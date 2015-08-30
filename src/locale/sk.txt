@@ -1,0 +1,87 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Súkromné konverzácie pre každého.
+Vitajte v Cryptocat-e. Tu je pár nápomocných rád: <ul><li> Cryptocat nieje čarovný. Nikdy by ste nemali zveriť programu svoj život. </li><li class="key"> Cryptocat Vás neochráni pred nezodpovednými ľuďmi, keyloggermi a neanonymizuje Vaše pripojenie.
+Blog
+Vlastný server
+Obnoviť
+Názov konverzácie
+Prezývka
+Pripojiť
+Vložte názov pre Vašu konverzáciu a oznámte ho ľuďom, s ktorými chcete hovoriť.
+Zadajte názov konverzácie pre pripojenie.
+Zadajte názov konverzácie.
+Názov konverzácie môže pozostávať iba z písmen alebo číslic.
+Prosím zadajte prezývku.
+Prezývka môže pozostávať iba z písmen alebo číslic.
+Prezývka je už obsadená.
+Autentikácia neúspešná.
+Spojenie zlyhalo.
+Ďakujeme, že používate Cryptocat.
+Registrujem...
+Pripájam...
+Pripojený.
+Prosím píšte na klávesnici náhodné znaky počas pár sekúnd.
+Generujem kryptovacie kľúče...
+Skupinová konverzácia. Pre súkromnú konverzáciu kliknite na užívateľa.
+OTR odtlačok (pre súkromnú konverzáciu):
+Odtlačok skupinovej konverzácie:
+Vynuluj moje kryptovacie kľúče
+Vynulovanie Vašich kryptovacích kľúčov Vás odpojí. Zmenia sa aj Vaše odtlačky.
+Pokračovať
+Stav: Dostupný
+Stav: Preč
+O mne
+Notifikácie na ploche zapnuté
+Notifikácie na ploche vypnuté
+Zvukové notifikácie zapnuté
+Zvukové notifikácie vypnuté
+Zapamätaj si moju prezývku.
+Nepamätám si moju prezývku
+Odhlásiť
+Zobraz informácie
+Pošli zakryptovaný súbor
+Zobraz obrázok
+Stiahnuť súbor
+Konverzácia
+Sú povolené iba ZIP súbory a obrázky. Maximálna veľkosť súboru: (SIZE) MB.
+Chyba: Prosím, uistite sa, že súbor je ZIP alebo obrázok.
+Chyba: Súbor nemôže byť väčší než (SIZE) MB.
+Začať videohovor
+Ukončiť videohovor
+(NICKNAME) by s vami chcel začať videohovor.
+Zrušiť
+Ignorovať
+Odignorovať
+Overiť
+Overte identitu tohto používateľa opýtaním tajnej otázky. Odpovede musia byť rovnaké!
+Tajná otázka
+Tajná odpoveď
+Opýtať sa
+Spytujem sa...
+Neúspešné
+Identita overená.
+(NICKNAME) chce overiť vašu identitu. Prosím, odpovedzte na uvedenú tajnú otázku aby ste sa autentikovali:
+Vaša odpoveď musí presne zodpovedať odpovedi od (NICKNAME).
+Odpoveď
+Varovanie: Dostali ste nečitateľnú správu od užívateľa (NICKNAME). To môže značiť nedôveryhodného užívateľa alebo správy, ktorých doručenie zlyhalo. Možno tiež máte spustenú zastaralú verziu Cryptocat-u. Prosíme, skontrolujte dostupné aktualizácie.
+Varovanie: Vaša verzia Cryptocat-u je zastaralá. Prechod na novú verziu je silno odporúčaný! Bez aktualizácie nemožno pokračovať.
+Varovanie: táto správa nemohla byť zaslaná užívateľovi (NICKNAME)
+Overený
+Užívateľ nie je overený.
+Kliknite sem, ak sa chcete dozvedieť viac...
+Dozvedieť sa viac o overení
+Vždy, keď komunikujete prostredníctvom Cryptocatu, potrebujete overiť osoby, s ktorými sa rozprávate.
+Jedným spôsobom overenia pomocou Cryptocatu je položiť priateľovi nejakú tajnú otázku, na ktorú pozná odpoveď len on.
+Môžete ich tiež kontaktovať pomocou dôveryhodného kanála, napríklad telefonicky, a požiadať ich o prečítanie svojich odtlačkov.
+Odtlačky sú identifikátory, ktoré vám umožňujú overovať osoby. V každom rozhovore môžu byť iné.
+Bez overenia, hocikto by mohol zosobňovať alebo zachytávať vašu komunikáciu.
+Overovacie odtlačky pre tento kontakt sa zmenili. To by sa nemalo stávať a môže to označovať niečo podozrivé. Prosíme overte si tento kontakt predtým, než s ním začnete chatovať.
+Skupinový chat
+Facebook
+Pripojte sa k facebookovému chatu prostredníctvom Cryptocatu. Vytvorte si end-to-end konverzácie s facebookovými priateľmi tiež používajúcimi Cryptocat.
+Chatovať cez Facebook
+Stav konverzácie
+šifrované.
+nešifrované!
+Táto konverzácia nie je šifrovaná, pretože tento kontakt nepoužíva Cryptocat. Ak si chcete vychutnať šifrovaný chat, požiadajte vášho priateľa, nech si Cryptocat stiahne tiež.

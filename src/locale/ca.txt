@@ -1,0 +1,87 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Converses privades per a tothom.
+Benvingut a Cryptocat. Aquí van alguns consells útils:<ul><li>Cryptocat no és una solució màgica. Mai haurieu de posar la vostra vida en mans d'un programa.</li> <li class="key">Cryptocat no pot protegir-vos de persones amb males intencions ni keyloggers, així com tampoc anonimitza la conexió.</li></ul>
+Bloc
+Servidor personalitzat
+Reinicia
+nom de la conversa
+nom d'usuari
+connecta
+Escriu un nom per a la teva conversa i comparteix-la amb gent amb qui t'agradaria parlar.
+Introdueix el nom de la conversa per a unir-te.
+Si us plau, introduïu el nom de la conversa.
+El nom de la conversa només pot contenir números i lletres.
+Si us plau, introduïu un nom d'usuari
+El nom d'usuari només es pot formar amb números i lletres.
+El nom d'usuari ja està en us.
+Error d'identificació.
+Ha fallat la connexió.
+Gràcies per utilitzar Cryptocat.
+Registrant...
+Connectant...
+Connectat.
+Si us plau, escriviu aleatòriament amb el teclat durant uns segons.
+S'estan generant les claus de xifrat...
+Conversa de grup. Clica a un usuari per a iniciar una conversa privada.
+Empremta OTR (per a converses privades):
+Empremta de conversa de grup:
+Reinicia les meves claus de xifrat
+Reiniciar les teves claus de xifrat et desconnectarà. La teva emprempta digital també canviarà.
+Continua
+Estat: Disponible
+Estat: Absent
+La meva informació
+Notificacions d'escriptori activades
+Notificacions d'escriptori desactivades
+Notificacions d'àudio activades
+Notificacions d'àudio desactivades
+Recorda el meu nom d'usuari
+No recordis el meu nom d'usuari
+Desconnectar-se
+Mostra informació
+Envia fitxer xifrat
+Veure imatge
+Desar fitxer
+Conversa
+Només s'accepten arxius ZIP i imatges. Mida màxima d'arxiu: (SIZE) MB.
+Error: Assegura't que l'arxiu sigui un ZIP o una imatge.
+Error: L'arxiu no pot superar (SIZE) MB.
+Iniciar xat amb video
+Finalitzar xat amb video
+(NICKNAME) vol iniciar una videoconferència amb tu.
+Cancel·la
+Ignorar
+Des-ignorar
+Autenticar-se
+Verifica la identitat d'aquest usuari fent una pregunta secreta. La resposta ha de coincidir exactament!
+Pregunta secreta
+Resposta secreta
+Pregunta
+Preguntant...
+Ha fallat
+Identitat verificada.
+(NICKNAME) vol verificar la vostra identitat. Si us plau, contesteu la pregunta secreta per a autenticar-vos:
+La vostra resposta ha de coincidir exactament amb la proporcionada per (NICKNAME).
+Resposta
+Avís: Heu rebut un missatge il·legible de (NICKNAME). Això pot indicar un usuari no fiable o bé missatges que no s'han rebut correctament. També pot ser causat per una versió desactualitzada de Cryptocat. Si us plau, comproveu les actualitzacions.
+Avís: La vostra versió de Cryptocat està desactualitzada. És molt important que l'actualitzeu abans de continuar.
+Avís: no s'ha pogut enviar el missatge a (NICKNAME)
+Autenticat
+L'usuari no s'ha autenticat.
+Vull aprendre més...
+Apreneu més sobre l'autenticació
+Cada cop que teniu una conversació a través de Cryptocat, necessiteu autenticar aquells amb qui parleu.
+Una manera d'autenticar-vos és fer servir Cryptocat per fer una pregunta secreta al vostre amic que només ell sàpiga respondre.
+També els pots contactar a través d'un canal de confiança, com ara per telèfon, i preguntar-los les seves empremtes.
+Les empremtes són identificadors que us permeten autenticar persones. Poden canviar entre cada conversació de Cryptocat.
+Sense autenticació, algú podria suplantar la vostra identitar i interceptar les vostres comunicacions.
+Les empremtes d'autenticació d'aquest contacte han canviat. Això no hauria de passar i podria indicar un comportament sospitós. Haurieu d'autenticar aquest contacte abans de parlar-hi.
+Conversa de grup
+Facebook
+Connecta al xat de Facebook mitjançant Cryptocat. Estableix converses xifrades extrem a extrem amb els teus amics de Facebook que també fan servir Cryptocat.
+Xatejar mitjançant Facebook
+Estat de la conversa
+xifrat
+no xifrat!
+Aquesta conversa no està xifrada perque el contacte no està fent servir Cryptocat. Demana-li al tru amic que es descarregui Cryptocat per gaudir d'una conversa xifrada.

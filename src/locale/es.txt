@@ -1,0 +1,87 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Conversaciones privadas para todos.
+Bienvenido a Cryptocat. Algunos consejos útiles: <ul><li>Cryptocat no es una panacea. No ponga su vida en manos de un programa informático.</li><li class="key">Cryptocat no puede protegerle de personas poco fiables y keyloggers. Tampoco anonimiza su conexión.</li></ul>
+Blog
+Servidor personalizado
+Reiniciar
+nombre de la conversación
+nombre de usuario
+conectar
+Introduzca un nombre para su conversación y compártalo con las personas con las que desea hablar, o únase al <strong>lobby</strong> para conocer nuevas personas.
+Introduzca el nombre de una conversación para unirse.
+Por favor, introduzca un nombre de conversación.
+El nombre de la conversación solo puede contener letras y números.
+Por favor, introduzca un nombre de usuario.
+Su nombre de usuario solo puede contener letras o números.
+El nombre de usuario se encuentra en uso.
+Error de autenticación.
+Conexión fallida.
+Gracias por usar Cryptocat.
+Registrando...
+Conectando...
+Conectado.
+Por favor, escribe aleatoriamente en tu teclado durante unos segundos.
+Generando claves de cifrado...
+Conversación de grupo. Haga clic sobre un usuario para iniciar una conversación privada.
+Huella OTR (para conversaciones privadas):
+Huella para conversaciones en grupo:
+Restablecer mis claves de cifrado
+Restablecer las claves de cifrado hará que se desconecte. Sus huellas digitales también cambiarán.
+Continuar
+Estado: Disponible
+Estado: Ausente
+Su información
+Notificaciones de escritorio activadas
+Notificaciones de escritorio desactivadas
+Notificaciones de audio activadas
+Notificaciones de audio desactivadas
+Recordar mi nombre de usuario
+No recordar mi nombre de usuario
+Desconectarse
+Mostrar Información
+Enviar archivo cifrado
+ver imagen
+descargar archivo
+Conversación
+Solo se aceptan archivos ZIP e imágenes. Tamaño máximo: (SIZE) MB.
+Error: Por favor, asegúrese de que su archivo es ZIP o una imagen.
+Error: El archivo no puede ser más grande que (SIZE) MB.
+Comenzar conversación de video
+Terminar conversación de video
+A (NICKNAME) le gustaría iniciar una conversación de vídeo con usted.
+Cancelar
+Ignorar
+No ignorar
+Autenticar
+Verifique la identidad de este usuario mediante una pregunta secreta. ¡Las respuestas tienen que coincidir exactamente!
+Pregunta secreta
+Respuesta secreta
+Preguntar
+Preguntando...
+Fallida
+Identidad verificada.
+(NICKNAME) quiere verificar su identidad. Por favor, conteste la siguiente pregunta para autenticarse:
+Su respuesta debe coincidir exactamente con la que ha escrito (NICKNAME).
+Responder
+Advertencia: Ha recibido un mensaje ilegible de (NICKNAME). Esto puede deberse a que el usuario no es confiable o a que los mensajes no fueron recibidos con éxito. También puede ser que esté usando una versión antigua de Cryptocat. Revise si hay actualizaciones.
+Advertencia: Su versión de Cryptocat no está actualizada. ¡La actualización a la última versión es muy recomendable! No proceda sin actualizar a la última versión.
+Advertencia: no se pudo enviar este mensaje a (NICKNAME)
+Autenticado
+El usuario no está autenticado.
+Haga clic para aprender más...
+Aprenda más sobre la autenticación
+Cada que tiene una conversación por Cryptocat, necesita que autenticar a las personas a quienes les está hablando.
+Una manera de autenticar es usar Cryptocat para preguntarle a su amigo una pregunta secreta cuya respuesta solo él conoce.
+También puede contactarlos por medio de un canal confiable, como por teléfono, y pedirles que lean sus huellas digitales.
+Las huellas digitales son identificadores que le permiten autenticar personas. Pueden cambiar entre cada conversación en Cryptocat.
+Sin autenticación, alguien puede suplantar o interceptar sus comunicaciones.
+Las huellas de autenticación para este contacto han cambiado. No se supone que eso suceda y pudiera indicar comportamiento sospechoso. Por favor, autentifique a este contacto antes de conversar con él.
+Charla grupal
+Facebook
+Conéctese a Facebook Chat a través de Cryptocat. Establezca charlas cifradas de extremo a extremo con amigos de Facebook que también estén usando Cryptocat.
+Charle a través de Facebook
+Estado de la conversación
+cifrado.
+¡sin cifrar!
+Esta conversación no está cifrada porque este contacto no está usando Cryptocat. Pídale a su amigo que descargue Cryptocat para poder disfrutar de una charla cifrada.

@@ -1,0 +1,68 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Privaatvestlus kõigile.
+Teretulemast Cryptocat'i. Paar abistavat nõuannet: <ul><li>Cryptocat ei ole hõbekuul. Ära kunagi usalda oma elu tarkvara kätesse.</li><li class="key">Cryptocat ei saa sind kaitsta ebausaldusväärsete inimeste ega nuhkvara eest ning ei anonümiseeri sinu ühendust.</li></ul>
+Blogi
+Kohandatud server
+Nulli
+vestluse nimi
+hüüdnimi
+ühenda
+Sisesta vestlusele nimi ning jaga seda inimestega, kelle sa rääkida tahad või liitu <strong>lobbiga</strong>, et kohtuda uute inimestega!
+Sisesta vestluse nimi millega ühineda.
+Palun sisesta vestluse nimi.
+Vestluse nimi peab olema tähtnumbriline.
+Palun sisesta hüüdnimi.
+Hüüdnimi peab olema tähtnumbriline.
+Hüüdnimi on kasutuses.
+Autentimisrike.
+Ühendus ebaõnnestus.
+Täname, et kasutate Cryptocat'i.
+Registreerimas...
+Ühendamas...
+Ühendatud.
+Palun trüki mõni sekund oma klaviatuuril nii suvaliselt kui võimalik.
+Loomas krüpteerimise võtmeid..
+Grupivestlus. Vajuta hüüdnimel privaatvestluseks.
+OTR sõrmejälg (privaatvestluste jaoks):
+Grupivestluse sõrmejälg:
+Nulli mu krüpteerimise võtmed
+Krüpteerimise võtmete nullimine katkestab su ühenduse. Ka sinu sõrmejäljed muutuvad.
+Jätka
+Staatus: Saadaval
+Staatus: Eemal
+Minu Info
+Töölaua Teated Sees
+Töölaua Teated Väljas
+Heliteated Sees
+Heliteated Väljas
+Mäleta mu hüüdnime
+Ära mäleta mu hüüdnime
+Logi välja
+Kuva Info
+Saada krüpteeritud fail
+vaata pilti
+lae fail alla
+Vestlus
+Ainult ZIP ja pildifailid on lubatud. Maksimaalne faili suurus: (SIZE) MB.
+Viga: Palun veendu, et sinu fail on .zip või pildifail.
+Viga: Faili ei saa olla suurem kui (SIZE) MB.
+Alusta videokõne
+Lõpeta videokõne
+(NICKNAME) tahab alustada sinuga video vestlust.
+Loobu
+Eira
+Tühista eiramine
+Autentimine
+Kinnita selle kasutaja identiteet, küsides salajast küsimust. Vastused peavad olema täpsed!
+Salaküsimus
+Salavastus
+Küsi
+Küsimas...
+Ebaõnnestus
+Identiteet kinnitatud.
+(NICKNAME) tahab kontrollida sinu identiteeti. Palun vastake allpool toodud salaküsimusele, et ennast autentida:
+Sinu vastus peab täpselt ühtima (NICKNAME) vastusega
+Vasta
+Hoiatus: (NICKNAME) on saatnud sulle loetamatu sõnumi. See võib viidata ebausaldusväärsele kasutajale või sõnumitele, mida ei ole võimalik vastu võtta.
+Hoiatus: Sinu Cryptocat versioon on vananenud. Uuendamine värskeimale versioonile on tungivalt soovitatav! Ärge jätkake ilma uuendamiseta.

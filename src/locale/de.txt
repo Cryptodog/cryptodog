@@ -1,0 +1,87 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Private Unterhaltungen für jeden.
+Willkommen bei Cryptocat. Ein paar hilfreiche Tipps: <ul><li>Cryptocat ist kein Wundermittel. Sie sollten Ihr Leben niemals einer Anwendung anvertrauen.</li><li class="key">Cryptocat kann Sie nicht vor vertrauensunwürdigen Menschen oder Keyloggern schützen und anonymisiert auch Ihre Internetverbindung nicht.</li></ul>
+Blog
+Benutzerdefinierter Server
+Zurücksetzen
+Name der Unterhaltung
+Spitzname
+Verbinden
+Einen Namen für Ihre Unterhaltung eingeben und diese Leuten freigeben, mit denen Sie sich unterhalten möchten, oder die <strong>Vorhalle</strong> besuchen, um neue Leute zu treffen!
+Den Namen einer Unterhaltung eingeben, um ihr beizutreten.
+Bitte den Namen einer Unterhaltung eingeben.
+Unterhaltungsname kann nur aus Buchstaben und Zahlen bestehen.
+Bitte einen Spitznamen eingeben.
+Spitzname kann nur aus Buchstaben und Zahlen bestehen.
+Dieser Spitzname wird bereits verwendet.
+Bestätigungsfehler.
+Verbindung fehlgeschlagen.
+Vielen Dank, dass Sie Cryptocat verwenden.
+Registrierung wird durchgeführt …
+Verbindung wird hergestellt …
+Verbunden.
+Bitte, so zufällig wie möglich, für ein paar Sekunden etwas auf der Tastatur eingeben.
+Verschlüsselungsschlüssel wird generiert …
+Gruppenunterhaltung. Für eine private Unterhaltung auf einen Benutzer klicken.
+OTR-Fingerabdruck (für private Unterhaltungen):
+Fingerabdruck der Gruppenunterhaltung:
+Meine Verschlüsselungsschlüssel zurücksetzen
+Das Zurücksetzen Ihrer Verschlüsselungsschlüssel wird die Verbindung trennen. Ihre Fingerabdrücke werden sich ebenfalls ändern.
+Fortsetzen
+Status: Verfügbar
+Status: Abwesend
+Meine Informationen
+Schreibtischbenachrichtigungen An
+Schreibtischbenachrichtigungen Aus
+Tonbenachrichtigung An
+Tonbenachrichtigung Aus
+Meinen Spitznamen merken
+Meinen Spitznamen nicht merken
+Abmelden
+Information anzeigen
+Verschlüsselte Datei senden
+Bild anzeigen
+Datei herunterladen
+Unterhaltung
+Es werden nur ZIP-Dateien und Bilder akzeptiert. Maximale Dateigröße: (SIZE) MB.
+Fehler: Ihre Datei muss eine ZIP-Datei oder ein Bild sein.
+Fehler: Datei darf nicht größer als (SIZE) MB sein.
+Video-Unterhaltung starten
+Video-Unterhaltung beenden
+(NICKNAME) möchte eine Video-Unterhaltung mit Ihnen starten.
+Abbrechen
+Ignorieren
+Ignorieren rückgängig machen
+Bestätigen
+Die Identität dieses Benutzers durch eine Sicherheitsfrage bestätigen. Die Antworten müssen exakt übereinstimmen!
+Sicherheitsfrage
+Geheime Antwort
+Fragen
+Frage wird gestellt …
+Fehlgeschlagen
+Identität bestätigt.
+(NICKNAME) möchte Ihre Identität überprüfen. Zum bestätigen bitte die unten stehende Sicherheitsfrage beantworten:
+Ihre Antwort muss exakt mit der von (NICKNAME) übereinstimmen.
+Antwort
+Achtung: Sie haben eine unlesbare Nachricht von (NICKNAME) erhalten. Das kann durch einen vertrauensunwürdigen Benutzer oder durch Netzwerkprobleme verursacht worden sein. Vielleicht verwenden Sie auch eine veraltete Version von Cryptocat. Bitte auf Aktualisierungen überprüfen.
+Achtung: Ihre Version von Cryptocat ist veraltet. Wir empfehlen Ihnen dringend, die neueste Version zu verwenden! Bevor Sie fortfahren bitte unbedingt auf die neueste Version aktualisieren.
+Achtung: Diese Nachricht konnte nicht zu (NICKNAME) gesendet werden.
+Bestätigt
+Benutzer ist nicht bestätigt.
+Anklicken, um mehr zu erfahren …
+Mehr über die Bestätigung erfahren
+Bei jeder Cryptocat-Unterhaltung, müssen Sie die Person, mit der Sie sprechen, bestätigen.
+Eine Möglichkeit der Bestätigung ist es, über Cryptocat Ihrem Freund eine geheime Frage zu stellen, die niemand anderer sonst beantworten kann.
+Sie können sich auch über einen vertrauenswürdigen Kanal, wie z.B. über das Telefon bitten, ihre Fingerabdrücke vorzulesen.
+Fingerabdrücke sind Kennungen, die es Ihnen erlauben, eine Person zu bestätigen. Diese können sich bei jeder Cryptocat-Unterhaltung ändern.
+Ohne Bestätigung könnte sich jemand als jemand anderes ausgeben, oder Ihre Kommunikation abhören.
+Die bestätigten Fingerabdrücke für diesen Kontakt haben sich geändert. Dies ist nicht vorgesehen und sieht nach einem verdächtigen Verhalten aus. Bitte bestätigen Sie diesen Kontakt, bevor Sie mit ihm unterhalten.
+Gruppenchat
+Facebook
+Verbinden Sie sich über Cryptocat mit Facebook Chat. Richten Sie durchgehend verschlüsselte Chats mit Facebook-Freunden ein, die ebenfalls Cryptocat verwenden
+Über Facebook chatten
+Unterhaltungsstatus
+verschlüsselt.
+nicht verschlüsselt!
+Diese Unterhaltung ist nicht verschlüselt, da dieser Kontakt nicht Cryptocat verwendet. Bitten Sie Ihre/n Freund/in, Cryptocat herunterzuladen, um verschlüsselten Chat zu nutzen.

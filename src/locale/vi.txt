@@ -1,0 +1,87 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Đối thoại Riêng tư cho Mọi người.
+Chào mừng đến với Cryptocat. Sau đây là vài mẹo hữu ích: <ul><li> Cryptocat không phải là một viên đạn bạc. Bạn không bao giờ nên tin trọn đời vào một phần mềm nào.</li><li class="key">Cryptocat không thể bảo vệ bạn khỏi những kẻ không đáng tin cậy hay là trình theo dõi bàn phím, và không vô danh hoá kết nối của bạn.</li></ul>
+Blog
+Máy chủ tuỳ chỉnh
+Đặt lại
+tên cuộc đối thoại
+tên
+kết nối
+Nhập tên của cuộc đối thoại của bạn và chia sẽ nó cho những người mà bạn muốn nói chuyện, hay vào <strong>lobby</strong> để gặp người mới!
+Nhập vào tên của cuộc đối thoại để tham gia.
+Xin hãy nhập tên cuộc đối thoại.
+Tên cuộc trò chuyện chỉ có thể là chữ cái hoặc số đếm.
+Đánh vào tên.
+Tên biệt danh chỉ có thể là chữ cái hoặc số.
+Tên đang được sử dụng.
+Xác thực thất bại.
+Kết nối thất bại.
+Cám ơn bạn đã dùng Cryptocat.
+Đang ghi danh...
+Đang kết nối...
+Đã kết nối.
+Hãy nhấn các phím trên bàn phím một cách ngẫu nhiên trong vài giây.
+Đang tạo khoá mã hoá...
+Đối thoại nhóm. Nhấn vào một thành viên để trao đổi riêng.
+Vân tay OTR (dùng cho đối thoại riêng):
+Vân tay cho cuộc đối thoại nhóm:
+Khởi tạo lại chìa khóa mã hóa của tôi
+Khởi tạo lại chìa khóa mã hóa của bạn sẽ làm ngắt kết nối. Dấu vân tay của bạn cũng sẽ thay đổi.
+Tiếp tục
+Trạng Thái: Có mặt
+Trạng Thái: Không có mặt
+Thông tin Của Tôi
+Bật Thông báo
+Tắt Thông báo
+Mở Thông báo bằng Âm Thanh
+Tắt Thông báo bằng Âm thanh
+Ghi nhớ tên của tôi
+Đừng ghi nhớ tên của tôi
+Đăng xuất
+Thông tin Hiển thị
+Gửi tập tin mã hoá
+xem hình ảnh
+tải tập tin
+Cuộc đối thoại
+Chỉ chấp nhận định dạng ZIP và tập tin hình ảnh. Kích cỡ file lớn nhất: (SIZE) MB.
+Lỗi: Hãy đảm bảo rằng tập tin gửi đi có định dạng ZIP hay là tập tin hình ảnh.
+Lỗi: Tập tin không thể lớn hơn (SIZE) MB.
+Bắt đầu cuộc gọi video
+Kết thúc cuộc gọi video
+(NICKNAME) muốn bắt đầu tán gẫu hình với bạn.
+Hủy bỏ
+Bỏ qua
+Huỷ bỏ qua
+Xác minh
+Xác thực nhân dạng người dùng này bằng cách hỏi câu hỏi bí mật. Câu trả lời phải so khớp chính xác !
+Câu hỏi bí mật
+Câu trả lời bí mật
+Hỏi
+Đang hỏi...
+Hỏng
+Nhân dạng đã được xác thực
+(NICKNAME) muốn xác thực nhân dạng của bạn. Vui lòng trả lời câu hỏi bí mật bên dưới để xác minh bạn:
+Câu trả lời của bạn phải khớp chính xác với (NICKNAME).
+Trả lời
+Cảnh báo: Tin nhắn từ (NICKNAME) không thể đọc được. Đây có thể là tin nhắn từ một người dùng không đáng tin hoặc là tin nhắn không nhận được. Bạn cũng có thể đang dùng phiên bản hết hạn. Xin xem cập nhật mới.
+Cảnh báo: Phiên bản Cryptocat của bạn đã hết hạn. Chúng tôi nghiêm túc đề nghị bạn cấp nhận phiên bản mới nhất ! Đừng tiếp tục nếu chưa cập nhật mới nhất.
+Cảnh báo: tin nhắn này không thể gửi đến (NICKNAME)
+Đã xác minh
+Người dùng chưa được xác minh.
+Bấm vào để tìm hiểu thêm...
+Tìm hiểu thêm về quy trình xác minh
+Mỗi khi có cuộc chuyện trò qua Cryptocat, bạn cần xác minh người bạn muốn trò chuyện.
+Một cách để xác minh là dùng Cryptocat để hỏi người bạn một câu hỏi bí mật mà chỉ có họ biết câu trả lời.
+Bạn cũng có thể liên lạc với họ qua một kênh an toàn, thí dụ như điện thoại, và yêu cầu cung cấp dấu tay của họ.
+Dấu tay là ký hiệu nhận diện để giúp bạn xác minh người khác. Dấu tay có thể thay đổi sau mỗi lần trò chuyện qua Cryptocat.
+Nếu không có quy trình xác minh, ai đó có thể mạo nhận hoặc chận bắt các thông tin liên lạc của bạn.
+Dấu tay xác minh của người này đã thay đổi. Chuyện này đáng lẽ không xảy ra và vì vậy hành vi này rất khả nghi. Xin vui lòng xác minh người này trước khi trò chuyện.
+Trò chuyện nhóm
+Mạng xã hội Facebook
+Kết nối với đàm thoại Facebook qua Cryptocat. Thiết lập các cuộc hội thoại được mã hóa trực tiếp với những người bạn trên Facebook cũng đang sử dụng Cryptocat.
+Trò chuyện qua Facebook
+Trạng thái cuộc trò chuyện
+được mã hóa.
+Chưa được mã hóa!
+Cuộc trò chuyện này chưa được mã hóa vì người liên lạc này không sử dụng Cryptocat. Hãy yêu cầu bạn của bạn tải về Cryptocat để thưởng thức cuộc nói chuyện được mã hóa.

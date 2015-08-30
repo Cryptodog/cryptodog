@@ -1,0 +1,54 @@
+@font-face {
+	font-family: 'Monda';
+	font-style: normal;
+	font-weight: 400;
+	src: url('../fonts/monda.woff') format('woff');
+}
+body {
+	height: 100%;
+	background: #C7E5F5;
+	margin: 0;
+	font-family: 'Helvetica Neue', Helvetica, Arial, Verdana;
+	line-height: 1.75em;
+	font-size: 14px;
+	font-family: 'Monda';
+}
+div#main {
+	width: 680px;
+	height: 550px;
+	padding: 20px;
+	background: #FFF;
+	border-radius: 18px 0 18px 18px;
+	margin: 2% auto 0 auto;
+	box-shadow: 8px 8px #97CEEC;
+	border: 8px solid #76BDE5;
+}
+img#logo {
+	width: 64px;
+}
+h1 {
+	display: inline;
+	vertical-align: 20px;
+	font-family: 'Monda';
+	font-weight: normal;
+	margin-left: 20px;
+	color: #76BDE5;
+	font-size: 36px;
+}
+.browser {
+	font-weight: bold;
+}
+div.instructions {
+	margin: 25px auto 20px; auto;
+	padding: 10px;
+	background: #F1F1F1;
+	width: 600px;
+	border-radius: 10px 0 10px 10px;
+	display: none;
+}
+div.instructions img {
+	display: block;
+}
+img.emoticon {
+	width: 16px;
+}

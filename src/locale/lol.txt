@@ -1,0 +1,87 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+﻿I Can Haz Private Conversashuns?
+O hai. Herez som helpful tips fur usin Cryptocat: <ul><li>Cryptocat iz not ceiling cat. Dunt trust it with ur lief!.</li><li class="key">Cryptocat can't protect u gainst evil pplz, keyloggarz and duz nut anonymize u (iz cat, not onion.)</li></ul>
+Blog
+custom servr...
+Reset
+conversashun naym
+nicknaem
+connect
+Entar a naem fur ur conversashun n share et wiz ppl u'd liek to talk to.
+Entr teh naym ov conversashun 2 join.
+Plz entr conversashun naym.'
+Conversashun naym must be alfanumeric.
+Plz entr a nicknaem.
+nicknaem must be alfanumeric.
+nicknaem in use.
+Authenticashun failure.
+Connecshun Faild.
+Thank mew 4 usin Cryptocat :3
+Registerin...
+Connectin...
+Haz Connecshun!
+Plz type on ur keybord as randomly as posible 4 few secondz.
+Generatin encrypshun keys...
+Group conversashun. Click on usr 4 private chat.
+OTR fingerprint (4 private conversashuns):
+Group conversashun fingerprint:
+Reset mah encrypshun keyz...
+Resettin yur encrypshun keyz will disconnect mew. Yur fingerprints will also chaeng!
+Continue
+Status: Available
+Status: Away
+My Info
+Desktop Notificashuns On
+Desktop Notificashuns Off
+Audio Notificashuns On
+Audio Notificashuns Off
+Remember mah nicknaem
+Don\'t remember mah nicknaem
+Disconnect
+Display info
+Send encryptd filez
+show meh picturz
+download teh file
+Conversashun
+ZIP fielz n cat pics only plz. Max file siez: (SIZE) MB.
+Error: Plz maek sure ur filez r an ZIP fiel or cat pic.
+Error: File haz to be smallr den (SIZE) MB plz.
+Start video chat
+End video chat
+(NICKNAME) wants 2 see u on der screen
+Cancel
+Ignore
+Unignore
+Authenticate
+Verify this user's identity by asking a secret question. Answers must match exactly!
+Secret question
+Secret answer
+Ask
+Asking...
+Failed
+Identity verified.
+(NICKNAME) wants to verify your identity. Please answer the below secret question to authenticate yourself:
+Your answer must exactly match the one given by (NICKNAME).
+Answer
+Warning: You have received an unreadable message from (NICKNAME). This may indicate an untrustworthy user or messages that failed to be received. You may also be running an outdated version of Cryptocat. Please check for updates.
+Warning: Your version of Cryptocat is outdated. Updating to the latest version is strongly recommended! Do not proceed without updating to the latest version.
+Warning: this message could not be sent to (NICKNAME)
+Authenticated
+User is not authenticated.
+Click to learn more...
+Learn more about authentication
+Every time you have a Cryptocat conversation, you need to authenticate the persons you are talking to.
+One way you can authenticate is by using Cryptocat to ask your friend a secret question that only they would know the answer to.
+You can also contact them via a trusted channel, such as by phone, and ask them to read their fingerprints.
+Fingerprints are identifiers that allow you to authenticate persons. They can change between every Cryptocat conversation.
+Without authentication, someone could be impersonating or intercepting your communications.
+The authentication fingerprints for this contact have changed. This is not supposed to happen and could indicate suspicious behaviour. Please authenticate this contact before chatting with them.
+Group Chat
+Facebook
+Connect to Facebook Chat via Cryptocat. Set up end-to-end encrypted chats with Facebook friends who are also using Cryptocat.
+Chat via Facebook
+Conversation status
+encrypted.
+not encrypted!
+This conversation is not encrypted because this contact is not using Cryptocat. Ask your friend to download Cryptocat to enjoy encrypted chat.

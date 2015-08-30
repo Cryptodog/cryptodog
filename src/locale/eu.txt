@@ -1,0 +1,79 @@
+ltr
+"Helvetica Neue", Helvetica, Arial, Verdana
+Elkarrizketa pribatuak guztionatzat.
+Ongi etorri Cryptocat-era. Hemen dituzu aholku erabilgarri batzuk: <ul><li>Cryptocat ez da magikoa. Ez zenuke inoiz zure bizitza software baten esku jarri behar.</li><li class="key">Cryptocat-ek ezin zaitu konfiantza merezi ez duten pertsonetatik edo keylogger-etatik babestu, eta ez du zure konexioa anonimo bihurtzen.</li></ul>
+Bloga
+Zerbitzari pertsonalizatua
+Berrezarri
+elkarrizketa-izena
+goitizena
+konektatu
+Idatzi zure elkarrizketarako izen bat eta parteka ezazu izen hori hitz egin nahiko zenukeen jendearekin. Bestela <strong>lobby</strong> elkarrizketan sartu jende berria ezagutzeko!
+Idatzi elkarrizketa baten izena elkarrizketa horretara sartzeko.
+Idatzi elkarrizketa-izen bat mesedez.
+Elkarrizketa-izena letraz eta zenbakiz bakarrik egon daiteke osatuta.
+Idatzi goitizen bat mesedez.
+Goitizena letraz eta zenbakiz bakarrik egon daiteke osatuta.
+Erabiltzen ari den goitizena.
+Egiaztaketa hutsegitea.
+Konexioak huts egin du.
+Eskerrik asko Cryptocat erabiltzeagatik.
+Erregistratzen...
+Konektatzen...
+Konektatuta.
+Segundu batzuz idatz ezazu teklatuan ahalik eta era ausazkoenean.
+Zifraketa-gakoak sortzen...
+Talde-elkarrizketa. Egin klik erabiltzaile baten gainean elkarrizketa pribatua izateko.
+OTR hatz-aztarna (elkarrizketa pribatuetarako):
+Talde elkarrizketaren hatz-aztarna:
+Berrezarri nire zifraketa-gakoak
+Zure zifraketa-gakoak berrezartzeak deskonektatu egingo zaitu. Zure hatz-aztarnak ere aldatuko dira.
+Jarraitu
+Egoera: Eskuragarri
+Egoera: Kanpoan
+Nire Informazioa
+Mahaigaineko jakinarazpenak gaituta
+Mahaigaineko jakinarazpenak desgaituta
+Soinu jakinarazpenak gaituta
+Soinu jakinarazpenak desgaituta
+Nire goititzena gogoratu
+Ez gogoratu nire goitizena
+Itxi saioa
+Erakutsi informazioa
+Bidali fitxategi zifratua
+ikusi irudia
+jaitsi fitxategia
+Elkarrizketa
+ZIP fitxategiak eta irudiak bakarrik onartzen dira. Gehienezko fitxategi-tamaina: (SIZE) MB.
+Errorea: Egiazta ezazu fitxategia ZIP motakoa edo irudia dela.
+Errorea: Fitxategia ezin da izan (SIZE) MB baino handiagoa.
+Hasi bideo-elkarrizketa
+Amaitu bideo-elkarrizketa
+(NICKNAME)-(e)k bideo-elkarrizketa bat hasi nahi du zurekin.
+Utzi
+Baztertu
+Ez baztertu
+Autentikatu
+Erabiltzaile honen nortasuna egiaztatu galdera sekretu baten bitartez. Erantzunek berdin-berdinak izan behar dute!
+Galdera sekretua
+Erantzun sekretua
+Galdetu
+Galdetzen...
+Huts egin du
+Nortasun egiaztatua.
+(NICKNAME)-(e)k zure nortasuna egiaztatu nahi du. Mesedez ondorengo galdera sekretua erantzun zure nortasuna egiaztatzeko:
+Zure erantzunak (NICKNAME)-(e)k emandakoaren berdina izan behar du.
+Erantzun
+Abisua: (NICKNAME)-(e)k irakurri ezin daitekeen mezu bat bidali dizu. Baliteke erabiltzaile fidagaitza izatea edo jasotzerakoan mezuak huts egin izana. Agian Cryptocat bertsioa zaharkitua erabiltzen egongo zara. Eguneraketarik dagoen egiaztatu, mesedez.
+Abisua: Zure Cryptocat bertsioa zaharkituta dago. Oso gomendagarria da azken bertsiora eguneratzea! Ez jarraitu azken bertsiora eguneratu gabe.
+Abisua: ezin izan da mezu hau (NICKNAME)-(r)i bidali
+Egiaztatua
+Erabiltzaile ez egiaztatua.
+Klik egin gehiago ikasteko...
+Ikasi gehiago egiaztaketari buruz
+Cryptocat elkarrizketa bat duzun bakoitzean, hizketan zauden pertsonak egiaztatu behar dituzu.
+Cryptocat era ziurtatuan erabiltzeko modu bat zure lagunei galdera sekretua egitea da, erantzuna beraiek bakarrik jakingo luketen bat.
+Beste modu bat, bide fidagarri batetik beraiek kontaktatzea da, adibidez telefonoz, eta beraien hatz-aztarna irakurtzeko eskatzea.
+Hatz-aztarnak pertsonak egiaztatzea ahalbidetzen duten identifikatzaileak dira. Cryptocat elkarrizketa bakoitzean aldatu daitezke.
+Egiaztaketarik gabe, norbait zure komunikazioak entzuten egon daiteke eta hizketan norekin ari zaren ere ezin duzu ziur egon.
+Kontaktu hau ziurtatzeko hatz-aztarnak aldatu egin dira. Horrelakorik ez zen gertatu beharko eta erabilera susmagarriaren seinale izan daiteke. Ziurtatu ezazu kontaktu hau berarekin elkarrizketa izan aurretik.
