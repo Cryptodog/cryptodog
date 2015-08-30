@@ -1,0 +1,9 @@
+* Remove superfluous browser-specific code.
+
+* Remove Facebook support.
+
+* Add support for capital letters in nicknames.
+
+* Change code and UI references from "cryptocat" to "cryptodog".
+
+* Change logo.
