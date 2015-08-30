@@ -7,3 +7,7 @@
 * Change code and UI references from "cryptocat" to "cryptodog".
 
 * Change logo.
+
+* Update libs if possible.
+
+* More emoticons?
