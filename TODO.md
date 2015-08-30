@@ -10,4 +10,8 @@
 
 * Update libs if possible.
 
-* More emoticons?
+* Add more emoticons.
+
+* Add more cat facts.
+
+* Use cookies for option storage instead of addon APIs.
