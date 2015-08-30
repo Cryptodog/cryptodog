@@ -15,7 +15,7 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
 * Remove Facebook support.
 
-    People have complained that FB integration doesn't work anymore, and it's too much difficulty to main with little payoff.
+    People have complained that FB integration doesn't work anymore, and it's too much difficulty to maintain with little payoff.
 
 * Add support for capital letters in nicknames.
 
