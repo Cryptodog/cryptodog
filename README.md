@@ -6,9 +6,20 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
 * Remove superfluous browser-specific code.
 
+    Marked for removal:
+      * chrome.js
+      * manifest.json
+      * firstRun.html
+      * css/firstRun.css
+      * img/firstRun/*
+
 * Remove Facebook support.
 
+    People have complained that FB integration doesn't work anymore, and it's too much difficulty to main with little payoff.
+
 * Add support for capital letters in nicknames.
+
+    Need to make sure this doesn't mess up any XMPP stuff first.
 
 * Change code and UI references from "cryptocat" to "cryptodog".
 
