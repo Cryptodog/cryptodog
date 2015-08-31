@@ -17,7 +17,7 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
     People have complained that FB integration doesn't work anymore, and it's too much difficulty to maintain with little payoff.
 
-    **UPDATE** Facebook dropped XMPP support a while ago, so this feature is impossible to fix.
+    **UPDATE:** Facebook dropped XMPP support a while ago, so this feature is impossible to fix.
 
 * Add support for capital letters in nicknames.
 
@@ -25,7 +25,7 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
 * Change code and UI references from "cryptocat" to "cryptodog".
 
-* Change logo.
+* Make dog logo.
 
 * Update libs if possible.
 
