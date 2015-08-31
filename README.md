@@ -34,3 +34,5 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 * Add more cat facts.
 
 * Use cookies for option storage instead of addon APIs.
+
+* Add semicolons to JS files
