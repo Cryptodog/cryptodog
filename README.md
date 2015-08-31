@@ -31,7 +31,7 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
 * Add more emoticons.
 
-* Add more cat facts.
+* Convert cat facts to dog facts.
 
 * Use cookies for option storage instead of addon APIs.
 
