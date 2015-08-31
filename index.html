@@ -13,19 +13,19 @@
 	<script type="application/javascript" src="js/lib/jquery/jquery.filterbydata.js"></script>
 	<script type="application/javascript" src="js/lib/mustache.js"></script>
 	<script type="application/javascript" src="js/lib/mousetrap.js"></script>
-	<script type="application/javascript" src="js/lib/strophe/strophe.js"></script>
+	<script type="application/javascript" src="js/lib/strophe/strophe.min.js"></script>
 	<script type="application/javascript" src="js/lib/strophe/strophe.ibb.js"></script>
 	<script type="application/javascript" src="js/lib/strophe/strophe.si-filetransfer.js"></script>
 	<script type="application/javascript" src="js/lib/strophe/strophe.muc.js"></script>
 	<!-- <script type="application/javascript" src="js/lib/strophe/strophe.ping.js"></script> -->
 	<script type="application/javascript" src="js/lib/crypto-js.js"></script>
 	<script type="application/javascript" src="js/lib/salsa20.js"></script>
-	<script type="application/javascript" src="js/lib/eventemitter.js"></script>
+	<script type="application/javascript" src="js/lib/eventemitter.min.js"></script>
 	<script type="application/javascript" src="js/lib/tinycon.js"></script>
 	<script type="application/javascript" src="js/cryptocat.js"></script>
 	<script type="application/javascript" src="js/etc/xmpp.js"></script>
 	<script type="application/javascript" src="js/etc/otr.js"></script>
-	<script type="application/javascript" src="js/etc/facebook.js"></script>
+	<!--<script type="application/javascript" src="js/etc/facebook.js"></script>-->
 	<script type="application/javascript" src="js/etc/catFacts.js"></script>
 	<script type="application/javascript" src="js/etc/storage.js"></script>
 	<script type="application/javascript" src="js/etc/templates.js"></script>
@@ -33,13 +33,13 @@
 	<script type="application/javascript" src="js/etc/multiParty.js"></script>
 	<script type="application/javascript" src="js/etc/fileTransfer.js"></script>
 	<script type="application/javascript" src="js/etc/customServers.js"></script>
-	<script type="application/javascript" src="js/lib/bigint.js"></script>
+	<script type="application/javascript" src="js/lib/bigint.mod.js"></script>
 	<script type="application/javascript" src="js/lib/otr.js"></script>
 	<script type="application/javascript" src="js/lib/elliptic.js"></script>
 	<script type="application/javascript" src="js/etc/locale.js"></script>
 </head>
 <body>
-	<div id="fb-root"></div>
+	<!--<div id="fb-root"></div>-->
 	<div id="dialogBox">
 		<div id="dialogBoxClose">x</div>
 		<div id="dialogBoxContent"></div>
@@ -62,20 +62,20 @@
 				</div>
 			</div>
 			<div id="login" dir="ltr">
-				<div id="loginTabs" dir="ltr">
+				<!--<div id="loginTabs" dir="ltr">
 					<span data-login="cryptocat" dir="ltr"></span>
 					<span data-login="facebook" dir="ltr"></span>
-				</div>
+				</div>-->
 				<form id="cryptocatLogin" class="loginForm" dir="ltr">
 					<input type="text" id="conversationName" class="mousetrap" maxlength="20" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
 					<input type="text" id="nickname" class="mousetrap" maxlength="16" autocomplete="off" dir="ltr" />
 					<input type="submit" id="loginSubmit" dir="ltr" />
 					<div id="loginInfo"></div>
 				</form>
-				<form id="facebookLogin" class="loginForm">
+				<!--<form id="facebookLogin" class="loginForm">
 					<br /><span class="facebookInfo"></span><br />
 					<input type="button" id="facebookConnect" value="Chat via Facebook" />
-					<br />
+					<br />-->
 				</form>
 			</div>
 			<div id="info">
