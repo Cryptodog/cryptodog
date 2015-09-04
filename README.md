@@ -7,11 +7,11 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 * Remove superfluous browser-specific code.
 
     Marked for removal:
-      * chrome.js
-      * manifest.json
-      * firstRun.html
-      * css/firstRun.css
-      * img/firstRun/*
+      * chrome.js ✓
+      * manifest.json ✓
+      * firstRun.html ✓
+      * css/firstRun.css ✓
+      * img/firstRun/* ✓
 
 * Remove Facebook support.
 
