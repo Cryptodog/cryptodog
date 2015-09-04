@@ -17,12 +17,7 @@ var fileMIME = new RegExp('^(image\/(png|jpeg|gif))|(application\/((x-compressed
 )
 
 var cn = function(to) {
-	if (Cryptocat.me.login === 'cryptocat') {
-		return Cryptocat.me.conversation + '@' + Cryptocat.xmpp.conferenceServer + '/' + to
-	}
-	if (Cryptocat.me.login === 'facebook') {
-		return '-' + Cryptocat.buddies[to].id + '@chat.facebook.com'
-	}
+	return Cryptocat.me.conversation + '@' + Cryptocat.xmpp.conferenceServer + '/' + to
 }
 
 Cryptocat.otr.beginSendFile = function(data) {

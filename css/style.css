@@ -216,32 +216,6 @@ div#bubble .loginForm {
 	position: relative;
 }
 
-/*div#bubble #cryptocatLogin {
-}*/
-
-/*div#bubble #facebookLogin {
-	display: none;
-	font-size: 1.3em;
-	text-align: center;
-	height: 172px;
-	padding: 0 10px;
-	width: 446px;
-	background: #76BDE5;
-	color: #FFF;
-	border-radius: 5px 0 5px 5px;
-}
-
-div#bubble #facebookLogin #facebookConnect {
-	margin: 20px auto -5px auto;
-	font-size: 1.2em;
-	padding: 10px;
-	width: 300px;
-}
-
-div#bubble #facebookLogin #facebookWarning {
-	font-weight: bold;
-}*/
-
 div#bubble .loginForm [type=text] {
 	margin: 9px 0;
 	border: none;
@@ -522,10 +496,6 @@ BUDDY LIST
 	bottom: 4px;
 	background-position: top left;
 	background-image: url('../img/icon-48.png');
-}
-
-.buddy span.notUsingCryptocat {
-	background-image: url('../img/facebook.png');
 }
 
 .buddy span.shortNickname {

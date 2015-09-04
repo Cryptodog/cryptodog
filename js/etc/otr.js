@@ -25,77 +25,26 @@ Cryptocat.otr.add = function(nickname) {
 
 // Handle incoming messages.
 var onIncoming = function(nickname, msg, encrypted) {
-	if (Cryptocat.me.login === 'cryptocat') {
-		// Drop unencrypted messages.
-		if (!encrypted) {
-			return
-		}
-		Cryptocat.addToConversation(
-			msg, nickname, Cryptocat.buddies[nickname].id, 'message'
-		)
-		if (Cryptocat.me.currentBuddy !== Cryptocat.buddies[nickname].id) {
-			Cryptocat.messagePreview(msg, nickname)
-		}
+	// Drop unencrypted messages.
+	if (!encrypted) {
+		return
 	}
-	if (Cryptocat.me.login === 'facebook') {
-		// Drop unencrypted messages if buddy claims to use Cryptocat.
-		if (Cryptocat.buddies[nickname].usingCryptocat &&
-			!encrypted
-		) {
-			return
-		}
-		if (!Cryptocat.buddies[nickname].usingCryptocat &&
-			encrypted
-		) {
-			$.get('https://outbound.crypto.cat/facebook/', {
-				'setuser': Cryptocat.buddies[nickname].id
-			})
-			Cryptocat.buddyStatus(nickname, 'online')
-			$('#buddy-' + Cryptocat.buddies[nickname].id)
-				.find('.loginTypeIcon')
-				.removeClass('notUsingCryptocat')
-			$('#buddy-' + Cryptocat.buddies[nickname].id)
-				.find('.buddyMenu').show()
-			if (Cryptocat.me.currentBuddy === Cryptocat.buddies[nickname].id) {
-				$('#encryptionStatus').html(
-					Mustache.render(Cryptocat.templates.encryptionStatus, {
-						conversationStatus: Cryptocat.locale.login.conversationStatus,
-						styling: 'encrypted',
-						encryptionStatus: Cryptocat.locale.login.encrypted
-					})
-				)
-			}
-			Cryptocat.buddies[nickname].usingCryptocat         = true
-			Cryptocat.buddies[nickname].otr.REQUIRE_ENCRYPTION = true
-		}
-		Cryptocat.addToConversation(
-			msg, nickname, Cryptocat.buddies[nickname].id, 'message'
-		)
-		if (Cryptocat.me.currentBuddy !== Cryptocat.buddies[nickname].id) {
-			Cryptocat.messagePreview(msg, nickname)
-		}
+	Cryptocat.addToConversation(
+		msg, nickname, Cryptocat.buddies[nickname].id, 'message'
+	)
+	if (Cryptocat.me.currentBuddy !== Cryptocat.buddies[nickname].id) {
+		Cryptocat.messagePreview(msg, nickname)
 	}
 }
 
 // Handle outgoing messages depending on connection type.
 var onOutgoing = function(nickname, message) {
-	if (Cryptocat.me.login === 'cryptocat') {
-		Cryptocat.xmpp.connection.muc.message(
-			Cryptocat.me.conversation
-				+ '@'
-				+ Cryptocat.xmpp.conferenceServer,
-			nickname, message, null, 'chat', 'active'
-		)
-	}
-	if (Cryptocat.me.login === 'facebook') {
-		var to = '-' + Cryptocat.buddies[nickname].id + '@chat.facebook.com'
-		var reply = $msg({
-			to: to,
-			type: 'chat',
-			cryptocat: 'true',
-		}).cnode(Strophe.xmlElement('body', message))
-		Cryptocat.xmpp.connection.send(reply.tree())
-	}
+	Cryptocat.xmpp.connection.muc.message(
+		Cryptocat.me.conversation
+			+ '@'
+			+ Cryptocat.xmpp.conferenceServer,
+		nickname, message, null, 'chat', 'active'
+	)
 }
 
 // Handle otr state changes.

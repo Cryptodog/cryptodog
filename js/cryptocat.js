@@ -165,9 +165,7 @@ Cryptocat.addToConversation = function(message, nickname, conversation, type) {
 		message = Strophe.xmlescape(message)
 		message = Cryptocat.addLinks(message)
 		message = addEmoticons(message)
-		if (Cryptocat.me.login === 'facebook') {
-			message = message.replace(/\&amp\;apos\;/g, '&apos;')
-		}
+
 		if (message.match(Cryptocat.me.nickname)) { lineDecoration = 3 }
 	}
 	if (type === 'warning') {
@@ -480,16 +478,9 @@ Cryptocat.onBuddyClick = function(buddyElement) {
 	// Render conversation info bar.
 	var styling = 'notEncrypted'
 	var encryptionStatus = Cryptocat.locale.login.notEncrypted
-	if (Cryptocat.me.login === 'cryptocat') {
-		styling = 'encrypted'
-		encryptionStatus = Cryptocat.locale.login.encrypted
-	}
-	else if (Cryptocat.me.login === 'facebook') {
-		if (Cryptocat.buddies[nickname].usingCryptocat) {
-			styling = 'encrypted'
-			encryptionStatus = Cryptocat.locale.login.encrypted
-		}
-	}
+	styling = 'encrypted'
+	encryptionStatus = Cryptocat.locale.login.encrypted
+
 	$('#encryptionStatus').html(
 		Mustache.render(Cryptocat.templates.encryptionStatus, {
 			conversationStatus: Cryptocat.locale.login.conversationStatus,
@@ -627,20 +618,13 @@ Cryptocat.displayInfo = function(nickname) {
 // Executes on user logout.
 Cryptocat.logout = function() {
 	Cryptocat.loginError = false
-	if (Cryptocat.me.login === 'cryptocat') {
-		Cryptocat.xmpp.connection.muc.leave(
-			Cryptocat.me.conversation + '@'
-			+ Cryptocat.xmpp.conferenceServer
-		)
-		$('#loginInfo').text(Cryptocat.locale['loginMessage']['thankYouUsing'])
-		$('#loginInfo').animate({'background-color': '#97CEEC'}, 200)
-	}
-	if (Cryptocat.me.login === 'facebook') {
-		clearInterval(Cryptocat.FB.statusInterval)
-		Cryptocat.FB.accessToken = null
-		Cryptocat.FB.userID = null
-		Cryptocat.storage.removeItem('fbAccessToken')
-	}
+	Cryptocat.xmpp.connection.muc.leave(
+		Cryptocat.me.conversation + '@'
+		+ Cryptocat.xmpp.conferenceServer
+	)
+	$('#loginInfo').text(Cryptocat.locale['loginMessage']['thankYouUsing'])
+	$('#loginInfo').animate({'background-color': '#97CEEC'}, 200)
+
 	Cryptocat.xmpp.connection.disconnect()
 	Cryptocat.xmpp.connection = null
 	document.title = 'Cryptocat'
@@ -660,7 +644,6 @@ Cryptocat.logout = function() {
 				$('#login').css({opacity: 1})
 				$('#conversationName').select()
 				$('#conversationName,#nickname').removeAttr('readonly')
-				$('#loginSubmit,#facebookConnect').removeAttr('readonly')
 				$('#encryptionStatus').text('')
 			})
 			$('#dialogBoxClose').click()
@@ -717,16 +700,6 @@ var currentTime = function(seconds) {
 var initializeConversationBuffer = function(id) {
 	if (!conversationBuffers.hasOwnProperty(id)) {
 		conversationBuffers[id] = ''
-	}
-	if (
-		id !== 'groupChat' &&
-		!Cryptocat.buddies[Cryptocat.getBuddyNicknameByID(id)].usingCryptocat
-		&& conversationBuffers[id] === ''
-	) {
-		conversationBuffers[id] += Mustache.render(Cryptocat.templates.notUsingCryptocat, {
-			text: Cryptocat.locale.login.facebookWarning,
-			dir:  Cryptocat.locale.direction
-		})
 	}
 }
 
@@ -979,11 +952,6 @@ var desktopNotification = function(image, title, body, timeout) {
 // Add a join/part notification to the conversation window.
 // If 'join === true', shows join notification, otherwise shows part.
 var buddyNotification = function(nickname, join) {
-	// Don't execute unless we're using Cryptocat group chat
-	if (Cryptocat.me.login !== 'cryptocat') {
-		return false
-	}
-	// Otherwise, go ahead
 	var status, audioNotification
 	if (join) {
 		status = Mustache.render(Cryptocat.templates.userJoin, {
@@ -1128,9 +1096,6 @@ var openBuddyMenu = function(nickname) {
 			buddy.ignored = !buddy.ignored
 			$menu.click()
 		})
-		if (Cryptocat.me.login === 'facebook') {
-			$contents.find('.option2').remove()
-		}
 	})
 }
 
@@ -1247,9 +1212,6 @@ $('#userInput').submit(function() {
 		].otr.sendMsg(message)
 	}
 	else if (Object.keys(Cryptocat.buddies).length) {
-		if (Cryptocat.me.login !== 'cryptocat') {
-			return false
-		}
 		var ciphertext = JSON.parse(Cryptocat.multiParty.sendMessage(message))
 		var missingRecipients = []
 		for (var i in Cryptocat.buddies) {

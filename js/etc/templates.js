@@ -91,13 +91,6 @@ Cryptocat.templates = {
 	userLeave: '<div class="userLeave"><span class="timestamp">{{currentTime}}</span>'
 		+ '<strong>-</strong>{{nickname}}</div>',
 
-	facebookAuthURL: 'https://www.facebook.com/dialog/oauth'
-		+ '?scope={{scope}}'
-		+ '&app_id={{appID}}'
-		+ '&client_id={{appID}}'
-		+ '&redirect_uri=https://outbound.crypto.cat/facebook/'
-		+ '?id={{authID}}&close=true&display=popup',
-
 	encryptionStatus: '{{conversationStatus}}: <strong class="{{styling}}">{{encryptionStatus}}</strong>',
 
 	notUsingCryptocat: '<div class="notUsingCryptocatWarning" dir="{{dir}}">{{text}}</div>',

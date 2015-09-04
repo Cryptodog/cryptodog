@@ -86,10 +86,7 @@ Cryptocat.xmpp.connect = function() {
 	Cryptocat.me.nickname = Strophe.xmlescape($('#nickname').val())
 	Cryptocat.xmpp.connection = new Strophe.Connection(Cryptocat.xmpp.relay)
 	Cryptocat.xmpp.connection.connect(Cryptocat.xmpp.domain, null, function(status) {
-		if (
-			(status === Strophe.Status.CONNECTING) &&
-			(Cryptocat.me.login === 'cryptocat')
-		) {
+		if (status === Strophe.Status.CONNECTING){
 			$('#loginInfo').animate({'background-color': '#97CEEC'}, 200)
 			$('#loginInfo').text(Cryptocat.locale['loginMessage']['connecting'])
 		}
@@ -121,14 +118,11 @@ Cryptocat.xmpp.connect = function() {
 Cryptocat.xmpp.onConnected = function() {
 	afterConnect()
 	clearInterval(CatFacts.interval)
-	if (Cryptocat.me.login === 'cryptocat') {
-		$('#loginInfo').text('✓')
-		$('#buddy-groupChat,#status').show()
-		$('#buddy-groupChat').insertBefore('#buddiesOnline')
-	}
-	else {
-		$('#buddy-groupChat,#status').hide()
-	}
+
+	$('#loginInfo').text('✓')
+	$('#buddy-groupChat,#status').show()
+	$('#buddy-groupChat').insertBefore('#buddiesOnline')
+
 	$('#fill').stop().animate({
 		'width': '100%', 'opacity': '1'
 	}, 250, 'linear')
@@ -142,12 +136,10 @@ Cryptocat.xmpp.onConnected = function() {
 		$('.logo').animate({'margin': '-11px 5px 0 0'})
 		$('#login').fadeOut(200, function() {
 			$('#conversationInfo').fadeIn()
-			if (Cryptocat.me.login === 'cryptocat') {
-				$('#buddy-groupChat').click(function() {
-					Cryptocat.onBuddyClick($(this))
-				})
-				$('#buddy-groupChat').click()
-			}
+			$('#buddy-groupChat').click(function() {
+				Cryptocat.onBuddyClick($(this))
+			})
+			$('#buddy-groupChat').click()
 			$('#conversationWrapper').fadeIn()
 			$('#optionButtons').fadeIn()
 			$('#footer').delay(200).animate({'height': 60}, function() {
@@ -173,12 +165,10 @@ Cryptocat.xmpp.reconnect = function() {
 		}
 		else if (status === Strophe.Status.CONNECTED) {
 			afterConnect()
-			if (Cryptocat.me.login === 'cryptocat') {
-				Cryptocat.xmpp.connection.muc.join(
-					Cryptocat.me.conversation + '@' + Cryptocat.xmpp.conferenceServer,
-					Cryptocat.me.nickname
-				)
-			}
+			Cryptocat.xmpp.connection.muc.join(
+				Cryptocat.me.conversation + '@' + Cryptocat.xmpp.conferenceServer,
+				Cryptocat.me.nickname
+			)
 		}
 		else if ((status === Strophe.Status.CONNFAIL) || (status === Strophe.Status.DISCONNECTED)) {
 			if (Cryptocat.loginError) {
