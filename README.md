@@ -6,18 +6,17 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
 * Remove superfluous browser-specific code.
 
-    Marked for removal:
-      * chrome.js ✓
-      * manifest.json ✓
-      * firstRun.html ✓
-      * css/firstRun.css ✓
-      * img/firstRun/* ✓
+    The obvious culprits have been deleted, but if you see something related to Chrome/Firefox/Mac, verify that it's redundant and remove it.
 
 * Remove Facebook support.
 
-    People have complained that FB integration doesn't work anymore, and it's too much difficulty to maintain with little payoff.
+    Mostly done. Language files and locale.js still contain references to FB, but these are opaque to the user.
 
-    **UPDATE:** Facebook dropped XMPP support a while ago, so this feature is impossible to fix.
+* Update libs and corresponding code calls!
+
+* Add semicolons to JS files.
+
+* Use cookies for option storage instead of addon APIs.
 
 * Add support for capital letters in nicknames.
 
@@ -27,12 +26,6 @@ A pure JavaScript client you can either run locally in your browser, or via our 
 
 * Make dog logo.
 
-* Update libs if possible.
-
 * Add more emoticons.
 
 * Convert cat facts to dog facts.
-
-* Use cookies for option storage instead of addon APIs.
-
-* Add semicolons to JS files
