@@ -644,6 +644,7 @@ Cryptocat.logout = function() {
 				$('#login').css({opacity: 1})
 				$('#conversationName').select()
 				$('#conversationName,#nickname').removeAttr('readonly')
+				$('#loginSubmit').removeAttr('readonly')
 				$('#encryptionStatus').text('')
 			})
 			$('#dialogBoxClose').click()
