@@ -1,6 +1,8 @@
 # Cryptodog Web Client
 
-A pure JavaScript client you can either run locally in your browser, or via our hosted service.
+Cryptodog is a fork of the popular encrypted messaging program, Cryptocat. Unfortunately, the latter hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features so that Cryptocat remains usable.
+
+This repository contains a pure JavaScript client you can either run locally in your browser, or via our hosted service at https://cryptodog.github.io/webclient.
 
 ## Todo
 
