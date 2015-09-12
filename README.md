@@ -31,3 +31,5 @@ This repository contains a pure JavaScript client you can either run locally in 
 * Add more emoticons.
 
 * Convert cat facts to dog facts.
+
+* Convert line-number based localization to JSON based system
