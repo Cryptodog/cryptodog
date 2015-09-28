@@ -32,7 +32,7 @@ var onIncoming = function(nickname, msg, encrypted) {
 	Cryptocat.addToConversation(
 		msg, nickname, Cryptocat.buddies[nickname].id, 'message'
 	)
-	if (Cryptocat.me.currentBuddy !== Cryptocat.buddies[nickname].id) {
+	if (Cryptocat.me.currentBuddy !== Cryptocat.buddies[nickname].id && !Cryptocat.buddies[nickname].ignored) {
 		Cryptocat.messagePreview(msg, nickname)
 	}
 }
