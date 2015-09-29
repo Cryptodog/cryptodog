@@ -1367,6 +1367,7 @@ KEYBOARD SHORTCUTS
 -------------------
 */
 
+/*
 // Select previous buddy
 Mousetrap.bind('ctrl+1', function() {
 	var prev = $('.currentConversation').prevAll('.buddy')
@@ -1379,6 +1380,8 @@ Mousetrap.bind('ctrl+2', function() {
 	next.length ? next[0].click() : $('.buddy').first().click()
 })
 
+ctrl+(number) shortcuts are used already in most browsers.
+*/ 
 // ???
 Mousetrap.bind('up up down down left right left right b a enter', function() {
 	if (Cryptocat.sounds.balloon.loop) {
