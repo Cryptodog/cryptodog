@@ -1,18 +1,26 @@
 ;(function() {
 'use strict';
 
-// Cryptocat OTR functions and callbacks.
-Cryptocat.otr = {}
+// Cryptodog OTR functions and callbacks.
+Cryptodog.otr = {}
 
 // Construct a new OTR conversation
-Cryptocat.otr.add = function(nickname) {
-	var otr = new OTR({
-		priv: Cryptocat.me.otrKey,
-		smw: {
-			path: 'js/workers/smp.js',
-			seed: Cryptocat.random.generateSeed
-		}
-	})
+Cryptodog.otr.add = function(nickname) {
+	// file protocol doesn't support WebWorkers
+	if (window.location.protocol === 'file:'){
+		var otr = new OTR({
+			priv: Cryptodog.me.otrKey
+		})
+	}
+	else {
+		var otr = new OTR({
+			priv: Cryptodog.me.otrKey,
+			smw: {
+				path: '/js/workers/smp.js',
+				seed: Cryptodog.random.generateSeed
+			}
+		})
+	}
 	otr.REQUIRE_ENCRYPTION = true
 	otr.on('ui',     onIncoming.bind(null, nickname))
 	otr.on('io',     onOutgoing.bind(null, nickname))
@@ -29,20 +37,20 @@ var onIncoming = function(nickname, msg, encrypted) {
 	if (!encrypted) {
 		return
 	}
-	Cryptocat.addToConversation(
-		msg, nickname, Cryptocat.buddies[nickname].id, 'message'
+	Cryptodog.addToConversation(
+		msg, nickname, Cryptodog.buddies[nickname].id, 'message'
 	)
-	if (Cryptocat.me.currentBuddy !== Cryptocat.buddies[nickname].id && !Cryptocat.buddies[nickname].ignored) {
-		Cryptocat.messagePreview(msg, nickname)
+	if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored) {
+		Cryptodog.messagePreview(msg, nickname)
 	}
 }
 
 // Handle outgoing messages depending on connection type.
 var onOutgoing = function(nickname, message) {
-	Cryptocat.xmpp.connection.muc.message(
-		Cryptocat.me.conversation
+	Cryptodog.xmpp.connection.muc.message(
+		Cryptodog.me.conversation
 			+ '@'
-			+ Cryptocat.xmpp.conferenceServer,
+			+ Cryptodog.xmpp.conferenceServer,
 		nickname, message, null, 'chat', 'active'
 	)
 }
@@ -50,24 +58,24 @@ var onOutgoing = function(nickname, message) {
 // Handle otr state changes.
 var onStatusChange = function(nickname, state) {
 	/*jshint camelcase:false */
-	var buddy = Cryptocat.buddies[nickname]
+	var buddy = Cryptodog.buddies[nickname]
 	if (state === OTR.CONST.STATUS_AKE_SUCCESS) {
 		var fingerprint = buddy.otr.their_priv_pk.fingerprint()
 		if (buddy.fingerprint === null) {
 			buddy.fingerprint = fingerprint
-			Cryptocat.closeGenerateFingerprints(nickname)
+			Cryptodog.closeGenerateFingerprints(nickname)
 		}
 		else if (buddy.fingerprint !== fingerprint) {
 			// re-aked with a different key
 			buddy.fingerprint = fingerprint
-			Cryptocat.removeAuthAndWarn(nickname)
+			Cryptodog.removeAuthAndWarn(nickname)
 		}
 	}
 }
 
 // Store received filename.
 var onFile = function(nickname, type, key, filename) {
-	var buddy = Cryptocat.buddies[nickname]
+	var buddy = Cryptodog.buddies[nickname]
 	// filename is being relied on as diversifier
 	// and should continue to be generated uniquely
 	// as in sendFile()
@@ -84,10 +92,10 @@ var onFile = function(nickname, type, key, filename) {
 
 // Receive an SMP question
 var onSMPQuestion = function(nickname, question) {
-	var chatWindow = Cryptocat.locale.chatWindow,
-		buddy = Cryptocat.buddies[nickname],
+	var chatWindow = Cryptodog.locale.chatWindow,
+		buddy = Cryptodog.buddies[nickname],
 		answer = false
-	var info = Mustache.render(Cryptocat.templates.authRequest, {
+	var info = Mustache.render(Cryptodog.templates.authRequest, {
 		authenticate: chatWindow.authenticate,
 		authRequest: chatWindow.authRequest.replace('(NICKNAME)', nickname),
 		answerMustMatch: chatWindow.answerMustMatch
@@ -97,14 +105,14 @@ var onSMPQuestion = function(nickname, question) {
 	})
 	$('#dialogBoxClose').click()
 	window.setTimeout(function() {
-		Cryptocat.dialogBox(info, {
+		Cryptodog.dialogBox(info, {
 			height: 240,
 			closeable: true,
 			onAppear: function() {
 				$('#authReplySubmit').unbind('click').bind('click', function(e) {
 					e.preventDefault()
 					answer = $('#authReply').val()
-					answer = Cryptocat.prepareAnswer(answer, false, buddy.mpFingerprint)
+					answer = Cryptodog.prepareAnswer(answer, false, buddy.mpFingerprint)
 					buddy.otr.smpSecret(answer)
 					$('#dialogBoxClose').click()
 				})
@@ -112,7 +120,7 @@ var onSMPQuestion = function(nickname, question) {
 			onClose: function() {
 				if (answer) { return }
 				buddy.otr.smpSecret(
-					Cryptocat.random.encodedBytes(16, CryptoJS.enc.Hex)
+					Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex)
 				)
 			}
 		})
@@ -121,8 +129,8 @@ var onSMPQuestion = function(nickname, question) {
 
 // Handle SMP callback
 var onSMPAnswer = function(nickname, type, data, act) {
-	var chatWindow = Cryptocat.locale.chatWindow,
-		buddy = Cryptocat.buddies[nickname]
+	var chatWindow = Cryptodog.locale.chatWindow,
+		buddy = Cryptodog.buddies[nickname]
 	switch(type) {
 	case 'question':
 		onSMPQuestion(nickname, data)

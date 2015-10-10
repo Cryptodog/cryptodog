@@ -1,24 +1,24 @@
-if (typeof Cryptocat === 'undefined') {
-	Cryptocat = function() {}
+if (typeof Cryptodog === 'undefined') {
+	Cryptodog = function() {}
 }
 
 ;(function (root, factory) {
 	if (typeof module !== 'undefined' && module.exports) {
 		module.exports = factory({}, require('../lib/salsa20.js'), true)
 	} else {
-		if (typeof root.Cryptocat === 'undefined') {
-			root.Cryptocat = function () {}
+		if (typeof root.Cryptodog === 'undefined') {
+			root.Cryptodog = function () {}
 		}
-		factory(root.Cryptocat, root.Salsa20, false)
+		factory(root.Cryptodog, root.Salsa20, false)
 	}
-}(this, function (Cryptocat, Salsa20, node) {
+}(this, function (Cryptodog, Salsa20, node) {
 'use strict';
 
-Cryptocat.random = {}
+Cryptodog.random = {}
 
 var state
 
-Cryptocat.random.generateSeed = function() {
+Cryptodog.random.generateSeed = function() {
 	var buffer, crypto
 	// Node.js ... for tests
 	if (typeof window === 'undefined' && typeof require !== 'undefined') {
@@ -34,7 +34,7 @@ Cryptocat.random.generateSeed = function() {
 	return buffer
 }
 
-Cryptocat.random.setSeed = function(s) {
+Cryptodog.random.setSeed = function(s) {
 	if (!s) { return false }
 	state = new Salsa20(
 		[
@@ -49,14 +49,14 @@ Cryptocat.random.setSeed = function(s) {
 	)
 }
 
-Cryptocat.random.getBytes = function(i) {
+Cryptodog.random.getBytes = function(i) {
 	if (i.constructor !== Number || i < 1) {
 		throw new Error('Expecting a number greater than 0.')
 	}
 	return state.getBytes(i)
 }
 
-Cryptocat.random.bitInt = function(k) {
+Cryptodog.random.bitInt = function(k) {
 	if (k > 31) {
 		throw new Error('That\'s more than JS can handle.')
 	}
@@ -64,36 +64,36 @@ Cryptocat.random.bitInt = function(k) {
 	var b = Math.floor(k / 8)
 	var mask = (1 << (k % 8)) - 1
 	if (mask) {
-		r = Cryptocat.random.getBytes(1)[0] & mask
+		r = Cryptodog.random.getBytes(1)[0] & mask
 	}
 	for (; i < b; i++) {
-		r = (256 * r) + Cryptocat.random.getBytes(1)[0]
+		r = (256 * r) + Cryptodog.random.getBytes(1)[0]
 	}
 	return r
 }
 
-Cryptocat.random.decimal = function() {
+Cryptodog.random.decimal = function() {
 	var r = 250;
 	while ( r > 249 ) {
-		r = Cryptocat.random.getBytes(1)[0]
+		r = Cryptodog.random.getBytes(1)[0]
 	}
 	return r % 10;
 }
 
-Cryptocat.random.rawBytes = function(bytes) {
-	var sa = String.fromCharCode.apply(null, Cryptocat.random.getBytes(bytes))
+Cryptodog.random.rawBytes = function(bytes) {
+	var sa = String.fromCharCode.apply(null, Cryptodog.random.getBytes(bytes))
 	return CryptoJS.enc.Latin1.parse(sa)
 }
 
-Cryptocat.random.encodedBytes = function(bytes, encoding) {
-	return Cryptocat.random.rawBytes(bytes).toString(encoding)
+Cryptodog.random.encodedBytes = function(bytes, encoding) {
+	return Cryptodog.random.rawBytes(bytes).toString(encoding)
 }
 
 if (node) {
 	// Seed RNG in tests.
-	Cryptocat.random.setSeed(Cryptocat.random.generateSeed())
+	Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
 }
 
-return Cryptocat
+return Cryptodog
 
 }))//:3

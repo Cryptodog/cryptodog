@@ -1,4 +1,4 @@
-Cryptocat.multiParty = function() {};
+Cryptodog.multiParty = function() {};
 
 (function(){
 'use strict';
@@ -65,27 +65,27 @@ var HMAC = function(msg, key) {
 
 // Generate private key (32 random bytes)
 // Represented as BigInt
-Cryptocat.multiParty.genPrivateKey = function() {
+Cryptodog.multiParty.genPrivateKey = function() {
 	return BigInt.randBigInt(256)
 }
 
 // Generate public key (Curve 25519 Diffie-Hellman with basePoint 9)
 // Represented as BigInt
-Cryptocat.multiParty.genPublicKey = function(privateKey) {
+Cryptodog.multiParty.genPublicKey = function(privateKey) {
 	return Curve25519.ecDH(privateKey)
 }
 
 // Generate shared secrets
 // First 256 bytes are for encryption, last 256 bytes are for HMAC.
 // Represented as WordArrays
-Cryptocat.multiParty.genSharedSecret = function(nickname) {
+Cryptodog.multiParty.genSharedSecret = function(nickname) {
 	//I need to convert the BigInt to WordArray here. I do it using the Base64 representation.
 	var sharedSecret = CryptoJS.SHA512(
 		CryptoJS.enc.Base64.parse(
 			BigInt.bigInt2base64(
 				Curve25519.ecDH(
-					Cryptocat.me.mpPrivateKey,
-					Cryptocat.buddies[nickname].mpPublicKey
+					Cryptodog.me.mpPrivateKey,
+					Cryptodog.buddies[nickname].mpPublicKey
 				),
 				32
 			)
@@ -99,10 +99,10 @@ Cryptocat.multiParty.genSharedSecret = function(nickname) {
 
 // Get fingerprint
 // If nickname is null, returns own fingerprint
-Cryptocat.multiParty.genFingerprint = function(nickname) {
-	var key = Cryptocat.me.mpPublicKey
+Cryptodog.multiParty.genFingerprint = function(nickname) {
+	var key = Cryptodog.me.mpPublicKey
 	if (nickname) {
-		key = Cryptocat.buddies[nickname].mpPublicKey
+		key = Cryptodog.buddies[nickname].mpPublicKey
 	}
 	return CryptoJS.SHA512(
 		CryptoJS.enc.Base64.parse(
@@ -112,28 +112,28 @@ Cryptocat.multiParty.genFingerprint = function(nickname) {
 }
 
 // Send my public key in response to a public key request.
-Cryptocat.multiParty.sendPublicKey = function(nickname) {
+Cryptodog.multiParty.sendPublicKey = function(nickname) {
 	var answer = {}
 	answer['type'] = 'publicKey'
 	answer['text'] = {}
 	answer['text'][nickname] = {}
 	answer['text'][nickname]['message'] = BigInt.bigInt2base64(
-		Cryptocat.me.mpPublicKey, 32
+		Cryptodog.me.mpPublicKey, 32
 	)
 	return JSON.stringify(answer)
 }
 
 // Issue a warning for decryption failure to the main conversation window
-Cryptocat.multiParty.messageWarning = function(sender) {
-	var messageWarning = Cryptocat.locale['warnings']['messageWarning']
+Cryptodog.multiParty.messageWarning = function(sender) {
+	var messageWarning = Cryptodog.locale['warnings']['messageWarning']
 		.replace('(NICKNAME)', sender)
-	Cryptocat.addToConversation(messageWarning, sender, 'groupChat', 'warning')
+	Cryptodog.addToConversation(messageWarning, sender, 'groupChat', 'warning')
 }
 
 // Generate message tag. 8 rounds of SHA512
 // Input: WordArray
 // Output: Base64
-Cryptocat.multiParty.messageTag = function(message) {
+Cryptodog.multiParty.messageTag = function(message) {
 	for (var i = 0; i !== 8; i++) {
 		message = CryptoJS.SHA512(message)
 	}
@@ -141,19 +141,19 @@ Cryptocat.multiParty.messageTag = function(message) {
 }
 
 // Send message.
-Cryptocat.multiParty.sendMessage = function(message) {
+Cryptodog.multiParty.sendMessage = function(message) {
 	//Convert from UTF8
 	message = CryptoJS.enc.Utf8.parse(message)
 	// Add 64 bytes of padding
-	message.concat(Cryptocat.random.rawBytes(64))
+	message.concat(Cryptodog.random.rawBytes(64))
 	var encrypted = {
 		text: {},
 		type: 'message'
 	}
 	//Sort recipients
 	var sortedRecipients = []
-	for (var b in Cryptocat.buddies) {
-		if (Cryptocat.buddies[b].mpSecretKey) {
+	for (var b in Cryptodog.buddies) {
+		if (Cryptodog.buddies[b].mpSecretKey) {
 			sortedRecipients.push(b)
 		}
 	}
@@ -163,17 +163,17 @@ Cryptocat.multiParty.sendMessage = function(message) {
 	var i, iv
 	for (i = 0; i !== sortedRecipients.length; i++) {
 		//Generate a random IV
-		iv = Cryptocat.random.encodedBytes(12, CryptoJS.enc.Base64)
+		iv = Cryptodog.random.encodedBytes(12, CryptoJS.enc.Base64)
 		// Do not reuse IVs
 		while (usedIVs.indexOf(iv) >= 0) {
-			iv = Cryptocat.random.encodedBytes(12, CryptoJS.enc.Base64)
+			iv = Cryptodog.random.encodedBytes(12, CryptoJS.enc.Base64)
 		}
 		usedIVs.push(iv)
 		//Encrypt the message
 		encrypted['text'][sortedRecipients[i]] = {}
 		encrypted['text'][sortedRecipients[i]]['message'] = encryptAES(
 			message,
-			Cryptocat.buddies[sortedRecipients[i]].mpSecretKey['message'],
+			Cryptodog.buddies[sortedRecipients[i]].mpSecretKey['message'],
 			iv
 		)
 		encrypted['text'][sortedRecipients[i]]['iv'] = iv
@@ -187,19 +187,19 @@ Cryptocat.multiParty.sendMessage = function(message) {
 		//Compute the HMAC
 		encrypted['text'][sortedRecipients[i]]['hmac'] = HMAC(
 			hmac,
-			Cryptocat.buddies[sortedRecipients[i]].mpSecretKey['hmac']
+			Cryptodog.buddies[sortedRecipients[i]].mpSecretKey['hmac']
 		)
 		//Append to tag
 		encrypted['tag'].concat(CryptoJS.enc.Base64.parse(encrypted['text'][sortedRecipients[i]]['hmac']))
 	}
 	//Compute tag
-	encrypted['tag'] = Cryptocat.multiParty.messageTag(encrypted['tag'])
+	encrypted['tag'] = Cryptodog.multiParty.messageTag(encrypted['tag'])
 	return JSON.stringify(encrypted)
 }
 
 // Receive message. Detects requests/reception of public keys.
-Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
-	var buddy = Cryptocat.buddies[sender]
+Cryptodog.multiParty.receiveMessage = function(sender, myName, message) {
+	var buddy = Cryptodog.buddies[sender]
 	try {
 		message = JSON.parse(message)
 	}
@@ -222,13 +222,13 @@ Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
 				!BigInt.equals(buddy.mpPublicKey, publicKey)
 			) {
 				buddy.updateMpKeys(publicKey)
-				Cryptocat.removeAuthAndWarn(sender)
+				Cryptodog.removeAuthAndWarn(sender)
 			}
 			// if we're missing their key, make sure we aren't already
 			// authenticated (prevents a possible active attack)
 			else if (!buddy.mpPublicKey && buddy.authenticated) {
 				buddy.updateMpKeys(publicKey)
-				Cryptocat.removeAuthAndWarn(sender)
+				Cryptodog.removeAuthAndWarn(sender)
 			} else {
 				buddy.updateMpKeys(publicKey)
 			}
@@ -236,11 +236,11 @@ Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
 		}
 		// Detect public key request and send public key
 		else if (message['type'] === 'publicKeyRequest') {
-			Cryptocat.xmpp.sendPublicKey(sender)
+			Cryptodog.xmpp.sendPublicKey(sender)
 		}
 		else if (message['type'] === 'message') {
 			// Make sure message is being sent to all chat room participants
-			var recipients = Object.keys(Cryptocat.buddies)
+			var recipients = Object.keys(Cryptodog.buddies)
 			var missingRecipients = []
 			recipients.splice(recipients.indexOf(sender), 1)
 			for (var r = 0; r !== recipients.length; r++) {
@@ -262,10 +262,10 @@ Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
 				}
 			}
 			if (missingRecipients.length) {
-				Cryptocat.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients')
+				Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients')
 			}
 			// Decrypt message
-			if (!Cryptocat.buddies[sender].mpSecretKey) {
+			if (!Cryptodog.buddies[sender].mpSecretKey) {
 				return false
 			}
 			// Sort recipients
@@ -280,24 +280,24 @@ Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
 			if (
 				!OTR.HLP.compare(
 					message['text'][myName]['hmac'],
-					HMAC(hmac, Cryptocat.buddies[sender].mpSecretKey['hmac'])
+					HMAC(hmac, Cryptodog.buddies[sender].mpSecretKey['hmac'])
 				)
 			) {
 				console.log('multiParty: HMAC failure')
-				Cryptocat.multiParty.messageWarning(sender)
+				Cryptodog.multiParty.messageWarning(sender)
 				return false
 			}
 			// Check IV reuse
 			if (usedIVs.indexOf(message['text'][myName]['iv']) >= 0) {
 				console.log('multiParty: IV reuse detected, possible replay attack')
-				Cryptocat.multiParty.messageWarning(sender)
+				Cryptodog.multiParty.messageWarning(sender)
 				return false
 			}
 			usedIVs.push(message['text'][myName]['iv'])
 			// Decrypt
 			var plaintext = decryptAES(
 				message['text'][myName]['message'],
-				Cryptocat.buddies[sender].mpSecretKey['message'],
+				Cryptodog.buddies[sender].mpSecretKey['message'],
 				message['text'][myName]['iv']
 			)
 			// Check tag
@@ -305,15 +305,15 @@ Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
 			for (i = 0; i !== sortedRecipients.length; i++) {
 				messageTag.concat(CryptoJS.enc.Base64.parse(message['text'][sortedRecipients[i]]['hmac']))
 			}
-			if (Cryptocat.multiParty.messageTag(messageTag) !== message['tag']) {
+			if (Cryptodog.multiParty.messageTag(messageTag) !== message['tag']) {
 				console.log('multiParty: message tag failure')
-				Cryptocat.multiParty.messageWarning(sender)
+				Cryptodog.multiParty.messageWarning(sender)
 				return false
 			}
 			// Remove padding
 			if (plaintext.sigBytes < 64) {
 				console.log('multiParty: invalid plaintext size')
-				Cryptocat.multiParty.messageWarning(sender)
+				Cryptodog.multiParty.messageWarning(sender)
 				return false
 			}
 			plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes-64)
@@ -322,14 +322,14 @@ Cryptocat.multiParty.receiveMessage = function(sender, myName, message) {
 		}
 		else {
 			console.log('multiParty: Unknown message type: ' + message['type'])
-			Cryptocat.multiParty.messageWarning(sender)
+			Cryptodog.multiParty.messageWarning(sender)
 		}
 	}
 	return false
 }
 
 // Reset everything except my own key pair
-Cryptocat.multiParty.reset = function() {
+Cryptodog.multiParty.reset = function() {
 	usedIVs = []
 }
 

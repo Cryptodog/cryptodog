@@ -1,46 +1,22 @@
 (function() {
 'use strict';
 
-Cryptocat.locale = {}
+Cryptodog.locale = {}
+Cryptodog.locales = {}
 var languageObject
 
-// Get locale file, call other functions
-Cryptocat.locale.set = function(locale, refresh) {
-	locale = Cryptocat.locale.handleAliases(locale.toLowerCase())
-	$.ajax({
-		url : 'locale/' + locale + '.txt',
-		dataType: 'text',
-		accepts: 'text/html',
-		contentType: 'text/html',
-		complete: function(data) {
-			try {
-				var language = data.responseText.split('\n')
-				if (language.length < 5) { // data too small, dismiss
-					Cryptocat.locale.set('en', true)
-					return false
-				}
-				for (var i in language) {
-					if (language.hasOwnProperty(i)) {
-						language[i] = $.trim(language[i])
-					}
-				}
-				languageObject = Cryptocat.locale.buildObject(locale, language)
-				if (refresh) {
-					Cryptocat.locale.refresh(languageObject)
-				}
-			}
-			catch(err) {
-				Cryptocat.locale.set('en', true)
-			}
-		},
-		error: function() {
-			Cryptocat.locale.set('en', true)
-		}
-	})
+Cryptodog.locale.set = function(locale, refresh) {
+	if (Cryptodog.locales[locale] === undefined){return}
+	locale = Cryptodog.locale.handleAliases(locale.toLowerCase())
+	languageObject = Cryptodog.locale.buildObject(locale)
+	if (refresh) {
+		Cryptodog.locale.refresh(languageObject)
+	}
 }
 
 // Build and deliver language object
-Cryptocat.locale.buildObject = function(locale, language) {
+Cryptodog.locale.buildObject = function(locale) {
+	var language = Cryptodog.locales[locale]
 	var i = 0
 	languageObject = {
 		language:                     locale,
@@ -133,16 +109,16 @@ Cryptocat.locale.buildObject = function(locale, language) {
 			                            || languageObject.auth.clickToLearnMore,
 			learnMoreAuth:            language[i++]
                                         || languageObject.auth.learnMoreAuth,
-			authSlide1:               language[i++]
-			                            || languageObject.auth.authSlide1,
-			authSlide2:               language[i++]
-			                            || languageObject.auth.authSlide2,
-			authSlide3:               language[i++]
-			                            || languageObject.auth.authSlide3,
-			authSlide4:               language[i++]
-			                            || languageObject.auth.authSlide4,
-			authSlide5:               language[i++]
-			                            || languageObject.auth.authSlide5,
+			authPhrase1:               language[i++]
+			                            || languageObject.auth.authPhrase1,
+			authPhrase2:               language[i++]
+			                            || languageObject.auth.authPhrase2,
+			authPhrase3:               language[i++]
+			                            || languageObject.auth.authPhrase3,
+			authPhrase4:               language[i++]
+			                            || languageObject.auth.authPhrase4,
+			authPhrase5:               language[i++]
+			                            || languageObject.auth.authPhrase5,
 			AKEWarning:               language[i++]
 			                            || languageObject.auth.AKEWarning
 		},
@@ -165,19 +141,16 @@ Cryptocat.locale.buildObject = function(locale, language) {
 			|| languageObject.login.facebookWarning,
 		}
 	}
-	var decodeFileSize = function (str) { return str.replace('(SIZE)', (Cryptocat.otr.maximumFileSize / 1024)) }
-	languageObject.chatWindow.fileTransferInfo = decodeFileSize(languageObject.chatWindow.fileTransferInfo)
-	languageObject.chatWindow.fileSizeError = decodeFileSize(languageObject.chatWindow.fileSizeError)
 	for (var o in languageObject) {
 		if (languageObject.hasOwnProperty(o)) {
-			Cryptocat.locale[o] = languageObject[o]
+			Cryptodog.locale[o] = languageObject[o]
 		}
 	}
 	return languageObject
 }
 
 // Re-render login page with new strings
-Cryptocat.locale.refresh = function(languageObject) {
+Cryptodog.locale.refresh = function(languageObject) {
 	var smallType = ['bo', 'ar', 'in']
 	if (smallType.indexOf(languageObject['language']) >= 0) {
 		$('body').css({'font-size': '13px'})
@@ -202,12 +175,8 @@ Cryptocat.locale.refresh = function(languageObject) {
 	$('#buddy-groupChat').find('span').text(languageObject['chatWindow']['conversation'])
 	$('#languageSelect').text($('[data-locale=' + languageObject['language'] + ']').text())
 	$('[data-login=cryptocat]').text(languageObject.login.groupChat)
-	$('[data-login=facebook]').text(languageObject.login.facebook)
-	$('.facebookInfo').text(languageObject.login.facebookInfo)
-	$('#facebookConnect').val(languageObject.login.chatViaFacebook)
 	$('[data-utip]').utip()
 	$('html').attr('dir', languageObject['direction'])
-	$('#encryptionStatus').attr('dir', languageObject['direction'])
 	if (languageObject['direction'] === 'ltr') {
 		$('div#bubble #info li').css('background-position', 'top left')
 	}
@@ -218,7 +187,7 @@ Cryptocat.locale.refresh = function(languageObject) {
 }
 
 // Handle aliases
-Cryptocat.locale.handleAliases = function(locale) {
+Cryptodog.locale.handleAliases = function(locale) {
 	if (locale === ('zh-hk' || 'zh-tw')) {
 		return 'zh-hk'
 	}
@@ -232,8 +201,8 @@ Cryptocat.locale.handleAliases = function(locale) {
 }
 
 // Populate language
-if (typeof(window) !== 'undefined') {
-	Cryptocat.locale.set('en', true)
-}
+if (typeof(window) !== 'undefined') { $(window).ready(function() {
+	Cryptodog.locale.set('en', true)
+})}
 
 })()

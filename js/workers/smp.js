@@ -27,7 +27,7 @@
 		switch (data.type) {
 			case 'seed':
 				importScripts.apply(root, imports)
-				Cryptocat.random.setSeed(data.seed)
+				Cryptodog.random.setSeed(data.seed)
 				break
 			case 'init':
 				sm = new root.OTR.SM(data.reqs)
