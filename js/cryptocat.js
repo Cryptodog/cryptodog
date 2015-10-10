@@ -25,6 +25,9 @@ Cryptocat.me = {
 
 Cryptocat.buddies = {}
 
+// For persistent ignores.
+Cryptocat.ignoredNames = []
+
 Cryptocat.audioExt = '.mp3'
 if (navigator.userAgent.match(/(OPR)|(Firefox)/)) {
 	Cryptocat.audioExt = '.ogg'
@@ -367,6 +370,10 @@ Cryptocat.addBuddy = function(nickname, id, status) {
 		})
 	})
 	$('#buddyList').dequeue()
+	if (Cryptocat.ignoredNames.indexOf(nickname) !== -1){
+		buddy.ignored = true
+		$('#buddy-' + buddy.id).addClass('ignored')
+	}
 }
 
 // Set a buddy's status to `online` or `away`.
@@ -1091,8 +1098,10 @@ var openBuddyMenu = function(nickname) {
 			e.stopPropagation()
 			if (buddy.ignored) {
 				$buddy.removeClass('ignored')
+				Cryptocat.ignoredNames.splice(Cryptocat.ignoredNames.indexOf(buddy.nickname), 1)
 			} else {
 				$buddy.addClass('ignored')
+				Cryptocat.ignoredNames.push(buddy.nickname)
 			}
 			buddy.ignored = !buddy.ignored
 			$menu.click()
@@ -1358,6 +1367,7 @@ KEYBOARD SHORTCUTS
 -------------------
 */
 
+/*
 // Select previous buddy
 Mousetrap.bind('ctrl+1', function() {
 	var prev = $('.currentConversation').prevAll('.buddy')
@@ -1370,6 +1380,8 @@ Mousetrap.bind('ctrl+2', function() {
 	next.length ? next[0].click() : $('.buddy').first().click()
 })
 
+ctrl+(number) shortcuts are used already in most browsers.
+*/ 
 // ???
 Mousetrap.bind('up up down down left right left right b a enter', function() {
 	if (Cryptocat.sounds.balloon.loop) {
