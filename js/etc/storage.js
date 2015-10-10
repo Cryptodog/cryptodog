@@ -1,26 +1,34 @@
-Cryptocat.storage = {}
+Cryptodog.storage = {}
 
 $(window).ready(function() {
 'use strict';
 
-// Cryptocat Storage API
+// Cryptodog Storage API
 // This API uses different local storage solutions,
 // depending on the browser engine, to offer a uniform
-// storage interface for Cryptocat user preferences and settings.
+// storage interface for Cryptodog user preferences and settings.
 
 // How to use:
-// Cryptocat.storage.setItem(itemName, itemValue)
+// Cryptodog.storage.setItem(itemName, itemValue)
 // Sets itemName's value to itemValue.
 
-// Cryptocat.storage.getItem(itemName, callbackFunction(result))
+// Cryptodog.storage.getItem(itemName, callbackFunction(result))
 // Gets itemName's value from local storage, and passes it to
 // the callback function as result.
 
-// Cryptocat.storage.removeItem(itemName)
+// Cryptodog.storage.removeItem(itemName)
 // Removes itemName and its value from local storage.
 
 // Define the wrapper, depending on our browser or environment.
-Cryptocat.storage = (function() {
+Cryptodog.storage = (function() {
+	// Use a dummy when on file: protocol
+	if (window.location.protocol === 'file:'){
+		return {
+			setItem: function(key, val) {},
+			getItem: function(key, callback) {},
+			removeItem: function(key) {}
+		}
+	}
 	// Chrome
 	if (typeof(chrome) === 'object' && chrome.storage) {
 		return {
@@ -90,35 +98,35 @@ Cryptocat.storage = (function() {
 })()
 
 // Initialize language settings.
-Cryptocat.storage.getItem('language', function(key) {
+Cryptodog.storage.getItem('language', function(key) {
 	if (key) {
-		Cryptocat.locale.set(key, true)
+		Cryptodog.locale.set(key, true)
 	}
 	else {
-		Cryptocat.locale.set(window.navigator.language.toLowerCase())
+		Cryptodog.locale.set(window.navigator.language.toLowerCase())
 	}
 })
 
 // Load custom server settings
-Cryptocat.storage.getItem('serverName', function(key) {
-	if (key) { Cryptocat.serverName = key }
+Cryptodog.storage.getItem('serverName', function(key) {
+	if (key) { Cryptodog.serverName = key }
 })
-Cryptocat.storage.getItem('domain', function(key) {
-	if (key) { Cryptocat.xmpp.domain = key }
+Cryptodog.storage.getItem('domain', function(key) {
+	if (key) { Cryptodog.xmpp.domain = key }
 })
-Cryptocat.storage.getItem('conferenceServer', function(key) {
-	if (key) { Cryptocat.xmpp.conferenceServer = key }
+Cryptodog.storage.getItem('conferenceServer', function(key) {
+	if (key) { Cryptodog.xmpp.conferenceServer = key }
 })
-Cryptocat.storage.getItem('relay', function(key) {
-	if (key) { Cryptocat.xmpp.relay = key }
+Cryptodog.storage.getItem('relay', function(key) {
+	if (key) { Cryptodog.xmpp.relay = key }
 })
-Cryptocat.storage.getItem('customServers', function(key) {
+Cryptodog.storage.getItem('customServers', function(key) {
 	if (key) {
 		$('#customServerSelector').empty()
 		var servers = $.parseJSON(key)
 		$.each(servers, function(name) {
 			$('#customServerSelector').append(
-				Mustache.render(Cryptocat.templates['customServer'], {
+				Mustache.render(Cryptodog.templates['customServer'], {
 					name: name,
 					domain: servers[name]['domain'],
 					XMPP: servers[name]['xmpp'],
@@ -130,7 +138,7 @@ Cryptocat.storage.getItem('customServers', function(key) {
 })
 
 // Load nickname settings.
-Cryptocat.storage.getItem('myNickname', function(key) {
+Cryptodog.storage.getItem('myNickname', function(key) {
 	if (key) {
 		$('#nickname').animate({'color': 'transparent'}, function() {
 			$(this).val(key)
@@ -141,13 +149,13 @@ Cryptocat.storage.getItem('myNickname', function(key) {
 
 // Load notification settings.
 window.setTimeout(function() {
-	Cryptocat.storage.getItem('desktopNotifications', function(key) {
+	Cryptodog.storage.getItem('desktopNotifications', function(key) {
 		if (key === 'true') {
 			$('#notifications').click()
 			$('#utip').hide()
 		}
 	})
-	Cryptocat.storage.getItem('audioNotifications', function(key) {
+	Cryptodog.storage.getItem('audioNotifications', function(key) {
 		if ((key === 'true') || !key) {
 			$('#audio').click()
 			$('#utip').hide()

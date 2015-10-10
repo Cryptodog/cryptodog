@@ -1,44 +1,41 @@
 <!DOCTYPE html>
-<head><!-- pointless comment -->
+<head>
 	<meta charset="UTF-8" />
-	<title>Cryptocat</title>
+	<title>Cryptodog</title>
 	<link rel="stylesheet" media="screen" href="css/style.css" type="text/css" />
-	<link rel="stylesheet" href="css/jquery.basicslider.css" type="text/css" />
 	<link rel="stylesheet" href="css/jquery.utip.css" type="text/css" />
-	<link rel="icon" type="image/gif" href="img/favicon.gif" />
+	<link rel="icon" type="image/gif" href="img/favicon.png" />
 	<script type="application/javascript" src="js/lib/jquery/jquery.js"></script>
-	<script type="application/javascript" src="js/lib/jquery/jquery.basicslider.js"></script>
-	<script type="application/javascript" src="js/lib/jquery/jquery.color.js"></script>
+	<script type="application/javascript" src="js/lib/jquery/jquery.color-2.1.2.js"></script>
 	<script type="application/javascript" src="js/lib/jquery/jquery.utip.js"></script>
 	<script type="application/javascript" src="js/lib/jquery/jquery.filterbydata.js"></script>
 	<script type="application/javascript" src="js/lib/mustache.js"></script>
-	<script type="application/javascript" src="js/lib/mousetrap.js"></script>
-	<script type="application/javascript" src="js/lib/strophe/strophe.min.js"></script>
+	<script type="application/javascript" src="js/lib/strophe/strophe.js"></script>
 	<script type="application/javascript" src="js/lib/strophe/strophe.ibb.js"></script>
 	<script type="application/javascript" src="js/lib/strophe/strophe.si-filetransfer.js"></script>
 	<script type="application/javascript" src="js/lib/strophe/strophe.muc.js"></script>
-	<!-- <script type="application/javascript" src="js/lib/strophe/strophe.ping.js"></script> -->
+	<!-- <script type="application/javascript" src="/js/lib/strophe/strophe.ping.js"></script> -->
 	<script type="application/javascript" src="js/lib/crypto-js.js"></script>
 	<script type="application/javascript" src="js/lib/salsa20.js"></script>
-	<script type="application/javascript" src="js/lib/eventemitter.min.js"></script>
-	<script type="application/javascript" src="js/lib/tinycon.js"></script>
+	<script type="application/javascript" src="js/lib/eventemitter.js"></script>
+	<script type="application/javascript" src="js/lib/randomColor.js"></script>
 	<script type="application/javascript" src="js/cryptocat.js"></script>
 	<script type="application/javascript" src="js/etc/xmpp.js"></script>
 	<script type="application/javascript" src="js/etc/otr.js"></script>
-	<script type="application/javascript" src="js/etc/catFacts.js"></script>
 	<script type="application/javascript" src="js/etc/storage.js"></script>
 	<script type="application/javascript" src="js/etc/templates.js"></script>
 	<script type="application/javascript" src="js/etc/random.js"></script>
 	<script type="application/javascript" src="js/etc/multiParty.js"></script>
 	<script type="application/javascript" src="js/etc/fileTransfer.js"></script>
 	<script type="application/javascript" src="js/etc/customServers.js"></script>
-	<script type="application/javascript" src="js/lib/bigint.mod.js"></script>
+	<script type="application/javascript" src="js/lib/bigint.js"></script>
 	<script type="application/javascript" src="js/lib/otr.js"></script>
 	<script type="application/javascript" src="js/lib/elliptic.js"></script>
 	<script type="application/javascript" src="js/etc/locale.js"></script>
+	<script type="application/javascript" src="js/etc/locales.js"></script>
 </head>
 <body>
-	<!--<div id="fb-root"></div>-->
+	<noscript>Cryptodog requires JavaScript for key generation, encryption and chat. Please enable JavaScript to use Cryptodog.</noscript>
 	<div id="dialogBox">
 		<div id="dialogBoxClose">x</div>
 		<div id="dialogBoxContent"></div>
@@ -46,24 +43,22 @@
 	<div id="bubbleWrapper">
 		<div id="bubble">
 			<div id="header">
-				<img src="img/cryptocat.png" alt="Cryptocat" class="logo" />
-				<span id="logoText" dir="ltr">cryptocat</span>
+				<img src="img/logo.svg" alt="Cryptodog" class="logo" />
+				<span id="logoText" dir="ltr">Cryptodog</span>
 				<span id="conversationInfo">
 					<span class="conversationName"></span>
-					<span id="encryptionStatus"></span>
 				</span>
 				<div id="optionButtons" dir="ltr">
-					<img class="button" id="status" src="img/available.png" alt="" data-utip-gravity="sw" />
-					<img class="button" id="myInfo" src="img/key.png" alt="" data-utip-gravity="sw" />
-					<img class="button" id="notifications" src="img/noNotifications.png" alt="" data-utip-gravity="sw" />
-					<img class="button" id="audio" src="img/noSound.png" alt="" data-utip-gravity="sw" />
-					<img class="button" id="logout" src="img/logout.png" alt="" data-utip-gravity="sw" />
+					<img class="button" id="status" src="img/svg/checkmark.svg" alt="" data-utip-gravity="sw" />
+					<img class="button" id="myInfo" src="img/svg/key.svg" alt="" data-utip-gravity="sw" />
+					<img class="button" id="notifications" src="img/svg/bubble2.svg" alt="" data-utip-gravity="sw" />
+					<img class="button" id="logout" src="img/svg/switch.svg" alt="" data-utip-gravity="sw" />
 				</div>
 			</div>
 			<div id="login" dir="ltr">
-				<form id="cryptocatLogin" class="loginForm" dir="ltr">
-					<input type="text" id="conversationName" class="mousetrap" maxlength="20" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
-					<input type="text" id="nickname" class="mousetrap" maxlength="16" autocomplete="off" dir="ltr" />
+				<form id="CryptodogLogin" class="loginForm" dir="ltr">
+					<input type="text" id="conversationName" maxlength="20" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
+					<input type="text" id="nickname" maxlength="16" autocomplete="off" dir="ltr" />
 					<input type="submit" id="loginSubmit" dir="ltr" />
 					<div id="loginInfo"></div>
 				</form>
@@ -74,6 +69,11 @@
 			</div>
 			<div id="footer">
 				<div id="version"></div>
+				<div id="information">
+					<a href="CHANGELOG.txt">What changed?</a>
+					<a href="LICENSE.txt">License</a>
+					<a href="RESOURCES.txt">Resources</a>
+				</div>
 				<div id="loginOptions">
 					<a href="#" id="languageSelect"></a>
 					<a href="#" id="customServer"></a>
@@ -104,7 +104,6 @@
 					<li data-locale="kn">ಕನ್ನಡ</li>
 					<li data-locale="ko">한국어</li>
 					<li data-locale="lv">Latviešu</li>
-					<li data-locale="lol">Lolcat</li>
 					<li data-locale="nl">Nederlands</li>
 					<li data-locale="no">Norsk</li>
 					<li data-locale="pl">Polski</li>
@@ -132,7 +131,7 @@
 					</div>
 				</div>
 				<form id="userInput">
-					<textarea id="userInputText" class="mousetrap"></textarea>
+					<textarea id="userInputText"></textarea>
 					<input type="submit" value="►" id="userInputSend" />
 				</form>
 			</div>

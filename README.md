@@ -33,3 +33,6 @@ This repository contains a pure JavaScript client you can either run locally in 
 * Convert cat facts to dog facts.
 
 * Convert line-number based localization to JSON based system
+
+## Thanks
+* xor - UI Rework, misc patches
