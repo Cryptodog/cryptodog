@@ -28,6 +28,20 @@ Cryptodog.buddies = {}
 // For persistent ignores.
 Cryptodog.ignoredNames = []
 
+Cryptodog.audioExt = '.mp3'
+if (navigator.userAgent.match(/(OPR)|(Firefox)/)) {
+	Cryptodog.audioExt = '.ogg'
+}
+Cryptodog.sounds = {
+	'keygenStart': (new Audio('snd/keygenStart' + Cryptodog.audioExt)),
+	'keygenLoop':  (new Audio('snd/keygenLoop'  + Cryptodog.audioExt)),
+	'keygenEnd':   (new Audio('snd/keygenEnd'   + Cryptodog.audioExt)),
+	'userLeave':   (new Audio('snd/userLeave'   + Cryptodog.audioExt)),
+	'userJoin':    (new Audio('snd/userJoin'    + Cryptodog.audioExt)),
+	'msgGet':      (new Audio('snd/msgGet'      + Cryptodog.audioExt)),
+	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
+}
+
 /*
 -------------------
 END GLOBAL SCOPE
@@ -1311,6 +1325,8 @@ $('#CryptodogLogin').submit(function() {
 	}
 	return false
 })
+
+
 
 /*
 -------------------
