@@ -10,24 +10,24 @@ var updateCustomServers = function() {
 		customServers[name].xmpp = $(this).attr('data-xmpp')
 		customServers[name].relay = $(this).attr('data-relay')
 	})
-	Cryptocat.storage.setItem('customServers', JSON.stringify(customServers))
+	Cryptodog.storage.setItem('customServers', JSON.stringify(customServers))
 }
 
 $('#customServer').click(function() {
 	if (!document.getElementById('customServerSelector').firstChild) {
 		$('#customServerSelector').append(
-			Mustache.render(Cryptocat.templates['customServer'], {
-				name: 'Cryptocat',
-				domain: Cryptocat.xmpp.defaultDomain,
-				XMPP: Cryptocat.xmpp.defaultConferenceServer,
-				Relay: Cryptocat.xmpp.defaultRelay
+			Mustache.render(Cryptodog.templates['customServer'], {
+				name: 'Cryptodog',
+				domain: Cryptodog.xmpp.defaultDomain,
+				XMPP: Cryptodog.xmpp.defaultConferenceServer,
+				Relay: Cryptodog.xmpp.defaultRelay
 			})
 		)
 		$('#customServerSelector').append(
-			Mustache.render(Cryptocat.templates['customServer'], {
-				name: 'Cryptocat (Tor Hidden Service)',
-				domain: Cryptocat.xmpp.defaultDomain,
-				XMPP: Cryptocat.xmpp.defaultConferenceServer,
+			Mustache.render(Cryptodog.templates['customServer'], {
+				name: 'Cryptodog (Tor Hidden Service)',
+				domain: Cryptodog.xmpp.defaultDomain,
+				XMPP: Cryptodog.xmpp.defaultConferenceServer,
 				Relay: 'http://catmeow2zuqpkpyw.onion/http-bind'
 			})
 		)
@@ -35,32 +35,32 @@ $('#customServer').click(function() {
 	$('#languages').hide()
 	$('#footer').animate({'height': 220}, function() {
 		$('#customServerDialog').fadeIn()
-		$('#customName').val(Cryptocat.serverName)
-		$('#customDomain').val(Cryptocat.xmpp.domain)
-		$('#customConferenceServer').val(Cryptocat.xmpp.conferenceServer)
-		$('#customRelay').val(Cryptocat.xmpp.relay)
-		$('#customServerReset').val(Cryptocat.locale['loginWindow']['reset']).click(function() {
-			$('#customName').val('Cryptocat')
-			$('#customDomain').val(Cryptocat.xmpp.defaultDomain)
-			$('#customConferenceServer').val(Cryptocat.xmpp.defaultConferenceServer)
-			$('#customRelay').val(Cryptocat.xmpp.defaultRelay)
-			Cryptocat.storage.removeItem('serverName')
-			Cryptocat.storage.removeItem('domain')
-			Cryptocat.storage.removeItem('conferenceServer')
-			Cryptocat.storage.removeItem('relay')
+		$('#customName').val(Cryptodog.serverName)
+		$('#customDomain').val(Cryptodog.xmpp.domain)
+		$('#customConferenceServer').val(Cryptodog.xmpp.conferenceServer)
+		$('#customRelay').val(Cryptodog.xmpp.relay)
+		$('#customServerReset').val(Cryptodog.locale['loginWindow']['reset']).click(function() {
+			$('#customName').val('Cryptodog')
+			$('#customDomain').val(Cryptodog.xmpp.defaultDomain)
+			$('#customConferenceServer').val(Cryptodog.xmpp.defaultConferenceServer)
+			$('#customRelay').val(Cryptodog.xmpp.defaultRelay)
+			Cryptodog.storage.removeItem('serverName')
+			Cryptodog.storage.removeItem('domain')
+			Cryptodog.storage.removeItem('conferenceServer')
+			Cryptodog.storage.removeItem('relay')
 		})
-		$('#customServerSubmit').val(Cryptocat.locale['chatWindow']['cont']).click(function() {
+		$('#customServerSubmit').val(Cryptodog.locale['chatWindow']['cont']).click(function() {
 			$('#customServerDialog').fadeOut(200, function() {
 				$('#footer').animate({'height': 14})
 			})
-			Cryptocat.serverName = $('#customName').val()
-			Cryptocat.xmpp.domain = $('#customDomain').val()
-			Cryptocat.xmpp.conferenceServer = $('#customConferenceServer').val()
-			Cryptocat.xmpp.relay = $('#customRelay').val()
-			Cryptocat.storage.setItem('serverName', Cryptocat.serverName)
-			Cryptocat.storage.setItem('domain', Cryptocat.xmpp.domain)
-			Cryptocat.storage.setItem('conferenceServer', Cryptocat.xmpp.conferenceServer)
-			Cryptocat.storage.setItem('relay', Cryptocat.xmpp.relay)
+			Cryptodog.serverName = $('#customName').val()
+			Cryptodog.xmpp.domain = $('#customDomain').val()
+			Cryptodog.xmpp.conferenceServer = $('#customConferenceServer').val()
+			Cryptodog.xmpp.relay = $('#customRelay').val()
+			Cryptodog.storage.setItem('serverName', Cryptodog.serverName)
+			Cryptodog.storage.setItem('domain', Cryptodog.xmpp.domain)
+			Cryptodog.storage.setItem('conferenceServer', Cryptodog.xmpp.conferenceServer)
+			Cryptodog.storage.setItem('relay', Cryptodog.xmpp.relay)
 		})
 		$('#customDomain').select()
 	})
@@ -70,7 +70,7 @@ $('#customServerSave').click(function() {
 	$('#customServerDelete').val('Delete')
 		.attr('data-deleteconfirm', '0')
 		.removeClass('confirm')
-	if ($('#customDomain').val() === Cryptocat.xmpp.defaultDomain) {
+	if ($('#customDomain').val() === Cryptodog.xmpp.defaultDomain) {
 		return // Cannot overwrite the default domain
 	}
 	var serverIsInList = false
@@ -88,7 +88,7 @@ $('#customServerSave').click(function() {
 	})
 	if (!serverIsInList) {
 		$('#customServerSelector').append(
-			Mustache.render(Cryptocat.templates['customServer'], {
+			Mustache.render(Cryptodog.templates['customServer'], {
 				name: $('#customName').val(),
 				domain: $('#customDomain').val(),
 				XMPP: $('#customConferenceServer').val(),
@@ -134,7 +134,7 @@ $('#customServerSelector').change(function() {
 		.attr('data-saveconfirm', '0')
 		.removeClass('confirm')
 	var selectedOption = $(this).find(':selected')
-	if ($(selectedOption).attr('data-domain') === Cryptocat.xmpp.defaultDomain) {
+	if ($(selectedOption).attr('data-domain') === Cryptodog.xmpp.defaultDomain) {
 		$('#customServerDelete').attr('disabled', 'disabled').addClass('disabled')
 	}
 	$('#customName').val($(selectedOption).val())

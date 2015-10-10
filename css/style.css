@@ -4,23 +4,9 @@ PRE-DEFINED TAGS
 -------------------
 */
 
-@font-face {
-	font-family: 'Monda';
-	font-style: normal;
-	font-weight: 400;
-	src: url('../fonts/monda.woff') format('woff');
-}
-
-@font-face {
-	font-family: 'Logotype';
-	font-style: normal;
-	font-weight: 400;
-	src: url('../fonts/logotype.woff') format('woff');
-}
-
 body {
 	height: 100%;
-	background: #C7E5F5;
+	background: #DDD;
 	margin: 0;
 	padding: 0;
 	font-family: 'Helvetica Neue', Helvetica, Arial, Verdana;
@@ -28,7 +14,7 @@ body {
 }
 
 a {
-	color: #76BDE5;
+	color: #999;
 	text-decoration: none;
 }
 
@@ -59,27 +45,22 @@ webview {
 
 [type=text], [type=password], [type=button], [type=submit], textarea {
 	display: block;
-	background: #303040;
+	background: #444;
 	font-size: 1em;
 	padding: 3px;
 	color: #FFF;
 	border: none;
 	border: 1px solid #222;
 	width: 205px;
-	box-shadow: 2px 2px #97CEEC;
 	outline: none;
 }
 
 [type=button], [type=submit] {
 	color: #FFF;
-	background: #97CEEC;
+	background: #C0C0C0;
 	border: none;
 	cursor: pointer;
 	border-radius: 4px 0 4px 4px;
-}
-
-[type=button]:active, [type=submit]:active {
-	box-shadow: inset 2px 2px #72B1DB;
 }
 
 ::-webkit-input-placeholder {
@@ -108,16 +89,14 @@ div#bubble {
 	width: 716px;
 	height: 540px;
 	background: #FFF;
-	border-radius: 15px 0 15px 15px;
-	box-shadow: 3px 3px #76BDE5;
-	border: 6px solid #303040;
+	border: 6px solid #444;
 	padding: 0 0 50px 0;
 	display: none;
 	float: left;
 }
 
 div#av {
-	background: #303040;
+	background: #444;
 	width: 0;
 	height: 0;
 	padding: 36px 0;
@@ -128,7 +107,6 @@ div#av {
 	z-index: 2;
 	border-radius: 0 0 15px 0;
 	margin-left: -12px;
-	box-shadow: 5px 5px #76BDE5, inset 5px 0 rgba(150, 200, 255, 0.5);
 }
 
 div#bubble div#header {
@@ -152,11 +130,10 @@ div#bubble #logoText {
 	display: inline-block;
 	position: relative;
 	z-index: 100;
-	color: #97CEEC;
-	font-family: 'Logotype';
+	color: #008CDD;
 	-webkit-font-smoothing: none;
 	font-size: 30px;
-	text-shadow: 2px 2px #45A7DD;
+	font-weight: bold;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	user-select: none;
@@ -174,8 +151,8 @@ div#bubble #optionButtons {
 
 div#bubble .button {
 	margin: 7px 0 0 3px;
-	width: 16px;
-	height: 16px;
+	width: 14px;
+	height: 14px;
 }
 
 div#bubble #login {
@@ -200,11 +177,11 @@ div#bubble #loginTabs span {
 }
 
 div#bubble #loginTabs [data-selected=false]:hover {
-	background: #97CEEC;
+	background: #C0C0C0;
 }
 
 div#bubble #loginTabs [data-selected=true] {
-	background: #76BDE5;
+	background: #999;
 }
 
 div#bubble .loginForm {
@@ -223,7 +200,7 @@ div#bubble .loginForm [type=text] {
 	padding: 7px;
 	text-align: center;
 	resize: none;
-	background: #76BDE5;
+	background: #999;
 }
 
 div#bubble .loginForm #conversationName {
@@ -249,13 +226,11 @@ div#bubble #loginSubmit {
 	position: relative;
 	bottom: 2px;
 	font-size: 1.6em;
-	border: 1px solid #97CEEC;
-	box-shadow: 2px 2px #97CEEC;
-	background: #76BDE5;
+	background: #008CDD;
 }
 
 div#bubble #loginSubmit:hover {
-	background: #97CEEC;
+	background: #00AEDE;
 }
 
 div#bubble #loginSubmit:active {
@@ -265,7 +240,7 @@ div#bubble #loginSubmit:active {
 div#loginInfo {
 	text-align: center;
 	font-size: 1.3em;
-	background: #76BDE5;
+	background: #999;
 	padding: 3px;
 	color: #FFF;
 	border-radius: 0 0 4px 4px;
@@ -274,13 +249,12 @@ div#loginInfo {
 }
 
 div#bubble div#info {
-	border: 1px solid #97ceec;
+	border: 1px solid #C0C0C0;
 	padding: 4px 10px;
-	box-shadow: 4px 4px #97CEEC;
 	border-radius: 4px 0 4px 4px;
 	margin: 30px auto;
-	width: 650px;
-	height: 210px;
+	width: 550px;
+	height: 170px;
 	font-size: 1.1em;
 	line-height: 1.5em;
 	font-family: Verdana, Arial, Helvetica;
@@ -290,30 +264,16 @@ div#bubble #info #introParagraph {
 	color: #333;
 }
 
-div#bubble #info li {
-	list-style-type: none;
-	background: url('../img/available.png') no-repeat;
-	background-size: 32px auto;
-	height: 40px;
-	padding: 0 40px;
-	margin: 20px 0 0 -30px;
-}
-
-div#bubble #info li.key {
-	background: url('../img/key.png') no-repeat top left;
-	background-size: 32px auto;
-}
-
 div#bubble h1 {
 	font-family: Helvetica, Arial;
 	font-size: 1.5em;
 }
 
 div#bubble #footer {
-	background: #303040;
+	background: #444;
 	width: 100%;
 	height: 14px;
-	padding: 1px 0 2px 2px;
+	padding: 1px 0 2px 0px;
 	position: absolute;
 	right: 0;
 	bottom: 0;
@@ -324,7 +284,7 @@ div#bubble #footer {
 }
 
 div#footer a {
-	color: #97CEEC;
+	color: #FFF;
 }
 
 div#footer #version {
@@ -359,13 +319,12 @@ div#customServerFields {
 div#customServerDialog input, select#customServerSelector {
 	margin: 8px;
 	background: rgba(255, 255, 255, 0.08);
-	box-shadow: none;
 	border-radius: 4px 0 4px 4px;
 	padding: 4px;
 }
 
 div#customServerDialog input#customName {
-	background: rgba(151, 206, 236, 0.8);
+	background: #999;
 }
 
 div#customServerDialog input.disabled {
@@ -374,13 +333,12 @@ div#customServerDialog input.disabled {
 }
 
 div#customServerDialog input.confirm {
-	color: #97CEEC;
+	color: #C0C0C0;
 }
 
 div#customServerDialog [type=button] {
 	display: inline;
 	width: 96px;
-	box-shadow: 2px 2px #97CEEC;
 }
 
 div#customServerDialog #customServerSubmit {
@@ -400,15 +358,11 @@ select#customServerSelector {
 }
 
 #customServerSelector::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 	border-radius: 10px;
 }
 
 #customServerSelector::-webkit-scrollbar-thumb {
 	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
 
 div#footer #languageSelect {
@@ -435,6 +389,15 @@ div#footer #languages li {
 	padding: 3px;
 	width: 80px;
 	list-style-type: none;
+}
+
+div#footer #information {
+	margin: 0 20px;
+	float: left;
+}
+
+div#footer #information a {
+	margin-right: 10px;
 }
 
 /*
@@ -466,15 +429,15 @@ BUDDY LIST
 .buddy {
 	width: 110px;
 	height: 15px;
-	background: #303040;
+	background: #444;
 	border-radius: 2px 0 0 2px;
 	margin-top: 2px;
-	background-position: 87% 3px;
+	background-position: 80% 4px;
 	background-repeat: no-repeat;
-	background-size: 16px 16px;
+	background-size: 14px 14px;
 	color: #FFF;
 	padding: 5px 4px 3px 6px;
-	font-family: 'Monda', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 	font-size: 1em;
 	display: none;
 	position: relative;
@@ -495,7 +458,7 @@ BUDDY LIST
 	border-radius: 3px 0 3px 3px;
 	bottom: 4px;
 	background-position: top left;
-	background-image: url('../img/icon-48.png');
+	background-image: url("../img/svg/user.svg");
 }
 
 .buddy span.shortNickname {
@@ -512,7 +475,7 @@ BUDDY LIST
 }
 
 .buddy.currentConversation {
-	background-color: #97CEEC;
+	background-color: #008CDD;;
 	color: #FFF !important;
 }
 
@@ -529,8 +492,10 @@ BUDDY LIST
 	z-index: 2;
 	float: right;
 	margin: 0;
-	background-image: url("../img/down.png");
-	background-size: 14px 14px;
+	background-image: url("../img/svg/circle-down.svg");
+	background-size: 10px 10px;
+	background-position: 2px 2px;
+	background-repeat: no-repeat;
 	width: 14px;
 	height: 14px;
 	cursor: pointer;
@@ -539,11 +504,11 @@ BUDDY LIST
 }
 
 .buddyMenu:hover {
-	background-color: #97CEEC;
+	background-color: #C0C0C0;
 }
 
 .buddyMenu:active {
-	background-color: #303040;
+	background-color: #444;
 }
 
 .buddyMenuContents {
@@ -569,32 +534,32 @@ BUDDY LIST
 
 #buddy-groupChat {
 	display: block;
-	background-image: url("../img/groupChat.png");
-	background-position: 97% 3px;
+	background-image: url("../img/svg/users.svg");
+	background-position: 96% 4px;
 }
 
 /* New message notification stuff */
 @-webkit-keyframes pulse {
 	0% {background-color: #000000;}
-	50% {background-color: #A7D8F7;}
+	50% {background-color: #CCC;}
 	100% {background-color: #000000;}
 }
 
 @-moz-keyframes pulse {
 	0% {background-color: #000000;}
-	50% {background-color: #A7D8F7;}
+	50% {background-color: #CCC;}
 	100% {background-color: #000000;}
 }
 
 @-o-keyframes pulse {
 	0% {background-color: #000000;}
-	50% {background-color: #A7D8F7;}
+	50% {background-color: #CCC;}
 	100% {background-color: #000000;}
 }
 
 @keyframes pulse {
 	0% {background-color: #000000;}
-	50% {background-color: #A7D8F7;}
+	50% {background-color: #CCC;}
 	100% {background-color: #000000;}
 }
 
@@ -603,11 +568,13 @@ BUDDY LIST
 	-moz-animation: pulse 2s infinite;
 	-o-animation: pulse 2s infinite;
 	animation: pulse 2s infinite;
-	background-image: url("../img/newMessage.png");
+	background-image: url("../img/svg/bubbles2.svg");
 }
 
 .composing {
-	background-image: url("../img/composing.png");
+	background-image: url("../img/svg/pencil2.svg");
+	background-position: 80% 5px;
+	background-size: 12px 12px;
 }
 
 /*
@@ -620,24 +587,21 @@ DIALOG BOX
 	position: absolute;
 	width: 470px;
 	height: 240px;
-	border: 1px solid #97CEEC;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #C0C0C0;
 	border-radius: 8px 0 8px 8px;
 	margin: 50px auto 0 -240px;
 	z-index: 4;
 	left: 50%;
 	font-size: 1.1em;
-	border-right: none;
-	border-bottom: none;
 	background: #FCFCFC;
-	box-shadow: 5px 5px #97CEEC;
 	display: none;
 	color: #151520;
-	font-family: 'Monda';
 }
 
 .dialogBoxError {
 	border-color: #F00 !important;
-	box-shadow: 5px 5px #F00 !important;
 }
 
 .dialogBoxError #openAuth {
@@ -658,7 +622,7 @@ DIALOG BOX
 	font-size: 0;
 	text-align: center;
 	color: #FFF;
-	background: #97CEEC;
+	background: #C0C0C0;
 	float: right;
 	margin-top: 4px;
 	padding-bottom: 4px;
@@ -700,10 +664,9 @@ DIALOG BOX
 	cursor: pointer;
 	padding: 1px 30px;
 	height: 20px;
-	border: 1px solid #3992C0;
+	border: 1px solid #999;
 	background-color: transparent;
-	box-shadow: 2px 2px #3992C0;
-	color: #3992C0;
+	color: #999;
 	text-align: center;
 	border-radius: 5px 0 5px 5px;
 	display: inline-block;
@@ -717,7 +680,7 @@ DIALOG BOX
 
 #authenticated[data-active=true] {
 	color: #FFF;
-	background-color: #3992C0;
+	background-color: #999;
 	opacity: 1;
 }
 
@@ -728,7 +691,6 @@ DIALOG BOX
 	height: 20px;
 	border: 1px solid #EF6C74;
 	background-color: transparent;
-	box-shadow: 2px 2px #EF6C74;
 	color: #EF6C74;
 	text-align: center;
 	border-radius: 5px 0 5px 5px;
@@ -749,7 +711,7 @@ DIALOG BOX
 #authLearnMore {
 	width: 230px;
 	font-size: 0.9em;
-	border: 1px dashed #76BDE5;
+	border: 1px dashed #999;
 	padding: 0 4px;
 	margin: 13px 0 5px 0;
 	display: inline-block;
@@ -758,11 +720,11 @@ DIALOG BOX
 
 #authLearnMore:hover {
 	cursor: pointer;
-	background: rgba(151, 206, 236, 0.1);
+	background: #ECECEC;
 }
 
 #authLearnMore:active {
-	background: rgba(151, 206, 236, 0.3);
+	background: #DDD;
 }
 
 #authTutorial {
@@ -770,18 +732,8 @@ DIALOG BOX
 	display: none;
 }
 
-#authTutorial p {
-	max-width: 410px;
-	width: 410px;
-	margin-bottom: 10px;
-	padding: 5px 10px;
-	background: #76BDE5;
-	border-radius: 0 0 5px 5px;
-	color: #FFF;
-}
-
 .authInfo {
-	background: rgba(151, 206, 236, 0.4);
+	background: #ECECEC;
 	height: 130px;
 	padding: 5px 8px;
 	margin: 5px auto 0 auto;
@@ -795,8 +747,7 @@ DIALOG BOX
 }
 
 .authInfo #authQuestion, .authInfo #authAnswer {
-	box-shadow: none;
-	background: rgba(151, 206, 236, 0.7);
+	background: #999;
 	padding: 4px;
 	width: 260px;
 	border: none;
@@ -811,7 +762,7 @@ DIALOG BOX
 	margin: -35px 20px 0px 0;
 	border-radius: 5px 0 5px 5px;
 	font-size: 1.2em;
-	background: #97CEEC;
+	background: #008CDD;
 	border: none;
 	word-wrap: break-word;
 }
@@ -829,18 +780,16 @@ DIALOG BOX
 }
 
 #authReply {
-	background: #97CEEC;
+	background: #C0C0C0;
 	border: none;
 	border-radius: 5px 0 5px 5px;
 	padding: 4px;
-	box-shadow: none;
 	width: 220px;
 }
 
 #authReplySubmit {
 	width: 100px;
 	border-radius: 5px 0 5px 5px;
-	box-shadow: 2px 2px #76BDE5;
 }
 
 #dialogBox #fileInfoField {
@@ -859,15 +808,12 @@ DIALOG BOX
 #progressForm img {
 	float: left;
 	margin: 8px 20px 0 0;
-	box-shadow: 2px 2px #97CEEC;
 }
 
 #progressInfo {
-	width: 320px;
 	font-size: 1em;
 	position: relative;
 	bottom: 70px;
-	float: right;
 }
 
 #progressInfo #interestingFact {
@@ -882,14 +828,14 @@ DIALOG BOX
 	margin-top: 10px;
 	height: 18px;
 	width: 290px;
-	border: 1px solid #97CEEC;
+	border: 1px solid #C0C0C0;
 	padding: 1px;
 }
 
 #progressBar #fill {
 	height: 100%;
 	width: 0%;
-	background: #97CEEC;
+	background: #C0C0C0;
 	opacity: 0.3;
 }
 
@@ -899,20 +845,20 @@ DIALOG BOX
 	display: inline-block;
 	vertical-align: -5px;
 	margin-left: 10px;
-	border: 1px solid #97CEEC;
+	border: 1px solid #C0C0C0;
 	padding: 1px;
 }
 
 .fileProgressBarFill {
 	height: 100%;
 	width: 0%;
-	background: #97CEEC;
+	background: #C0C0C0;
 }
 
 #dialogBox .title {
 	padding: 5px 20px 5px 10px;
 	border-left: none;
-	background: #97CEEC;
+	background: #C0C0C0;
 	max-width: 220px;
 	margin-bottom: 2px;
 	color: #FFF;
@@ -932,16 +878,14 @@ DIALOG BOX
 
 #dialogBox #fileInfoField {
 	color: #444;
-	font-family: 'Monda'
 }
 
 #dialogBox #resetKeysOK {
-	background: #303040;
-	border: 1px solid #97CEEC;
-	color: #97CEEC;
+	background: #AAA;
+	border: 1px solid #C0C0C0;
+	color: #C0C0C0;
 	margin: 0 auto;
 	width: 100px;
-	box-shadow: 2px 2px #97CEEC;
 	font-size: 1.2em;
 	cursor: pointer;
 }
@@ -975,7 +919,6 @@ CONVERSATION WINDOW
 
 #conversationInfo {
 	color: #FFF;
-	font-family: 'Monda';
 	font-size: 1em;
 	margin: 0 0 0 20px;
 	position: relative;
@@ -985,28 +928,11 @@ CONVERSATION WINDOW
 
 #conversationInfo .conversationName {
 	color: #FFF;
-	background: #76BDE5;
+	background: #999;
 	padding: 2px 7px;
 	border-radius: 3px 0 3px 3px;
 	font-size: 1.1em;
 	margin-left: -5px;
-}
-
-#conversationInfo #encryptionStatus {
-	margin: 0 0 0 20px;
-	line-height: 1em;
-	font-size: 1.2em;
-	max-width: 400px;
-}
-
-#conversationInfo #encryptionStatus .encrypted {
-	font-weight: bold;
-	color: #3992C0;
-}
-
-#conversationInfo #encryptionStatus .notEncrypted {
-	font-weight: bold;
-	color: #EF6C74;
 }
 
 #conversationWrapper {
@@ -1025,7 +951,7 @@ CONVERSATION WINDOW
 	z-index: 3;
 	height: 100%;
 	width: 622px;
-	font-family: 'Monda', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 	color: transparent;
 	position: relative;
 	font-size: 1.15em;
@@ -1040,20 +966,21 @@ CONVERSATION WINDOW
 	margin: 0 7px -4px -2px;
 	border-radius: 4px;
 	background-color: #EF6C74;
-	background-image: url("../img/authStatusNo.png");
-	background-size: 16px 16px;
-	background-position: -2px 2px;
+	background-image: url("../img/svg/warning.svg");
+	background-size: 12px 12px;
+	background-position: 2px 2px;
+	background-repeat: no-repeat;
 	cursor: pointer;
 }
 
 #conversationWindow .authStatus[data-auth=true] {
-	background-color: #3992C0;
+	background-color: #008CDD;
 	background-image: none;
 }
 
 #conversationWindow .timeStamp {
 	color: #151520;
-	text-shadow: 1px 1px #CCC;
+	text-shadow: 1px 1px #C0C0C0;
 	font-size: 0.8em;
 	font-family: monospace;
 	vertical-align: 1px;
@@ -1073,14 +1000,14 @@ CONVERSATION WINDOW
 }
 
 #conversationWindow .nickHighlight {
-	color: #76BDE5;
+	color: #999;
 }
 
 .missingRecipients {
-	background: #3992C0;
+	background: #DDD;
 	border-radius: 4px 0 0 0;
 	margin-bottom: 1px;
-	color: #FFF;
+	color: #444;
 	font-size: 0.8em;
 	padding: 0px 10px;
 	opacity: 0;
@@ -1088,21 +1015,8 @@ CONVERSATION WINDOW
 	max-width: 90%;
 }
 
-.notUsingCryptocatWarning {
-	background: #EF6C74;
-	border-radius: 5px 0 5px 5px;
-	margin-bottom: 10px;
-	color: #FFF;
-	font-size: 1em;
-	padding: 10px;
-	opacity: 0;
-	display: inline-block;
-	max-width: 91%
-}
-
-.line1, .line2, .line3, .line4 {
-	box-shadow: 2px 2px #76BDE5;
-	border: 2px solid #76BDE5;
+.line {
+	border: 2px solid #999;
 	border-radius: 3px 0 3px 3px;
 	padding: 0 4px 0 4px;
 	color: #080812;
@@ -1117,62 +1031,9 @@ CONVERSATION WINDOW
 	white-space: pre-wrap;
 }
 
-.line1 {
-	box-shadow: 2px 2px #97CEEC;
-	border: 2px solid #97CEEC;
-}
-
-.line3 {
-	background-color: #EFF9FE;
-}
-
-.line4 {
-	box-shadow: 2px 2px #F00;
-	border: 2px solid #F00;
-	background: #F00;
-	color: #FFF;
-}
-
-.line1 .sender {
-	background: #97CEEC;
-	color: #FFF;
-}
-
-.line2 .sender, .line3 .sender {
-	background: #76BDE5;
-	color: #FFF;
-}
-
-.line4 .sender {
-	background: #FFF;
-	color: #F00;
-}
-
-.line1:after, .line2:after, .line3:after, .line4:after {
-	content: '';
-	position: absolute;
-	top: 100%;
-	border: 10px solid;
-}
-
-.line1:after {
-	right: 30px;
-	border-color: #97CEEC transparent transparent transparent;
-}
-
-.line2:after {
-	left: 30px;
-	border-color: #76BDE5 transparent transparent transparent;
-}
-
-.line3:after {
-	left: 30px;
-	border-color: #76BDE5 transparent transparent;
-}
-
-.line4:after {
-	left: 30px;
-	border-color: #F00 transparent transparent;
+.line .sender {
+	background: #999;
+	color: #fff;
 }
 
 .visibleLine {
@@ -1185,15 +1046,14 @@ CONVERSATION WINDOW
 }
 
 #userInputText {
-	background: #202030;
+	background: #333;
 	border-radius: 7px 0 0 7px;
 	padding: 8px 10px;
 	height: 32px;
-	width: 580px;
+	width: 566px;
 	margin: 10px 0 7px 0;
 	display: inline;
-	box-shadow: none;
-	font-family: 'Monda', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 	font-size: 1.25em;
 	text-align: left;
 	resize: none;
@@ -1207,25 +1067,24 @@ CONVERSATION WINDOW
 	margin: 10px 3px 0 0;
 	border-radius: 0px 0 7px 0px;
 	font-size: 1.8em;
-	text-shadow: 3px 2px #76BDE5;
-	box-shadow: 2px 2px #76BDE5;
+	background: #008CDD;
 }
 
 #userInputSend:hover {
-	text-shadow: 3px 2px #76BDE5, -1px -1px #999;
+	background: #00AEDE;
 }
 
 #userInputSend:active {
-	text-shadow: 3px 2px #76BDE5, -1px -1px #151520;
+	background: #70B7DE;
 }
 
 .fileView {
-	background: #97CEEC;
+	background: #C0C0C0;
 	color: #FFF;
 	padding: 0 5px 0 21px;
 	font-size: 0.9em;
 	border-radius: 3px 0 3px 3px;
-	background-image: url("../img/file.png");
+	background-image: url("../img/svg/file-text2.svg");
 	background-size: 16px auto;
 	background-position: center left;
 	background-repeat: no-repeat;
@@ -1233,7 +1092,7 @@ CONVERSATION WINDOW
 }
 
 .userJoin, .userLeave {
-	background: #97CEEC;
+	background: #777;
 	max-width: 165px;
 	display: block;
 	margin: 0 0 15px 0;
@@ -1244,7 +1103,8 @@ CONVERSATION WINDOW
 }
 
 .userLeave {
-	background: #DADADA;
+	background: #DDD;
+	color: #444;
 }
 
 .userJoin .timestamp, .userLeave .timestamp {
@@ -1261,35 +1121,3 @@ CONVERSATION WINDOW
 .fileView:hover {
 	text-decoration: none;
 }
-
-/*
--------------------
-EMOTICONS
--------------------
-*/
-
-.emoticon {
-	background-repeat: no-repeat;
-	height: 13px;
-	width: 13px;
-	display: inline-block;
-	margin: 0 3px;
-	background-size: 100% 100%;
-	font-size: 2px;
-	vertical-align: -2px;
-	color: transparent;
-}
-
-.balloon {
-	position: fixed;
-	bottom: -100px;
-	z-index: 100;
-	height: 100px;
-	width: auto;
-}
-
-/*
--------------------
-AUDIO/VIDEO CHAT
--------------------
-*/

@@ -1,16 +1,10 @@
-// Cryptocat templates for use with mustache.js.
+// Cryptodog templates for use with mustache.js.
 'use strict';
 
-Cryptocat.templates = {
+Cryptodog.templates = {
 
 	customServer: '<option data-domain="{{domain}}" data-xmpp="{{XMPP}}" data-relay="{{Relay}}">'
 		+ '{{name}}</option>',
-
-	generatingKeys: '<br /><p id="progressForm"><img src="img/keygen.gif" '
-		+ 'alt="" /><p id="progressInfo"><span>{{text}}</span></p>',
-
-	catFact: '<br />Here is an interesting fact while you wait:'
-		+ '<br /><div id="interestingFact">{{catFact}}</div>',
 
 	buddy: '<div class="buddy" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">'
 		+ '<span class="loginTypeIcon"></span><span class="shortNickname">{{shortNickname}}</span>'
@@ -48,11 +42,12 @@ Cryptocat.templates = {
 		+ '<p id="authVerified">{{identityVerified}}</p></div>'
 		+ '<div id="authTutorial"></div></div>',
 
-	authTutorial: '<div id="authTutorialSlides"><ul class="bjqs">'
-		+ '<li><img src="img/authTutorial/1.png" title="{{slide1}}"></li>'
-		+ '<li><img src="img/authTutorial/2.png" title="{{slide2}}"></li>'
-		+ '<li><img src="img/authTutorial/3.png" title="{{slide3}}"></li>'
-		+ '<li><img src="img/authTutorial/4.png" title="{{slide4}}"></li>'
+	authTutorial: '<ul>'
+		+ '<li>{{phrase1}}</li>'
+		+ '<li>{{phrase2}}</li>'
+		+ '<li>{{phrase3}}</li>'
+		+ '<li>{{phrase4}}</li>'
+		+ '<li>{{phrase5}}</li>'
 		+ '</ul></div>',
 
 	authRequest: '<div class="title">{{authenticate}}</div>'
@@ -76,23 +71,19 @@ Cryptocat.templates = {
 
 	missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
-	message: '<div class="line{{lineDecoration}}"><span class="sender" data-sender="{{nickname}}"'
-		+ ' data-timestamp="{{currentTime}}"><span class="authStatus" data-auth="{{authStatus}}" '
+	message: '<div class="line" style="border-color:{{color}};"><span class="sender" data-sender="{{nickname}}"'
+		+ ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="authStatus" data-auth="{{authStatus}}" '
 		+ 'data-utip-gravity="se"></span>'
 		+ '<span class="nickname">{{nickname}}</span></span>{{&message}}</div>',
 
-	emoticon: ' <img class="emoticon" src="img/emoticon/{{emoticon}}.png" alt="" /> ',
-
 	authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
 
-	userJoin: '<div class="userJoin"><span class="timestamp">{{currentTime}}</span>'
+	userJoin: '<div class="userJoin" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>'
 		+ '<strong>+</strong>{{nickname}}</div>',
 
 	userLeave: '<div class="userLeave"><span class="timestamp">{{currentTime}}</span>'
 		+ '<strong>-</strong>{{nickname}}</div>',
 
-	encryptionStatus: '{{conversationStatus}}: <strong class="{{styling}}">{{encryptionStatus}}</strong>',
-
-	notUsingCryptocat: '<div class="notUsingCryptocatWarning" dir="{{dir}}">{{text}}</div>',
+	notUsingCryptodog: '<div class="notUsingCryptodogWarning" dir="{{dir}}">{{text}}</div>',
 
 }

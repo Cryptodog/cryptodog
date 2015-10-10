@@ -2,10 +2,10 @@ $(window).ready(function() {
 'use strict';
 
 // Maximum encrypted file sharing size, in kilobytes.
-Cryptocat.otr.maximumFileSize = 5120
+Cryptodog.otr.maximumFileSize = 5120
 
 // Size in which file chunks are split, in bytes.
-Cryptocat.otr.chunkSize = 64511
+Cryptodog.otr.chunkSize = 64511
 
 // Safari compatibility
 window.URL = window.URL || window.webkitURL
@@ -17,16 +17,16 @@ var fileMIME = new RegExp('^(image\/(png|jpeg|gif))|(application\/((x-compressed
 )
 
 var cn = function(to) {
-	return Cryptocat.me.conversation + '@' + Cryptocat.xmpp.conferenceServer + '/' + to
+	return Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer + '/' + to
 }
 
-Cryptocat.otr.beginSendFile = function(data) {
+Cryptodog.otr.beginSendFile = function(data) {
 	if (!data.file.type.match(fileMIME)) {
-		$('#fileInfoField').text(Cryptocat.locale['chatWindow']['fileTypeError'])
+		$('#fileInfoField').text(Cryptodog.locale['chatWindow']['fileTypeError'])
 		return
 	}
-	else if (data.file.size > (Cryptocat.otr.maximumFileSize * 1024)) {
-		$('#fileInfoField').text(Cryptocat.locale['chatWindow']['fileSizeError'])
+	else if (data.file.size > (Cryptodog.otr.maximumFileSize * 1024)) {
+		$('#fileInfoField').text(Cryptodog.locale['chatWindow']['fileSizeError'])
 		return
 	}
 	else {
@@ -34,17 +34,17 @@ Cryptocat.otr.beginSendFile = function(data) {
 			$('#dialogBoxClose').click()
 		}, 500)
 	}
-	var sid = Cryptocat.xmpp.connection.getUniqueId()
+	var sid = Cryptodog.xmpp.connection.getUniqueId()
 	files[sid] = {
 		to: data.to,
 		position: 0,
 		file: data.file,
 		key: data.key,
-		total: Math.ceil(data.file.size / Cryptocat.otr.chunkSize),
+		total: Math.ceil(data.file.size / Cryptodog.otr.chunkSize),
 		ctr: -1
 	}
 	/* jshint -W106 */
-	Cryptocat.xmpp.connection.si_filetransfer.send(
+	Cryptodog.xmpp.connection.si_filetransfer.send(
 	/* jshint +W106 */
 		cn(data.to),
 		sid,
@@ -55,12 +55,12 @@ Cryptocat.otr.beginSendFile = function(data) {
 			if (err) {
 				return console.log(err)
 			}
-			Cryptocat.xmpp.connection.ibb.open(cn(data.to), sid, Cryptocat.otr.chunkSize, function(err) {
+			Cryptodog.xmpp.connection.ibb.open(cn(data.to), sid, Cryptodog.otr.chunkSize, function(err) {
 				if (err) {
 					return console.log(err)
 				}
-				Cryptocat.addToConversation(sid, Cryptocat.me.nickname, Cryptocat.buddies[data.to].id, 'file')
-				Cryptocat.otr.sendFileData({
+				Cryptodog.addToConversation(sid, Cryptodog.me.nickname, Cryptodog.buddies[data.to].id, 'file')
+				Cryptodog.otr.sendFileData({
 					start: true,
 					to: data.to,
 					sid: sid
@@ -70,23 +70,23 @@ Cryptocat.otr.beginSendFile = function(data) {
 	)
 }
 
-Cryptocat.otr.sendFileData = function(data) {
+Cryptodog.otr.sendFileData = function(data) {
 	var sid = data.sid
 	var seq = data.start ? 0 : parseInt(data.seq, 10) + 1
 	if (seq > 65535) {
 		seq = 0
 	}
 	if (files[sid].position > files[sid].file.size) {
-		Cryptocat.xmpp.connection.ibb.close(cn(data.to), sid, function(err) {
+		Cryptodog.xmpp.connection.ibb.close(cn(data.to), sid, function(err) {
 			if (err) {
 				return console.log(err)
 			}
 		})
-		Cryptocat.updateFileProgressBar(sid, files[sid].ctr + 1, files[sid].file.size, data.to)
+		Cryptodog.updateFileProgressBar(sid, files[sid].ctr + 1, files[sid].file.size, data.to)
 		return
 	}
 	// Split into chunk
-	var end = files[sid].position + Cryptocat.otr.chunkSize
+	var end = files[sid].position + Cryptodog.otr.chunkSize
 	// Check for slice function on file
 	var sliceStr = files[sid].file.slice ? 'slice' : 'webkitSlice'
 	var chunk = files[sid].file[sliceStr](files[sid].position, end)
@@ -120,31 +120,31 @@ Cryptocat.otr.sendFileData = function(data) {
 		)
 		// Combine ciphertext and mac, then transfer chunk
 		msg += mac.toString(CryptoJS.enc.Base64)
-		Cryptocat.xmpp.connection.ibb.data(cn(data.to), sid, seq, msg, function(err) {
+		Cryptodog.xmpp.connection.ibb.data(cn(data.to), sid, seq, msg, function(err) {
 			if (err) {
 				return console.log(err)
 			}
-			Cryptocat.otr.sendFileData({
+			Cryptodog.otr.sendFileData({
 				seq: seq,
 				to: data.to,
 				sid: sid
 			})
 		})
-		Cryptocat.updateFileProgressBar(sid, files[sid].ctr + 1, files[sid].file.size, data.to)
+		Cryptodog.updateFileProgressBar(sid, files[sid].ctr + 1, files[sid].file.size, data.to)
 	}
 	reader.readAsDataURL(chunk)
 }
 
-Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
+Cryptodog.otr.ibbHandler = function(type, from, sid, data, seq) {
 	var nick = from.split('/')[1]
 	switch (type) {
 		case 'open':
 			var file = rcvFile[from][sid].filename
-			rcvFile[from][sid].key = Cryptocat.buddies[nick].fileKey[file]
+			rcvFile[from][sid].key = Cryptodog.buddies[nick].fileKey[file]
 			if (sid.match(/^\w{1,64}$/) && rcvFile[from][sid].mime.match(fileMIME)) {
-				Cryptocat.addToConversation(sid, nick, Cryptocat.buddies[nick].id, 'file')
+				Cryptodog.addToConversation(sid, nick, Cryptodog.buddies[nick].id, 'file')
 			}
-			delete Cryptocat.buddies[nick].fileKey[file]
+			delete Cryptodog.buddies[nick].fileKey[file]
 			break
 		case 'data':
 			if (rcvFile[from][sid].abort) {
@@ -152,7 +152,7 @@ Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
 			}
 			if (rcvFile[from][sid].ctr > rcvFile[from][sid].total - 1) {
 				rcvFile[from][sid].abort = true
-				Cryptocat.fileTransferError(sid, nick)
+				Cryptodog.fileTransferError(sid, nick)
 				return
 			}
 			rcvFile[from][sid].seq = seq
@@ -170,7 +170,7 @@ Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
 				!OTR.HLP.compare(mac, cmac.toString(CryptoJS.enc.Base64))
 			) {
 				rcvFile[from][sid].abort = true
-				Cryptocat.fileTransferError(sid, nick)
+				Cryptodog.fileTransferError(sid, nick)
 				console.log('OTR file transfer: MACs do not match.')
 				return
 			}
@@ -182,7 +182,7 @@ Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
 			msg = CryptoJS.AES.decrypt(msg, CryptoJS.enc.Latin1.parse(key.encryptKey), opts)
 			rcvFile[from][sid].data += (msg.toString(CryptoJS.enc.Latin1))
 			rcvFile[from][sid].ctr += 1
-			Cryptocat.updateFileProgressBar(sid, rcvFile[from][sid].ctr, rcvFile[from][sid].size, nick)
+			Cryptodog.updateFileProgressBar(sid, rcvFile[from][sid].ctr, rcvFile[from][sid].size, nick)
 			break
 		case 'close':
 			if (!rcvFile[from][sid].abort && rcvFile[from][sid].total === rcvFile[from][sid].ctr) {
@@ -193,7 +193,7 @@ Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
 					if (navigator.userAgent !== 'Chrome (Mac app)' &&
 					!matchSafariVersion([6, 0, 5]) &&
 					rcvFile[from][sid].size >= 131072) {
-						Cryptocat.fileTransferError(sid, nick)
+						Cryptodog.fileTransferError(sid, nick)
 						console.log('File size is too large for this version of Safari')
 						;delete rcvFile[from][sid]
 						return
@@ -214,10 +214,10 @@ Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
 				}
 				if (rcvFile[from][sid].filename.match(/^[\w.\-]+$/)
 				&& rcvFile[from][sid].mime.match(fileMIME)) {
-					Cryptocat.addFile(url, sid, nick, rcvFile[from][sid].filename)
+					Cryptodog.addFile(url, sid, nick, rcvFile[from][sid].filename)
 				}
 				else {
-					Cryptocat.fileTransferError(sid, nick)
+					Cryptodog.fileTransferError(sid, nick)
 					console.log('Received file of unallowed file type ' +
 						rcvFile[from][sid].mime + ' from ' + nick)
 				}
@@ -227,7 +227,7 @@ Cryptocat.otr.ibbHandler = function(type, from, sid, data, seq) {
 	}
 }
 
-Cryptocat.otr.fileHandler = function(from, sid, filename, size, mime) {
+Cryptodog.otr.fileHandler = function(from, sid, filename, size, mime) {
 	if (!rcvFile[from]) {
 		rcvFile[from] = {}
 	}
@@ -237,7 +237,7 @@ Cryptocat.otr.fileHandler = function(from, sid, filename, size, mime) {
 		mime: mime,
 		seq: 0,
 		ctr: 0,
-		total: Math.ceil(size / Cryptocat.otr.chunkSize),
+		total: Math.ceil(size / Cryptodog.otr.chunkSize),
 		abort: false,
 		data: ''
 	}

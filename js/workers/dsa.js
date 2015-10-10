@@ -22,7 +22,7 @@
 	onmessage = function (e) {
 		var data = e.data;
 		importScripts.apply(root, imports)
-		Cryptocat.random.setSeed(data.seed)
+		Cryptodog.random.setSeed(data.seed)
 		if (data.debug) { sendMsg('debug', 'DSA key creation started') }
 		var dsa = new DSA()
 		if (data.debug) { sendMsg('debug', 'DSA key creation finished') }
