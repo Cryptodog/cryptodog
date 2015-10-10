@@ -759,7 +759,7 @@ DIALOG BOX
 	float: right;
 	width: 100px;
 	height: 57px;
-	margin: -35px 20px 0px 0;
+	margin: -35px 20px 0 0;
 	border-radius: 5px 0 5px 5px;
 	font-size: 1.2em;
 	background: #008CDD;
@@ -834,7 +834,7 @@ DIALOG BOX
 
 #progressBar #fill {
 	height: 100%;
-	width: 0%;
+	width: 0;
 	background: #C0C0C0;
 	opacity: 0.3;
 }
@@ -851,7 +851,7 @@ DIALOG BOX
 
 .fileProgressBarFill {
 	height: 100%;
-	width: 0%;
+	width: 0;
 	background: #C0C0C0;
 }
 
@@ -1009,7 +1009,7 @@ CONVERSATION WINDOW
 	margin-bottom: 1px;
 	color: #444;
 	font-size: 0.8em;
-	padding: 0px 10px;
+	padding: 0 10px;
 	opacity: 0;
 	display: inline-block;
 	max-width: 90%;
@@ -1065,7 +1065,7 @@ CONVERSATION WINDOW
 	height: 48px;
 	float: right;
 	margin: 10px 3px 0 0;
-	border-radius: 0px 0 7px 0px;
+	border-radius: 0 0 7px 0;
 	font-size: 1.8em;
 	background: #008CDD;
 }
@@ -1120,4 +1120,10 @@ CONVERSATION WINDOW
 
 .fileView:hover {
 	text-decoration: none;
+}
+
+.monospace {
+    font-size: 1.5em;
+	position: relative;
+	top: 2.1px;
 }

@@ -769,18 +769,16 @@ var addEmoticons = function(message) {
 		//happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
 		'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,
 		'😉': /(\s|^);-?\)(?=(\s|$))/gi,
-		'😜': /(\s|^);-?\p(?=(\s|$))/gi
+		'😜': /(\s|^);-?\p(?=(\s|$))/gi,
 		//squint: /(\s|^)-_-(?=(\s|$))/gi,
+		'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g
 	}
 	for (var e in emoticons) {
 		if (emoticons.hasOwnProperty(e)) {
-			message = message.replace(emoticons[e], ' ' + e)
+			message = message.replace(emoticons[e], ' <span class="monospace">' + e + '</span>')
 		}
 	}
-	return message.replace(
-		/(\s|^)\&lt\;3\b(?=(\s|$))/g,
-		' <span class="monospace">&#9829;</span> '
-	)
+	return message
 }
 
 
