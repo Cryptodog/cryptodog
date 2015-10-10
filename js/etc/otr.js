@@ -16,7 +16,7 @@ Cryptodog.otr.add = function(nickname) {
 		var otr = new OTR({
 			priv: Cryptodog.me.otrKey,
 			smw: {
-				path: '/js/workers/smp.js',
+				path: 'js/workers/smp.js',
 				seed: Cryptodog.random.generateSeed
 			}
 		})

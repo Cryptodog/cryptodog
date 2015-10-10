@@ -56,7 +56,7 @@ Cryptodog.xmpp.prepareKeys = function(callback) {
 	}
 	else {
 		DSA.createInWebWorker({
-			path: '/js/workers/dsa.js',
+			path: 'js/workers/dsa.js',
 			seed: Cryptodog.random.generateSeed
 		}, function(key) {
 			Cryptodog.me.otrKey = key
