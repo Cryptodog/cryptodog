@@ -1122,9 +1122,13 @@ $('#darkMode').click(function() {
 	var $this = $(this)
 	if (document.body.classList.contains('darkMode')){
 		document.body.classList.remove('darkMode')
+		document.body.classList.add('lightMode')
 		$('#darkMode').attr('data-utip', 'Dark mode')
 	}
 	else {
+		if (document.body.classList.contains('lightMode')) {
+			document.body.classList.remove('lightMode')
+		}
 		document.body.classList.add('darkMode')
 		$('#darkMode').attr('data-utip', 'Light mode')
 	}
