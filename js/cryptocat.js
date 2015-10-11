@@ -1117,6 +1117,19 @@ USER INTERFACE BINDINGS
 */
 
 // Buttons:
+// Dark mode button
+$('#darkMode').click(function() {
+	var $this = $(this)
+	if (document.body.classList.contains('darkMode')){
+		document.body.classList.remove('darkMode')
+		$('#darkMode').attr('data-utip', 'Dark mode')
+	}
+	else {
+		document.body.classList.add('darkMode')
+		$('#darkMode').attr('data-utip', 'Light mode')
+	}
+})
+
 // Status button.
 $('#status').click(function() {
 	var $this = $(this)

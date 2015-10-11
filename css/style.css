@@ -73,6 +73,45 @@ webview {
 
 /*
 -------------------
+DARK MODE
+-------------------
+*/
+
+body.darkMode {
+	background: #222;
+}
+
+body.darkMode div#bubble { 
+	background: #222;
+}
+
+body.darkMode div#bubble div#info {
+	border: 1px solid #999;
+	background-color: #999
+}
+
+body.darkMode div#bubble div#info h1 {
+	color: #fff;
+}
+
+body.darkMode .line {
+	color: #fff;
+}
+
+body.darkMode .missingRecipients {
+	background: #444;
+	border-radius: 4px 0 0 0;
+	margin-bottom: 1px;
+	color: #DDD;
+	font-size: 0.8em;
+	padding: 0 10px;
+	opacity: 0;
+	display: inline-block;
+	max-width: 90%;
+}
+
+/*
+-------------------
 MAIN WINDOW (BUBBLE)
 -------------------
 */
