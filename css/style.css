@@ -73,6 +73,43 @@ webview {
 
 /*
 -------------------
+DARK MODE
+-------------------
+*/
+
+body.darkMode {
+	background: #111;
+}
+
+body.darkMode div#bubble { 
+	background: #222;
+}
+
+body.darkMode div#bubble div#info {
+	border: 1px solid #999;
+	background-color: #999
+}
+
+body.darkMode div#bubble div#info h1 {
+	color: #fff;
+}
+
+body.darkMode .line {
+	color: #fff;
+}
+
+body.darkMode .missingRecipients {
+	background: #444;
+	color: #DDD;
+}
+
+body.darkMode .userLeave {
+	background: #444;
+	color: #DDD;
+}
+
+/*
+-------------------
 MAIN WINDOW (BUBBLE)
 -------------------
 */
