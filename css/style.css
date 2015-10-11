@@ -87,7 +87,7 @@ body.darkMode div#bubble {
 
 body.darkMode div#bubble div#info {
 	border: 1px solid #999;
-	background-color: #999
+	background-color: #999;
 }
 
 body.darkMode div#bubble div#info h1 {
@@ -127,9 +127,10 @@ div#bubble {
 	height: 540px;
 	background: #FFF;
 	border: 6px solid #444;
-	padding: 0 0 50px 0;
+	padding: 0 0 51px 0;
 	display: none;
 	float: left;
+	transition: ease-in 100ms;
 }
 
 div#av {
@@ -424,15 +425,6 @@ div#footer #languages li {
 	list-style-type: none;
 }
 
-div#footer #information {
-	margin: 0 20px;
-	float: left;
-}
-
-div#footer #information a {
-	margin-right: 10px;
-}
-
 /*
 -------------------
 BUDDY LIST
@@ -476,7 +468,8 @@ BUDDY LIST
 	position: relative;
 	cursor: default;
 	z-index: 15;
-	transition: background-color 0.25s;
+	/*transition: background-color 0.25s;*/
+	transition: ease-in 250ms;
 }
 
 .buddy span.loginTypeIcon {
@@ -1156,7 +1149,7 @@ CONVERSATION WINDOW
 }
 
 .monospace {
-    font-size: 1.5em;
+    font-size: 1.3em;
 	position: relative;
-	top: 2.1px;
+	top: 1px;
 }
