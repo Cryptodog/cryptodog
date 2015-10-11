@@ -103,6 +103,11 @@ body.darkMode .missingRecipients {
 	color: #DDD;
 }
 
+body.darkMode .userLeave {
+	background: #444;
+	color: #DDD;
+}
+
 /*
 -------------------
 MAIN WINDOW (BUBBLE)
@@ -1131,8 +1136,8 @@ CONVERSATION WINDOW
 }
 
 .userLeave {
-	background: #444;
-	color: #DDD;
+	background: #DDD;
+	color: #444;
 }
 
 .userJoin .timestamp, .userLeave .timestamp {
