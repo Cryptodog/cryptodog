@@ -78,7 +78,7 @@ DARK MODE
 */
 
 body.darkMode {
-	background: #222;
+	background: #111;
 }
 
 body.darkMode div#bubble { 
