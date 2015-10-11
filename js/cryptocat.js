@@ -190,7 +190,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		message: message,
 		color: Cryptodog.getUserColor(nickname)
 	})
-	
+
 	conversationBuffers[conversation] += renderedMessage
 	if (conversation === Cryptodog.me.currentBuddy) {
 		$('#conversationWindow').append(renderedMessage)
@@ -1120,8 +1120,8 @@ USER INTERFACE BINDINGS
 // Status button.
 $('#status').click(function() {
 	var $this = $(this)
-	if ($this.attr('src') === '/img/svg/checkmark.svg') {
-		$this.attr('src', '/img/svg/cross.svg')
+	if ($this.attr('src') === 'img/svg/checkmark.svg') {
+		$this.attr('src', 'img/svg/cross.svg')
 		$this.attr('title', Cryptodog.locale['chatWindow']['statusAway'])
 		$this.attr('data-utip', Cryptodog.locale['chatWindow']['statusAway'])
 		$this.mouseenter()
@@ -1129,7 +1129,7 @@ $('#status').click(function() {
 		Cryptodog.xmpp.sendStatus()
 	}
 	else {
-		$this.attr('src', '/img/svg/checkmark.svg')
+		$this.attr('src', 'img/svg/checkmark.svg')
 		$this.attr('title', Cryptodog.locale['chatWindow']['statusAvailable'])
 		$this.attr('data-utip', Cryptodog.locale['chatWindow']['statusAvailable'])
 		$this.mouseenter()
