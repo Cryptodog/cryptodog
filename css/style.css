@@ -79,33 +79,74 @@ DARK MODE
 
 body.darkMode {
 	background: #111;
+	transition: ease-in-out 150ms;
 }
 
 body.darkMode div#bubble { 
 	background: #222;
+	transition: ease-in-out 150ms;
 }
 
 body.darkMode div#bubble div#info {
 	border: 1px solid #999;
-	background-color: #999
+	background-color: #999;
+	transition: ease-in-out 150ms;
 }
 
 body.darkMode div#bubble div#info h1 {
 	color: #fff;
+	transition: ease-in-out 150ms;
 }
 
 body.darkMode .line {
 	color: #fff;
+	transition: ease-in-out 150ms;
 }
 
 body.darkMode .missingRecipients {
 	background: #444;
 	color: #DDD;
+	transition: ease-in-out 150ms;
 }
 
 body.darkMode .userLeave {
 	background: #444;
 	color: #DDD;
+	transition: ease-in-out 150ms;
+}
+
+/*
+----------------------
+LIGHT MODE TRANSITIONS
+----------------------
+*/
+
+body.lightMode {
+	transition: ease-in-out 150ms;
+}
+
+body.lightMode div#bubble {
+	transition: ease-in-out 150ms;
+}
+
+body.lightMode div#bubble div#info {
+	transition: ease-in-out 150ms;
+}
+
+body.lightMode div#bubble div#info h1 {
+	transition: ease-in-out 150ms;
+}
+
+body.lightMode .line {
+	transition: ease-in-out 150ms;
+}
+
+body.lightMode .missingRecipients {
+	transition: ease-in-out 150ms;
+}
+
+body.lightMode .userLeave {
+	transition: ease-in-out 150ms;
 }
 
 /*
