@@ -130,7 +130,7 @@ div#bubble #logoText {
 	display: inline-block;
 	position: relative;
 	z-index: 100;
-	color: #008CDD;
+	color: #bb7a20;
 	-webkit-font-smoothing: none;
 	font-size: 30px;
 	font-weight: bold;
@@ -226,15 +226,11 @@ div#bubble #loginSubmit {
 	position: relative;
 	bottom: 2px;
 	font-size: 1.6em;
-	background: #008CDD;
+	background: #bb7a20;
 }
 
 div#bubble #loginSubmit:hover {
-	background: #00AEDE;
-}
-
-div#bubble #loginSubmit:active {
-	background: #70B7DE;
+	background: #c99536;
 }
 
 div#loginInfo {
@@ -475,7 +471,7 @@ BUDDY LIST
 }
 
 .buddy.currentConversation {
-	background-color: #008CDD;;
+	background-color: #bb7a20;;
 	color: #FFF !important;
 }
 
@@ -762,7 +758,7 @@ DIALOG BOX
 	margin: -35px 20px 0 0;
 	border-radius: 5px 0 5px 5px;
 	font-size: 1.2em;
-	background: #008CDD;
+	background: #bb7a20;
 	border: none;
 	word-wrap: break-word;
 }
@@ -974,7 +970,7 @@ CONVERSATION WINDOW
 }
 
 #conversationWindow .authStatus[data-auth=true] {
-	background-color: #008CDD;
+	background-color: #bb7a20;
 	background-image: none;
 }
 
@@ -1067,7 +1063,7 @@ CONVERSATION WINDOW
 	margin: 10px 3px 0 0;
 	border-radius: 0 0 7px 0;
 	font-size: 1.8em;
-	background: #008CDD;
+	background: #bb7a20;
 }
 
 #userInputSend:hover {

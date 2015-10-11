@@ -597,7 +597,7 @@ Cryptodog.logout = function() {
 		+ Cryptodog.xmpp.conferenceServer
 	)
 	$('#loginInfo').text(Cryptodog.locale['loginMessage']['thankYouUsing'])
-	$('#loginInfo').animate({'background-color': '#008CDD'}, 200)
+	$('#loginInfo').animate({'background-color': '#bb7a20'}, 200)
 	Cryptodog.xmpp.connection.disconnect()
 	Cryptodog.xmpp.connection = null
 	document.title = 'Cryptodog'
