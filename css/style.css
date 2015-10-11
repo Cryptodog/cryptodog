@@ -100,14 +100,7 @@ body.darkMode .line {
 
 body.darkMode .missingRecipients {
 	background: #444;
-	border-radius: 4px 0 0 0;
-	margin-bottom: 1px;
 	color: #DDD;
-	font-size: 0.8em;
-	padding: 0 10px;
-	opacity: 0;
-	display: inline-block;
-	max-width: 90%;
 }
 
 /*
