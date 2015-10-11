@@ -1131,8 +1131,8 @@ CONVERSATION WINDOW
 }
 
 .userLeave {
-	background: #DDD;
-	color: #444;
+	background: #444;
+	color: #DDD;
 }
 
 .userJoin .timestamp, .userLeave .timestamp {
