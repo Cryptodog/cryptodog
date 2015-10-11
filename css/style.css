@@ -87,7 +87,7 @@ body.darkMode div#bubble {
 
 body.darkMode div#bubble div#info {
 	border: 1px solid #999;
-	background-color: #999
+	background-color: #999;
 }
 
 body.darkMode div#bubble div#info h1 {
@@ -130,6 +130,7 @@ div#bubble {
 	padding: 0 0 50px 0;
 	display: none;
 	float: left;
+	transition: ease-in 100ms;
 }
 
 div#av {
@@ -422,15 +423,6 @@ div#footer #languages li {
 	padding: 3px;
 	width: 80px;
 	list-style-type: none;
-}
-
-div#footer #information {
-	margin: 0 20px;
-	float: left;
-}
-
-div#footer #information a {
-	margin-right: 10px;
 }
 
 /*
