@@ -424,15 +424,6 @@ div#footer #languages li {
 	list-style-type: none;
 }
 
-div#footer #information {
-	margin: 0 20px;
-	float: left;
-}
-
-div#footer #information a {
-	margin-right: 10px;
-}
-
 /*
 -------------------
 BUDDY LIST

@@ -612,7 +612,7 @@ Cryptodog.logout = function() {
 		$('#logoText').fadeIn()
 		$('#footer').animate({'height': 14})
 		$('#conversationWrapper').fadeOut(function() {
-			$('#info,#information,#loginOptions,#version,#loginInfo').fadeIn()
+			$('#info,#loginOptions,#version,#loginInfo').fadeIn()
 			$('#login').fadeIn(200, function() {
 				$('#login').css({opacity: 1})
 				$('#conversationName').select()
