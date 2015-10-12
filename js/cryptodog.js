@@ -160,10 +160,10 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		if (nickname !== Cryptodog.me.nickname) {
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages)
 		}
+		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 0)
 		message = Strophe.xmlescape(message)
 		message = Cryptodog.addLinks(message)
 		message = addEmoticons(message)
-		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 0)
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
@@ -911,7 +911,10 @@ var desktopNotification = function(image, title, body, timeout) {
 			body: body,
 			icon: image
 		})
-		currentNotifications.push(n)
+		currentNotifications.push({
+			notification: n,
+			timeout: timeout
+		})
 	}
 	else if (notificationStatus == "default" || notificationStatus == null || notificationStatus == "")
 	{
