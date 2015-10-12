@@ -1075,7 +1075,7 @@ var openBuddyMenu = function(nickname) {
 
 // Check for nickname completion.
 // Called when pressing tab in user input.
-var nicknameCompletion = function(input) {
+var _nicknameCompletion = function(input) {
 	var nickname, match, suffix
 	for (nickname in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
@@ -1090,6 +1090,34 @@ var nicknameCompletion = function(input) {
 	}
 }
 
+var nicknameCompletion = function(input) {
+	var nickname, suffix
+	var potentials = []
+	for (nickname in Cryptodog.buddies) {
+		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
+			try {
+				potentials.push({
+				score: nickname.score(input),
+				value: nickname})
+			}
+			catch (err) {
+				//console.log("completion: " + err)
+			}
+		}
+	}
+	var largest = potentials[0];
+	
+	for (var i = 0; i < potentials.length; i++) {
+		if (potentials[i].score > largest.score) {
+			largest = potentials[i]
+		}
+		//console.log("matcherpotential: score=" + potentials[i].score + ",value=" + potentials[i].value)
+	}
+	//console.log("matcher: score=" + largest.score + ", value=" + largest.value)
+	if (input.match(/\s/)) { suffix = ' ' }
+				else { suffix = ': ' }
+	return input, largest.value + suffix
+}
 // Get color by nickname
 Cryptodog.getUserColor = function(nickname){
 	if (nickname === Cryptodog.me.nickname){
