@@ -4,6 +4,18 @@ Cryptodog is a fork of the popular encrypted messaging program, [Cryptocat](http
 
 This repository contains a pure JavaScript client you can either run locally in your browser, or via our hosted service at https://cryptodog.github.io/webclient.
 
+## Differences from Cryptocat
+* Dark theme
+* Better tab-autocomplete (tolerant of typos)
+* Other users can't log out and log back in to be unignored
+* Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
+* Colored names in chat to improve readability
+* Desktop notifications
+* Unicode emoticons (may be removed; lousy support in some browsers)
+* Amazing Halloween theme
+* Minor animation tweaks & additions
+* Different bugs
+
 ## Todo
 
 * Remove superfluous browser-specific code.
@@ -25,6 +37,8 @@ This repository contains a pure JavaScript client you can either run locally in 
     Need to make sure this doesn't mess up any XMPP stuff first.
 
 * Change code and UI references from "cryptocat" to "cryptodog".
+
+    Mostly done, only locales left to do.
 
 * Make dog logo.
 
