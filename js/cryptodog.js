@@ -1143,7 +1143,7 @@ Cryptodog.newMessageCount = function(count){
 		Cryptodog.me.newMessages = 0
 		// clear notifications
 		currentNotifications.forEach(function(element) {
-			element.close()
+			element.notification.close()
 		}, this);
 		currentNotifications = []
 	}
