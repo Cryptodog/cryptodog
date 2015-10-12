@@ -45,6 +45,13 @@ Cryptodog.sounds = {
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
 
+
+Notification.requestPermission(function(permission){
+	console.log("asked for notification permission, got '" + permission + "'");
+});
+
+
+
 /*
 -------------------
 END GLOBAL SCOPE
@@ -889,23 +896,6 @@ var bindSenderElement = function(senderElement) {
 var currentNotifications = []
 
 var desktopNotification = function(image, title, body, timeout) {
-	/*if (!Cryptodog.desktopNotifications || Cryptodog.me.windowFocus) { return false }
-	// Mac
-	if (navigator.userAgent === 'Chrome (Mac app)') {
-		var iframe = document.createElement('IFRAME')
-		iframe.setAttribute('src', 'js-call:' + title + ':' + body)
-		document.documentElement.appendChild(iframe)
-		iframe.parentNode.removeChild(iframe)
-		iframe = null
-	}
-	else {
-		var notice = new Notification(title, { tag: 'Cryptodog', body: body, icon: image })
-		if (timeout > 0) {
-			window.setTimeout(function() {
-				if (notice) { notice.cancel() }
-			}, timeout)
-		}
-	}*/
 	if (Cryptodog.me.windowFocus) {
 		console.log("tried to show desktop notif, but window had focus")
 		return false
@@ -914,14 +904,19 @@ var desktopNotification = function(image, title, body, timeout) {
 		console.log("tried to show desktop notif, but notifs are off")
 		return false
 	}
-	console.log("showing desktop notif, title is: " + title)
 	var notificationStatus = Notification.permission;
+	console.log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title)
 	if (notificationStatus == 'granted') {
 		var n = new Notification(title, {
 			body: body,
 			icon: image
 		})
 		currentNotifications.push(n)
+	}
+	else if (notificationStatus == "default" || notificationStatus == null || notificationStatus == "")
+	{
+		// request permission
+		Notification.requestPermission();
 	}
 }
 
@@ -1109,6 +1104,11 @@ Cryptodog.getUserColor = function(nickname){
 Cryptodog.newMessageCount = function(count){
 	if (Cryptodog.me.windowFocus) {
 		Cryptodog.me.newMessages = 0
+		// clear notifications
+		currentNotifications.forEach(function(element) {
+			element.close()
+		}, this);
+		currentNotifications = []
 	}
 	count = Cryptodog.me.newMessages
 	var prevCount = document.title.match(/^\([0-9]+\)\s+/)
