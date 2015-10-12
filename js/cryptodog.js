@@ -1165,11 +1165,6 @@ Cryptodog.newMessageCount = function(count){
 	}
 }
 
-// Get random nickname
-Cryptodog.getRandomNickname = function(){
-	return 'anon'+(Math.floor(Math.random() * (10000 - 1)) + 1)
-}
-
 /*
 -------------------
 USER INTERFACE BINDINGS
@@ -1464,8 +1459,5 @@ $(window).resize()
 
 // Show main window.
 $('#bubble').show()
-
-// Set a random nickname
-document.querySelector('#nickname').value = Cryptodog.getRandomNickname()
 
 })}
