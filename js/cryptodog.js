@@ -1097,7 +1097,7 @@ var nicknameCompletion = function(input) {
 		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
 			try {
 				potentials.push({
-				score: nickname.score(input),
+				score: nickname.score(input.match(/(\S)+$/)[0]),
 				value: nickname})
 			}
 			catch (err) {
@@ -1114,9 +1114,15 @@ var nicknameCompletion = function(input) {
 		//console.log("matcherpotential: score=" + potentials[i].score + ",value=" + potentials[i].value)
 	}
 	//console.log("matcher: score=" + largest.score + ", value=" + largest.value)
-	if (input.match(/\s/)) { suffix = ' ' }
-				else { suffix = ': ' }
-	return input, largest.value + suffix
+	if (input.match(/\s/)) { 
+		suffix = ' ' 
+	}
+	else {
+		 suffix = ': '
+	}
+	if (largest.score == 0)
+		return input;
+	return input.replace(/(\S)+$/, largest.value + suffix)
 }
 // Get color by nickname
 Cryptodog.getUserColor = function(nickname){
