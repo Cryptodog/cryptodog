@@ -47,7 +47,7 @@ var notifImg = "img/cryptodog-logo.png";
 
 
 Notification.requestPermission(function(permission){
-	console.log("asked for notification permission, got '" + permission + "'");
+	log("asked for notification permission, got '" + permission + "'");
 });
 
 
@@ -74,6 +74,14 @@ $('#version').text(Cryptodog.version)
 Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
 
 var conversationBuffers = {}
+
+var allowDebugLogging = false
+
+var log = function(message) {
+	if (!allowDebugLogging)
+		return
+	console.log(message)
+}
 
 /*
 -------------------
@@ -160,7 +168,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		if (nickname !== Cryptodog.me.nickname) {
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages)
 		}
-		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 0)
+		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7)
 		message = Strophe.xmlescape(message)
 		message = Cryptodog.addLinks(message)
 		message = addEmoticons(message)
@@ -895,17 +903,34 @@ var bindSenderElement = function(senderElement) {
 
 var currentNotifications = []
 
+var handleNotificationTimeout = function() {
+	var removalIndexes = []
+	currentNotifications.forEach(function (element) {
+		element.timeout -= 1
+		if (element.timeout <= 0) {
+			element.notification.close()
+			log("expiring notification")
+			removalIndexes.push(currentNotifications.indexOf(element))
+		}
+	}, this)
+	removalIndexes.forEach(function (index) {
+		currentNotifications.splice(index, 1)
+	}, this)
+}
+
+window.setInterval(handleNotificationTimeout, 1000);
+
 var desktopNotification = function(image, title, body, timeout) {
 	if (Cryptodog.me.windowFocus) {
-		console.log("tried to show desktop notif, but window had focus")
+		log("tried to show desktop notif, but window had focus")
 		return false
 	}
 	if (!Cryptodog.desktopNotifications) {
-		console.log("tried to show desktop notif, but notifs are off")
+		log("tried to show desktop notif, but notifs are off")
 		return false
 	}
 	var notificationStatus = Notification.permission;
-	console.log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title)
+	log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title)
 	if (notificationStatus == 'granted') {
 		var n = new Notification(title, {
 			body: body,
@@ -950,7 +975,7 @@ var buddyNotification = function(nickname, join) {
 	scrollDownConversation(400, true)
 	desktopNotification(notifImg,
 		nickname + ' has ' + (join ? 'joined ' : 'left ')
-		+ Cryptodog.me.conversation, '', 0x1337)
+		+ Cryptodog.me.conversation, '', 7)
 }
 
 // Send encrypted file.
@@ -1101,7 +1126,7 @@ var nicknameCompletion = function(input) {
 				value: nickname})
 			}
 			catch (err) {
-				//console.log("completion: " + err)
+				log("completion: " + err)
 			}
 		}
 	}
@@ -1111,9 +1136,9 @@ var nicknameCompletion = function(input) {
 		if (potentials[i].score > largest.score) {
 			largest = potentials[i]
 		}
-		//console.log("matcherpotential: score=" + potentials[i].score + ",value=" + potentials[i].value)
+		log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
 	}
-	//console.log("matcher: score=" + largest.score + ", value=" + largest.value)
+	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) { 
 		suffix = ' ' 
 	}
