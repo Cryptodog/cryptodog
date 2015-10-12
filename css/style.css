@@ -484,7 +484,7 @@ BUDDY LIST
 	border-radius: 3px 0 3px 3px;
 	bottom: 4px;
 	background-position: top left;
-	background-image: url("../img/svg/user.svg");
+	background-image: url("../img/icons/user.svg");
 }
 
 .buddy span.shortNickname {
@@ -518,7 +518,7 @@ BUDDY LIST
 	z-index: 2;
 	float: right;
 	margin: 0;
-	background-image: url("../img/svg/circle-down.svg");
+	background-image: url("../img/icons/circle-down.svg");
 	background-size: 10px 10px;
 	background-position: 2px 2px;
 	background-repeat: no-repeat;
@@ -560,7 +560,7 @@ BUDDY LIST
 
 #buddy-groupChat {
 	display: block;
-	background-image: url("../img/svg/users.svg");
+	background-image: url("../img/icons/users.svg");
 	background-position: 96% 4px;
 }
 
@@ -594,11 +594,11 @@ BUDDY LIST
 	-moz-animation: pulse 2s infinite;
 	-o-animation: pulse 2s infinite;
 	animation: pulse 2s infinite;
-	background-image: url("../img/svg/bubbles2.svg");
+	background-image: url("../img/icons/bubbles2.svg");
 }
 
 .composing {
-	background-image: url("../img/svg/pencil2.svg");
+	background-image: url("../img/icons/pencil2.svg");
 	background-position: 80% 5px;
 	background-size: 12px 12px;
 }
@@ -992,7 +992,7 @@ CONVERSATION WINDOW
 	margin: 0 7px -4px -2px;
 	border-radius: 4px;
 	background-color: #EF6C74;
-	background-image: url("../img/svg/warning.svg");
+	background-image: url("../img/icons/warning.svg");
 	background-size: 12px 12px;
 	background-position: 2px 2px;
 	background-repeat: no-repeat;
@@ -1110,7 +1110,7 @@ CONVERSATION WINDOW
 	padding: 0 5px 0 21px;
 	font-size: 0.9em;
 	border-radius: 3px 0 3px 3px;
-	background-image: url("../img/svg/file-text2.svg");
+	background-image: url("../img/icons/file-text2.svg");
 	background-size: 16px auto;
 	background-position: center left;
 	background-repeat: no-repeat;
