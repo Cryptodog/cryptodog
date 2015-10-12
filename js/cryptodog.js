@@ -42,6 +42,9 @@ Cryptodog.sounds = {
 	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
 }
 
+// image used for notifications
+var notifImg = "img/cryptodog-logo.png";
+
 /*
 -------------------
 END GLOBAL SCOPE
@@ -153,6 +156,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		message = Strophe.xmlescape(message)
 		message = Cryptodog.addLinks(message)
 		message = addEmoticons(message)
+		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 0)
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
@@ -882,8 +886,10 @@ var bindSenderElement = function(senderElement) {
 	})
 }
 
+var currentNotifications = []
+
 var desktopNotification = function(image, title, body, timeout) {
-	if (!Cryptodog.desktopNotifications || Cryptodog.me.windowFocus) { return false }
+	/*if (!Cryptodog.desktopNotifications || Cryptodog.me.windowFocus) { return false }
 	// Mac
 	if (navigator.userAgent === 'Chrome (Mac app)') {
 		var iframe = document.createElement('IFRAME')
@@ -899,6 +905,23 @@ var desktopNotification = function(image, title, body, timeout) {
 				if (notice) { notice.cancel() }
 			}, timeout)
 		}
+	}*/
+	if (Cryptodog.me.windowFocus) {
+		console.log("tried to show desktop notif, but window had focus")
+		return false
+	}
+	if (!Cryptodog.desktopNotifications) {
+		console.log("tried to show desktop notif, but notifs are off")
+		return false
+	}
+	console.log("showing desktop notif, title is: " + title)
+	var notificationStatus = Notification.permission;
+	if (notificationStatus == 'granted') {
+		var n = new Notification(title, {
+			body: body,
+			icon: image
+		})
+		currentNotifications.push(n)
 	}
 }
 
@@ -927,7 +950,7 @@ var buddyNotification = function(nickname, join) {
 		$('#conversationWindow').append(status)
 	}
 	scrollDownConversation(400, true)
-	desktopNotification('img/keygen.gif',
+	desktopNotification(notifImg,
 		nickname + ' has ' + (join ? 'joined ' : 'left ')
 		+ Cryptodog.me.conversation, '', 0x1337)
 }
@@ -1166,10 +1189,25 @@ $('#notifications').click(function() {
 		$this.mouseenter()
 		Cryptodog.desktopNotifications = true
 		Cryptodog.storage.setItem('desktopNotifications', 'true')
-		if (window.webkitNotifications) {
-			if (window.webkitNotifications.checkPermission()) {
-				window.webkitNotifications.requestPermission(function() {})
+		var notifStatus = Notification.permission;
+		if (notifStatus == 'denied') {
+			// notifications supported but not enabled
+			Notification.requestPermission();
+			// check if user actually accepted
+			if (Notification.permission == 'denied') {
+				Cryptodog.desktopNotifications = false
+				Cryprodog.storage.setItem('desktopNotifications', 'false')
 			}
+		}
+		else if (notifStatus == 'unknown') {
+			// browser doesn't support desktop notifications
+			alert("It looks like your browser doesn't support desktop notifications.")
+			$this.attr('src', 'img/svg/bubble2.svg')
+			$this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOff'])
+			$this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOff'])
+			$this.mouseenter()
+			Cryptodog.desktopNotifications = false
+			Cryptodog.storage.setItem('desktopNotifications', 'false')
 		}
 	}
 	else {
