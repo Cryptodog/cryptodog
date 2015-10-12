@@ -4,6 +4,12 @@ PRE-DEFINED TAGS
 -------------------
 */
 
+noscript {
+	text-align: center;
+	font-size: 25px;
+	color: #bb7a20;
+}
+
 body {
 	height: 100%;
 	background: #DDD;
