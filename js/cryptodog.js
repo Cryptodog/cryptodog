@@ -1,4 +1,4 @@
-if (typeof Cryptodog === 'undefined') { Cryptodog = function() {} }
+﻿if (typeof Cryptodog === 'undefined') { Cryptodog = function() {} }
 
 /*
 -------------------
@@ -7,6 +7,16 @@ GLOBAL VARIABLES
 */
 
 Cryptodog.version = '1.1.6' // Version number
+
+// set to true to allow debug lines to be written to console
+var allowDebugLogging = false
+
+// for debugging
+var log = function(message) {
+	if (!allowDebugLogging)
+		return
+	console.log(message)
+}
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -75,13 +85,9 @@ Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
 
 var conversationBuffers = {}
 
-var allowDebugLogging = false
 
-var log = function(message) {
-	if (!allowDebugLogging)
-		return
-	console.log(message)
-}
+
+
 
 /*
 -------------------
