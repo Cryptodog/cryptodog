@@ -12,7 +12,6 @@ This repository contains a pure JavaScript client you can either run locally in 
 * Colored names in chat to improve readability
 * Desktop notifications
 * Unicode emoticons (may be removed; lousy support in some browsers)
-* Amazing Halloween theme
 * Minor animation tweaks & additions
 * Different bugs
 
@@ -41,6 +40,8 @@ This repository contains a pure JavaScript client you can either run locally in 
     Mostly done, only locales left to do.
 
 * Make dog logo.
+
+    Done, could possibly be improved
 
 * Add more emoticons.
 
