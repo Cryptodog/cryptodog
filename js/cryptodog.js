@@ -930,6 +930,14 @@ var handleNotificationTimeout = function() {
 
 window.setInterval(handleNotificationTimeout, 1000);
 
+function notificationTruncate(msg) {
+    if (msg.length > 50) {
+        log("Truncating notification")
+        return msg.substring(0,50) + "..."
+    }
+    return msg
+}
+
 var desktopNotification = function(image, title, body, timeout) {
 	if (Cryptodog.me.windowFocus) {
 		log("tried to show desktop notif, but window had focus")
@@ -943,7 +951,7 @@ var desktopNotification = function(image, title, body, timeout) {
 	log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title)
 	if (notificationStatus == 'granted') {
 		var n = new Notification(title, {
-			body: body,
+			body: notificationTruncate(body),
 			icon: image
 		})
 		currentNotifications.push({
