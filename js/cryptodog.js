@@ -1110,20 +1110,20 @@ var openBuddyMenu = function(nickname) {
 
 // Check for nickname completion.
 // Called when pressing tab in user input.
-var _nicknameCompletion = function(input) {
-	var nickname, match, suffix
-	for (nickname in Cryptodog.buddies) {
-		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
-			try { match = nickname.match(input.match(/(\S)+$/)[0]) }
-			catch(err) {}
-			if (match) {
-				if (input.match(/\s/)) { suffix = ' ' }
-				else { suffix = ': ' }
-				return input.replace(/(\S)+$/, nickname + suffix)
-			}
-		}
-	}
-}
+//var _nicknameCompletion = function(input) {
+//	var nickname, match, suffix
+//	for (nickname in Cryptodog.buddies) {
+//		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
+//			try { match = nickname.match(input.match(/(\S)+$/)[0]) }
+//			catch(err) {}
+//			if (match) {
+//				if (input.match(/\s/)) { suffix = ' ' }
+//				else { suffix = ': ' }
+//				return input.replace(/(\S)+$/, nickname + suffix)
+//			}
+//		}
+//	}
+//}
 
 var nicknameCompletion = function(input) {
 	var nickname, suffix
@@ -1132,8 +1132,9 @@ var nicknameCompletion = function(input) {
 		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
 			try {
 				potentials.push({
-				score: nickname.score(input.match(/(\S)+$/)[0]),
-				value: nickname})
+				    score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
+				    value: nickname
+				})
 			}
 			catch (err) {
 				log("completion: " + err)
@@ -1142,12 +1143,19 @@ var nicknameCompletion = function(input) {
 	}
 	var largest = potentials[0];
 
-	for (var i = 0; i < potentials.length; i++) {
-		if (potentials[i].score > largest.score) {
-			largest = potentials[i]
-		}
-		log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
-	}
+    // find item with largest score
+    potentials.forEach(function(item) {
+        if (item.score > largest.score) {
+            largest = item
+        }
+    }, this)
+
+	//for (var i = 0; i < potentials.length; i++) {
+	//	if (potentials[i].score > largest.score) {
+	//		largest = potentials[i]
+	//	}
+	//	log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
+	//}
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) {
 		suffix = ' '
@@ -1155,7 +1163,7 @@ var nicknameCompletion = function(input) {
 	else {
 		 suffix = ': '
 	}
-	if (largest.score == 0)
+	if (largest.score < 0.1)    // cut-off matching attempt if all scores are low
 		return input;
 	return input.replace(/(\S)+$/, largest.value + suffix)
 }
