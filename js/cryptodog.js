@@ -42,6 +42,14 @@ Cryptodog.sounds = {
 	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
 }
 
+var allowDebugLogging = false
+
+var log = function (message) {
+    if (!allowDebugLogging)
+        return
+    console.log(message)
+}
+
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
 
@@ -74,14 +82,6 @@ $('#version').text(Cryptodog.version)
 Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
 
 var conversationBuffers = {}
-
-var allowDebugLogging = false
-
-var log = function(message) {
-	if (!allowDebugLogging)
-		return
-	console.log(message)
-}
 
 /*
 -------------------
@@ -777,20 +777,20 @@ Cryptodog.addLinks = function(message) {
 // Convert text emoticons to graphical emoticons.
 var addEmoticons = function(message) {
        var emoticons = {
-		'😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi,
-		'😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,
-		'🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,
-		'😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,
-		'😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,
-		'🙁': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,
-		'🙂': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,
-		'😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,
+		'😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi, 	//
+		'😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,		//
+		'🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,		   // :3 - Cat face
+		'😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,			//
+		'😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,			//
+		'🙁': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,			//
+		'🙂': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,			//
+		'😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,			//
 		//happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
-		'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,
-		'😉': /(\s|^);-?\)(?=(\s|$))/gi,
-		'😜': /(\s|^);-?\p(?=(\s|$))/gi,
+		'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,			//
+		'😉': /(\s|^);-?\)(?=(\s|$))/gi,				//
+		'😜': /(\s|^);-?\p(?=(\s|$))/gi,				//
 		//squint: /(\s|^)-_-(?=(\s|$))/gi,
-		'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g
+		'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g				// <3 - Heart
 	}
 	for (var e in emoticons) {
 		if (emoticons.hasOwnProperty(e)) {
@@ -1131,7 +1131,7 @@ var nicknameCompletion = function(input) {
 		}
 	}
 	var largest = potentials[0];
-	
+
 	for (var i = 0; i < potentials.length; i++) {
 		if (potentials[i].score > largest.score) {
 			largest = potentials[i]
@@ -1139,8 +1139,8 @@ var nicknameCompletion = function(input) {
 		log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
 	}
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
-	if (input.match(/\s/)) { 
-		suffix = ' ' 
+	if (input.match(/\s/)) {
+		suffix = ' '
 	}
 	else {
 		 suffix = ': '
