@@ -43,3 +43,11 @@ License: MIT
 ##IcoMoon icons
 Origin: https://icomoon.io/
 License: CC BY 4.0 or GPL
+
+##string_score.js
+Origin: https://github.com/joshaven/string_score
+Licence: MIT
+
+##localForage
+Origin: https://github.com/mozilla/localForage
+Licence: Apache

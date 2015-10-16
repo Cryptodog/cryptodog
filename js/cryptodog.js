@@ -1,4 +1,4 @@
-if (typeof Cryptodog === 'undefined') { Cryptodog = function() {} }
+﻿if (typeof Cryptodog === 'undefined') { Cryptodog = function() {} }
 
 /*
 -------------------
@@ -7,6 +7,16 @@ GLOBAL VARIABLES
 */
 
 Cryptodog.version = '1.1.6' // Version number
+
+// set to true to allow debug lines to be written to console
+var allowDebugLogging = false
+
+// for debugging
+var log = function(message) {
+	if (!allowDebugLogging)
+		return
+	console.log(message)
+}
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -42,6 +52,14 @@ Cryptodog.sounds = {
 	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
 }
 
+var allowDebugLogging = false
+
+var log = function (message) {
+    if (!allowDebugLogging)
+        return
+    console.log(message)
+}
+
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
 
@@ -74,14 +92,6 @@ $('#version').text(Cryptodog.version)
 Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
 
 var conversationBuffers = {}
-
-var allowDebugLogging = false
-
-var log = function(message) {
-	if (!allowDebugLogging)
-		return
-	console.log(message)
-}
 
 /*
 -------------------
@@ -777,20 +787,20 @@ Cryptodog.addLinks = function(message) {
 // Convert text emoticons to graphical emoticons.
 var addEmoticons = function(message) {
        var emoticons = {
-		'😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi,
-		'😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,
-		'🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,
-		'😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,
-		'😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,
-		'🙁': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,
-		'🙂': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,
-		'😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,
+		'😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi, 	//
+		'😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,		//
+		'🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,		   // :3 - Cat face
+		'😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,			//
+		'😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,			//
+		'🙁': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,			//
+		'🙂': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,			//
+		'😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,			//
 		//happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
-		'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,
-		'😉': /(\s|^);-?\)(?=(\s|$))/gi,
-		'😜': /(\s|^);-?\p(?=(\s|$))/gi,
+		'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,			//
+		'😉': /(\s|^);-?\)(?=(\s|$))/gi,				//
+		'😜': /(\s|^);-?\p(?=(\s|$))/gi,				//
 		//squint: /(\s|^)-_-(?=(\s|$))/gi,
-		'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g
+		'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g				// <3 - Heart
 	}
 	for (var e in emoticons) {
 		if (emoticons.hasOwnProperty(e)) {
@@ -1100,20 +1110,20 @@ var openBuddyMenu = function(nickname) {
 
 // Check for nickname completion.
 // Called when pressing tab in user input.
-var _nicknameCompletion = function(input) {
-	var nickname, match, suffix
-	for (nickname in Cryptodog.buddies) {
-		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
-			try { match = nickname.match(input.match(/(\S)+$/)[0]) }
-			catch(err) {}
-			if (match) {
-				if (input.match(/\s/)) { suffix = ' ' }
-				else { suffix = ': ' }
-				return input.replace(/(\S)+$/, nickname + suffix)
-			}
-		}
-	}
-}
+//var _nicknameCompletion = function(input) {
+//	var nickname, match, suffix
+//	for (nickname in Cryptodog.buddies) {
+//		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
+//			try { match = nickname.match(input.match(/(\S)+$/)[0]) }
+//			catch(err) {}
+//			if (match) {
+//				if (input.match(/\s/)) { suffix = ' ' }
+//				else { suffix = ': ' }
+//				return input.replace(/(\S)+$/, nickname + suffix)
+//			}
+//		}
+//	}
+//}
 
 var nicknameCompletion = function(input) {
 	var nickname, suffix
@@ -1122,8 +1132,9 @@ var nicknameCompletion = function(input) {
 		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
 			try {
 				potentials.push({
-				score: nickname.score(input.match(/(\S)+$/)[0]),
-				value: nickname})
+				    score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
+				    value: nickname
+				})
 			}
 			catch (err) {
 				log("completion: " + err)
@@ -1131,21 +1142,28 @@ var nicknameCompletion = function(input) {
 		}
 	}
 	var largest = potentials[0];
-	
-	for (var i = 0; i < potentials.length; i++) {
-		if (potentials[i].score > largest.score) {
-			largest = potentials[i]
-		}
-		log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
-	}
+
+    // find item with largest score
+    potentials.forEach(function(item) {
+        if (item.score > largest.score) {
+            largest = item
+        }
+    }, this)
+
+	//for (var i = 0; i < potentials.length; i++) {
+	//	if (potentials[i].score > largest.score) {
+	//		largest = potentials[i]
+	//	}
+	//	log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
+	//}
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
-	if (input.match(/\s/)) { 
-		suffix = ' ' 
+	if (input.match(/\s/)) {
+		suffix = ' '
 	}
 	else {
 		 suffix = ': '
 	}
-	if (largest.score == 0)
+	if (largest.score < 0.1)    // cut-off matching attempt if all scores are low
 		return input;
 	return input.replace(/(\S)+$/, largest.value + suffix)
 }
