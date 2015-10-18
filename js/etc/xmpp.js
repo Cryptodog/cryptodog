@@ -106,6 +106,7 @@ Cryptodog.xmpp.connect = function() {
 Cryptodog.xmpp.onConnected = function() {
 	afterConnect()
 	$('#loginInfo').text('✓')
+	$('#status').attr('src', 'img/icons/checkmark.svg');
 	$('#buddy-groupChat,#status').show()
 	$('#buddy-groupChat').insertBefore('#buddiesOnline')
 	$('#fill').stop().animate({
