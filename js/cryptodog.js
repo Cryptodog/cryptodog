@@ -1111,21 +1111,6 @@ var openBuddyMenu = function(nickname) {
 
 // Check for nickname completion.
 // Called when pressing tab in user input.
-//var _nicknameCompletion = function(input) {
-//	var nickname, match, suffix
-//	for (nickname in Cryptodog.buddies) {
-//		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
-//			try { match = nickname.match(input.match(/(\S)+$/)[0]) }
-//			catch(err) {}
-//			if (match) {
-//				if (input.match(/\s/)) { suffix = ' ' }
-//				else { suffix = ': ' }
-//				return input.replace(/(\S)+$/, nickname + suffix)
-//			}
-//		}
-//	}
-//}
-
 var nicknameCompletion = function(input) {
 	var nickname, suffix
 	var potentials = []
@@ -1151,12 +1136,6 @@ var nicknameCompletion = function(input) {
         }
     }, this)
 
-	//for (var i = 0; i < potentials.length; i++) {
-	//	if (potentials[i].score > largest.score) {
-	//		largest = potentials[i]
-	//	}
-	//	log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
-	//}
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) {
 		suffix = ' '
