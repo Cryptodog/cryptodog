@@ -52,14 +52,6 @@ Cryptodog.sounds = {
 	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
 }
 
-var allowDebugLogging = false
-
-var log = function (message) {
-    if (!allowDebugLogging)
-        return
-    console.log(message)
-}
-
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
 
