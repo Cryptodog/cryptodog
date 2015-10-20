@@ -931,7 +931,8 @@ var handleNotificationTimeout = function() {
 window.setInterval(handleNotificationTimeout, 1000);
 
 function notificationTruncate(msg) {
-    if (msg.length > 50) {
+    var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    if (msg.length > 50 && is_firefox) {
         log("Truncating notification")
         return msg.substring(0,50) + "..."
     }
