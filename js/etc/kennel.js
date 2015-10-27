@@ -15,9 +15,7 @@ $(window).ready(function () {
     localforage.config()
 
     // Cryptodog Storage API
-    // This API uses different local storage solutions,
-    // depending on the browser engine, to offer a uniform
-    // storage interface for Cryptodog user preferences and settings.
+    // This API exists as a shim between Cryptodog and localForage
 
     // How to use:
     // Cryptodog.storage.setItem(itemName, itemValue)

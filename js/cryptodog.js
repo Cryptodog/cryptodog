@@ -577,16 +577,16 @@ Cryptodog.displayInfo = function(nickname) {
 		chatWindow = Cryptodog.locale.chatWindow
 	infoDialog = Mustache.render(Cryptodog.templates[infoDialog], {
 		nickname: nickname,
-		authenticated: Cryptodog.locale.auth.authenticated + ':',
-		learnMoreAuth: Cryptodog.locale.auth.learnMoreAuth,
-		otrFingerprint: chatWindow.otrFingerprint,
-		groupFingerprint: chatWindow.groupFingerprint,
-		authenticate: chatWindow.authenticate,
+		authenticated:      Cryptodog.locale.auth.authenticated + ':',
+		learnMoreAuth:      Cryptodog.locale.auth.learnMoreAuth,
+		otrFingerprint:     chatWindow.otrFingerprint,
+		groupFingerprint:   chatWindow.groupFingerprint,
+		authenticate:       chatWindow.authenticate,
 		verifyUserIdentity: chatWindow.verifyUserIdentity,
-		secretQuestion: chatWindow.secretQuestion,
-		secretAnswer: chatWindow.secretAnswer,
-		ask: chatWindow.ask,
-		identityVerified: chatWindow.identityVerified
+		secretQuestion:     chatWindow.secretQuestion,
+		secretAnswer:       chatWindow.secretAnswer,
+		ask:                chatWindow.ask,
+		identityVerified:   chatWindow.identityVerified
 	})
 	ensureOTRdialog(nickname, false, function() {
 		if (isMe) {
