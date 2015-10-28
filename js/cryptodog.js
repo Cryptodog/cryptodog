@@ -38,6 +38,7 @@ Cryptodog.buddies = {}
 // For persistent ignores.
 Cryptodog.ignoredNames = []
 
+/*
 Cryptodog.audioExt = '.mp3'
 if (navigator.userAgent.match(/(OPR)|(Firefox)/)) {
 	Cryptodog.audioExt = '.ogg'
@@ -51,14 +52,7 @@ Cryptodog.sounds = {
 	'msgGet':      (new Audio('snd/msgGet'      + Cryptodog.audioExt)),
 	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
 }
-
-var allowDebugLogging = false
-
-var log = function (message) {
-    if (!allowDebugLogging)
-        return
-    console.log(message)
-}
+*/
 
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
@@ -67,8 +61,6 @@ var notifImg = "img/cryptodog-logo.png";
 Notification.requestPermission(function(permission){
 	log("asked for notification permission, got '" + permission + "'");
 });
-
-
 
 /*
 -------------------
