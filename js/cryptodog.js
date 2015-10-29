@@ -8,15 +8,7 @@ GLOBAL VARIABLES
 
 Cryptodog.version = '1.1.6' // Version number
 
-// set to true to allow debug lines to be written to console
-var allowDebugLogging = false
-
-// for debugging
-var log = function(message) {
-	if (!allowDebugLogging)
-		return
-	console.log(message)
-}
+// debug lines moved to js/etc/debug.js
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -38,6 +30,7 @@ Cryptodog.buddies = {}
 // For persistent ignores.
 Cryptodog.ignoredNames = []
 
+/*
 Cryptodog.audioExt = '.mp3'
 if (navigator.userAgent.match(/(OPR)|(Firefox)/)) {
 	Cryptodog.audioExt = '.ogg'
@@ -51,15 +44,7 @@ Cryptodog.sounds = {
 	'msgGet':      (new Audio('snd/msgGet'      + Cryptodog.audioExt)),
 	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
 }
-
-var allowDebugLogging = false
-
-var log = function (message) {
-    if (!allowDebugLogging)
-        return
-    console.log(message)
-}
-
+*/
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
 
@@ -67,8 +52,6 @@ var notifImg = "img/cryptodog-logo.png";
 Notification.requestPermission(function(permission){
 	log("asked for notification permission, got '" + permission + "'");
 });
-
-
 
 /*
 -------------------
@@ -577,16 +560,16 @@ Cryptodog.displayInfo = function(nickname) {
 		chatWindow = Cryptodog.locale.chatWindow
 	infoDialog = Mustache.render(Cryptodog.templates[infoDialog], {
 		nickname: nickname,
-		authenticated: Cryptodog.locale.auth.authenticated + ':',
-		learnMoreAuth: Cryptodog.locale.auth.learnMoreAuth,
-		otrFingerprint: chatWindow.otrFingerprint,
-		groupFingerprint: chatWindow.groupFingerprint,
-		authenticate: chatWindow.authenticate,
+		authenticated:      Cryptodog.locale.auth.authenticated + ':',
+		learnMoreAuth:      Cryptodog.locale.auth.learnMoreAuth,
+		otrFingerprint:     chatWindow.otrFingerprint,
+		groupFingerprint:   chatWindow.groupFingerprint,
+		authenticate:       chatWindow.authenticate,
 		verifyUserIdentity: chatWindow.verifyUserIdentity,
-		secretQuestion: chatWindow.secretQuestion,
-		secretAnswer: chatWindow.secretAnswer,
-		ask: chatWindow.ask,
-		identityVerified: chatWindow.identityVerified
+		secretQuestion:     chatWindow.secretQuestion,
+		secretAnswer:       chatWindow.secretAnswer,
+		ask:                chatWindow.ask,
+		identityVerified:   chatWindow.identityVerified
 	})
 	ensureOTRdialog(nickname, false, function() {
 		if (isMe) {
@@ -931,7 +914,8 @@ var handleNotificationTimeout = function() {
 window.setInterval(handleNotificationTimeout, 1000);
 
 function notificationTruncate(msg) {
-    if (msg.length > 50) {
+    var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    if (msg.length > 50 && is_firefox) {
         log("Truncating notification")
         return msg.substring(0,50) + "..."
     }
@@ -1118,21 +1102,6 @@ var openBuddyMenu = function(nickname) {
 
 // Check for nickname completion.
 // Called when pressing tab in user input.
-//var _nicknameCompletion = function(input) {
-//	var nickname, match, suffix
-//	for (nickname in Cryptodog.buddies) {
-//		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
-//			try { match = nickname.match(input.match(/(\S)+$/)[0]) }
-//			catch(err) {}
-//			if (match) {
-//				if (input.match(/\s/)) { suffix = ' ' }
-//				else { suffix = ': ' }
-//				return input.replace(/(\S)+$/, nickname + suffix)
-//			}
-//		}
-//	}
-//}
-
 var nicknameCompletion = function(input) {
 	var nickname, suffix
 	var potentials = []
@@ -1158,12 +1127,6 @@ var nicknameCompletion = function(input) {
         }
     }, this)
 
-	//for (var i = 0; i < potentials.length; i++) {
-	//	if (potentials[i].score > largest.score) {
-	//		largest = potentials[i]
-	//	}
-	//	log("completion.potential: score=" + potentials[i].score + ",value=" + potentials[i].value)
-	//}
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) {
 		suffix = ' '

@@ -6,7 +6,7 @@ $(window).ready(function () {
     // TODO: Actually handle errrors
     function StripError(err, val) {
         if (err) {
-            console.log("Error reading storage, returning null")
+            log("Error reading storage, returning null")
             return null
         }
         return val
@@ -15,9 +15,7 @@ $(window).ready(function () {
     localforage.config()
 
     // Cryptodog Storage API
-    // This API uses different local storage solutions,
-    // depending on the browser engine, to offer a uniform
-    // storage interface for Cryptodog user preferences and settings.
+    // This API exists as a shim between Cryptodog and localForage
 
     // How to use:
     // Cryptodog.storage.setItem(itemName, itemValue)
@@ -37,22 +35,26 @@ $(window).ready(function () {
             setItem: function(key, val) {
                 localforage.setItem(key, val, function(err, result) {
                     if (err) {
-                        console.log("error when setting item in localForage")
+                        console.error("error when setting item in localForage")
+                    } else {
+                        log("wrote key '" + key + "' to storage.")
                     }
                 })
             },
             getItem: function(key, callback) {
                 return localforage.getItem(key, function (err, val) {
                     if (err) {
-                        console.log("An error occurred during localStorage read.")
+                        console.error("An error occurred during localStorage read.")
                         return null
+                    } else {
+                        log("read key '" + key + "' from storage.")
                     }
                     callback(val)
                 })
             },
             removeItem: function(key) {
                 localforage.removeItem(key, function(thing) {
-                    console.log("removed item from storage")
+                    log("removed item from storage")
                 })
             }
         }
