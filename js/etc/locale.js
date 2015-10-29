@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    allowDebugLogging = true;
 
     Cryptodog.locale = {};
     var languageObject;
