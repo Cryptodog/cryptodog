@@ -1,10 +1,11 @@
 {
     "languages": [
-        "en-us"
+        "en-us",
+        "ca-es"
     ],
     "aliases": {
-        "en-CA": "en-us",
-        "zh-TW": "zh-hk",
-        "zh-SG": "zh-cn"
+        "en-ca": "en-us",
+        "zh-tw": "zh-hk",
+        "zh-sg": "zh-cn"
     }
 }
