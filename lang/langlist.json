@@ -1,10 +1,44 @@
 {
     "languages": [
-        "en-us"
+        "ar",
+        "bg",
+        "bo",
+        "ca",
+        "cs",
+        "da",
+        "de",
+        "el",
+        "en-us",
+        "es",
+        "et",
+        "eu",
+        "fa",
+        "fr",
+        "he",
+        "in",
+        "it",
+        "ja",
+        "km",
+        "kn",
+        "ko",
+        "lol",
+        "lv",
+        "nl",
+        "no",
+        "pl",
+        "pt",
+        "ru",
+        "sk",
+        "sv",
+        "tr",
+        "uk",
+        "vi",
+        "zh-cn",
+        "zh-hk"
     ],
     "aliases": {
-        "en-CA": "en-us",
-        "zh-TW": "zh-hk",
-        "zh-SG": "zh-cn"
+        "en-ca": "en-us",
+        "zh-tw": "zh-hk",
+        "zh-sg": "zh-cn"
     }
 }
