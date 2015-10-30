@@ -86,23 +86,6 @@
         $('#conversationName').select();
     }
 
-    // Handle aliases
-    Cryptodog.locale.handleAliases = function (locale) {
-        console.error("handleAliases is deprecated.");
-
-
-        if (locale === ('zh-hk' || 'zh-tw')) {
-            return 'zh-hk';
-        }
-        else if (locale === ('zh-cn' || 'zh-sg')) {
-            return 'zh-cn';
-        }
-        else if (locale.match('-')) {
-            return locale.match(/[a-z]+/)[0];
-        }
-        return locale
-    }
-
     // Populate language
     if (typeof (window) !== 'undefined') {
         $(window).ready(function() {
