@@ -3,7 +3,6 @@
 
 
     Cryptodog.locale = {};
-    var languageObject;
 
     Cryptodog.locale.set = function (locale, refresh) {
         Cryptodog.locale.buildObject(locale, refresh);
@@ -91,7 +90,8 @@
     if (typeof (window) !== 'undefined') {
         $(window).ready(function() {
             log("Window ready, loading default language");
-            Cryptodog.locale.set('en-US', true);
+            var lang = window.navigator.userLanguage || window.navigator.language;
+            Cryptodog.locale.set(lang, true);
         });
     }
 
