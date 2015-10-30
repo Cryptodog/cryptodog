@@ -39,6 +39,7 @@
     "aliases": {
         "en-ca": "en-us",
         "zh-tw": "zh-hk",
-        "zh-sg": "zh-cn"
+        "zh-sg": "zh-cn",
+        "en": "en-us"
     }
 }

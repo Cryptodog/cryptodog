@@ -28,9 +28,10 @@
             }
 
             // make sure language is enabled
-            if (!langlist["languages"].indexOf(locale) === -1) {
+            if (langlist["languages"].indexOf(locale) === -1) {
                 // language not present, default to en-US
                 console.warn("Locale '" + locale + "' was not found, defaulting to en-US.");
+                locale = "en-us";
             } else {
                 log("Locale '" + locale + "' found, loading.");
             }
