@@ -5,3 +5,7 @@ function log(message) {
         console.log(message);
     }
 }
+
+function stringifyBool(value) {
+    return value ? "true" : "false";
+}

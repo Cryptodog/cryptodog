@@ -3,13 +3,8 @@
 
     Cryptodog.locale = {};
 
-    Cryptodog.locale.set = function(locale, refresh) {
-        Cryptodog.locale.buildObject(locale, refresh);
-    };
-
-    // alternate async JSON-based language object builder
-    Cryptodog.locale.buildObject = function(locale, refresh) {
-        log("Locale builder invoked");
+    Cryptodog.locale.set = function (locale, refresh) {
+        log("locale set to '" + locale + "', refresh=" + stringifyBool(refresh));
 
         // make locale lowercase
         locale = locale.toLowerCase();
@@ -35,6 +30,7 @@
             }
             
             // load language file
+            // TODO: Handle missing language elements (load missing from en-us?)
             $.getJSON("lang/" + locale + ".json", function(data) {
                 log("Got language file '" + locale + "'");
                 for (var o in data) {
@@ -42,7 +38,6 @@
                         Cryptodog.locale[o] = data[o];
                     }
                 }
-                log(refresh ? "Caller requested refresh" : "Caller did not request refresh");
                 if (refresh)
                     Cryptodog.locale.refresh(data);
             });
@@ -57,20 +52,20 @@
             $('body').css({ 'font-size': '11px' });
         }
         $('body').css('font-family', languageObject.fonts);
-        $('#introHeader').text(languageObject.loginWindow['introHeader']);
-        $('#introParagraph').html(languageObject.loginWindow['introParagraph']);
-        $('#customServer').text(languageObject.loginWindow['customServer']);
-        $('#conversationName').attr('placeholder', languageObject.loginWindow['conversationName']);
-        $('#conversationName').attr('data-utip', languageObject.loginWindow['conversationNameTooltip']);
-        $('#nickname').attr('placeholder', languageObject.loginWindow['nickname']);
-        $('#loginSubmit').val(languageObject.loginWindow['connect']);
-        $('#loginInfo').text(languageObject.loginWindow['enterConversation']);
-        $('#logout').attr('data-utip', languageObject.chatWindow['logout']);
-        $('#audio').attr('data-utip', languageObject.chatWindow['audioNotificationsOff']);
-        $('#notifications').attr('data-utip', languageObject.chatWindow['desktopNotificationsOff']);
-        $('#myInfo').attr('data-utip', languageObject.chatWindow['myInfo']);
-        $('#status').attr('data-utip', languageObject.chatWindow['statusAvailable']);
-        $('#buddy-groupChat').find('span').text(languageObject.chatWindow['conversation']);
+        $('#introHeader').text(languageObject.loginWindow.introHeader);
+        $('#introParagraph').html(languageObject.loginWindow.introParagraph);
+        $('#customServer').text(languageObject.loginWindow.customServer);
+        $('#conversationName').attr('placeholder', languageObject.loginWindow.conversationName);
+        $('#conversationName').attr('data-utip', languageObject.loginWindow.conversationNameTooltip);
+        $('#nickname').attr('placeholder', languageObject.loginWindow.nickname);
+        $('#loginSubmit').val(languageObject.loginWindow.connect);
+        $('#loginInfo').text(languageObject.loginWindow.enterConversation);
+        $('#logout').attr('data-utip', languageObject.chatWindow.logout);
+        $('#audio').attr('data-utip', languageObject.chatWindow.audioNotificationsOff);
+        $('#notifications').attr('data-utip', languageObject.chatWindow.desktopNotificationsOff);
+        $('#myInfo').attr('data-utip', languageObject.chatWindow.myInfo);
+        $('#status').attr('data-utip', languageObject.chatWindow.statusAvailable);
+        $('#buddy-groupChat').find('span').text(languageObject.chatWindow.conversation);
         $('#languageSelect').text($('[data-locale=' + languageObject.language + ']').text());
         $('[data-login=cryptocat]').text(languageObject.login.groupChat);
         $('[data-utip]').utip();
