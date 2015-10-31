@@ -51,8 +51,7 @@
 
     // Re-render login page with new strings
     Cryptodog.locale.refresh = function(languageObject) {
-        var smallType = ['bo', 'ar', 'in'];
-        if (smallType.indexOf(languageObject.language) >= 0) {
+        if (languageObject.smallType) {
             $('body').css({ 'font-size': '13px' });
         } else {
             $('body').css({ 'font-size': '11px' });
