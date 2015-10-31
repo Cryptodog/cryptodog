@@ -1,3 +1,5 @@
+[![bitHound Score](https://www.bithound.io/github/Cryptodog/cryptodog-webclient/badges/score.svg)](https://www.bithound.io/github/Cryptodog/cryptodog-webclient)
+
 # Cryptodog Web Client
 
 Cryptodog is a fork of the popular encrypted messaging program, [Cryptocat](https://github.com/cryptocat/cryptocat). Unfortunately, the latter hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features so that Cryptocat remains usable.
