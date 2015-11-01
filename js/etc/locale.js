@@ -1,46 +1,44 @@
 (function() {
     'use strict';
 
+    allowDebugLogging = true;
+
     Cryptodog.locale = {};
+    Cryptodog.langlist = {};
 
     Cryptodog.locale.set = function (locale, refresh) {
         log("locale set to '" + locale + "', refresh=" + stringifyBool(refresh));
 
         // make locale lowercase
         locale = locale.toLowerCase();
+        
+        // handle aliases
+        if (Cryptodog.langlist.aliases.hasOwnProperty(locale)) {
+            var newlang = Cryptodog.langlist.aliases[locale];
+            log(locale + " -> " + newlang);
+            locale = newlang;
+        }
 
-        // get a list of available languages
-        $.getJSON("lang/langlist.json", function(langlist) {
-            log("Got langlist");
-
-            // handle aliases
-            if (langlist.aliases.hasOwnProperty(locale)) {
-                var newlang = langlist.aliases[locale];
-                log(locale + " -> " + newlang);
-                locale = newlang;
-            }
-
-            // make sure language is present
-            if (langlist.languages.indexOf(locale) === -1) {
-                // language not present, default to en-US
-                console.warn("Locale '" + locale + "' was not found, defaulting to en-US.");
-                locale = "en-us";
-            } else {
-                log("Locale '" + locale + "' found, loading.");
-            }
+        // make sure language is present
+        if (Cryptodog.langlist.languages.indexOf(locale) === -1) {
+            // language not present, default to en-US
+            console.warn("Locale '" + locale + "' was not found, defaulting to en-US.");
+            locale = "en-us";
+        } else {
+            log("Locale '" + locale + "' found, loading.");
+        }
             
-            // load language file
-            // TODO: Handle missing language elements (load missing from en-us?)
-            $.getJSON("lang/" + locale + ".json", function(data) {
-                log("Got language file '" + locale + "'");
-                for (var o in data) {
-                    if (data.hasOwnProperty(o)) {
-                        Cryptodog.locale[o] = data[o];
-                    }
+        // load language file
+        // TODO: Handle missing language elements (load missing from en-us?)
+        $.getJSON("lang/" + locale + ".json", function(data) {
+            log("Got language file '" + locale + "'");
+            for (var o in data) {
+                if (data.hasOwnProperty(o)) {
+                    Cryptodog.locale[o] = data[o];
                 }
-                if (refresh)
-                    Cryptodog.locale.refresh(data);
-            });
+            }
+            if (refresh)
+                Cryptodog.locale.refresh(data);
         });
     };
 
@@ -83,7 +81,12 @@
         $(window).ready(function() {
             log("Window ready, loading language based on browser preferences");
             var lang = window.navigator.userLanguage || window.navigator.language;
-            Cryptodog.locale.set(lang, true);
+            // fetch langlist
+            $.getJSON("lang/langlist.json", function (data) {
+                log("Got langlist file");
+                Cryptodog.langlist = data;
+                Cryptodog.locale.set(lang, true);
+            })
         });
     }
 
