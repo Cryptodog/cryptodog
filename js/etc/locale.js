@@ -3,6 +3,7 @@
 
     Cryptodog.locale = {};
     Cryptodog.langlist = {};
+    Cryptodog.locale.allowTutorial = false; // TODO: Load this from locale file
 
     Cryptodog.locale.set = function (locale, refresh) {
         log("locale set to '" + locale + "', refresh=" + stringifyBool(refresh));
@@ -25,6 +26,10 @@
         } else {
             log("Locale '" + locale + "' found, loading.");
         }
+
+        if (locale === "en-us") {
+            Cryptodog.allowTutorial = true;
+        }
             
         // load language file
         // TODO: Handle missing language elements (load missing from en-us?)
@@ -35,8 +40,9 @@
                     Cryptodog.locale[o] = data[o];
                 }
             }
-            if (refresh)
+            if (refresh) {
                 Cryptodog.locale.refresh(data);
+            }
         });
     };
 
@@ -80,11 +86,11 @@
             log("Window ready, loading language based on browser preferences");
             var lang = window.navigator.userLanguage || window.navigator.language;
             // fetch langlist
-            $.getJSON("lang/langlist.json", function (data) {
+            $.getJSON("lang/langlist.json", function(data) {
                 log("Got langlist file");
                 Cryptodog.langlist = data;
                 Cryptodog.locale.set(lang, true);
-            })
+            });
         });
     }
 
