@@ -142,10 +142,7 @@ if (typeof (window) !== 'undefined') {
         // `type` can be 'file', 'message', 'warning' or 'missingRecipients'.
         // In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
         Cryptodog.addToConversation = function(message, nickname, conversation, type) {
-            //if (nickname === Cryptodog.me.nickname) {
-
-            //}
-            if (Cryptodog.buddies[nickname].ignored) {
+            if (nickname !== Cryptodog.me.nickname && Cryptodog.buddies[nickname].ignored) {
                 return false;
             }
             initializeConversationBuffer(conversation);
