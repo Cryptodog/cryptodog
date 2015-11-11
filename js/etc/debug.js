@@ -1,4 +1,4 @@
-var allowDebugLogging = false;
+var allowDebugLogging = true;
 
 function log(message) {
     if (allowDebugLogging) {
