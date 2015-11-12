@@ -2,15 +2,16 @@ $(window).ready(function() {
     'use strict';
 
     var updateCustomServers = function() {
-        var customServers = {};
-        $('#customServerSelector option').each(function() {
-            var name = $(this).val();
-            customServers[name] = {};
-            customServers[name].domain = $(this).attr('data-domain');
-            customServers[name].xmpp = $(this).attr('data-xmpp');
-            customServers[name].relay = $(this).attr('data-relay');
+        var customServers = [];
+        $('#customServerSelector option').each(function () {
+            var object = {};
+            object.name = $(this).val();
+            object.domain = $(this).attr('data-domain');
+            object.xmpp = $(this).attr('data-xmpp');
+            object.relay = $(this).attr('data-relay');
+            customServers.push(object);
         });
-        Cryptodog.storage.setItem('customServers', JSON.stringify(customServers));
+        Cryptodog.storage.setItem('customServers', customServers);
     };
 
     $('#customServer').click(function() {
@@ -57,10 +58,17 @@ $(window).ready(function() {
                 Cryptodog.xmpp.domain = $('#customDomain').val();
                 Cryptodog.xmpp.conferenceServer = $('#customConferenceServer').val();
                 Cryptodog.xmpp.relay = $('#customRelay').val();
-                Cryptodog.storage.setItem('serverName', Cryptodog.serverName);
-                Cryptodog.storage.setItem('domain', Cryptodog.xmpp.domain);
-                Cryptodog.storage.setItem('conferenceServer', Cryptodog.xmpp.conferenceServer);
-                Cryptodog.storage.setItem('relay', Cryptodog.xmpp.relay);
+                var serverObject = {
+                    serverName: Cryptodog.serverName,
+                    domain: Cryptodog.xmpp.domain,
+                    conferenceServer: Cryptodog.xmpp.conferenceServer,
+                    relay: Cryptodog.xmpp.relay
+                }
+                Cryptodog.storage.setItem('server', serverObject);
+                //Cryptodog.storage.setItem('serverName', Cryptodog.serverName);
+                //Cryptodog.storage.setItem('domain', Cryptodog.xmpp.domain);
+                //Cryptodog.storage.setItem('conferenceServer', Cryptodog.xmpp.conferenceServer);
+                //Cryptodog.storage.setItem('relay', Cryptodog.xmpp.relay);
             });
             $('#customDomain').select();
         });

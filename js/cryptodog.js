@@ -925,32 +925,44 @@ if (typeof (window) !== 'undefined') {
             return msg;
         }
 
-        var desktopNotification = function(image, title, body, timeout) {
+        function desktopNotification(image, title, body, timeout) {
             if (Cryptodog.me.windowFocus) {
                 console.log("tried to show desktop notif, but window had focus");
                 return false;
             }
-            if (!Cryptodog.desktopNotifications) {
-                console.log("tried to show desktop notif, but notifs are off");
-                return false;
-            }
-            var notificationStatus = Notification.permission;
-            console.log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title);
-            if (notificationStatus === 'granted') {
-                var n = new Notification(title, {
-                    body: notificationTruncate(body),
-                    icon: image
-                });
-                currentNotifications.push({
-                    notification: n,
-                    timeout: timeout
-                });
-            } else if (notificationStatus === "default" || notificationStatus === null || notificationStatus === "") {
-                console.log("Notification permission not granted, requesting.");
-                // request permission
-                Notification.requestPermission();
-            }
+
+            Cryptodog.storage.getItem("desktopNotifications", desktopNotificationCallbackWrapper(image, title, body, timeout));
         };
+
+        function desktopNotificationCallbackWrapper(image, title, body, timeout) {
+            return function(value) {
+                if (typeof (value) !== "boolean") {
+                    console.warn("Kennel returned non-boolean for boolean value");
+                    value = false;
+                }
+
+                if (!value) {
+                    console.log("tried to show desktop notif, but notifs are off");
+                    return false;
+                }
+                var notificationStatus = Notification.permission;
+                console.log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title);
+                if (notificationStatus === 'granted') {
+                    var n = new Notification(title, {
+                        body: notificationTruncate(body),
+                        icon: image
+                    });
+                    currentNotifications.push({
+                        notification: n,
+                        timeout: timeout
+                    });
+                } else if (notificationStatus === "default" || notificationStatus === null || notificationStatus === "") {
+                    console.log("Notification permission not granted, requesting.");
+                    // request permission
+                    Notification.requestPermission();
+                }
+            }
+        }
 
         // Add a join/part notification to the conversation window.
         // If 'join === true', shows join notification, otherwise shows part.
@@ -1231,34 +1243,35 @@ if (typeof (window) !== 'undefined') {
                 $this.attr('title', Cryptodog.locale.chatWindow.desktopNotificationsOn);
                 $this.attr('data-utip', Cryptodog.locale.chatWindow.desktopNotificationsOn);
                 $this.mouseenter();
-                Cryptodog.desktopNotifications = true;
-                Cryptodog.storage.setItem('desktopNotifications', 'true');
+                //Cryptodog.desktopNotifications = true;
+                Cryptodog.storage.setItem('desktopNotifications', true);
                 var notifStatus = Notification.permission;
                 if (notifStatus === 'denied') {
                     // notifications supported but not enabled
                     Notification.requestPermission();
                     // check if user actually accepted
                     if (Notification.permission === 'denied') {
-                        Cryptodog.desktopNotifications = false;
-                        Cryprodog.storage.setItem('desktopNotifications', 'false');
+                        //Cryptodog.desktopNotifications = false;
+                        Cryprodog.storage.setItem('desktopNotifications', false);
                     }
                 } else if (notifStatus === 'unknown') {
                     // browser doesn't support desktop notifications
+                    // TODO: Don't use alert()
                     alert("It looks like your browser doesn't support desktop notifications.");
                     $this.attr('src', 'img/icons/bubble2.svg');
                     $this.attr('title', Cryptodog.locale.chatWindow.desktopNotificationsOff);
                     $this.attr('data-utip', Cryptodog.locale.chatWindow.desktopNotificationsOff);
                     $this.mouseenter();
-                    Cryptodog.desktopNotifications = false;
-                    Cryptodog.storage.setItem('desktopNotifications', 'false');
+                    //Cryptodog.desktopNotifications = false;
+                    Cryptodog.storage.setItem('desktopNotifications', false);
                 }
             } else {
                 $this.attr('src', 'img/icons/bubble2.svg');
                 $this.attr('title', Cryptodog.locale.chatWindow.desktopNotificationsOff);
                 $this.attr('data-utip', Cryptodog.locale.chatWindow.desktopNotificationsOff);
                 $this.mouseenter();
-                Cryptodog.desktopNotifications = false;
-                Cryptodog.storage.setItem('desktopNotifications', 'false');
+                //Cryptodog.desktopNotifications = false;
+                Cryptodog.storage.setItem('desktopNotifications', false);
             }
         });
 

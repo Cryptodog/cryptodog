@@ -18,8 +18,6 @@ $(window).ready(function() {
 
     // Cryptodog.storage.removeItem(itemName)
     // Removes itemName and its value from local storage.
-
-    // Define the wrapper, depending on our browser or environment.
     Cryptodog.storage = (function() {
         // let localForage handle browser detection, etc
         return {
@@ -28,7 +26,7 @@ $(window).ready(function() {
                     if (err) {
                         console.error("error when setting item in localForage");
                     } else {
-                        log("wrote key '" + key + "' to storage.");
+                        console.log("wrote key '" + key + "' to storage.");
                     }
                 });
             },
@@ -38,14 +36,14 @@ $(window).ready(function() {
                         console.error("An error occurred during localStorage read.");
                         return null;
                     } else {
-                        log("read key '" + key + "' from storage.");
+                        console.log("read key '" + key + "' from storage.");
                     }
                     callback(val);
                 });
             },
             removeItem: function(key) {
                 localforage.removeItem(key, function(item) {
-                    log("removed item from storage");
+                    console.log("removed item from storage");
                 });
             }
         };
@@ -60,41 +58,52 @@ $(window).ready(function() {
         }
     });
 
+    // Load custom server settings object
+    Cryptodog.storage.getItem('server', function(value) {
+        if (value !== null) {
+            Cryptodog.serverName = value.key;
+            Cryptodog.xmpp.domain = value.domain;
+            Cryptodog.xmpp.conferenceServer = value.conferenceServer;
+            Cryptodog.xmpp.relay = value.relay;
+        }
+    });
+
     // Load custom server settings
-    Cryptodog.storage.getItem('serverName', function(key) {
-        if (key) {
-            Cryptodog.serverName = key;
-        }
-    });
-    Cryptodog.storage.getItem('domain', function(key) {
-        if (key) {
-            Cryptodog.xmpp.domain = key;
-        }
-    });
-    Cryptodog.storage.getItem('conferenceServer', function(key) {
-        if (key) {
-            Cryptodog.xmpp.conferenceServer = key;
-        }
-    });
-    Cryptodog.storage.getItem('relay', function(key) {
-        if (key) {
-            Cryptodog.xmpp.relay = key;
-        }
-    });
+    //Cryptodog.storage.getItem('serverName', function(key) {
+    //    if (key) {
+    //        Cryptodog.serverName = key;
+    //    }
+    //});
+    //Cryptodog.storage.getItem('domain', function(key) {
+    //    if (key) {
+    //        Cryptodog.xmpp.domain = key;
+    //    }
+    //});
+    //Cryptodog.storage.getItem('conferenceServer', function(key) {
+    //    if (key) {
+    //        Cryptodog.xmpp.conferenceServer = key;
+    //    }
+    //});
+    //Cryptodog.storage.getItem('relay', function(key) {
+    //    if (key) {
+    //        Cryptodog.xmpp.relay = key;
+    //    }
+    //});
     Cryptodog.storage.getItem('customServers', function(key) {
         if (key) {
+            console.log("Populating server list");
             $('#customServerSelector').empty();
-            var servers = $.parseJSON(key);
-            $.each(servers, function(name) {
+            
+            key.forEach(function(item) {
                 $('#customServerSelector').append(
                     Mustache.render(Cryptodog.templates.customServer, {
-                        name: name,
-                        domain: servers[name].domain,
-                        XMPP: servers[name].xmpp,
-                        Relay: servers[name].relay
+                        name: item.name,
+                        domain: item.domain,
+                        XMPP: item.xmpp,
+                        Relay: item.relay
                     })
                 );
-            });
+            })
         }
     });
 
@@ -111,7 +120,7 @@ $(window).ready(function() {
     // Load notification settings.
     window.setTimeout(function() {
         Cryptodog.storage.getItem('desktopNotifications', function(key) {
-            if (key === 'true') {
+            if (typeof (key) === "boolean" && key) {
                 $('#notifications').click();
                 $('#utip').hide();
             }
