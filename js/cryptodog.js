@@ -51,9 +51,9 @@ Cryptodog.sounds = {
 var notifImg = "img/cryptodog-logo.png";
 
 
-Notification.requestPermission(function (permission) {
-    log("asked for notification permission, got '" + permission + "'");
-});
+//Notification.requestPermission(function (permission) {
+//    log("asked for notification permission, got '" + permission + "'");
+//});
 
 /*
 -------------------
@@ -905,7 +905,7 @@ if (typeof (window) !== 'undefined') {
                 element.timeout -= 1;
                 if (element.timeout <= 0) {
                     element.notification.close();
-                    log("expiring notification");
+                    console.log("expiring notification");
                     removalIndexes.push(currentNotifications.indexOf(element));
                 }
             }, this);
@@ -919,7 +919,7 @@ if (typeof (window) !== 'undefined') {
         function notificationTruncate(msg) {
             var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
             if (msg.length > 50 && is_firefox) {
-                log("Truncating notification");
+                console.log("Truncating notification");
                 return msg.substring(0, 50) + "...";
             }
             return msg;
@@ -927,15 +927,15 @@ if (typeof (window) !== 'undefined') {
 
         var desktopNotification = function(image, title, body, timeout) {
             if (Cryptodog.me.windowFocus) {
-                log("tried to show desktop notif, but window had focus");
+                console.log("tried to show desktop notif, but window had focus");
                 return false;
             }
             if (!Cryptodog.desktopNotifications) {
-                log("tried to show desktop notif, but notifs are off");
+                console.log("tried to show desktop notif, but notifs are off");
                 return false;
             }
             var notificationStatus = Notification.permission;
-            log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title);
+            console.log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title);
             if (notificationStatus === 'granted') {
                 var n = new Notification(title, {
                     body: notificationTruncate(body),
@@ -946,6 +946,7 @@ if (typeof (window) !== 'undefined') {
                     timeout: timeout
                 });
             } else if (notificationStatus === "default" || notificationStatus === null || notificationStatus === "") {
+                console.log("Notification permission not granted, requesting.");
                 // request permission
                 Notification.requestPermission();
             }
