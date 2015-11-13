@@ -2,7 +2,7 @@
 
 # Cryptodog Web Client
 
-Cryptodog is a fork of the popular encrypted messaging program, [Cryptocat](https://github.com/cryptocat/cryptocat). Unfortunately, the latter hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features so that Cryptocat remains usable.
+Cryptodog is a fork of the popular encrypted messaging program, [Cryptocat](https://github.com/cryptocat/cryptocat). Unfortunately, Cryptocat hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features so that Cryptocat remains usable.
 
 This repository contains a pure JavaScript client you can either run locally in your browser, or via our hosted service at https://cryptodog.github.io/webclient.
 
@@ -16,40 +16,49 @@ This repository contains a pure JavaScript client you can either run locally in 
 * Unicode emoticons (may be removed; lousy support in some browsers)
 * Minor animation tweaks & additions
 * Different bugs
+* Loads faster
+* Easier to localize
 
-## Todo
+## Local Usage
 
-* Remove superfluous browser-specific code.
+Cryptodog can be used with file:/// URIs, as well as with a local webserver.
+It is recommended to use the local webserver approach when possible, as some features do not function on file:// URIs.
 
-    The obvious culprits have been deleted, but if you see something related to Chrome/Firefox/Mac, verify that it's redundant and remove it.
+If you are using file:///, use branch **master**, if you are using a local webserver, use branch **gh-pages**.
+All branches other than *master* have issues with loading language files on file:/// due to limitations of the protocol.
 
-* Remove Facebook support.
+## Localization
 
-    Mostly done. Language files and locale.js still contain references to FB, but these are opaque to the user.
+*This section does not apply to master*
 
-* Update libs and corresponding code calls!
+Cryptodog handles localization differently from Cryptocat. A list of all languages available, and their aliases are stored in `lang/langlist.json`. The file has the following syntax:
+```json
+{
+    "languages": [
+        "lang1",
+        "lang2"
+    ],
+    "aliases": {
+        "alias1": "lang1",
+        "alias2": "lang2",
+        "alias3": "lang1"
+    }
+}
+```
+`languages` is a list of all the languages available, excluding aliases. These must match the name of a JSON file in `lang`.
 
-* Add semicolons to JS files.
+`aliases` is a list of language aliases, in the form `"alias": "target"`.
 
-* Use cookies for option storage instead of addon APIs.
+If the locale is set to a language that cannot be found, the client will log a warning and default to `en-us`. If the client also fails to load `en-us`, no language will be loaded and localizable strings will not be populated.
 
-* Add support for capital letters in nicknames.
+Cryptodog currently does not have a in-UI way of changing locale, for now type `Cryptodog.locale.set("locale", true)` (where `"locale"` is one of the locales defined in `lang/langlist.json`) into your browser's console.
 
-    Need to make sure this doesn't mess up any XMPP stuff first.
+## Coding Style
 
-* Change code and UI references from "cryptocat" to "cryptodog".
-
-    Mostly done, only locales left to do.
-
-* Make dog logo.
-
-    Done, could possibly be improved
-
-* Add more emoticons.
-
-* Convert cat facts to dog facts.
-
-* Convert line-number based localization to JSON based system
+When working on the code, please follow these rules:
+* Use semicolons at the end of statements
+* Use double-quotes ("") instead of single-quotes ('') for strings
+* Use `item.key` notation instead of `item["key"]` notation when possible
 
 ## Thanks
 * xor - UI Rework, misc patches
