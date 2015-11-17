@@ -57,7 +57,7 @@ Cryptodog currently does not have a in-UI way of changing locale, for now type `
 
 When working on the code, please follow these rules:
 * Use semicolons at the end of statements
-* Use double-quotes ("") instead of single-quotes ('') for strings
+* Use double-quotes (" ") instead of single-quotes (' ') for strings
 * Use `item.key` notation instead of `item["key"]` notation when possible
 
 ## Thanks
