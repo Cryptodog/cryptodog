@@ -27,32 +27,6 @@ It is recommended to use the local webserver approach when possible, as some fea
 If you are using file:///, use branch **master**, if you are using a local webserver, use branch **gh-pages**.
 All branches other than *master* have issues with loading language files on file:/// due to limitations of the protocol.
 
-## Localization
-
-*This section does not apply to master*
-
-Cryptodog handles localization differently from Cryptocat. A list of all languages available, and their aliases are stored in `lang/langlist.json`. The file has the following syntax:
-```json
-{
-    "languages": [
-        "lang1",
-        "lang2"
-    ],
-    "aliases": {
-        "alias1": "lang1",
-        "alias2": "lang2",
-        "alias3": "lang1"
-    }
-}
-```
-`languages` is a list of all the languages available, excluding aliases. These must match the name of a JSON file in `lang`.
-
-`aliases` is a list of language aliases, in the form `"alias": "target"`.
-
-If the locale is set to a language that cannot be found, the client will log a warning and default to `en-us`. If the client also fails to load `en-us`, no language will be loaded and localizable strings will not be populated.
-
-Cryptodog currently does not have a in-UI way of changing locale, for now type `Cryptodog.locale.set("locale", true)` (where `"locale"` is one of the locales defined in `lang/langlist.json`) into your browser's console.
-
 ## Coding Style
 
 When working on the code, please follow these rules:
