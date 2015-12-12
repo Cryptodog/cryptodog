@@ -3,7 +3,7 @@
     "fonts": "\"Helvetica Neue\", Helvetica, Arial, Verdana",
     "loginWindow": {
         "introHeader": "Private Conversations for Everyone.",
-        "introParagraph": "Welcome to Cryptocat. Here are some helpful tips: <ul><li>Cryptocat is not a magic bullet. You should never trust any piece of software with your life.</li><li class=\"key\">Cryptocat can't protect you against untrustworthy people or key loggers, and does not anonymize your connection.</li></ul>",
+        "introParagraph": "Welcome to Cryptodog. Here are some helpful tips: <ul><li>Cryptodog is not a magic bullet. You should never trust any piece of software with your life.</li><li class=\"key\">Cryptodog can't protect you against untrustworthy people or key loggers, and does not anonymize your connection.</li></ul>",
         "blog": "Blog",
         "customServer": "Custom server",
         "reset": "Reset",
@@ -21,7 +21,7 @@
         "nicknameInUse": "Nickname in use.",
         "authenticationFailure": "Authentication failure.",
         "connectionFailed": "Connection failed.",
-        "thankYouUsing": "Thank you for using Cryptocat.",
+        "thankYouUsing": "Thank you for using Cryptodog.",
         "registering": "Registering...",
         "connecting": "Connecting...",
         "connected": "Connected.",
@@ -72,8 +72,8 @@
         "answer": "Answer"
     },
     "warnings": {
-        "messageWarning": "Warning: You have received an unreadable message from (NICKNAME). This may indicate an untrustworthy user or messages that failed to be received. You may also be running an outdated version of Cryptocat. Please check for updates.",
-        "updateWarning": "Warning: Your version of Cryptocat is outdated. Updating to the latest version is strongly recommended! Do not proceed without updating to the latest version.",
+        "messageWarning": "Warning: You have received an unreadable message from (NICKNAME). This may indicate an untrustworthy user or messages that failed to be received. You may also be running an outdated version of Cryptodog. Please check for updates.",
+        "updateWarning": "Warning: Your version of Cryptodog is outdated. Updating to the latest version is strongly recommended! Do not proceed without updating to the latest version.",
         "missingRecipientWarning": "Warning: this message could not be sent to (NICKNAME)"
     },
     "auth": {
@@ -81,10 +81,10 @@
         "userNotAuthenticated": "User is not authenticated.",
         "clickToLearnMore": "Click to learn more...",
         "learnMoreAuth": "Learn more about authentication",
-        "authPhrase1": "Every time you have a Cryptocat conversation, you need to authenticate the persons you are talking to.",
-        "authPhrase2": "One way you can authenticate is by using Cryptocat to ask your friend a secret question that only they would know the answer to.",
+        "authPhrase1": "Every time you have a Cryptodog conversation, you need to authenticate the persons you are talking to.",
+        "authPhrase2": "One way you can authenticate is by using Cryptodog to ask your friend a secret question that only they would know the answer to.",
         "authPhrase3": "You can also contact them via a trusted channel, such as by phone, and ask them to read their fingerprints.",
-        "authPhrase4": "Fingerprints are identifiers that allow you to authenticate persons. They can change between every Cryptocat conversation.",
+        "authPhrase4": "Fingerprints are identifiers that allow you to authenticate persons. They can change between every Cryptodog conversation.",
         "authPhrase5": "Without authentication, someone could be impersonating or intercepting your communications.",
         "AKEWarning": "The authentication fingerprints for this contact have changed. This is not supposed to happen and could indicate suspicious behaviour. Please authenticate this contact before chatting with them."
     },
