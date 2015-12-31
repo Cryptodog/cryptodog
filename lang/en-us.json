@@ -3,7 +3,7 @@
     "fonts": "\"Helvetica Neue\", Helvetica, Arial, Verdana",
     "loginWindow": {
         "introHeader": "Private Conversations for Everyone.",
-        "introParagraph": "Welcome to Cryptodog. Here are some helpful tips: <ul><li>Cryptodog is not a magic bullet. You should never trust any piece of software with your life.</li><li class=\"key\">Cryptodog can't protect you against untrustworthy people or key loggers, and does not anonymize your connection.</li></ul>",
+        "introParagraph": "Welcome to Cryptodog. Here are some helpful tips: <ul><li>Cryptodog is not a magic bullet. You should never trust any piece of software with your life.</li><li class=\"key\">Cryptodog can't protect you against untrustworthy people or key loggers, and does not anonymize your connection.</li><li>If you're <b>having trouble connecting</b>, try using a different server. Just click \"Custom server\" at the bottom right and pick one you and your conversation partner like.</ul>",
         "blog": "Blog",
         "customServer": "Custom server",
         "reset": "Reset",
