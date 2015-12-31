@@ -18,9 +18,9 @@ $('#customServer').click(function() {
 		$('#customServerSelector').append(
 			Mustache.render(Cryptodog.templates['customServer'], {
 				name: 'Cryptodog',
-				domain: Cryptodog.xmpp.defaultDomain,
-				XMPP: Cryptodog.xmpp.defaultConferenceServer,
-				Relay: Cryptodog.xmpp.defaultRelay
+				domain: 'crypto.cat',
+				XMPP: 'conference.crypto.cat',
+				Relay: 'https://crypto.cat/http-bind'
 			})
 		)
 
