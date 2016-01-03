@@ -24,14 +24,14 @@ $('#customServer').click(function() {
 			})
 		)
 
-		 $('#customServerSelector').append(
-                        Mustache.render(Cryptodog.templates['customServer'], {
-                                name: 'Cryptocrap (Alternate Server)',
-                                domain: 'cryptocrap.xyz',
-                                XMPP: 'conference.cryptocrap.xyz',
-                                Relay: 'https://cryptocrap.xyz/http-bind'
-                        })
-                )
+		$('#customServerSelector').append(
+			Mustache.render(Cryptodog.templates['customServer'], {
+				name: 'Cryptocrap',
+				domain: 'cryptocrap.xyz',
+				XMPP: 'conference.cryptocrap.xyz',
+				Relay: 'https://cryptocrap.xyz/http-bind'
+			})
+		)
 	}
 	$('#languages').hide()
 	$('#footer').animate({'height': 220}, function() {
