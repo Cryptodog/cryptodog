@@ -98,7 +98,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = HLP = {}
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.js')
+    BigInt = require('../vendor/bigint.mod.js')
   } else {
     if (root.OTR) root.OTR.HLP = HLP
     if (root.DSA) root.DSA.HLP = HLP
@@ -436,7 +436,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = DSA
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.js')
+    BigInt = require('../vendor/bigint.mod.js')
     WWPath = require('path').join(__dirname, '/dsa-webworker.js')
     HLP = require('./helpers.js')
   } else {
@@ -1047,7 +1047,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = AKE
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.js')
+    BigInt = require('../vendor/bigint.mod.js')
     CONST = require('./const.js')
     HLP = require('./helpers.js')
     DSA = require('./dsa.js')
@@ -1446,7 +1446,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = SM
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.js')
+    BigInt = require('../vendor/bigint.mod.js')
     EventEmitter = require('../vendor/eventemitter.js')
     CONST = require('./const.js')
     HLP = require('./helpers.js')
@@ -1881,7 +1881,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = OTR
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.js')
+    BigInt = require('../vendor/bigint.mod.js')
     EventEmitter = require('../vendor/eventemitter.js')
     SMWPath = require('path').join(__dirname, '/sm-webworker.js')
     CONST = require('./const.js')

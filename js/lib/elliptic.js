@@ -3,7 +3,7 @@
 ;(function (root, factory) {
 
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = factory(require('./bigint.js'))
+    module.exports = factory(require('./bigint.mod.js'))
   } else {
     root.Curve25519 = factory(root.BigInt)
   }
