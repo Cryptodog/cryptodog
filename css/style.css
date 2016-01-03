@@ -293,8 +293,8 @@ div#bubble div#info {
 	padding: 4px 10px;
 	border-radius: 4px 0 4px 4px;
 	margin: 30px auto;
-	width: 550px;
-	height: 170px;
+	width: 80%;
+	height: auto;
 	font-size: 1.1em;
 	line-height: 1.5em;
 	font-family: Verdana, Arial, Helvetica;
