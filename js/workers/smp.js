@@ -7,7 +7,7 @@
 		'../lib/crypto-js.js',
 		'../lib/salsa20.js',
 		'../etc/random.js',
-		'../lib/bigint.js',
+		'../lib/bigint.mod.js',
 		'../lib/eventemitter.js',
 		'../lib/otr.js'
 	]

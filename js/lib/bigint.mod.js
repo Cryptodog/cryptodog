@@ -5,10 +5,10 @@
   } else if (typeof module !== 'undefined' && module.exports) {
     module.exports = factory(require('../etc/random.js'))
   } else {
-    root.BigInt = factory(root.Cryptocat)
+    root.BigInt = factory(root.Cryptodog)
   }
 
-}(this, function (Cryptocat) {
+}(this, function (Cryptodog) {
 
   ////////////////////////////////////////////////////////////////////////////////////////
   // Big Integer Library v. 5.5
@@ -509,7 +509,7 @@
       copyInt_(ans,0);
       for (dd=1;dd;) {
         dd=0;
-        ans[0]= 1 | (1<<(k-1)) | Cryptocat.random.bitInt(k);  //random, k-bit, odd integer, with msb 1
+        ans[0]= 1 | (1<<(k-1)) | Cryptodograndom.bitInt(k);  //random, k-bit, odd integer, with msb 1
         for (j=1;(j<primes.length) && ((primes[j]&pm)==primes[j]);j++) { //trial division by all primes 3...sqrt(2^k)
           if (0==(ans[0]%primes[j])) {
             dd=1;
@@ -524,7 +524,7 @@
     B=c*k*k;    //try small primes up to B (or all the primes[] array if the largest is less than B).
     if (k>2*m)  //generate this k-bit number by first recursively generating a number that has between k/2 and k-m bits
       for (r=1; k-k*r<=m; )
-        r=pows[Cryptocat.random.bitInt(9)];
+        r=pows[Cryptodog.random.bitInt(9)];
     else
       r=0.5;
 
@@ -617,7 +617,7 @@
       b[i]=0;
     a=Math.floor((n-1)/bpe)+1; //# array elements to hold the BigInt
     for (i=0;i<a;i++) {
-      b[i]=Cryptocat.random.bitInt(bpe);
+      b[i]=Cryptodog.random.bitInt(bpe);
     }
     b[a-1] &= (2<<((n-1)%bpe))-1;
     if (s==1)
@@ -1650,7 +1650,7 @@
     })
     return mpi
   }
-  
+
 	// Gets a bit from a BigInt
 	function getBit(x, n) {
 		var i = Math.floor(n / bpe)
