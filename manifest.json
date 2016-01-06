@@ -10,7 +10,7 @@
     },
 
     "background": {
-        "scripts": ["chrome-events.js"],
+        "scripts": ["chrome.js"],
         "persistent": false
     },
 
