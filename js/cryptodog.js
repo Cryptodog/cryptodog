@@ -6,7 +6,7 @@ GLOBAL VARIABLES
 -------------------
 */
 
-Cryptodog.version = '1.1.6' // Version number
+Cryptodog.version = '1.5.7' // Version number
 
 // debug lines moved to js/etc/debug.js
 
