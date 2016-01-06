@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+
+    "name": "Cryptodog",
+    "description": "A community fork of Cryptocat",
+    "version": "1.01",
+
+    "browser_action": {
+        "default_icon": "img/logo-200.png"
+    },
+
+    "background": {
+        "scripts": ["chrome-events.js"],
+        "persistent": false
+    },
+
+    "permissions": [
+        "activeTab",
+        "notifications",
+        "storage"
+    ]
+}
