@@ -1,3 +1,5 @@
+![Cryptodog](https://raw.githubusercontent.com/Cryptodog/cryptodog/master/img/logo-128.png)
+
 # Cryptodog
 
 Cryptodog is a community fork of the popular encrypted messaging app, [Cryptocat](https://github.com/cryptocat/cryptocat).
