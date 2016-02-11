@@ -4,17 +4,17 @@ Cryptodog is a community fork of the popular encrypted messaging app, [Cryptocat
 
 ## Differences from Cryptocat
 
-Dark theme with more contrast, easier on eyes
-Better tab-complete
-Loads faster
-Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
-Slight animation tweaks and additions
-Your ignore list persists across your session
-Colored names in chat to improve readability
-Desktop notifications
-Unicode emoticons
-Easier to localize
-And of course, different bugs (if you catch any, please don't hesitate to open an issue or pull request here!)
+* Dark theme with more contrast, easier on eyes
+* Better tab-complete
+* Loads faster
+* Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
+* Slight animation tweaks and additions
+* Your ignore list persists across your session
+* Colored names in chat to improve readability
+* Desktop notifications
+* Unicode emoticons
+* Easier to localize
+* And of course, different bugs (if you catch any, please don't hesitate to open an issue or pull request here!)
 
 ## Install
 Signed Chrome and Firefox extensions are on the roadmap.
