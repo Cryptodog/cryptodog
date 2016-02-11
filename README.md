@@ -1,31 +1,29 @@
-[![bitHound Score](https://www.bithound.io/github/Cryptodog/cryptodog-webclient/badges/score.svg)](https://www.bithound.io/github/Cryptodog/cryptodog-webclient)
+# Cryptodog
 
-# Cryptodog Web Client
-
-Cryptodog is a fork of the popular encrypted messaging program, [Cryptocat](https://github.com/cryptocat/cryptocat). Unfortunately, Cryptocat hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features so that Cryptocat remains usable.
-
-This repository contains a pure JavaScript client you can either run locally in your browser, or via our hosted service at https://cryptodog.github.io/cryptodog-webclient.
+Cryptodog is a community fork of the popular encrypted messaging app, [Cryptocat](https://github.com/cryptocat/cryptocat). Unfortunately, Cryptocat hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features.
 
 ## Differences from Cryptocat
-* Dark theme
-* Better tab-autocomplete (tolerant of typos)
-* Other users can't log out and log back in to be unignored
-* Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
-* Colored names in chat to improve readability
-* Desktop notifications
-* Unicode emoticons (may be removed; lousy support in some browsers)
-* Minor animation tweaks & additions
-* Different bugs
-* Loads faster
-* Easier to localize
 
-## Local Usage
+Dark theme with more contrast, easier on eyes
+Better tab-complete
+Loads faster
+Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
+Slight animation tweaks and additions
+Your ignore list persists across your session
+Colored names in chat to improve readability
+Desktop notifications
+Unicode emoticons
+Easier to localize
+And of course, different bugs (if you catch any, please don't hesitate to open an issue or pull request here!)
 
-Cryptodog can be used with file:/// URIs, as well as with a local webserver.
-It is recommended to use the local webserver approach when possible, as some features do not function on file:// URIs.
+## Install
+Signed Chrome and Firefox extensions are on the roadmap.
 
-If you are using file:///, use branch **master**, if you are using a local webserver, use branch **gh-pages**.
-All branches other than *master* have issues with loading language files on file:/// due to limitations of the protocol.
+In the meantime, you can load this repository as an unpacked Chrome extension (in developer mode), or you can use our hosted client at: https://cryptodog.github.io
+
+## Note on security
+
+Please note that Cryptodog is experimental software, and unlike Cryptocat, has not had an independent security audit or code review. Although we have purposely avoided touching the underlying cryptography thus far, it is absolutely possible that Cryptodog introduces vulnerabilities not present in Cryptocat. Please do not use this app if you're in a high-risk situation or have any doubts about your safety.
 
 ## Coding Style
 
