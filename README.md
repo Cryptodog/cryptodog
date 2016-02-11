@@ -1,6 +1,6 @@
 # Cryptodog
 
-Cryptodog is a community fork of the popular encrypted messaging app, [Cryptocat](https://github.com/cryptocat/cryptocat). Unfortunately, Cryptocat hasn't been updated in several months, and it looks like development may never resume. The goal of this project is to fix bugs in the original code and add new features.
+Cryptodog is a community fork of the popular encrypted messaging app, [Cryptocat](https://github.com/cryptocat/cryptocat).
 
 ## Differences from Cryptocat
 
