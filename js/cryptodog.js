@@ -8,8 +8,6 @@ GLOBAL VARIABLES
 
 Cryptodog.version = '1.5.7' // Version number
 
-// debug lines moved to js/etc/debug.js
-
 Cryptodog.me = {
 	newMessages:   0,
 	windowFocus:   true,
@@ -30,24 +28,8 @@ Cryptodog.buddies = {}
 // For persistent ignores.
 Cryptodog.ignoredNames = []
 
-/*
-Cryptodog.audioExt = '.mp3'
-if (navigator.userAgent.match(/(OPR)|(Firefox)/)) {
-	Cryptodog.audioExt = '.ogg'
-}
-Cryptodog.sounds = {
-	'keygenStart': (new Audio('snd/keygenStart' + Cryptodog.audioExt)),
-	'keygenLoop':  (new Audio('snd/keygenLoop'  + Cryptodog.audioExt)),
-	'keygenEnd':   (new Audio('snd/keygenEnd'   + Cryptodog.audioExt)),
-	'userLeave':   (new Audio('snd/userLeave'   + Cryptodog.audioExt)),
-	'userJoin':    (new Audio('snd/userJoin'    + Cryptodog.audioExt)),
-	'msgGet':      (new Audio('snd/msgGet'      + Cryptodog.audioExt)),
-	'balloon':     (new Audio('snd/balloon'     + Cryptodog.audioExt))
-}
-*/
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
-
 
 Notification.requestPermission(function(permission){
 	log("asked for notification permission, got '" + permission + "'");
@@ -792,7 +774,6 @@ var addEmoticons = function(message) {
 	return message
 }
 
-
 // Bind `nickname`'s authentication dialog buttons and options.
 var bindAuthDialog = function(nickname) {
 	var buddy = Cryptodog.buddies[nickname]
@@ -1419,8 +1400,6 @@ $('#CryptodogLogin').submit(function() {
 	}
 	return false
 })
-
-
 
 /*
 -------------------
