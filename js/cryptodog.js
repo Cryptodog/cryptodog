@@ -285,7 +285,6 @@ var Buddy = function(nickname, id, status) {
 	this.mpSecretKey    = null
 	this.nickname       = nickname
 	this.genFingerState = null
-	this.usingCryptodog = true
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = randomColor({luminosity: 'dark'})
