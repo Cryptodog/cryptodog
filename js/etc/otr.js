@@ -92,6 +92,17 @@ var onFile = function(nickname, type, key, filename) {
 
 // Receive an SMP question
 var onSMPQuestion = function(nickname, question) {
+	// Silently answer question if buddy is ignored.
+	if (Cryptodog.ignoredNames.indexOf(nickname) !== -1){
+		buddy = Cryptodog.buddies[nickname];
+		answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
+		buddy.otr.smpSecret(answer);
+		if (!answer){
+			buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
+		}
+		return;
+	}
+
 	var chatWindow = Cryptodog.locale.chatWindow,
 		buddy = Cryptodog.buddies[nickname],
 		answer = false
