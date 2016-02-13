@@ -1118,17 +1118,10 @@ var nicknameCompletion = function(input) {
 		return input;
 	return input.replace(/(\S)+$/, largest.value + suffix)
 }
+
 // Get color by nickname
 Cryptodog.getUserColor = function(nickname){
-	if (nickname === Cryptodog.me.nickname){
-		return Cryptodog.me.color
-	}
-	else if (Cryptodog.buddies[nickname] !== undefined){
-		return Cryptodog.buddies[nickname].color
-	}
-	else {
-		return '#000'
-	}
+	return nickname === Cryptodog.me.nickname ? Cryptodog.me.color : Cryptodog.buddies[nickname].color;
 }
 
 // Handle new message count
