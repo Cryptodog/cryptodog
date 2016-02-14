@@ -244,6 +244,7 @@ Cryptodog.xmpp.onPresence = function(presence) {
 		for (var u = 0; u < 4000; u += 2000) {
 			window.setTimeout(Cryptodog.xmpp.sendPublicKey, u, nickname)
 		}
+		Cryptodog.xmpp.sendStatus(); // Propagate away status to newcomers.
 	}
 	// Handle buddy status change to 'available'.
 	else if (
@@ -271,9 +272,9 @@ Cryptodog.xmpp.sendPublicKey = function(nickname) {
 
 // Send your current status to the XMPP server.
 Cryptodog.xmpp.sendStatus = function() {
-        var status = ''
+    var status = ''
 	if (Cryptodog.xmpp.currentStatus === 'away') {
-                status = 'away'
+    	status = 'away'
 	}
 	Cryptodog.xmpp.connection.muc.setStatus(
 		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
