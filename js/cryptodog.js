@@ -26,7 +26,7 @@ Cryptodog.me = {
 Cryptodog.buddies = {}
 
 // For persistent ignores.
-Cryptodog.ignoredNames = []
+Cryptodog.ignoredNicknames = []
 
 // image used for notifications
 var notifImg = "img/cryptodog-logo.png";
@@ -120,7 +120,7 @@ Cryptodog.fileTransferError = function(sid, nickname) {
 // In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
 Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	if (nickname === Cryptodog.me.nickname) {}
-	else if (Cryptodog.buddies[nickname].ignored) {
+	else if (Cryptodog.buddies[nickname].ignored()) {
 		return false
 	}
 	initializeConversationBuffer(conversation)
@@ -258,7 +258,6 @@ Cryptodog.removeAuthAndWarn = function(nickname) {
 // Buddy constructor
 var Buddy = function(nickname, id, status) {
 	this.id             = id
-	this.ignored        = false
 	this.fingerprint    = null
 	this.authenticated  = false
 	this.fileKey        = null
@@ -270,6 +269,20 @@ var Buddy = function(nickname, id, status) {
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = randomColor({luminosity: 'dark'})
+	this.ignored        = function(){
+		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
+	};
+
+	this.toggleIgnored = function(){
+		if (this.ignored()){
+			Cryptodog.ignoredNicknames.splice(Cryptodog.ignoredNicknames.indexOf(this.nickname), 1);
+			$('#buddy-' + this.id).removeClass('ignored');
+		}
+		else {
+			Cryptodog.ignoredNicknames.push(this.nickname);
+			$('#buddy-' + this.id).addClass('ignored');
+		}
+	};
 }
 
 Buddy.prototype = {
@@ -342,8 +355,7 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 		})
 	})
 	$('#buddyList').dequeue()
-	if (Cryptodog.ignoredNames.indexOf(nickname) !== -1){
-		buddy.ignored = true
+	if (buddy.ignored()){
 		$('#buddy-' + buddy.id).addClass('ignored')
 	}
 }
@@ -1030,7 +1042,7 @@ var ensureOTRdialog = function(nickname, close, cb) {
 var openBuddyMenu = function(nickname) {
 	var buddy = Cryptodog.buddies[nickname],
 		chatWindow = Cryptodog.locale.chatWindow,
-		ignoreAction = chatWindow[buddy.ignored ? 'unignore' : 'ignore'],
+		ignoreAction = chatWindow[buddy.ignored() ? 'unignore' : 'ignore'],
 		$menu = $('#menu-' + buddy.id),
 		$buddy = $('#buddy-' + buddy.id)
 	if ($menu.attr('status') === 'active') {
@@ -1067,14 +1079,7 @@ var openBuddyMenu = function(nickname) {
 		})
 		$contents.find('.option3').click(function(e) {
 			e.stopPropagation()
-			if (buddy.ignored) {
-				$buddy.removeClass('ignored')
-				Cryptodog.ignoredNames.splice(Cryptodog.ignoredNames.indexOf(buddy.nickname), 1)
-			} else {
-				$buddy.addClass('ignored')
-				Cryptodog.ignoredNames.push(buddy.nickname)
-			}
-			buddy.ignored = !buddy.ignored
+			buddy.toggleIgnored();
 			$menu.click()
 		})
 	})

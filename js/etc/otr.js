@@ -40,7 +40,7 @@ var onIncoming = function(nickname, msg, encrypted) {
 	Cryptodog.addToConversation(
 		msg, nickname, Cryptodog.buddies[nickname].id, 'message'
 	)
-	if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored) {
+	if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored()) {
 		Cryptodog.messagePreview(msg, nickname)
 	}
 }
@@ -92,10 +92,11 @@ var onFile = function(nickname, type, key, filename) {
 
 // Receive an SMP question
 var onSMPQuestion = function(nickname, question) {
+	var buddy = Cryptodog.buddies[nickname];
+
 	// Silently answer question if buddy is ignored.
-	if (Cryptodog.ignoredNames.indexOf(nickname) !== -1){
-		buddy = Cryptodog.buddies[nickname];
-		answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
+	if (buddy.ignored()){
+		var answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
 		buddy.otr.smpSecret(answer);
 		if (!answer){
 			buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
@@ -104,7 +105,6 @@ var onSMPQuestion = function(nickname, question) {
 	}
 
 	var chatWindow = Cryptodog.locale.chatWindow,
-		buddy = Cryptodog.buddies[nickname],
 		answer = false
 	var info = Mustache.render(Cryptodog.templates.authRequest, {
 		authenticate: chatWindow.authenticate,
