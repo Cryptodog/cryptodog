@@ -203,7 +203,7 @@ Cryptodog.messagePreview = function(message, nickname) {
 	var buddyElement = $('#buddy-' + Cryptodog.buddies[nickname].id)
 	if (!buddyElement.attr('data-utip')) {
 		if (message.length > 15) {
-			message = message.substring(0, 15) + '..'
+			message = message.substring(0, 15) + '...'
 		}
 		buddyElement.attr({
 			'data-utip-gravity': 'sw',
@@ -698,7 +698,7 @@ var getUniqueBuddyID = function() {
 // Adds '..' to delineate that string was shortened.
 var shortenString = function(string, length) {
 	if (string.length > length) {
-		return string.substring(0, (length - 2)) + '..'
+		return string.substring(0, (length - 2)) + '...'
 	}
 	return string
 }
