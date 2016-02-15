@@ -1429,11 +1429,11 @@ $(window).bind('beforeunload', function() {
 })
 
 // Logout on browser close.
-$(window).unload(function() {
-	if (Cryptodog.xmpp.connection !== null) {
+window.onunload = function() {
+    if (Cryptodog.xmpp.connection !== null) {
 		Cryptodog.xmpp.connection.disconnect()
 	}
-})
+}
 
 // Determine whether we are showing a top margin
 // Depending on window size
