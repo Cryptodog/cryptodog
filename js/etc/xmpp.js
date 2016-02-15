@@ -155,7 +155,6 @@ Cryptodog.xmpp.reconnect = function() {
 				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
 				Cryptodog.me.nickname
 			)
-			Cryptodog.xmpp.sendStatus(); // Propagate away status upon reconnect.
 		}
 		else if ((status === Strophe.Status.CONNFAIL) || (status === Strophe.Status.DISCONNECTED)) {
 			if (Cryptodog.loginError) {
