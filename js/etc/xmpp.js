@@ -289,6 +289,8 @@ var afterConnect = function() {
 	/* jshint -W106 */
 	Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler)
 	/* jshint +W106 */
+
+	Cryptodog.xmpp.sendStatus();
 }
 
 // Clean nickname so that it's safe to use.
