@@ -290,6 +290,7 @@ var afterConnect = function() {
 	Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler)
 	/* jshint +W106 */
 
+	// Send status upon (re)connect.
 	Cryptodog.xmpp.sendStatus();
 }
 
