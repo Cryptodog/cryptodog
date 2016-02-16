@@ -218,7 +218,7 @@ Cryptodog.xmpp.onPresence = function(presence) {
 			// Delay logout in order to avoid race condition with window animation
 			window.setTimeout(function() {
 				Cryptodog.logout()
-				Cryptodog.loginFail(Cryptodog.locale['loginMessage']['nicknameInUse'])
+				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameInUse'])
 			}, 3000)
 			return false
 		}

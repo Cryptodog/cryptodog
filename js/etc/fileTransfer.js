@@ -152,7 +152,7 @@ Cryptodog.otr.ibbHandler = function(type, from, sid, data, seq) {
 			}
 			if (rcvFile[from][sid].ctr > rcvFile[from][sid].total - 1) {
 				rcvFile[from][sid].abort = true
-				Cryptodog.fileTransferError(sid, nick)
+				Cryptodog.UI.fileTransferError(sid, nick)
 				return
 			}
 			rcvFile[from][sid].seq = seq
@@ -170,7 +170,7 @@ Cryptodog.otr.ibbHandler = function(type, from, sid, data, seq) {
 				!OTR.HLP.compare(mac, cmac.toString(CryptoJS.enc.Base64))
 			) {
 				rcvFile[from][sid].abort = true
-				Cryptodog.fileTransferError(sid, nick)
+				Cryptodog.UI.fileTransferError(sid, nick)
 				console.log('OTR file transfer: MACs do not match.')
 				return
 			}
@@ -193,7 +193,7 @@ Cryptodog.otr.ibbHandler = function(type, from, sid, data, seq) {
 					if (navigator.userAgent !== 'Chrome (Mac app)' &&
 					!matchSafariVersion([6, 0, 5]) &&
 					rcvFile[from][sid].size >= 131072) {
-						Cryptodog.fileTransferError(sid, nick)
+						Cryptodog.UI.fileTransferError(sid, nick)
 						console.log('File size is too large for this version of Safari')
 						;delete rcvFile[from][sid]
 						return
@@ -217,7 +217,7 @@ Cryptodog.otr.ibbHandler = function(type, from, sid, data, seq) {
 					Cryptodog.addFile(url, sid, nick, rcvFile[from][sid].filename)
 				}
 				else {
-					Cryptodog.fileTransferError(sid, nick)
+					Cryptodog.UI.fileTransferError(sid, nick)
 					console.log('Received file of unallowed file type ' +
 						rcvFile[from][sid].mime + ' from ' + nick)
 				}

@@ -50,8 +50,7 @@ INTIALIZATION
 -------------------
 */
 
-// Set version number in UI.
-$('#version').text(Cryptodog.version)
+Cryptodog.UI.setVersion(Cryptodog.version)
 
 // Seed RNG.
 Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
@@ -103,18 +102,6 @@ Cryptodog.addFile = function(url, file, conversation, filename) {
 	conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html()
 }
 
-// Signal a file transfer error in the UI.
-Cryptodog.fileTransferError = function(sid, nickname) {
-	$('.fileProgressBar')
-		.filterByData('file', sid)
-		.filterByData('id', Cryptodog.buddies[nickname].id)
-		.animate({'borderColor': '#F00'})
-	$('.fileProgressBarFill')
-		.filterByData('file', sid)
-		.filterByData('id', Cryptodog.buddies[nickname].id)
-		.animate({'background-color': '#F00'})
-}
-
 // Add a `message` from `nickname` to the `conversation` display and log.
 // `type` can be 'file', 'message', 'warning' or 'missingRecipients'.
 // In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
@@ -145,8 +132,8 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		}
 		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7)
 		message = Strophe.xmlescape(message)
-		message = Cryptodog.addLinks(message)
-		message = addEmoticons(message)
+		message = Cryptodog.UI.addLinks(message)
+		message = Cryptodog.UI.addEmoticons(message)
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
@@ -164,7 +151,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		if (conversation === Cryptodog.me.currentBuddy) {
 			$('#conversationWindow').append(message)
 			$('.missingRecipients').last().animate({'top': '0', 'opacity': '1'}, 100)
-			scrollDownConversation(400, true)
+			Cryptodog.UI.scrollDownConversation(400, true)
 		}
 		return true
 	}
@@ -189,8 +176,8 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	if (conversation === Cryptodog.me.currentBuddy) {
 		$('#conversationWindow').append(renderedMessage)
 		$('.line').last().animate({'top': '0', 'opacity': '1'}, 100)
-		bindSenderElement($('.line').last().find('.sender'))
-		scrollDownConversation(400, true)
+		Cryptodog.UI.bindSenderElement($('.line').last().find('.sender'))
+		Cryptodog.UI.scrollDownConversation(400, true)
 	}
 	else {
 		$('#buddy-' + conversation).addClass('newMessage')
@@ -214,45 +201,6 @@ Cryptodog.messagePreview = function(message, nickname) {
 			buddyElement.removeAttr('data-utip')
 		}, 0x1337)
 	}
-}
-
-// Handles login failures.
-Cryptodog.loginFail = function(message) {
-	$('#loginInfo').text(message)
-	$('#bubble').animate({'left': '+=5px'}, 130)
-		.animate({'left': '-=10px'}, 130)
-		.animate({'left': '+=5px'}, 130)
-	$('#loginInfo').animate({'background-color': '#E93028'}, 200)
-}
-
-// Handle detected new keys.
-Cryptodog.removeAuthAndWarn = function(nickname) {
-	var buddy = Cryptodog.buddies[nickname]
-	var openAuth = false
-	buddy.updateAuth(false)
-	var errorAKE = Mustache.render(
-		Cryptodog.templates.errorAKE, {
-			nickname: nickname,
-			errorText: Cryptodog.locale.auth.AKEWarning,
-			openAuth: Cryptodog.locale.chatWindow.authenticate
-		}
-	)
-	Cryptodog.dialogBox(errorAKE, {
-		extraClasses: 'dialogBoxError',
-		closeable: true,
-		height: 250,
-		onAppear: function() {
-			$('#openAuth').unbind().bind('click', function() {
-				openAuth = true
-				$('#dialogBoxClose').click()
-			})
-		},
-		onClose: function() {
-			if (openAuth) {
-				Cryptodog.displayInfo(nickname)
-			}
-		}
-	})
 }
 
 // Buddy constructor
@@ -468,8 +416,8 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 	initializeConversationBuffer(id)
 	// Switch currently active conversation.
 	$('#conversationWindow').html(conversationBuffers[id])
-	bindSenderElement()
-	scrollDownConversation(0, false)
+	Cryptodog.UI.bindSenderElement()
+	Cryptodog.UI.scrollDownConversation(0, false)
 	$('#userInputText').focus()
 	$('#buddy-' + id).addClass('currentConversation')
 	// Clean up finished conversations.
@@ -485,65 +433,6 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 		}
 	})
 	$('#conversationWindow').children().addClass('visibleLine')
-}
-
-// Close generating fingerprints dialog.
-Cryptodog.closeGenerateFingerprints = function(nickname) {
-	var state = Cryptodog.buddies[nickname].genFingerState
-	Cryptodog.buddies[nickname].genFingerState = null
-	$('#fill').stop().animate(
-		{'width': '100%', 'opacity': '1'},
-		400, 'linear',
-		function() {
-			$('#dialogBoxContent').fadeOut(function() {
-				$(this).empty().show()
-				if (state.close) {
-					$('#dialogBoxClose').click()
-				}
-				state.cb()
-			})
-		}
-	)
-}
-
-// Displays a pretty dialog box with `data` as the content HTML.
-Cryptodog.dialogBox = function(data, options) {
-	if (options.closeable) {
-		$('#dialogBoxClose').css('width', 18)
-		$('#dialogBoxClose').css('font-size', 12)
-		$(document).keydown(function(e) {
-			if (e.keyCode === 27) {
-				e.stopPropagation()
-				$('#dialogBoxClose').click()
-				$(document).unbind('keydown')
-			}
-		})
-	}
-	if (options.extraClasses) {
-		$('#dialogBox').addClass(options.extraClasses)
-	}
-	$('#dialogBoxContent').html(data)
-	$('#dialogBox').css('height', options.height)
-	$('#dialogBox').fadeIn(200, function() {
-		if (options.onAppear) { options.onAppear() }
-	})
-	$('#dialogBoxClose').unbind('click').click(function(e) {
-		e.stopPropagation()
-		$(this).unbind('click')
-		if ($(this).css('width') === 0) {
-			return false
-		}
-		$('#dialogBox').fadeOut(100, function() {
-			if (options.extraClasses) {
-				$('#dialogBox').removeClass(options.extraClasses)
-			}
-			$('#dialogBoxContent').empty()
-			$('#dialogBoxClose').css('width', '0')
-			$('#dialogBoxClose').css('font-size', '0')
-			if (options.onClose) { options.onClose() }
-		})
-		$('#userInputText').focus()
-	})
 }
 
 // Display buddy information, including fingerprints and authentication.
@@ -566,7 +455,7 @@ Cryptodog.displayInfo = function(nickname) {
 	})
 	ensureOTRdialog(nickname, false, function() {
 		if (isMe) {
-			Cryptodog.dialogBox(infoDialog, {
+			Cryptodog.UI.dialogBox(infoDialog, {
 				height: 250,
 				closeable: true
 			})
@@ -580,7 +469,7 @@ Cryptodog.displayInfo = function(nickname) {
 				phrase4: Cryptodog.locale.auth.authPhrase4,
 				phrase5: Cryptodog.locale.auth.authPhrase5
 			})
-			Cryptodog.dialogBox(infoDialog, {
+			Cryptodog.UI.dialogBox(infoDialog, {
 				height: 430,
 				closeable: true,
 				onAppear: function() {
@@ -596,49 +485,22 @@ Cryptodog.displayInfo = function(nickname) {
 
 // Executes on user logout.
 Cryptodog.logout = function() {
+	Cryptodog.UI.logout()
 	Cryptodog.loginError = false
 	Cryptodog.xmpp.connection.muc.leave(
 		Cryptodog.me.conversation + '@'
 		+ Cryptodog.xmpp.conferenceServer
 	)
-	$('#loginInfo').text(Cryptodog.locale['loginMessage']['thankYouUsing'])
-	$('#loginInfo').animate({'background-color': '#bb7a20'}, 200)
 	Cryptodog.xmpp.connection.disconnect()
 	Cryptodog.xmpp.connection = null
-	document.title = 'Cryptodog'
-	$('#conversationInfo,#optionButtons').fadeOut()
-	$('#header').animate({'background-color': 'transparent'})
-	$('.logo').animate({'margin': '-5px 5px 0 5px'})
-	$('#buddyWrapper').slideUp()
-	$('.buddy').unbind('click')
-	$('.buddyMenu').unbind('click')
-	$('#buddy-groupChat').insertAfter('#buddiesOnline')
-	$('#userInput').fadeOut(function() {
-		$('#logoText').fadeIn()
-		$('#footer').animate({'height': 14})
-		$('#conversationWrapper').fadeOut(function() {
-			$('#info,#loginOptions,#version,#loginInfo').fadeIn()
-			$('#login').fadeIn(200, function() {
-				$('#login').css({opacity: 1})
-				$('#conversationName').select()
-				$('#conversationName,#nickname').removeAttr('readonly')
-				$('#loginSubmit').removeAttr('readonly')
-			})
-			$('#dialogBoxClose').click()
-			$('#buddyList div').each(function() {
-				if ($(this).attr('id') !== 'buddy-groupChat') {
-					$(this).remove()
-				}
-			})
-			$('#conversationWindow').html('')
-			for (var b in Cryptodog.buddies) {
-				if (Cryptodog.buddies.hasOwnProperty(b)) {
-					delete Cryptodog.buddies[b]
-				}
-			}
-			conversationBuffers = {}
-		})
-	})
+
+	for (var b in Cryptodog.buddies) {
+		if (Cryptodog.buddies.hasOwnProperty(b)) {
+			delete Cryptodog.buddies[b]
+		}
+	}
+
+	conversationBuffers = {}
 }
 
 Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
@@ -650,6 +512,13 @@ Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
 		answer += ';' + first + ';' + second
 	}
 	return answer
+}
+
+Cryptodog.changeStatus = function(status) {
+	if (status && ['away', 'online'].indexOf(status) > 0){
+		Cryptodog.xmpp.currentStatus = status
+		Cryptodog.xmpp.sendStatus()
+	}
 }
 
 /*
@@ -731,61 +600,6 @@ var getFingerprint = function(nickname, OTR) {
 	return formatted.toUpperCase()
 }
 
-// Convert message URLs to links. Used internally.
-Cryptodog.addLinks = function(message) {
-	var sanitize
-	var URLs = message.match(/((http(s?)\:\/\/){1}\S+)/gi)
-	if (!URLs) { return message }
-	for (var i = 0; i !== URLs.length; i++) {
-		sanitize = URLs[i].split('')
-		for (var l = 0; l !== sanitize.length; l++) {
-			if (!sanitize[l].match(
-				/\w|\d|\:|\/|\?|\=|\#|\+|\,|\.|\&|\;|\%/)
-			) {
-				sanitize[l] = encodeURIComponent(sanitize[l])
-			}
-		}
-		sanitize = sanitize.join('')
-		var url = sanitize.replace(':', '&colon;')
-		if (navigator.userAgent === 'Chrome (Mac app)') {
-			message = message.replace(
-				sanitize, '<a href="' + url + '">' + url + '</a>'
-			)
-			continue
-		}
-		message = message.replace(
-			sanitize, '<a href="' + url + '" target="_blank">' + url + '</a>'
-		)
-	}
-	return message
-}
-
-// Convert text emoticons to graphical emoticons.
-var addEmoticons = function(message) {
-       var emoticons = {
-		'😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi, 	// :'( - Cry
-		'😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,		// :/ - Unsure
-		'🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,		    // :3 - Cat face
-		'😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,			// :O - Shock
-		'😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,			// :D - Grin
-		'☹': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,			// :( - Sad
-		'😊': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,			// :) - Happy
-		'😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,			// :P - Tongue
-		//happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
-		'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,			// :x - Shut
-		'😉': /(\s|^);-?\)(?=(\s|$))/gi,				    // ;) - Wink
-		'😜': /(\s|^);-?\p(?=(\s|$))/gi,				    // ;P - Winky Tongue
-		//squint: /(\s|^)-_-(?=(\s|$))/gi,
-		'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g				// <3 - Heart
-	}
-	for (var e in emoticons) {
-		if (emoticons.hasOwnProperty(e)) {
-			message = message.replace(emoticons[e], ' <span class="monospace">' + e + '</span>')
-		}
-	}
-	return message
-}
-
 // Bind `nickname`'s authentication dialog buttons and options.
 var bindAuthDialog = function(nickname) {
 	var buddy = Cryptodog.buddies[nickname]
@@ -841,48 +655,6 @@ var bindAuthDialog = function(nickname) {
 		buddy.updateAuth(false)
 		answer = Cryptodog.prepareAnswer(answer, true, buddy.mpFingerprint)
 		buddy.otr.smpSecret(answer, question)
-	})
-}
-
-// Bind sender element to show authStatus information and timestamps.
-var bindSenderElement = function(senderElement) {
-	if (!senderElement) {
-		senderElement = $('.sender')
-	}
-	senderElement.children().unbind('mouseenter,mouseleave,click')
-	senderElement.find('.nickname').mouseenter(function() {
-		$(this).text($(this).parent().attr('data-timestamp'))
-	})
-	senderElement.find('.nickname').mouseleave(function() {
-		$(this).text($(this).parent().attr('data-sender'))
-	})
-	senderElement.find('.authStatus').mouseenter(function() {
-		if ($(this).attr('data-auth') === 'true') {
-			$(this).attr('data-utip', Cryptodog.locale.auth.authenticated)
-		}
-		else {
-			$(this).attr('data-utip',
-				Mustache.render(Cryptodog.templates.authStatusFalseUtip, {
-					text: Cryptodog.locale.auth.userNotAuthenticated,
-					learnMore: Cryptodog.locale.auth.clickToLearnMore
-				})
-			)
-		}
-		// This is pretty ugly, sorry! Feel free to clean up via pull request.
-		var bgc = $(this).css('background-color')
-		var boxShadow = bgc.replace('rgb', 'rgba')
-			.substring(0, bgc.length - 1) + ', 0.3)'
-		$(this).attr('data-utip-style', JSON.stringify({
-			'width': 'auto',
-			'max-width': '110px',
-			'font-size': '11px',
-			'background-color': bgc,
-			'box-shadow': '0 0 0 2px ' + boxShadow
-		}))
-		$(this).attr('data-utip-click', 'Cryptodog.displayInfo()')
-	})
-	senderElement.find('.authStatus').click(function() {
-		Cryptodog.displayInfo($(this).parent().attr('data-sender'))
 	})
 }
 
@@ -966,7 +738,7 @@ var buddyNotification = function(nickname, join) {
 	if (Cryptodog.me.currentBuddy === 'groupChat') {
 		$('#conversationWindow').append(status)
 	}
-	scrollDownConversation(400, true)
+	Cryptodog.UI.scrollDownConversation(400, true)
 	desktopNotification(notifImg,
 		nickname + ' has ' + (join ? 'joined ' : 'left ')
 		+ Cryptodog.me.conversation, '', 7)
@@ -979,7 +751,7 @@ var sendFile = function(nickname) {
 		fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo']
 	})
 	ensureOTRdialog(nickname, false, function() {
-		Cryptodog.dialogBox(sendFileDialog, {
+		Cryptodog.UI.dialogBox(sendFileDialog, {
 			height: 250,
 			closeable: true
 		})
@@ -1006,31 +778,15 @@ var sendFile = function(nickname) {
 	})
 }
 
-// Scrolls down the chat window to the bottom in a smooth animation.
-// 'speed' is animation speed in milliseconds.
-// If `threshold` is true, we won't scroll down if the user
-// appears to be scrolling up to read messages.
-var scrollDownConversation = function(speed, threshold) {
-	var scrollPosition = $('#conversationWindow')[0].scrollHeight
-	scrollPosition -= $('#conversationWindow').scrollTop()
-	if ((scrollPosition < 700) || !threshold) {
-		$('#conversationWindow').stop().animate({
-			scrollTop: $('#conversationWindow')[0].scrollHeight + 20
-		}, speed)
-	}
-}
-
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
 var ensureOTRdialog = function(nickname, close, cb) {
 	var buddy = Cryptodog.buddies[nickname]
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
 		return cb()
 	}
-	var progressDialog = '<div id="progressBar"><div id="fill"></div></div>'
-	Cryptodog.dialogBox(progressDialog, {
-		height: 250,
-		closeable: true
-	})
+
+	Cryptodog.UI.progressBarOTR()
+
 	$('#progressBar').css('margin', '70px auto 0 auto')
 	$('#fill').animate({'width': '100%', 'opacity': '1'}, 10000, 'linear')
 	// add some state for status callback
@@ -1163,92 +919,6 @@ USER INTERFACE BINDINGS
 -------------------
 */
 
-// Buttons:
-// Dark mode button
-$('#darkMode').click(function() {
-	var $this = $(this)
-	if (document.body.classList.contains('darkMode')){
-		document.body.classList.remove('darkMode')
-		$('#darkMode').attr('data-utip', 'Dark mode')
-	}
-	else {
-		document.body.classList.add('darkMode')
-		$('#darkMode').attr('data-utip', 'Light mode')
-	}
-})
-
-// Status button.
-$('#status').click(function() {
-	var $this = $(this)
-	if ($this.attr('src') === 'img/icons/checkmark.svg') {
-		$this.attr('src', 'img/icons/cross.svg')
-		$this.attr('title', Cryptodog.locale['chatWindow']['statusAway'])
-		$this.attr('data-utip', Cryptodog.locale['chatWindow']['statusAway'])
-		$this.mouseenter()
-		Cryptodog.xmpp.currentStatus = 'away'
-		Cryptodog.xmpp.sendStatus()
-	}
-	else {
-		$this.attr('src', 'img/icons/checkmark.svg')
-		$this.attr('title', Cryptodog.locale['chatWindow']['statusAvailable'])
-		$this.attr('data-utip', Cryptodog.locale['chatWindow']['statusAvailable'])
-		$this.mouseenter()
-		Cryptodog.xmpp.currentStatus = 'online'
-		Cryptodog.xmpp.sendStatus()
-	}
-})
-
-// My info button.
-$('#myInfo').click(function() {
-	Cryptodog.displayInfo(Cryptodog.me.nickname)
-})
-
-// Desktop notifications button.
-$('#notifications').click(function() {
-	var $this = $(this)
-	if ($this.attr('src') === 'img/icons/bubble2.svg') {
-		$this.attr('src', 'img/icons/bubble.svg')
-		$this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOn'])
-		$this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOn'])
-		$this.mouseenter()
-		Cryptodog.desktopNotifications = true
-		Cryptodog.storage.setItem('desktopNotifications', 'true')
-		var notifStatus = Notification.permission;
-		if (notifStatus == 'denied') {
-			// notifications supported but not enabled
-			Notification.requestPermission();
-			// check if user actually accepted
-			if (Notification.permission == 'denied') {
-				Cryptodog.desktopNotifications = false
-				Cryprodog.storage.setItem('desktopNotifications', 'false')
-			}
-		}
-		else if (notifStatus == 'unknown') {
-			// browser doesn't support desktop notifications
-			alert("It looks like your browser doesn't support desktop notifications.")
-			$this.attr('src', 'img/icons/bubble2.svg')
-			$this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOff'])
-			$this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOff'])
-			$this.mouseenter()
-			Cryptodog.desktopNotifications = false
-			Cryptodog.storage.setItem('desktopNotifications', 'false')
-		}
-	}
-	else {
-		$this.attr('src', 'img/icons/bubble2.svg')
-		$this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOff'])
-		$this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOff'])
-		$this.mouseenter()
-		Cryptodog.desktopNotifications = false
-		Cryptodog.storage.setItem('desktopNotifications', 'false')
-	}
-})
-
-// Logout button.
-$('#logout').click(function() {
-	Cryptodog.logout()
-})
-
 // Submit user input.
 $('#userInput').submit(function() {
 	var message = $.trim($('#userInputText').val())
@@ -1374,19 +1044,19 @@ $('#CryptodogLogin').submit(function() {
 	$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()))
 	$('#nickname').val($.trim($('#nickname').val().toLowerCase()))
 	if ($('#conversationName').val() === '') {
-		Cryptodog.loginFail(Cryptodog.locale['loginMessage']['enterConversation'])
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation'])
 		$('#conversationName').select()
 	}
 	else if (!$('#conversationName').val().match(/^\w{1,20}$/)) {
-		Cryptodog.loginFail(Cryptodog.locale['loginMessage']['conversationAlphanumeric'])
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['conversationAlphanumeric'])
 		$('#conversationName').select()
 	}
 	else if ($('#nickname').val() === '') {
-		Cryptodog.loginFail(Cryptodog.locale['loginMessage']['enterNickname'])
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname'])
 		$('#nickname').select()
 	}
 	else if (!$('#nickname').val().match(/^\w{1,16}$/)) {
-		Cryptodog.loginFail(Cryptodog.locale['loginMessage']['nicknameAlphanumeric'])
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameAlphanumeric'])
 		$('#nickname').select()
 	}
 	// Prepare keys and connect.
@@ -1399,55 +1069,10 @@ $('#CryptodogLogin').submit(function() {
 	return false
 })
 
-/*
--------------------
-WINDOW EVENT BINDINGS
--------------------
-*/
+Cryptodog.UI.userInterfaceBindings()
 
-// When the window/tab is not selected, set `windowFocus` to false.
-// `windowFocus` is used to know when to show desktop notifications.
-$(window).blur(function() {
-	Cryptodog.me.windowFocus = false
-})
+Cryptodog.UI.windowEventBindings()
 
-// On window focus, select text input field automatically if we are chatting.
-// Also set `windowFocus` to true.
-$(window).focus(function() {
-	Cryptodog.me.windowFocus = true
-	Cryptodog.newMessageCount()
-	if (Cryptodog.me.currentBuddy) {
-		$('#userInputText').focus()
-	}
-})
-
-// Prevent accidental window close.
-$(window).bind('beforeunload', function() {
-	if (Object.keys(Cryptodog.buddies).length > 1) {
-		return Cryptodog.locale['loginMessage']['thankYouUsing']
-	}
-})
-
-// Logout on browser close.
-window.onunload = function() {
-    if (Cryptodog.xmpp.connection !== null) {
-		Cryptodog.xmpp.connection.disconnect()
-	}
-}
-
-// Determine whether we are showing a top margin
-// Depending on window size
-$(window).resize(function() {
-	if ($(window).height() < 650) {
-		$('#bubble').css('margin-top', '0')
-	}
-	else {
-		$('#bubble').css('margin-top', '2%')
-	}
-})
-$(window).resize()
-
-// Show main window.
-$('#bubble').show()
+Cryptodog.UI.show()
 
 })}

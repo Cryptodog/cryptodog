@@ -63,12 +63,12 @@ var onStatusChange = function(nickname, state) {
 		var fingerprint = buddy.otr.their_priv_pk.fingerprint()
 		if (buddy.fingerprint === null) {
 			buddy.fingerprint = fingerprint
-			Cryptodog.closeGenerateFingerprints(nickname)
+			Cryptodog.UI.closeGenerateFingerprints(nickname)
 		}
 		else if (buddy.fingerprint !== fingerprint) {
 			// re-aked with a different key
 			buddy.fingerprint = fingerprint
-			Cryptodog.removeAuthAndWarn(nickname)
+			Cryptodog.UI.removeAuthAndWarn(nickname)
 		}
 	}
 }
@@ -116,7 +116,7 @@ var onSMPQuestion = function(nickname, question) {
 	})
 	$('#dialogBoxClose').click()
 	window.setTimeout(function() {
-		Cryptodog.dialogBox(info, {
+		Cryptodog.UI.dialogBox(info, {
 			height: 240,
 			closeable: true,
 			onAppear: function() {
