@@ -1,0 +1,66 @@
+﻿{
+    "name": "Unicode Emojis",
+    "type": "text",
+    "data": [
+        {
+            "name": "cry",
+            "regex": "/(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi",
+            "data": "😢"
+        },
+        {
+            "name": "unsure",
+            "regex": "/(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi",
+            "data": "😕"
+        },
+        {
+            "name": "cat_face",
+            "regex": "/(\s|^)(:|(=))-?3(?=(\s|$))/gi",
+            "data": "🐱"
+        },
+        {
+            "name": "shock",
+            "regex": "/(\s|^)(:|(=))-?o(?=(\s|$))/gi",
+            "data": "😮"
+        },
+        {
+            "name": "grin",
+            "regex": "/(\s|^)(:|(=))-?D(?=(\s|$))/gi",
+            "data": "😄"
+        },
+        {
+            "name": "sad",
+            "regex": "/(\s|^)(:|(=))-?\((?=(\s|$))/gi",
+            "data": "☹"
+        },
+        {
+            "name": "happy",
+            "regex": "/(\s|^)(:|(=))-?\)(?=(\s|$))/gi",
+            "data": "😊"
+        },
+        {
+            "name": "tongue",
+            "regex": "/(\s|^)(:|(=))-?p(?=(\s|$))/gi",
+            "data": "😛"
+        },
+        {
+            "name": "shut",
+            "regex": "/(\s|^)(:|(=))-?x\b(?=(\s|$))/gi",
+            "data": "😶"
+        },
+        {
+            "name": "wink",
+            "regex": "/(\s|^);-?\)(?=(\s|$))/gi",
+            "data": "😉"
+        },
+        {
+            "name": "wink_tongue",
+            "regex": "/(\s|^);-?\p(?=(\s|$))/gi",
+            "data": "😜"
+        },
+        {
+            "name": "heart",
+            "regex": "/(\s|^)\&lt\;3\b(?=(\s|$))/g",
+            "data": "❤️"
+        }
+    ]
+}
