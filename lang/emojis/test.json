@@ -1,0 +1,12 @@
+{
+  "name": "TestPack",
+  "type": "text",
+  "data": [
+    {
+      "name": "test",
+      "regex": "/(\\s|^)(:|(=))-?\\)(?=(\\s|$))/",
+      "regexflags": "gi",
+      "data": "n"
+    }
+  ]
+}

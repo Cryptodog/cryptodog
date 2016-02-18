@@ -178,31 +178,106 @@ Cryptodog.UI = {
 		return message
 	},
 
+    //emoticons: {
+    //    '😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi, 	// :'( - Cry
+    //    '😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,		// :/ - Unsure
+    //    '🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,		    // :3 - Cat face
+    //    '😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,			// :O - Shock
+    //    '😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,			// :D - Grin
+    //    '☹': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,			// :( - Sad
+    //    '😊': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,			// :) - Happy
+    //    '😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,			// :P - Tongue
+    //    //happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
+    //    '😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,			// :x - Shut
+    //    '😉': /(\s|^);-?\)(?=(\s|$))/gi,				    // ;) - Wink
+    //    '😜': /(\s|^);-?\p(?=(\s|$))/gi,				    // ;P - Winky Tongue
+    //    //squint: /(\s|^)-_-(?=(\s|$))/gi,
+    //    '❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g				// <3 - Heart
+    //},
+
+    // Default emoticons (Unicode) - also in lang/emojis/unicode.json
+	emoticons: [
+	    {
+	        "data": '😢',
+	        "regex": /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi
+	    }, 	// :'( - Cry
+	    {
+	        "data": '😕',
+	        "regex": /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi
+	    },  // :/ - Unsure
+	    {
+	        "data": '🐱', 
+	        "regex": /(\s|^)(:|(=))-?3(?=(\s|$))/gi 
+	    },		    // :3 - Cat face
+	    {
+	        "data": '😮',
+	        "regex": /(\s|^)(:|(=))-?o(?=(\s|$))/gi
+	    },	// :O - Shock
+	    {
+	        "data": '😄',
+	        "regex": /(\s|^)(:|(=))-?D(?=(\s|$))/gi
+	    },	// :D - Grin
+	    {
+	        "data": '☹',
+	        "regex": /(\s|^)(:|(=))-?\((?=(\s|$))/gi
+	    },	// :( - Sad
+        {
+            "data": '😊',
+            "regex": /(\s|^)(:|(=))-?\)(?=(\s|$))/gi
+        },	// :) - Happy
+	    {
+	        "data": '😛',
+	        "regex": /(\s|^)(:|(=))-?p(?=(\s|$))/gi
+	    },	// :P - Tongue
+        //happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
+	    {
+	        "data":'😶',
+	        "regex": /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi
+	    },	// :x - Shut
+	    {
+	        "data": '😉',
+	        "regex": /(\s|^);-?\)(?=(\s|$))/gi
+	    },				    // ;) - Wink
+	    {
+	        "data": '😜',
+	        "regex": /(\s|^);-?\p(?=(\s|$))/gi
+	    },    // ;P - Winky Tongue
+        //squint: /(\s|^)-_-(?=(\s|$))/gi,
+	    {
+	        "data": '❤️',
+	        "regex": /(\s|^)\&lt\;3\b(?=(\s|$))/g
+	    } // <3 - Heart
+	],
+
 	// Convert text emoticons to graphical emoticons.
-	addEmoticons: function(message) {
-	       var emoticons = {
-			'😢': /(\s|^)(:|(=))-?\&apos;\((?=(\s|$))/gi, 	// :'( - Cry
-			'😕': /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi,		// :/ - Unsure
-			'🐱': /(\s|^)(:|(=))-?3(?=(\s|$))/gi,		    // :3 - Cat face
-			'😮': /(\s|^)(:|(=))-?o(?=(\s|$))/gi,			// :O - Shock
-			'😄': /(\s|^)(:|(=))-?D(?=(\s|$))/gi,			// :D - Grin
-			'☹': /(\s|^)(:|(=))-?\((?=(\s|$))/gi,			// :( - Sad
-			'😊': /(\s|^)(:|(=))-?\)(?=(\s|$))/gi,			// :) - Happy
-			'😛': /(\s|^)(:|(=))-?p(?=(\s|$))/gi,			// :P - Tongue
-			//happy: /(\s|^)\^(_|\.)?\^(?=(\s|$))/gi,
-			'😶': /(\s|^)(:|(=))-?x\b(?=(\s|$))/gi,			// :x - Shut
-			'😉': /(\s|^);-?\)(?=(\s|$))/gi,				    // ;) - Wink
-			'😜': /(\s|^);-?\p(?=(\s|$))/gi,				    // ;P - Winky Tongue
-			//squint: /(\s|^)-_-(?=(\s|$))/gi,
-			'❤️': /(\s|^)\&lt\;3\b(?=(\s|$))/g				// <3 - Heart
-		}
-		for (var e in emoticons) {
-			if (emoticons.hasOwnProperty(e)) {
-				message = message.replace(emoticons[e], ' <span class="monospace">' + e + '</span>')
-			}
-		}
-		return message
+	addEmoticons: function (message) {
+	    for (var i = 0; i < Cryptodog.UI.emoticons.length; i++) {
+	        var e = Cryptodog.UI.emoticons[i];
+            message = message.replace(e.regex, ' <span class="monospace">' + e.data + '</span>');
+        }
+		//for (var e in Cryptodog.UI.emoticons) {
+		//	if (Cryptodog.UI.emoticons.hasOwnProperty(e)) {
+		//		message = message.replace(e.regex, ' <span class="monospace">' + e.data + '</span>')
+		//	}
+		//}
+	    return message;
 	},
+
+    setEmoticonPack: function(packId) {
+        $.getJSON("lang/emojis/" + packId + ".json", function(emojiJSON) {
+            console.log("Loaded emoji pack '" + emojiJSON.name + "'");
+            if (emojiJSON.type !== "text") {
+                console.error("Non-text emoji sets are not supported right now.");
+                return;
+            }
+            Cryptodog.UI.emoticons = [];
+            emojiJSON.data.forEach(function(emoji) {
+                console.log("Started loading " + emoji.name);
+                var regex = new RegExp(emoji.regex, emoji.regexflags);
+                Cryptodog.UI.emoticons.push({ data: emoji.data, regex: regex });
+            })
+        });
+    },
 
 	// Bind sender element to show authStatus information and timestamps.
 	bindSenderElement: function(senderElement) {
