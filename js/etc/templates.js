@@ -3,7 +3,7 @@
 
 Cryptodog.templates = {
 
-	customServer: '<option data-domain="{{domain}}" data-xmpp="{{XMPP}}" data-relay="{{Relay}}">'
+	customServer: '<option data-domain="{{domain}}" data-xmpp="{{xmpp}}" data-relay="{{relay}}">'
 		+ '{{name}}</option>',
 
 	buddy: '<div class="buddy" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">'

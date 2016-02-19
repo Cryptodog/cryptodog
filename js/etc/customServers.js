@@ -19,8 +19,8 @@ $('#customServer').click(function() {
 			Mustache.render(Cryptodog.templates['customServer'], {
 				name: 'Cryptocat',
 				domain: 'crypto.cat',
-				XMPP: 'conference.crypto.cat',
-				Relay: 'https://crypto.cat/http-bind'
+				xmpp: 'conference.crypto.cat',
+				relay: 'https://crypto.cat/http-bind'
 			})
 		)
 
@@ -28,8 +28,8 @@ $('#customServer').click(function() {
 			Mustache.render(Cryptodog.templates['customServer'], {
 				name: 'Cryptocrap',
 				domain: 'cryptocrap.xyz',
-				XMPP: 'conference.cryptocrap.xyz',
-				Relay: 'https://cryptocrap.xyz/http-bind'
+				xmpp: 'conference.cryptocrap.xyz',
+				relay: 'https://cryptocrap.xyz/http-bind'
 			})
 		)
 	}
@@ -92,8 +92,8 @@ $('#customServerSave').click(function() {
 			Mustache.render(Cryptodog.templates['customServer'], {
 				name: $('#customName').val(),
 				domain: $('#customDomain').val(),
-				XMPP: $('#customConferenceServer').val(),
-				Relay: $('#customRelay').val()
+				xmpp: $('#customConferenceServer').val(),
+				relay: $('#customRelay').val()
 			})
 		)
 	}

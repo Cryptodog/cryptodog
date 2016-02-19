@@ -92,7 +92,7 @@ Cryptodog.xmpp.connect = function() {
 			Cryptodog.xmpp.onConnected()
 			document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation
 			$('.conversationName').text(document.title)
-			Cryptodog.storage.setItem('myNickname', Cryptodog.me.nickname)
+			Cryptodog.storage.setItem('nickname', Cryptodog.me.nickname)
 		}
 		else if ((status === Strophe.Status.CONNFAIL) || (status === Strophe.Status.DISCONNECTED)) {
 			if (Cryptodog.loginError) {

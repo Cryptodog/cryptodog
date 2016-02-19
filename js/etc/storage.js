@@ -2,7 +2,7 @@ Cryptodog.storage = {}
 
 $(window).ready(function () {
     'use strict';
-    
+
     localforage.config()
 
     // Cryptodog Storage API
@@ -83,8 +83,8 @@ $(window).ready(function () {
                     Mustache.render(Cryptodog.templates['customServer'], {
                         name: name,
                         domain: servers[name]['domain'],
-                        XMPP: servers[name]['xmpp'],
-                        Relay: servers[name]['relay']
+                        xmpp: servers[name]['xmpp'],
+                        relay: servers[name]['relay']
                     })
                 )
             })
@@ -92,7 +92,7 @@ $(window).ready(function () {
     })
 
     // Load nickname settings.
-    Cryptodog.storage.getItem('myNickname', function (key) {
+    Cryptodog.storage.getItem('nickname', function (key) {
         if (key) {
             $('#nickname').animate({ 'color': 'transparent' }, function () {
                 $(this).val(key)
