@@ -1,56 +1,35 @@
-Cryptodog.storage = {}
+'use strict';
+localforage.config();
+
+Cryptodog.storage = {
+    setItem: function(key, val) {
+        localforage.setItem(key, val, function(err, result) {
+            if (err) {
+                console.error("error when setting item in localForage");
+            } else {
+                log("wrote key '" + key + "' to storage.");
+            }
+        });
+    },
+    getItem: function(key, callback) {
+        return localforage.getItem(key, function (err, val) {
+            if (err) {
+                console.error("An error occurred during localStorage read.");
+                return null;
+            } else {
+                log("read key '" + key + "' from storage.");
+            }
+            callback(val);
+        });
+    },
+    removeItem: function(key) {
+        localforage.removeItem(key, function(thing) {
+            log("removed item from storage");
+        });
+    }
+}
 
 $(window).ready(function () {
-    'use strict';
-
-    localforage.config()
-
-    // Cryptodog Storage API
-    // This API exists as a shim between Cryptodog and localForage
-
-    // How to use:
-    // Cryptodog.storage.setItem(itemName, itemValue)
-    // Sets itemName's value to itemValue.
-
-    // Cryptodog.storage.getItem(itemName, callbackFunction(result))
-    // Gets itemName's value from local storage, and passes it to
-    // the callback function as result.
-
-    // Cryptodog.storage.removeItem(itemName)
-    // Removes itemName and its value from local storage.
-
-    // Define the wrapper, depending on our browser or environment.
-    Cryptodog.storage = (function () {
-        // let localForage handle browser detection, etc
-        return {
-            setItem: function(key, val) {
-                localforage.setItem(key, val, function(err, result) {
-                    if (err) {
-                        console.error("error when setting item in localForage")
-                    } else {
-                        log("wrote key '" + key + "' to storage.")
-                    }
-                })
-            },
-            getItem: function(key, callback) {
-                return localforage.getItem(key, function (err, val) {
-                    if (err) {
-                        console.error("An error occurred during localStorage read.")
-                        return null
-                    } else {
-                        log("read key '" + key + "' from storage.")
-                    }
-                    callback(val)
-                })
-            },
-            removeItem: function(key) {
-                localforage.removeItem(key, function(thing) {
-                    log("removed item from storage")
-                })
-            }
-        }
-    })()
-
     // Initialize language settings.
     Cryptodog.storage.getItem('language', function (key) {
         if (key) {
