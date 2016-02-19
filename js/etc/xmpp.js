@@ -4,27 +4,28 @@ Cryptodog.xmpp = {};
 Cryptodog.xmpp.currentStatus = 'online';
 Cryptodog.xmpp.connection = null;
 
-// Default connection settings.
-Cryptodog.xmpp.defaultServerName = 'Cryptocat';
-Cryptodog.xmpp.defaultDomain = 'crypto.cat';
-Cryptodog.xmpp.defaultConferenceServer = 'conference.crypto.cat'
-Cryptodog.xmpp.defaultRelay = 'https://crypto.cat/http-bind';
+Cryptodog.xmpp.defaultServer = {
+	name: 'Cryptocat',
+	domain: 'crypto.cat',
+	conference: 'conference.crypto.cat',
+	relay: 'https://crypto.cat/http-bind'
+};
 
 $(window).ready(function() {
 'use strict';
 
 // Load custom server settings
 Cryptodog.storage.getItem('serverName', function(key){
-	Cryptodog.serverName = key ? key : Cryptodog.xmpp.defaultServerName;
+	Cryptodog.serverName = key ? key : Cryptodog.xmpp.defaultServer.name;
 });
 Cryptodog.storage.getItem('domain', function(key){
-	Cryptodog.xmpp.domain = key ? key : Cryptodog.xmpp.defaultDomain;
+	Cryptodog.xmpp.domain = key ? key : Cryptodog.xmpp.defaultServer.domain;
 });
 Cryptodog.storage.getItem('conferenceServer', function(key){
-	Cryptodog.xmpp.conferenceServer = key ? key : Cryptodog.xmpp.defaultConferenceServer;
+	Cryptodog.xmpp.conferenceServer = key ? key : Cryptodog.xmpp.defaultServer.conference;
 });
 Cryptodog.storage.getItem('relay', function(key){
-	Cryptodog.xmpp.relay = key ? key : Cryptodog.xmpp.defaultRelay;
+	Cryptodog.xmpp.relay = key ? key : Cryptodog.xmpp.defaultServer.relay;
 });
 
 // Prepares necessary encryption key operations before XMPP connection.

@@ -42,9 +42,9 @@ $('#customServer').click(function() {
 		$('#customRelay').val(Cryptodog.xmpp.relay)
 		$('#customServerReset').val(Cryptodog.locale['loginWindow']['reset']).click(function() {
 			$('#customName').val('Cryptodog')
-			$('#customDomain').val(Cryptodog.xmpp.defaultDomain)
-			$('#customConferenceServer').val(Cryptodog.xmpp.defaultConferenceServer)
-			$('#customRelay').val(Cryptodog.xmpp.defaultRelay)
+			$('#customDomain').val(Cryptodog.xmpp.defaultServer.domain)
+			$('#customConferenceServer').val(Cryptodog.xmpp.defaultServer.conference)
+			$('#customRelay').val(Cryptodog.xmpp.defaultServer.relay)
 			Cryptodog.storage.removeItem('serverName')
 			Cryptodog.storage.removeItem('domain')
 			Cryptodog.storage.removeItem('conferenceServer')
@@ -71,7 +71,7 @@ $('#customServerSave').click(function() {
 	$('#customServerDelete').val('Delete')
 		.attr('data-deleteconfirm', '0')
 		.removeClass('confirm')
-	if ($('#customDomain').val() === Cryptodog.xmpp.defaultDomain) {
+	if ($('#customDomain').val() === Cryptodog.xmpp.defaultServer.domain) {
 		return // Cannot overwrite the default domain
 	}
 	var serverIsInList = false
@@ -135,7 +135,7 @@ $('#customServerSelector').change(function() {
 		.attr('data-saveconfirm', '0')
 		.removeClass('confirm')
 	var selectedOption = $(this).find(':selected')
-	if ($(selectedOption).attr('data-domain') === Cryptodog.xmpp.defaultDomain) {
+	if ($(selectedOption).attr('data-domain') === Cryptodog.xmpp.defaultServer.domain) {
 		$('#customServerDelete').attr('disabled', 'disabled').addClass('disabled')
 	}
 	$('#customName').val($(selectedOption).val())
