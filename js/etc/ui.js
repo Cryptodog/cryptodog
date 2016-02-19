@@ -206,8 +206,8 @@ Cryptodog.UI = {
 	        "regex": /(\s|^)(:|(=))-?(\/|s)(?=(\s|$))/gi
 	    },  // :/ - Unsure
 	    {
-	        "data": '🐱', 
-	        "regex": /(\s|^)(:|(=))-?3(?=(\s|$))/gi 
+	        "data": '🐱',
+	        "regex": /(\s|^)(:|(=))-?3(?=(\s|$))/gi
 	    },		    // :3 - Cat face
 	    {
 	        "data": '😮',
@@ -380,7 +380,7 @@ Cryptodog.UI = {
 				$this.attr('title', Cryptodog.locale['chatWindow']['statusAvailable'])
 				$this.attr('data-utip', Cryptodog.locale['chatWindow']['statusAvailable'])
 				$this.mouseenter()
-				
+
 				Cryptodog.changeStatus('online')
 			}
 		})
@@ -483,6 +483,62 @@ Cryptodog.UI = {
 	-------------------
 	*/
 	windowEventBindings: function(){
+		$(window).ready(function(){
+		    // Initialize language settings.
+		    Cryptodog.storage.getItem('language', function(key){
+		        if (key){
+		            Cryptodog.locale.set(key, true);
+		        }
+		        else {
+		            Cryptodog.locale.set(window.navigator.language.toLowerCase());
+		        }
+		    });
+
+			// Load custom servers.
+		    Cryptodog.storage.getItem('customServers', function(key){
+		        if (key){
+		            $('#customServerSelector').empty();
+		            var servers = $.parseJSON(key);
+		            $.each(servers, function(name){
+		                $('#customServerSelector').append(
+		                    Mustache.render(Cryptodog.templates['customServer'], {
+		                        name: name,
+		                        domain: servers[name]['domain'],
+		                        xmpp: servers[name]['xmpp'],
+		                        relay: servers[name]['relay']
+		                    })
+		                );
+		            });
+		        }
+		    });
+
+		    // Load nickname settings.
+		    Cryptodog.storage.getItem('nickname', function(key){
+		        if (key){
+		            $('#nickname').animate({'color': 'transparent'}, function(){
+		                $(this).val(key);
+		                $(this).animate({'color': '#FFF'});
+		            });
+		        }
+		    });
+
+		    // Load notification settings.
+		    window.setTimeout(function(){
+		        Cryptodog.storage.getItem('desktopNotifications', function(key){
+		            if (key === 'true'){
+		                $('#notifications').click();
+		                $('#utip').hide();
+		            }
+		        });
+		        Cryptodog.storage.getItem('audioNotifications', function(key){
+		            if ((key === 'true') || !key){
+		                $('#audio').click();
+		                $('#utip').hide();
+		            }
+		        });
+		    }, 800);
+		});
+
 		// When the window/tab is not selected, set `windowFocus` to false.
 		// `windowFocus` is used to know when to show desktop notifications.
 		$(window).blur(function() {
@@ -531,4 +587,3 @@ Cryptodog.UI = {
 		$('#bubble').show()
 	}
 }
-
