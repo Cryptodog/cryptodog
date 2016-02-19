@@ -1,5 +1,4 @@
-// Cryptodog XMPP functions and callbacks.
-
+'use strict';
 Cryptodog.xmpp = {};
 Cryptodog.xmpp.currentStatus = 'online';
 Cryptodog.xmpp.connection = null;
@@ -11,21 +10,21 @@ Cryptodog.xmpp.defaultServer = {
 	relay: 'https://crypto.cat/http-bind'
 };
 
-$(window).ready(function() {
-'use strict';
+Cryptodog.xmpp.currentServer = {};
 
+$(window).ready(function() {
 // Load custom server settings
 Cryptodog.storage.getItem('serverName', function(key){
-	Cryptodog.serverName = key ? key : Cryptodog.xmpp.defaultServer.name;
+	Cryptodog.xmpp.currentServer.name = key ? key : Cryptodog.xmpp.defaultServer.name;
 });
 Cryptodog.storage.getItem('domain', function(key){
-	Cryptodog.xmpp.domain = key ? key : Cryptodog.xmpp.defaultServer.domain;
+	Cryptodog.xmpp.currentServer.domain = key ? key : Cryptodog.xmpp.defaultServer.domain;
 });
 Cryptodog.storage.getItem('conferenceServer', function(key){
-	Cryptodog.xmpp.conferenceServer = key ? key : Cryptodog.xmpp.defaultServer.conference;
+	Cryptodog.xmpp.currentServer.conference = key ? key : Cryptodog.xmpp.defaultServer.conference;
 });
 Cryptodog.storage.getItem('relay', function(key){
-	Cryptodog.xmpp.relay = key ? key : Cryptodog.xmpp.defaultServer.relay;
+	Cryptodog.xmpp.currentServer.relay = key ? key : Cryptodog.xmpp.defaultServer.relay;
 });
 
 // Prepares necessary encryption key operations before XMPP connection.
@@ -84,15 +83,15 @@ Cryptodog.xmpp.prepareKeys = function(callback) {
 Cryptodog.xmpp.connect = function() {
 	Cryptodog.me.conversation = Strophe.xmlescape($('#conversationName').val())
 	Cryptodog.me.nickname = Strophe.xmlescape($('#nickname').val())
-	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.relay)
-	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.domain, null, function(status) {
+	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay)
+	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
 		if (status === Strophe.Status.CONNECTING) {
 			$('#loginInfo').animate({'background-color': '#bb7a20'}, 200)
 			$('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting'])
 		}
 		else if (status === Strophe.Status.CONNECTED) {
 			Cryptodog.xmpp.connection.muc.join(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 				Cryptodog.me.nickname,
 				function(message) {
 					if (Cryptodog.xmpp.onMessage(message)) { return true }
@@ -156,15 +155,15 @@ Cryptodog.xmpp.reconnect = function() {
 	if (Cryptodog.xmpp.connection) {
 	    Cryptodog.xmpp.connection.reset()
 	}
-	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.relay)
-	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.domain, null, function(status) {
+	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay)
+	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
 		if (status === Strophe.Status.CONNECTING) {
 			$('.conversationName').animate({'background-color': '#F00'})
 		}
 		else if (status === Strophe.Status.CONNECTED) {
 			afterConnect()
 			Cryptodog.xmpp.connection.muc.join(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 				Cryptodog.me.nickname
 			)
 		}
@@ -277,7 +276,7 @@ Cryptodog.xmpp.onPresence = function(presence) {
 // Send your own multiparty public key to `nickname`, via XMPP-MUC.
 Cryptodog.xmpp.sendPublicKey = function(nickname) {
 	Cryptodog.xmpp.connection.muc.message(
-		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 		null, Cryptodog.multiParty.sendPublicKey(nickname), null, 'groupchat', 'active'
 	)
 }
@@ -289,7 +288,7 @@ Cryptodog.xmpp.sendStatus = function() {
     	status = 'away'
 	}
 	Cryptodog.xmpp.connection.muc.setStatus(
-		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 		Cryptodog.me.nickname, status, status
 	)
 }

@@ -17,7 +17,7 @@ var fileMIME = new RegExp('^(image\/(png|jpeg|gif))|(application\/((x-compressed
 )
 
 var cn = function(to) {
-	return Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer + '/' + to
+	return Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference + '/' + to
 }
 
 Cryptodog.otr.beginSendFile = function(data) {

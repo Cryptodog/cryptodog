@@ -50,7 +50,7 @@ var onOutgoing = function(nickname, message) {
 	Cryptodog.xmpp.connection.muc.message(
 		Cryptodog.me.conversation
 			+ '@'
-			+ Cryptodog.xmpp.conferenceServer,
+			+ Cryptodog.xmpp.currentServer.conference,
 		nickname, message, null, 'chat', 'active'
 	)
 }

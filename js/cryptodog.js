@@ -489,7 +489,7 @@ Cryptodog.logout = function() {
 	Cryptodog.loginError = false
 	Cryptodog.xmpp.connection.muc.leave(
 		Cryptodog.me.conversation + '@'
-		+ Cryptodog.xmpp.conferenceServer
+		+ Cryptodog.xmpp.currentServer.conference
 	)
 	Cryptodog.xmpp.connection.disconnect()
 	Cryptodog.xmpp.connection = null
@@ -944,7 +944,7 @@ $('#userInput').submit(function() {
 			)
 		}
 		Cryptodog.xmpp.connection.muc.message(
-			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 			null, JSON.stringify(ciphertext), null, 'groupchat', 'active'
 		)
 	}
@@ -983,12 +983,12 @@ $('#userInputText').keydown(function(e) {
 	if (!Cryptodog.me.composing) {
 		Cryptodog.me.composing = true
 		Cryptodog.xmpp.connection.muc.message(
-			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 			destination, '', null, type, 'composing'
 		)
 		window.setTimeout(function(d, t) {
 			Cryptodog.xmpp.connection.muc.message(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 				d, '', null, t, 'paused'
 			)
 			Cryptodog.me.composing = false
