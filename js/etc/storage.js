@@ -33,25 +33,3 @@ Cryptodog.storage = {
         });
     }
 };
-
-// Load custom server settings
-Cryptodog.storage.getItem('serverName', function(key){
-    if (key){
-        Cryptodog.serverName = key;
-    }
-});
-Cryptodog.storage.getItem('domain', function(key){
-    if (key){
-        Cryptodog.xmpp.domain = key;
-    }
-});
-Cryptodog.storage.getItem('conferenceServer', function(key){
-    if (key){
-        Cryptodog.xmpp.conferenceServer = key;
-    }
-});
-Cryptodog.storage.getItem('relay', function(key){
-    if (key){
-        Cryptodog.xmpp.relay = key;
-    }
-});
