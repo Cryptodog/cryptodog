@@ -5,9 +5,9 @@ Cryptodog.xmpp.currentStatus = 'online'
 Cryptodog.xmpp.connection = null
 
 // Default connection settings.
-Cryptodog.xmpp.defaultDomain = 'crypto.cat'
-Cryptodog.xmpp.defaultConferenceServer = 'conference.crypto.cat'
-Cryptodog.xmpp.defaultRelay = 'https://crypto.cat/http-bind'
+Cryptodog.xmpp.defaultDomain = 'cryptocrap.xyz'
+Cryptodog.xmpp.defaultConferenceServer = 'conference.cryptocrap.xyz'
+Cryptodog.xmpp.defaultRelay = 'https://cryptocrap.xyz/http-bind'
 
 Cryptodog.xmpp.domain = Cryptodog.xmpp.defaultDomain
 Cryptodog.xmpp.conferenceServer = Cryptodog.xmpp.defaultConferenceServer
