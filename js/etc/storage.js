@@ -1,33 +1,38 @@
 'use strict';
 localforage.config();
 
+// Functions for interfacing with localforage
 Cryptodog.storage = {
-    setItem: function(key, val) {
-        localforage.setItem(key, val, function(err, result) {
-            if (err) {
-                console.error("error when setting item in localForage");
+    setItem: function(key, value){
+        localforage.setItem(key, value, function(err, value){
+            if (err){
+                console.error(err);
             } else {
-                log("wrote key '" + key + "' to storage.");
+                log('Set (' + key + ', ' + value + ') in storage');
             }
         });
     },
-    getItem: function(key, callback) {
-        return localforage.getItem(key, function (err, val) {
-            if (err) {
-                console.error("An error occurred during localStorage read.");
-                return null;
+    getItem: function(key, callback){
+        localforage.getItem(key, function(err, value){
+            if (err){
+                console.error(err);
             } else {
-                log("read key '" + key + "' from storage.");
+                log('Read (' + key + ', ' + value + ') from storage');
             }
-            callback(val);
+            callback(value);
         });
     },
     removeItem: function(key) {
-        localforage.removeItem(key, function(thing) {
-            log("removed item from storage");
+        localforage.removeItem(key, function(key, err){
+            if (err){
+                console.error(err);
+            }
+            else {
+                log('Removed ' + key + ' from storage');
+            }
         });
     }
-}
+};
 
 $(window).ready(function () {
     // Initialize language settings.
