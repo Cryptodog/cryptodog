@@ -2,16 +2,7 @@ Cryptodog.storage = {}
 
 $(window).ready(function () {
     'use strict';
-
-    // TODO: Actually handle errrors
-    function StripError(err, val) {
-        if (err) {
-            log("Error reading storage, returning null")
-            return null
-        }
-        return val
-    }
-
+    
     localforage.config()
 
     // Cryptodog Storage API
