@@ -1,5 +1,5 @@
 'use strict';
-localforage.config();
+localforage.config({name: 'Cryptodog'});
 
 // Functions for interfacing with localforage
 Cryptodog.storage = {
