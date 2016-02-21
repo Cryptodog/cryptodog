@@ -29,7 +29,7 @@ Cryptodog.buddies = {}
 Cryptodog.ignoredNicknames = []
 
 // image used for notifications
-var notifImg = "img/cryptodog-logo.png";
+var notifImg = "img/logo-128.png";
 
 Notification.requestPermission(function(permission){
 	log("asked for notification permission, got '" + permission + "'");
