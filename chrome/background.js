@@ -1,9 +1,9 @@
-// On extension install
-chrome.runtime.onInstalled.addListener(function(details) {
-    chrome.tabs.create({'url': chrome.extension.getURL('index.html')});
-});
-
-// On extension icon click
-chrome.browserAction.onClicked.addListener(function(tab) {
-    chrome.tabs.create({'url': chrome.extension.getURL('index.html')});
+// On app launch
+chrome.app.runtime.onLaunched.addListener(function(){
+    chrome.app.window.create('index.html', {
+        'outerBounds': {
+            'width': 1000,
+            'height': 1000
+        }
+    });
 });
