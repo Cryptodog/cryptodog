@@ -1,20 +1,31 @@
-// Cryptodog XMPP functions and callbacks.
+'use strict';
+Cryptodog.xmpp = {};
+Cryptodog.xmpp.currentStatus = 'online';
+Cryptodog.xmpp.connection = null;
 
-Cryptodog.xmpp = {}
-Cryptodog.xmpp.currentStatus = 'online'
-Cryptodog.xmpp.connection = null
+Cryptodog.xmpp.defaultServer = {
+	name: 'Cryptocrap',
+	domain: 'cryptocrap.xyz',
+	conference: 'conference.cryptocrap.xyz',
+	relay: 'https://cryptocrap.xyz/http-bind'
+};
 
-// Default connection settings.
-Cryptodog.xmpp.defaultDomain = 'cryptocrap.xyz'
-Cryptodog.xmpp.defaultConferenceServer = 'conference.cryptocrap.xyz'
-Cryptodog.xmpp.defaultRelay = 'https://cryptocrap.xyz/http-bind'
-
-Cryptodog.xmpp.domain = Cryptodog.xmpp.defaultDomain
-Cryptodog.xmpp.conferenceServer = Cryptodog.xmpp.defaultConferenceServer
-Cryptodog.xmpp.relay = Cryptodog.xmpp.defaultRelay
+Cryptodog.xmpp.currentServer = {};
 
 $(window).ready(function() {
-'use strict';
+// Load custom server settings
+Cryptodog.storage.getItem('serverName', function(key){
+	Cryptodog.xmpp.currentServer.name = key ? key : Cryptodog.xmpp.defaultServer.name;
+});
+Cryptodog.storage.getItem('domain', function(key){
+	Cryptodog.xmpp.currentServer.domain = key ? key : Cryptodog.xmpp.defaultServer.domain;
+});
+Cryptodog.storage.getItem('conferenceServer', function(key){
+	Cryptodog.xmpp.currentServer.conference = key ? key : Cryptodog.xmpp.defaultServer.conference;
+});
+Cryptodog.storage.getItem('relay', function(key){
+	Cryptodog.xmpp.currentServer.relay = key ? key : Cryptodog.xmpp.defaultServer.relay;
+});
 
 // Prepares necessary encryption key operations before XMPP connection.
 // Shows a progress bar while doing so.
@@ -72,15 +83,15 @@ Cryptodog.xmpp.prepareKeys = function(callback) {
 Cryptodog.xmpp.connect = function() {
 	Cryptodog.me.conversation = Strophe.xmlescape($('#conversationName').val())
 	Cryptodog.me.nickname = Strophe.xmlescape($('#nickname').val())
-	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.relay)
-	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.domain, null, function(status) {
+	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay)
+	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
 		if (status === Strophe.Status.CONNECTING) {
 			$('#loginInfo').animate({'background-color': '#bb7a20'}, 200)
 			$('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting'])
 		}
 		else if (status === Strophe.Status.CONNECTED) {
 			Cryptodog.xmpp.connection.muc.join(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 				Cryptodog.me.nickname,
 				function(message) {
 					if (Cryptodog.xmpp.onMessage(message)) { return true }
@@ -92,7 +103,7 @@ Cryptodog.xmpp.connect = function() {
 			Cryptodog.xmpp.onConnected()
 			document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation
 			$('.conversationName').text(document.title)
-			Cryptodog.storage.setItem('myNickname', Cryptodog.me.nickname)
+			Cryptodog.storage.setItem('nickname', Cryptodog.me.nickname)
 		}
 		else if ((status === Strophe.Status.CONNFAIL) || (status === Strophe.Status.DISCONNECTED)) {
 			if (Cryptodog.loginError) {
@@ -144,15 +155,15 @@ Cryptodog.xmpp.reconnect = function() {
 	if (Cryptodog.xmpp.connection) {
 	    Cryptodog.xmpp.connection.reset()
 	}
-	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.relay)
-	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.domain, null, function(status) {
+	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay)
+	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
 		if (status === Strophe.Status.CONNECTING) {
 			$('.conversationName').animate({'background-color': '#F00'})
 		}
 		else if (status === Strophe.Status.CONNECTED) {
 			afterConnect()
 			Cryptodog.xmpp.connection.muc.join(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 				Cryptodog.me.nickname
 			)
 		}
@@ -218,7 +229,7 @@ Cryptodog.xmpp.onPresence = function(presence) {
 			// Delay logout in order to avoid race condition with window animation
 			window.setTimeout(function() {
 				Cryptodog.logout()
-				Cryptodog.loginFail(Cryptodog.locale['loginMessage']['nicknameInUse'])
+				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameInUse'])
 			}, 3000)
 			return false
 		}
@@ -244,6 +255,7 @@ Cryptodog.xmpp.onPresence = function(presence) {
 		for (var u = 0; u < 4000; u += 2000) {
 			window.setTimeout(Cryptodog.xmpp.sendPublicKey, u, nickname)
 		}
+		Cryptodog.xmpp.sendStatus(); // Propagate away status to newcomers.
 	}
 	// Handle buddy status change to 'available'.
 	else if (
@@ -264,19 +276,19 @@ Cryptodog.xmpp.onPresence = function(presence) {
 // Send your own multiparty public key to `nickname`, via XMPP-MUC.
 Cryptodog.xmpp.sendPublicKey = function(nickname) {
 	Cryptodog.xmpp.connection.muc.message(
-		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 		null, Cryptodog.multiParty.sendPublicKey(nickname), null, 'groupchat', 'active'
 	)
 }
 
 // Send your current status to the XMPP server.
 Cryptodog.xmpp.sendStatus = function() {
-        var status = ''
+    var status = ''
 	if (Cryptodog.xmpp.currentStatus === 'away') {
-                status = 'away'
+    	status = 'away'
 	}
 	Cryptodog.xmpp.connection.muc.setStatus(
-		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.conferenceServer,
+		Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 		Cryptodog.me.nickname, status, status
 	)
 }
@@ -288,6 +300,9 @@ var afterConnect = function() {
 	/* jshint -W106 */
 	Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler)
 	/* jshint +W106 */
+
+	// Send status upon (re)connect.
+	Cryptodog.xmpp.sendStatus();
 }
 
 // Clean nickname so that it's safe to use.
