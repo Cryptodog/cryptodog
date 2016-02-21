@@ -4,10 +4,10 @@ Cryptodog.xmpp.currentStatus = 'online';
 Cryptodog.xmpp.connection = null;
 
 Cryptodog.xmpp.defaultServer = {
-	name: 'Cryptocat',
-	domain: 'crypto.cat',
-	conference: 'conference.crypto.cat',
-	relay: 'https://crypto.cat/http-bind'
+	name: 'Cryptocrap',
+	domain: 'cryptocrap.xyz',
+	conference: 'conference.cryptocrap.xyz',
+	relay: 'https://cryptocrap.xyz/http-bind'
 };
 
 Cryptodog.xmpp.currentServer = {};
