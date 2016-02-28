@@ -515,7 +515,7 @@ Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
 }
 
 Cryptodog.changeStatus = function(status) {
-	if (status && ['away', 'online'].indexOf(status) > 0){
+	if (status === 'away' || status === 'online'){
 		Cryptodog.xmpp.currentStatus = status
 		Cryptodog.xmpp.sendStatus()
 	}
