@@ -155,27 +155,7 @@ Cryptodog.UI = {
 
 	// Convert message URLs to links. Used internally.
 	addLinks: function(message) {
-	    var sanitize;
-	    var URLs = message.match(/((http(s?)\:\/\/){1}\S+)/gi);
-	    if (!URLs) {
-	        return message;
-	    }
-		for (var i = 0; i !== URLs.length; i++) {
-		    sanitize = URLs[i].split('');
-			for (var l = 0; l !== sanitize.length; l++) {
-				if (!sanitize[l].match(/\w|\d|\:|\/|\?|\=|\#|\+|\,|\.|\&|\;|\%/)) {
-				    sanitize[l] = encodeURIComponent(sanitize[l]);
-				}
-			}
-		    sanitize = sanitize.join('');
-		    var url = sanitize.replace(':', '&colon;');
-			if (navigator.userAgent === 'Chrome (Mac app)') {
-			    message = message.replace(sanitize, '<a href="' + url + '">' + url + '</a>');
-				continue;
-			}
-		    message = message.replace(sanitize, '<a href="' + url + '" target="_blank">' + url + '</a>');
-		}
-	    return message;
+		return message.autoLink();
 	},
 
     //emoticons: {
