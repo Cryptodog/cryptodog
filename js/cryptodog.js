@@ -678,12 +678,12 @@ var handleNotificationTimeout = function() {
 window.setInterval(handleNotificationTimeout, 1000);
 
 function notificationTruncate(msg) {
-    var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-    if (msg.length > 50 && is_firefox) {
-        log("Truncating notification")
-        return msg.substring(0,50) + "…"
-    }
-    return msg
+	var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+	if (msg.length > 50 && is_firefox) {
+		log("Truncating notification")
+		return msg.substring(0,50) + "…"
+	}
+	return msg
 }
 
 var desktopNotification = function(image, title, body, timeout) {
@@ -850,8 +850,8 @@ var nicknameCompletion = function(input) {
 		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
 			try {
 				potentials.push({
-				    score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
-				    value: nickname
+					score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
+					value: nickname
 				})
 			}
 			catch (err) {
@@ -861,12 +861,12 @@ var nicknameCompletion = function(input) {
 	}
 	var largest = potentials[0];
 
-    // find item with largest score
-    potentials.forEach(function(item) {
-        if (item.score > largest.score) {
-            largest = item
-        }
-    }, this)
+	// find item with largest score
+	potentials.forEach(function(item) {
+		if (item.score > largest.score) {
+			largest = item
+		}
+	}, this)
 
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) {
