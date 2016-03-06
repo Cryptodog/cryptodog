@@ -955,6 +955,13 @@ $('#userInput').submit(function() {
 	return false
 })
 
+function isCharacterKeyPress(e) {
+	if (typeof e.which == "number" && e.which > 0) {
+		return !e.ctrlKey && !e.metaKey && !e.altKey && e.which != 8 && e.which != 16;
+ 	}
+	return false;
+}
+
 // User input key event detection.
 // (Message submission, nick completion...)
 $('#userInputText').keydown(function(e) {
@@ -971,6 +978,7 @@ $('#userInputText').keydown(function(e) {
 		Cryptodog.me.composing = false
 		return true
 	}
+	if (!isCharacterKeyPress(e)) return;
 	var destination, type
 	if (Cryptodog.me.currentBuddy === 'groupChat') {
 		destination = null
