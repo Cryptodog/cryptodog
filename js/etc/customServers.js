@@ -17,10 +17,10 @@ $('#customServer').click(function() {
 	if (!document.getElementById('customServerSelector').firstChild) {
 		$('#customServerSelector').append(
 			Mustache.render(Cryptodog.templates['customServer'], {
-				name: 'Cryptocat',
-				domain: 'crypto.cat',
-				xmpp: 'conference.crypto.cat',
-				relay: 'https://crypto.cat/http-bind'
+				name: 'Cryptodog',
+				domain: 'crypto.dog',
+				xmpp: 'conference.crypto.dog',
+				relay: 'https://crypto.dog/http-bind'
 			})
 		)
 
