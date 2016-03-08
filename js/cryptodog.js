@@ -50,12 +50,12 @@ INTIALIZATION
 -------------------
 */
 
-Cryptodog.UI.setVersion(Cryptodog.version)
+Cryptodog.UI.setVersion(Cryptodog.version);
 
 // Seed RNG.
-Cryptodog.random.setSeed(Cryptodog.random.generateSeed())
+Cryptodog.random.setSeed(Cryptodog.random.generateSeed());
 
-var conversationBuffers = {}
+var conversationBuffers = {};
 
 /*
 -------------------
@@ -65,32 +65,32 @@ GLOBAL INTERFACE FUNCTIONS
 
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
-	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[recipient].id])
-	var progress = (chunk * 100) / (Math.ceil(size / Cryptodog.otr.chunkSize))
+	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[recipient].id]);
+	var progress = (chunk * 100) / (Math.ceil(size / Cryptodog.otr.chunkSize));
 	if (progress > 100) { progress = 100 }
 	$('.fileProgressBarFill')
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[recipient].id)
-		.animate({'width': progress + '%'})
+		.animate({'width': progress + '%'});
 	conversationBuffer.find('.fileProgressBarFill')
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[recipient].id)
-		.width(progress + '%')
-	conversationBuffers[Cryptodog.buddies[recipient].id] = $('<div>').append($(conversationBuffer).clone()).html()
+		.width(progress + '%');
+	conversationBuffers[Cryptodog.buddies[recipient].id] = $('<div>').append($(conversationBuffer).clone()).html();
 }
 
 // Convert Data blob/url to downloadable file, replacing the progress bar.
 Cryptodog.addFile = function(url, file, conversation, filename) {
-	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[conversation].id])
-	var fileLinkString = 'fileLink'
+	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[conversation].id]);
+	var fileLinkString = 'fileLink';
 	if (navigator.userAgent === 'Chrome (Mac app)') {
-		fileLinkString += 'Mac'
+		fileLinkString += 'Mac';
 	}
 	var fileLink = Mustache.render(Cryptodog.templates[fileLinkString], {
 		url: url,
 		filename: filename,
 		downloadFile: Cryptodog.locale['chatWindow']['downloadFile']
-	})
+	});
 	$('.fileProgressBar')
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[conversation].id)
@@ -98,8 +98,8 @@ Cryptodog.addFile = function(url, file, conversation, filename) {
 	conversationBuffer.find('.fileProgressBar')
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[conversation].id)
-		.replaceWith(fileLink)
-	conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html()
+		.replaceWith(fileLink);
+	conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html();
 }
 
 // Add a `message` from `nickname` to the `conversation` display and log.
@@ -108,61 +108,58 @@ Cryptodog.addFile = function(url, file, conversation, filename) {
 Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	if (nickname === Cryptodog.me.nickname) {}
 	else if (Cryptodog.buddies[nickname].ignored()) {
-		return false
+		return false;
 	}
 	initializeConversationBuffer(conversation)
 	if (type === 'file') {
-		if (!message.length) { return false }
-		var id = conversation
+		if (!message.length) { return false; }
+		var id = conversation;
 		if (nickname !== Cryptodog.me.nickname) {
-			Cryptodog.newMessageCount(++Cryptodog.me.newMessages)
-			id = Cryptodog.buddies[nickname].id
+			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
+			id = Cryptodog.buddies[nickname].id;
 		}
 		message = Mustache.render(
 			Cryptodog.templates.file, {
 				file: message,
 				id: id
 			}
-		)
+		);
 	}
 	if (type === 'message') {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
-			Cryptodog.newMessageCount(++Cryptodog.me.newMessages)
+			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
 		}
-		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7)
-		message = Strophe.xmlescape(message)
-		message = Cryptodog.UI.addLinks(message)
-		message = Cryptodog.UI.addEmoticons(message)
+		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
+		message = Strophe.xmlescape(message);
+		message = Cryptodog.UI.addLinks(message);
+		message = Cryptodog.UI.addEmoticons(message);
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
-		message = Strophe.xmlescape(message)
+		message = Strophe.xmlescape(message);
 	}
 	if (type === 'missingRecipients') {
 		if (!message.length) { return false }
-		message = message.join(', ')
+		message = message.join(', ');
 		message = Mustache.render(Cryptodog.templates.missingRecipients, {
 			text: Cryptodog.locale.warnings.missingRecipientWarning
 				.replace('(NICKNAME)', message),
 			dir: Cryptodog.locale.direction
 		})
-		conversationBuffers[conversation] += message
+		conversationBuffers[conversation] += message;
 		if (conversation === Cryptodog.me.currentBuddy) {
-			$('#conversationWindow').append(message)
-			$('.missingRecipients').last().animate({'top': '0', 'opacity': '1'}, 100)
-			Cryptodog.UI.scrollDownConversation(400, true)
+			$('#conversationWindow').append(message);
+			$('.missingRecipients').last().animate({'top': '0', 'opacity': '1'}, 100);
+			Cryptodog.UI.scrollDownConversation(400, true);
 		}
-		return true
+		return true;
 	}
-	var authStatus = false
-	if (
-		(nickname === Cryptodog.me.nickname) ||
-		Cryptodog.buddies[nickname].authenticated
-	) {
-		authStatus = true
+	var authStatus = false;
+	if ((nickname === Cryptodog.me.nickname) || Cryptodog.buddies[nickname].authenticated) {
+		authStatus = true;
 	}
-	message = message.replace(/:/g, '&#58;')
+	message = message.replace(/:/g, '&#58;');
 
 	var renderedMessage = Mustache.render(Cryptodog.templates.message, {
 		nickname: shortenString(nickname, 16),
@@ -170,36 +167,36 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		authStatus: authStatus,
 		message: message,
 		color: Cryptodog.getUserColor(nickname)
-	})
+	});
 
 	conversationBuffers[conversation] += renderedMessage
 	if (conversation === Cryptodog.me.currentBuddy) {
-		$('#conversationWindow').append(renderedMessage)
-		$('.line').last().animate({'top': '0', 'opacity': '1'}, 100)
-		Cryptodog.UI.bindSenderElement($('.line').last().find('.sender'))
-		Cryptodog.UI.scrollDownConversation(400, true)
+		$('#conversationWindow').append(renderedMessage);
+		$('.line').last().animate({'top': '0', 'opacity': '1'}, 100);
+		Cryptodog.UI.bindSenderElement($('.line').last().find('.sender'));
+		Cryptodog.UI.scrollDownConversation(400, true);
 	}
 	else {
-		$('#buddy-' + conversation).addClass('newMessage')
+		$('#buddy-' + conversation).addClass('newMessage');
 	}
 }
 
 // Show a preview for a received message from a buddy.
 // Message previews will not overlap and are removed after 5 seconds.
 Cryptodog.messagePreview = function(message, nickname) {
-	var buddyElement = $('#buddy-' + Cryptodog.buddies[nickname].id)
+	var buddyElement = $('#buddy-' + Cryptodog.buddies[nickname].id);
 	if (!buddyElement.attr('data-utip')) {
 		if (message.length > 15) {
-			message = message.substring(0, 15) + '…'
+			message = message.substring(0, 15) + '…';
 		}
 		buddyElement.attr({
 			'data-utip-gravity': 'sw',
 			'data-utip': Strophe.xmlescape(message)
-		}).mouseenter()
+		}).mouseenter();
 		window.setTimeout(function() {
 			buddyElement.mouseleave()
 			buddyElement.removeAttr('data-utip')
-		}, 0x1337)
+		}, 0x1337);
 	}
 }
 
@@ -217,12 +214,12 @@ var Buddy = function(nickname, id, status) {
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = randomColor({luminosity: 'dark'})
-	this.ignored        = function(){
+	this.ignored        = function() {
 		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
 	};
 
-	this.toggleIgnored = function(){
-		if (this.ignored()){
+	this.toggleIgnored = function() {
+		if (this.ignored()) {
 			Cryptodog.ignoredNicknames.splice(Cryptodog.ignoredNicknames.indexOf(this.nickname), 1);
 			$('#buddy-' + this.id).removeClass('ignored');
 		}
@@ -236,30 +233,40 @@ var Buddy = function(nickname, id, status) {
 Buddy.prototype = {
 	constructor: Buddy,
 	updateMpKeys: function(publicKey) {
-		this.mpPublicKey = publicKey
-		this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname)
-		this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname)
+		this.mpPublicKey = publicKey;
+		this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
+		this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
 	},
 	updateAuth: function(auth) {
-		var nickname = this.nickname
-		this.authenticated = auth
+		var nickname = this.nickname;
+		this.authenticated = auth;
 		if (auth) {
-			$('#authenticated').attr('data-active', true)
-			$('#notAuthenticated').attr('data-active', false)
+			$('#authenticated').attr('data-active', true);
+			$('#notAuthenticated').attr('data-active', false);
 		}
 		else {
-			$('#authenticated').attr('data-active', false)
-			$('#notAuthenticated').attr('data-active', true)
+			$('#authenticated').attr('data-active', false);
+			$('#notAuthenticated').attr('data-active', true);
 		}
+		//for (var value in $('span').filterByData('sender', nickname)) {
+		//	$(value).find('.authStatus').attr('data-auth', auth);
+		//}
 		$.each($('span').filterByData('sender', nickname),
 			function(index, value) {
-				$(value).find('.authStatus').attr('data-auth', auth)
+				$(value).find('.authStatus').attr('data-auth', auth);
 			}
-		)
+		);
 		var authStatusBuffers = [
 			'groupChat',
 			Cryptodog.buddies[nickname].id
-		]
+		];
+		//for (var thisBuffer in authStatusBuffers) {
+		//	var buffer = $(conversationBuffers[thisBuffer]);
+		//	for (var value in buffer.find('span').filterByData('sender', nickname)) {
+		//		$(value).find('.authStatus').attr('data-auth', auth);
+		//	}
+		//	conversationBuffers[thisBuffer] = $('<div>').append(buffer.clone()).html();
+		//}
 		$.each(authStatusBuffers, function(i, thisBuffer) {
 			var buffer = $(conversationBuffers[thisBuffer])
 			$.each(buffer.find('span').filterByData('sender', nickname),
@@ -270,7 +277,8 @@ Buddy.prototype = {
 			conversationBuffers[thisBuffer] = $('<div>').append(
 				buffer.clone()
 			).html()
-		})
+		});
+
 	}
 }
 
