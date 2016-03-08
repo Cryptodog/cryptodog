@@ -331,21 +331,21 @@ Cryptodog.buddyStatus = function(nickname, status) {
 
 // Handle buddy going offline.
 Cryptodog.removeBuddy = function(nickname) {
-	var buddyID = Cryptodog.buddies[nickname].id
-	var buddyElement = $('.buddy').filterByData('id', buddyID)
-	delete Cryptodog.buddies[nickname]
+	var buddyID = Cryptodog.buddies[nickname].id;
+	var buddyElement = $('.buddy').filterByData('id', buddyID);
+	delete Cryptodog.buddies[nickname];
 	if (!buddyElement.length) {
-		return
+		return;
 	}
 	buddyElement.each(function() {
-		$(this).attr('status', 'offline')
-		buddyNotification(nickname, false)
+		$(this).attr('status', 'offline');
+		buddyNotification(nickname, false);
 		if (Cryptodog.me.currentBuddy === buddyID) {
-			return
+			return;
 		}
 		if (!$(this).hasClass('newMessage')) {
 			$(this).slideUp(500, function() {
-				$(this).remove()
+				$(this).remove();
 			})
 		}
 	})
@@ -359,45 +359,42 @@ var determineBuddyPlacement = function(nickname, id, status) {
 		id: id
 	}]
 	for (var i in Cryptodog.buddies) {
-		if (
-			Cryptodog.buddies.hasOwnProperty(i) &&
-			(Cryptodog.buddies[i].status === status)
-		) {
+		if (Cryptodog.buddies.hasOwnProperty(i) && (Cryptodog.buddies[i].status === status)) {
 			buddies.push({
 				nickname: i,
 				id: Cryptodog.buddies[i].id
-			})
+			});
 		}
 	}
 	buddies.sort(function(a, b) {
-		var nameA = a.nickname.toLowerCase()
-		var nameB = b.nickname.toLowerCase()
+		var nameA = a.nickname.toLowerCase();
+		var nameB = b.nickname.toLowerCase();
 		if (nameA < nameB) {
-			return -1
+			return -1;
 		}
 		if (nameA > nameB) {
-			return 1
+			return 1;
 		}
-		return 0
+		return 0;
 	})
-	var rightBefore
+	var rightBefore;
 	for (var o = 0; o < buddies.length; o++) {
 		if (buddies[o].id === id) {
 			if (o === 0) {
 				if (status === 'online') {
-					rightBefore = '#buddiesOnline'
+					rightBefore = '#buddiesOnline';
 				}
 				if (status === 'away') {
-					rightBefore = '#buddiesAway'
+					rightBefore = '#buddiesAway';
 				}
 			}
 			else {
-				rightBefore = '[data-id=' + buddies[o - 1].id + ']'
+				rightBefore = '[data-id=' + buddies[o - 1].id + ']';
 			}
-			break
+			break;
 		}
 	}
-	return rightBefore
+	return rightBefore;
 }
 
 // Get a buddy's nickname from their ID.
@@ -405,7 +402,7 @@ Cryptodog.getBuddyNicknameByID = function(id) {
 	for (var i in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(i)) {
 			if (Cryptodog.buddies[i].id === id) {
-				return i
+				return i;
 			}
 		}
 	}
@@ -413,34 +410,31 @@ Cryptodog.getBuddyNicknameByID = function(id) {
 
 // Bind buddy click actions.
 Cryptodog.onBuddyClick = function(buddyElement) {
-	var nickname = Cryptodog.getBuddyNicknameByID(buddyElement.attr('data-id'))
-	buddyElement.removeClass('newMessage')
+	var nickname = Cryptodog.getBuddyNicknameByID(buddyElement.attr('data-id'));
+	buddyElement.removeClass('newMessage');
 	if (buddyElement.prev().attr('id') === 'currentConversation') {
-		$('#userInputText').focus()
-		return true
+		$('#userInputText').focus();
+		return true;
 	}
-	var id = buddyElement.attr('data-id')
-	Cryptodog.me.currentBuddy = id
-	initializeConversationBuffer(id)
+	var id = buddyElement.attr('data-id');
+	Cryptodog.me.currentBuddy = id;
+	initializeConversationBuffer(id);
 	// Switch currently active conversation.
-	$('#conversationWindow').html(conversationBuffers[id])
-	Cryptodog.UI.bindSenderElement()
-	Cryptodog.UI.scrollDownConversation(0, false)
-	$('#userInputText').focus()
-	$('#buddy-' + id).addClass('currentConversation')
+	$('#conversationWindow').html(conversationBuffers[id]);
+	Cryptodog.UI.bindSenderElement();
+	Cryptodog.UI.scrollDownConversation(0, false);
+	$('#userInputText').focus();
+	$('#buddy-' + id).addClass('currentConversation');
 	// Clean up finished conversations.
 	$('#buddyList div').each(function() {
 		if ($(this).attr('data-id') !== id) {
-			$(this).removeClass('currentConversation')
-			if (
-				!$(this).hasClass('newMessage') &&
-				($(this).attr('status') === 'offline')
-			) {
-				$(this).slideUp(500, function() { $(this).remove() })
+			$(this).removeClass('currentConversation');
+			if (!$(this).hasClass('newMessage') && ($(this).attr('status') === 'offline')) {
+				$(this).slideUp(500, function() { $(this).remove() });
 			}
 		}
 	})
-	$('#conversationWindow').children().addClass('visibleLine')
+	$('#conversationWindow').children().addClass('visibleLine');
 }
 
 // Display buddy information, including fingerprints and authentication.
@@ -466,7 +460,7 @@ Cryptodog.displayInfo = function(nickname) {
 			Cryptodog.UI.dialogBox(infoDialog, {
 				height: 250,
 				closeable: true
-			})
+			});
 		}
 		else {
 			var authTutorial = Mustache.render(Cryptodog.templates.authTutorial, {
@@ -476,56 +470,56 @@ Cryptodog.displayInfo = function(nickname) {
 				phrase3: Cryptodog.locale.auth.authPhrase3,
 				phrase4: Cryptodog.locale.auth.authPhrase4,
 				phrase5: Cryptodog.locale.auth.authPhrase5
-			})
+			});
 			Cryptodog.UI.dialogBox(infoDialog, {
 				height: 430,
 				closeable: true,
 				onAppear: function() {
 					$('#authTutorial').html(authTutorial)
 				}
-			})
-			bindAuthDialog(nickname)
+			});
+			bindAuthDialog(nickname);
 		}
-		$('#otrFingerprint').text(getFingerprint(nickname, true))
-		$('#multiPartyFingerprint').text(getFingerprint(nickname, false))
+		$('#otrFingerprint').text(getFingerprint(nickname, true));
+		$('#multiPartyFingerprint').text(getFingerprint(nickname, false));
 	})
 }
 
 // Executes on user logout.
 Cryptodog.logout = function() {
-	Cryptodog.UI.logout()
-	Cryptodog.loginError = false
+	Cryptodog.UI.logout();
+	Cryptodog.loginError = false;
 	Cryptodog.xmpp.connection.muc.leave(
 		Cryptodog.me.conversation + '@'
 		+ Cryptodog.xmpp.currentServer.conference
-	)
-	Cryptodog.xmpp.connection.disconnect()
-	Cryptodog.xmpp.connection = null
+	);
+	Cryptodog.xmpp.connection.disconnect();
+	Cryptodog.xmpp.connection = null;
 
 	for (var b in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(b)) {
-			delete Cryptodog.buddies[b]
+			delete Cryptodog.buddies[b];
 		}
 	}
 
-	conversationBuffers = {}
+	conversationBuffers = {};
 }
 
 Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
-	var first, second
-	answer = answer.toLowerCase().replace(/(\s|\.|\,|\'|\"|\;|\?|\!)/, '')
+	var first, second;
+	answer = answer.toLowerCase().replace(/(\s|\.|\,|\'|\"|\;|\?|\!)/, '');
 	if (buddyMpFingerprint) {
-		first = ask ? Cryptodog.me.mpFingerprint : buddyMpFingerprint
-		second = ask ? buddyMpFingerprint : Cryptodog.me.mpFingerprint
-		answer += ';' + first + ';' + second
+		first = ask ? Cryptodog.me.mpFingerprint : buddyMpFingerprint;
+		second = ask ? buddyMpFingerprint : Cryptodog.me.mpFingerprint;
+		answer += ';' + first + ';' + second;
 	}
-	return answer
+	return answer;
 }
 
 Cryptodog.changeStatus = function(status) {
 	if (status === 'away' || status === 'online'){
-		Cryptodog.xmpp.currentStatus = status
-		Cryptodog.xmpp.sendStatus()
+		Cryptodog.xmpp.currentStatus = status;
+		Cryptodog.xmpp.sendStatus();
 	}
 }
 
@@ -538,170 +532,171 @@ PRIVATE INTERFACE FUNCTIONS
 // Outputs the current hh:mm.
 // If `seconds = true`, outputs hh:mm:ss.
 var currentTime = function(seconds) {
-	var date = new Date()
-	var time = []
-	time.push(date.getHours().toString())
-	time.push(date.getMinutes().toString())
-	if (seconds) { time.push(date.getSeconds().toString()) }
+	var date = new Date();
+	var time = [];
+	time.push(date.getHours().toString());
+	time.push(date.getMinutes().toString());
+	if (seconds) { 
+	   time.push(date.getSeconds().toString());
+	}
 	for (var just in time) {
 		if (time[just].length === 1) {
-			time[just] = '0' + time[just]
+			time[just] = '0' + time[just];
 		}
 	}
-	return time.join(':')
+	return time.join(':');
 }
 
 // Initializes a conversation buffer. Internal use.
 var initializeConversationBuffer = function(id) {
 	if (!conversationBuffers.hasOwnProperty(id)) {
-		conversationBuffers[id] = ''
+		conversationBuffers[id] = '';
 	}
 }
 
 // Get a unique buddy identifier.
 var getUniqueBuddyID = function() {
-	var buddyID = Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex)
+	var buddyID = Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex);
 	for (var b in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(b)) {
 			if (Cryptodog.buddies[b].id === buddyID) {
-				return getUniqueBuddyID()
+				return getUniqueBuddyID();
 			}
 		}
 	}
-	return buddyID
+	return buddyID;
 }
 
 // Simply shortens a string `string` to length `length.
 // Adds '..' to delineate that string was shortened.
 var shortenString = function(string, length) {
 	if (string.length > length) {
-		return string.substring(0, (length - 2)) + '…'
+		return string.substring(0, (length - 2)) + '…';
 	}
-	return string
+	return string;
 }
 
 // Get a fingerprint, formatted for readability.
 var getFingerprint = function(nickname, OTR) {
 	var buddy = Cryptodog.buddies[nickname],
 		isMe = nickname === Cryptodog.me.nickname,
-		fingerprint
+		fingerprint;
 
 	if (OTR) {
 		fingerprint = isMe
 			? Cryptodog.me.otrKey.fingerprint()
-			: fingerprint = buddy.fingerprint
+			: fingerprint = buddy.fingerprint;
 	} else {
 		fingerprint = isMe
 			? Cryptodog.me.mpFingerprint
-			: buddy.mpFingerprint
+			: buddy.mpFingerprint;
 	}
 
-	var formatted = ''
+	var formatted = '';
 	for (var i in fingerprint) {
 		if (fingerprint.hasOwnProperty(i)) {
 			if ((i !== 0) && (i % 8) === 0) {
-				formatted += ' '
+				formatted += ' ';
 			}
-			formatted += fingerprint[i]
+			formatted += fingerprint[i];
 		}
 	}
-	return formatted.toUpperCase()
+	return formatted.toUpperCase();
 }
 
 // Bind `nickname`'s authentication dialog buttons and options.
 var bindAuthDialog = function(nickname) {
 	var buddy = Cryptodog.buddies[nickname]
 	if (Cryptodog.buddies[nickname].authenticated) {
-		buddy.updateAuth(true)
+		buddy.updateAuth(true);
 	}
 	else {
-		buddy.updateAuth(false)
+		buddy.updateAuth(false);
 	}
 	$('#authenticated').unbind('click').bind('click', function() {
-		buddy.updateAuth(true)
+		buddy.updateAuth(true);
 	})
 	$('#notAuthenticated').unbind('click').bind('click', function() {
-		buddy.updateAuth(false)
+		buddy.updateAuth(false);
 	})
 	// If the current locale doesn't have the translation
 	// for the auth slides yet, then don't display the option
 	// for opening the auth tutorial.
 	// This is temporary until all translations are ready.
 	// — Nadim, March 29 2014
-	if (
-		Cryptodog.locale.language !== 'en' &&
-		Cryptodog.locale.auth.learnMoreAuth === 'Learn more about authentication') {
-		$('#authLearnMore').hide()
+	if (Cryptodog.locale.language !== 'en' && Cryptodog.locale.auth.learnMoreAuth === 'Learn more about authentication') {
+		$('#authLearnMore').hide();
 	}
 	$('#authLearnMore').unbind('click').bind('click', function() {
 		if ($(this).attr('data-active') === 'true') {
 			$('#authTutorial').fadeOut(function() {
 				$('#authLearnMore').attr('data-active', 'false')
-					.text(Cryptodog.locale.auth.learnMoreAuth)
-				$('.authInfo').fadeIn()
+					.text(Cryptodog.locale.auth.learnMoreAuth);
+				$('.authInfo').fadeIn();
 			})
 		}
 		else {
 			$('.authInfo').fadeOut(function() {
 				$('#authLearnMore').attr('data-active', 'true')
-					.text(Cryptodog.locale.chatWindow.cont)
-				$('#authTutorial').fadeIn()
-			})
+					.text(Cryptodog.locale.chatWindow.cont);
+				$('#authTutorial').fadeIn();
+			});
 		}
 	})
 	$('#authSubmit').unbind('click').bind('click', function(e) {
-		e.preventDefault()
-		var question = $('#authQuestion').val()
-		var answer = $('#authAnswer').val()
+		e.preventDefault();
+		var question = $('#authQuestion').val();
+		var answer = $('#authAnswer').val();
 		if (answer.length === 0) {
-			return
+			return;
 		}
-		$('#authSubmit').val(Cryptodog.locale.chatWindow.asking)
+		$('#authSubmit').val(Cryptodog.locale.chatWindow.asking);
 		$('#authSubmit').unbind('click').bind('click', function(e) {
-			e.preventDefault()
+			e.preventDefault();
 		})
-		buddy.updateAuth(false)
-		answer = Cryptodog.prepareAnswer(answer, true, buddy.mpFingerprint)
-		buddy.otr.smpSecret(answer, question)
+		buddy.updateAuth(false);
+		answer = Cryptodog.prepareAnswer(answer, true, buddy.mpFingerprint);
+		buddy.otr.smpSecret(answer, question);
 	})
 }
 
-var currentNotifications = []
+var currentNotifications = [];
 
 var handleNotificationTimeout = function() {
-	var removalIndexes = []
+	var removalIndexes = [];
 	currentNotifications.forEach(function (element) {
-		element.timeout -= 1
+		element.timeout -= 1;
 		if (element.timeout <= 0) {
-			element.notification.close()
-			log("expiring notification")
-			removalIndexes.push(currentNotifications.indexOf(element))
+			element.notification.close();
+			log("expiring notification");
+			removalIndexes.push(currentNotifications.indexOf(element));
 		}
-	}, this)
+	}, this);
 	removalIndexes.forEach(function (index) {
-		currentNotifications.splice(index, 1)
-	}, this)
+		currentNotifications.splice(index, 1);
+	}, this);
 }
 
 window.setInterval(handleNotificationTimeout, 1000);
 
 function notificationTruncate(msg) {
+   // Chrome truncates its notifications on its own, but firefox doesn't for some reason
 	var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	if (msg.length > 50 && is_firefox) {
-		log("Truncating notification")
-		return msg.substring(0,50) + "…"
+		//log("Truncating notification");
+		return msg.substring(0,50) + "…";
 	}
-	return msg
+	return msg;
 }
 
 var desktopNotification = function(image, title, body, timeout) {
 	if (Cryptodog.me.windowFocus) {
-		log("tried to show desktop notif, but window had focus")
-		return false
+		//log("tried to show desktop notif, but window had focus");
+		return false;
 	}
 	if (!Cryptodog.desktopNotifications) {
-		log("tried to show desktop notif, but notifs are off")
-		return false
+		//log("tried to show desktop notif, but notifs are off");
+		return false;
 	}
 	var notificationStatus = Notification.permission;
 	log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title)
@@ -709,11 +704,11 @@ var desktopNotification = function(image, title, body, timeout) {
 		var n = new Notification(title, {
 			body: notificationTruncate(body),
 			icon: image
-		})
+		});
 		currentNotifications.push({
 			notification: n,
 			timeout: timeout
-		})
+		});
 	}
 	else if (notificationStatus == "default" || notificationStatus == null || notificationStatus == "")
 	{
@@ -728,28 +723,28 @@ var buddyNotification = function(nickname, join) {
 	// Otherwise, go ahead
 	var status
 	if (join) {
-		Cryptodog.newMessageCount(++Cryptodog.me.newMessages)
+		Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
 		status = Mustache.render(Cryptodog.templates.userJoin, {
 			nickname: nickname,
 			currentTime: currentTime(false),
 			color: Cryptodog.getUserColor(nickname)
-		})
+		});
 	}
 	else {
 		status = Mustache.render(Cryptodog.templates.userLeave, {
 			nickname: nickname,
 			currentTime: currentTime(false)
-		})
+		});
 	}
-	initializeConversationBuffer('groupChat')
-	conversationBuffers['groupChat'] += status
+	initializeConversationBuffer('groupChat');
+	conversationBuffers['groupChat'] += status;
 	if (Cryptodog.me.currentBuddy === 'groupChat') {
-		$('#conversationWindow').append(status)
+		$('#conversationWindow').append(status);
 	}
-	Cryptodog.UI.scrollDownConversation(400, true)
+	Cryptodog.UI.scrollDownConversation(400, true);
 	desktopNotification(notifImg,
 		nickname + ' has ' + (join ? 'joined ' : 'left ')
-		+ Cryptodog.me.conversation, '', 7)
+		+ Cryptodog.me.conversation, '', 7);
 }
 
 // Send encrypted file.
@@ -757,12 +752,12 @@ var sendFile = function(nickname) {
 	var sendFileDialog = Mustache.render(Cryptodog.templates.sendFile, {
 		sendEncryptedFile: Cryptodog.locale['chatWindow']['sendEncryptedFile'],
 		fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo']
-	})
+	});
 	ensureOTRdialog(nickname, false, function() {
 		Cryptodog.UI.dialogBox(sendFileDialog, {
 			height: 250,
 			closeable: true
-		})
+		});
 		$('#fileSelector').change(function(e) {
 			e.stopPropagation()
 			if (this.files) {
@@ -776,21 +771,21 @@ var sendFile = function(nickname) {
 					filename: filename,
 					to: nickname,
 					key: key
-				})
-				;delete Cryptodog.buddies[nickname].fileKey[filename]
+				});
+				delete Cryptodog.buddies[nickname].fileKey[filename];
 			}
 		})
 		$('#fileSelectButton').click(function() {
-			$('#fileSelector').click()
-		})
+			$('#fileSelector').click();
+		});
 	})
 }
 
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
 var ensureOTRdialog = function(nickname, close, cb) {
-	var buddy = Cryptodog.buddies[nickname]
+	var buddy = Cryptodog.buddies[nickname];
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
-		return cb()
+		return cb();
 	}
 
 	Cryptodog.UI.progressBarOTR()
@@ -808,18 +803,18 @@ var openBuddyMenu = function(nickname) {
 		chatWindow = Cryptodog.locale.chatWindow,
 		ignoreAction = chatWindow[buddy.ignored() ? 'unignore' : 'ignore'],
 		$menu = $('#menu-' + buddy.id),
-		$buddy = $('#buddy-' + buddy.id)
+		$buddy = $('#buddy-' + buddy.id);
 	if ($menu.attr('status') === 'active') {
-		$menu.attr('status', 'inactive')
-		$menu.css('background-image', 'url("img/icons/circle-down.svg")')
-		$buddy.animate({'height': 15}, 190)
+		$menu.attr('status', 'inactive');
+		$menu.css('background-image', 'url("img/icons/circle-down.svg")');
+		$buddy.animate({'height': 15}, 190);
 		$('#' + buddy.id + '-contents').fadeOut(200, function() {
-			$(this).remove()
-		})
-		return
+			$(this).remove();
+		});
+		return;
 	}
-	$menu.attr('status', 'active')
-	$menu.css('background-image', 'url("img/icons/circle-up.svg")')
+	$menu.attr('status', 'active');
+	$menu.css('background-image', 'url("img/icons/circle-up.svg")');
 	$buddy.delay(10).animate({'height': 130}, 180, function() {
 		$buddy.append(
 			Mustache.render(Cryptodog.templates.buddyMenu, {
@@ -828,42 +823,42 @@ var openBuddyMenu = function(nickname) {
 				displayInfo: chatWindow.displayInfo,
 				ignore: ignoreAction
 			})
-		)
-		var $contents = $('#' + buddy.id + '-contents')
-		$contents.fadeIn(200)
+		);
+		var $contents = $('#' + buddy.id + '-contents');
+		$contents.fadeIn(200);
 		$contents.find('.option1').click(function(e) {
-			e.stopPropagation()
-			Cryptodog.displayInfo(nickname)
-			$menu.click()
-		})
+			e.stopPropagation();
+			Cryptodog.displayInfo(nickname);
+			$menu.click();
+		});
 		$contents.find('.option2').click(function(e) {
-			e.stopPropagation()
-			sendFile(nickname)
-			$menu.click()
-		})
+			e.stopPropagation();
+			sendFile(nickname);
+			$menu.click();
+		});
 		$contents.find('.option3').click(function(e) {
-			e.stopPropagation()
+			e.stopPropagation();
 			buddy.toggleIgnored();
-			$menu.click()
-		})
+			$menu.click();
+		});
 	})
 }
 
 // Check for nickname completion.
 // Called when pressing tab in user input.
 var nicknameCompletion = function(input) {
-	var nickname, suffix
-	var potentials = []
+	var nickname, suffix;
+	var potentials = [];
 	for (nickname in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
 			try {
 				potentials.push({
 					score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
 					value: nickname
-				})
+				});
 			}
 			catch (err) {
-				log("completion: " + err)
+				log("completion: " + err);
 			}
 		}
 	}
@@ -872,20 +867,20 @@ var nicknameCompletion = function(input) {
 	// find item with largest score
 	potentials.forEach(function(item) {
 		if (item.score > largest.score) {
-			largest = item
+			largest = item;
 		}
-	}, this)
+	}, this);
 
 	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) {
-		suffix = ' '
+		suffix = ' ';
 	}
 	else {
-		 suffix = ': '
+		 suffix = ': ';
 	}
 	if (largest.score < 0.1)    // cut-off matching attempt if all scores are low
 		return input;
-	return input.replace(/(\S)+$/, largest.value + suffix)
+	return input.replace(/(\S)+$/, largest.value + suffix);
 }
 
 // Get color by nickname
@@ -896,27 +891,28 @@ Cryptodog.getUserColor = function(nickname){
 // Handle new message count
 Cryptodog.newMessageCount = function(count){
 	if (Cryptodog.me.windowFocus) {
-		Cryptodog.me.newMessages = 0
+		Cryptodog.me.newMessages = 0;
 		// clear notifications
 		currentNotifications.forEach(function(element) {
-			element.notification.close()
+			element.notification.close();
 		}, this);
-		currentNotifications = []
+		currentNotifications = [];
 	}
-	count = Cryptodog.me.newMessages
-	var prevCount = document.title.match(/^\([0-9]+\)\s+/)
-	if (prevCount){
-		if (count <= 0){
-			document.title = document.title.replace(prevCount[0],'')
+	count = Cryptodog.me.newMessages;
+	var prevCount = document.title.match(/^\([0-9]+\)\s+/);
+	// TODO: Clean this up a bit
+	if (prevCount) {
+		if (count <= 0) {
+			document.title = document.title.replace(prevCount[0], '');
 		}
 		else if (count >= 1){
-			document.title = document.title.replace(prevCount[0],'('+count+') ')
-		}
+			document.title = document.title.replace(prevCount[0], '(' + count + ') ');
+		} 
 	}
 	else {
 		if (count <= 0) { return }
 		else if (count >= 1){
-			document.title = '('+count+') ' + document.title
+			document.title = '(' + count + ') ' + document.title;
 		}
 	}
 }
@@ -935,32 +931,32 @@ $('#userInput').submit(function() {
 	if (Cryptodog.me.currentBuddy !== 'groupChat') {
 		Cryptodog.buddies[
 			Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy)
-		].otr.sendMsg(message)
+		].otr.sendMsg(message);
 	}
 	else if (Object.keys(Cryptodog.buddies).length) {
-		var ciphertext = JSON.parse(Cryptodog.multiParty.sendMessage(message))
-		var missingRecipients = []
+		var ciphertext = JSON.parse(Cryptodog.multiParty.sendMessage(message));
+		var missingRecipients = [];
 		for (var i in Cryptodog.buddies) {
 			if (typeof(ciphertext['text'][i]) !== 'object') {
-				missingRecipients.push(i)
+				missingRecipients.push(i);
 			}
 		}
 		if (missingRecipients.length) {
 			Cryptodog.addToConversation(
 				missingRecipients, Cryptodog.me.nickname,
 				'groupChat', 'missingRecipients'
-			)
+			);
 		}
 		Cryptodog.xmpp.connection.muc.message(
 			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 			null, JSON.stringify(ciphertext), null, 'groupchat', 'active'
-		)
+		);
 	}
 	Cryptodog.addToConversation(
 		message, Cryptodog.me.nickname,
 		Cryptodog.me.currentBuddy, 'message'
-	)
-	return false
+	);
+	return false;
 })
 
 function isCharacterKeyPress(e) {
@@ -981,114 +977,114 @@ $('#userInputText').keydown(function(e) {
 		}
 	}
 	else if (e.keyCode === 13) {
-		e.preventDefault()
-		$('#userInput').submit()
-		Cryptodog.me.composing = false
-		return true
+		e.preventDefault();
+		$('#userInput').submit();
+		Cryptodog.me.composing = false;
+		return true;
 	}
 	if (!isCharacterKeyPress(e)) return;
-	var destination, type
+	var destination, type;
 	if (Cryptodog.me.currentBuddy === 'groupChat') {
-		destination = null
-		type = 'groupchat'
+		destination = null;
+		type = 'groupchat';
 	}
 	else {
-		destination = Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy)
-		type = 'chat'
+		destination = Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy);
+		type = 'chat';
 	}
 	if (!Cryptodog.me.composing) {
-		Cryptodog.me.composing = true
+		Cryptodog.me.composing = true;
 		Cryptodog.xmpp.connection.muc.message(
 			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 			destination, '', null, type, 'composing'
-		)
+		);
 		window.setTimeout(function(d, t) {
 			Cryptodog.xmpp.connection.muc.message(
 				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
 				d, '', null, t, 'paused'
-			)
-			Cryptodog.me.composing = false
-		}, 7000, destination, type)
+			);
+			Cryptodog.me.composing = false;
+		}, 7000, destination, type);
 	}
 })
 
 $('#userInputText').keyup(function(e) {
 	if (e.keyCode === 13) {
-		e.preventDefault()
+		e.preventDefault();
 	}
 })
 
 $('#userInputSubmit').click(function() {
-	$('#userInput').submit()
-	$('#userInputText').select()
+	$('#userInput').submit();
+	$('#userInputText').select();
 })
 
 // Language selector.
 $('#languageSelect').click(function() {
-	$('#customServerDialog').hide()
-	$('#languages li').css({'color': '#FFF', 'font-weight': 'normal'})
+	$('#customServerDialog').hide();
+	$('#languages li').css({'color': '#FFF', 'font-weight': 'normal'});
 	$('[data-locale=' + Cryptodog.locale['language'] + ']').css({
 		'color': '#CCC',
 		'font-weight': 'bold'
-	})
+	});
 	$('#footer').animate({'height': 190}, function() {
-		$('#languages').fadeIn()
-	})
+		$('#languages').fadeIn();
+	});
 	$('#languages li').click(function() {
-		var lang = $(this).attr('data-locale')
+		var lang = $(this).attr('data-locale');
 		$('#languages').fadeOut(200, function() {
-			Cryptodog.locale.set(lang, true)
-			Cryptodog.storage.setItem('language', lang)
-			$('#footer').animate({'height': 14})
-		})
+			Cryptodog.locale.set(lang, true);
+			Cryptodog.storage.setItem('language', lang);
+			$('#footer').animate({'height': 14});
+		});
 	})
 })
 
 // Login form.
 $('#conversationName').click(function() {
-	$(this).select()
+	$(this).select();
 })
 $('#nickname').click(function() {
-	$(this).select()
+	$(this).select();
 })
 $('#CryptodogLogin').submit(function() {
 	// Don't submit if form is already being processed.
 	if (($('#loginSubmit').attr('readonly') === 'readonly')) {
-		return false
+		return false;
 	}
 	//Check validity of conversation name and nickname.
-	$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()))
-	$('#nickname').val($.trim($('#nickname').val().toLowerCase()))
+	$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()));
+	$('#nickname').val($.trim($('#nickname').val().toLowerCase()));
 	if ($('#conversationName').val() === '') {
-		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation'])
-		$('#conversationName').select()
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
+		$('#conversationName').select();
 	}
 	else if (!$('#conversationName').val().match(/^\w{1,20}$/)) {
-		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['conversationAlphanumeric'])
-		$('#conversationName').select()
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['conversationAlphanumeric']);
+		$('#conversationName').select();
 	}
 	else if ($('#nickname').val() === '') {
-		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname'])
-		$('#nickname').select()
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname']);
+		$('#nickname').select();
 	}
 	else if (!$('#nickname').val().match(/^\w{1,16}$/)) {
-		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameAlphanumeric'])
-		$('#nickname').select()
+		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameAlphanumeric']);
+		$('#nickname').select();
 	}
 	// Prepare keys and connect.
 	else {
-		$('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly')
+		$('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly');
 		Cryptodog.xmpp.showKeyPreparationDialog(function() {
-			Cryptodog.xmpp.connect()
-		})
+			Cryptodog.xmpp.connect();
+		});
 	}
-	return false
+	return false;
 })
 
-Cryptodog.UI.userInterfaceBindings()
+Cryptodog.UI.userInterfaceBindings();
 
-Cryptodog.UI.windowEventBindings()
+Cryptodog.UI.windowEventBindings();
 
-Cryptodog.UI.show()
+Cryptodog.UI.show();
 
 })}
