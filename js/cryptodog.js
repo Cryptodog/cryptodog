@@ -63,6 +63,12 @@ GLOBAL INTERFACE FUNCTIONS
 -------------------
 */
 
+// If returns true for a name, name is automatically ignored
+// Can be used to filter out types of names
+Cryptodog.isFiltered = function(name) {
+	return false;
+} 
+
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
 	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[recipient].id]);
@@ -228,6 +234,11 @@ var Buddy = function(nickname, id, status) {
 			$('#buddy-' + this.id).addClass('ignored');
 		}
 	};
+
+	if (Cryptodog.isFiltered(this.nickname) && !this.ignored()) {
+		console.log("Filtering user '" + this.nickname + "', as isFiltered() returned true.");
+		this.toggleIgnored();
+	}
 }
 
 Buddy.prototype = {
