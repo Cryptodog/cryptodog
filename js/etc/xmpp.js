@@ -13,6 +13,11 @@ Cryptodog.xmpp.defaultServer = {
 Cryptodog.xmpp.currentServer = {};
 
 $(window).ready(function() {
+Cryptodog.storage.removeItem('serverName');
+Cryptodog.storage.removeItem('domain');
+Cryptodog.storage.removeItem('conferenceServer');
+Cryptodog.storage.removeItem('relay');
+
 // Load custom server settings
 Cryptodog.storage.getItem('serverName', function(key){
 	Cryptodog.xmpp.currentServer.name = key ? key : Cryptodog.xmpp.defaultServer.name;
