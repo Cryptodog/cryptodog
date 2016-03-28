@@ -122,7 +122,7 @@ Cryptodog.UI = {
 
 	logout: function() {
 		$('#loginInfo').text(Cryptodog.locale['loginMessage']['thankYouUsing']);
-		$('#loginInfo').animate({ 'background-color': '#bb7a20' }, 200);
+		$('#loginInfo').animate({ 'background-color': '#0087AF' }, 200);
 		document.title = 'Cryptodog';
 		$('#conversationInfo,#optionButtons').fadeOut();
 		$('#header').animate({ 'background-color': 'transparent' });

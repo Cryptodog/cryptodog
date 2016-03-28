@@ -44,7 +44,7 @@ Cryptodog.xmpp.showKeyPreparationDialog = function(callback) {
 		callback()
 		return
 	}
-	$('#loginInfo').css({'background-color': '#bb7a20'})
+	$('#loginInfo').css({'background-color': '#0087AF'})
 	$('#loginInfo').text(Cryptodog.locale['loginMessage']['generatingKeys'])
 
 	// Add delay to key generation when on the file protocol
@@ -86,7 +86,7 @@ Cryptodog.xmpp.connect = function() {
 	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay)
 	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
 		if (status === Strophe.Status.CONNECTING) {
-			$('#loginInfo').animate({'background-color': '#bb7a20'}, 200)
+			$('#loginInfo').animate({'background-color': '#0087AF'}, 200)
 			$('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting'])
 		}
 		else if (status === Strophe.Status.CONNECTED) {
@@ -295,7 +295,7 @@ Cryptodog.xmpp.sendStatus = function() {
 
 // Executed (manually) after connection.
 var afterConnect = function() {
-	$('.conversationName').animate({'background-color': '#bb7a20'})
+	$('.conversationName').animate({'background-color': '#0087AF'})
 	Cryptodog.xmpp.connection.ibb.addIBBHandler(Cryptodog.otr.ibbHandler)
 	/* jshint -W106 */
 	Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler)
