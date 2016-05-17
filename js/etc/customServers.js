@@ -26,6 +26,15 @@ $('#customServer').click(function() {
 
 		$('#customServerSelector').append(
 			Mustache.render(Cryptodog.templates['customServer'], {
+				name: 'Cryptodog (Tor Hidden Service)',
+				domain: 'doggyfipznipbaia.onion',
+				xmpp: 'conference.doggyfipznipbaia.onion',
+				relay: 'http://doggyfipznipbaia.onion/http-bind'
+			})
+		)
+
+		$('#customServerSelector').append(
+			Mustache.render(Cryptodog.templates['customServer'], {
 				name: 'Cryptocrap',
 				domain: 'cryptocrap.xyz',
 				xmpp: 'conference.cryptocrap.xyz',
