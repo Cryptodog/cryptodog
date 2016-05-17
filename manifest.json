@@ -1,20 +1,31 @@
 {
     "name": "Cryptodog",
-    "description": "A community fork of Cryptocat",
-    "version": "2.2.3",
+    "description": "Private conversations made easy",
+    "version": "2.2.4",
 
     "manifest_version": 2,
-
-    "app": {
-        "background": {
-            "scripts": ["chrome/background.js"]
-        }
+    
+    "background": {
+        "scripts": ["chrome/background.js"]
     },
 
-    "icons": {"128": "img/logo-128.png"},
+    "browser_action": {
+        "default_icon": {
+            "128": "img/logo-128.png"
+        }
+    },
+    
+    "icons": {
+        "128": "img/logo-128.png",
+        "48": "img/logo-48.png",
+        "16": "img/logo-16.png",
+        "38": "img/logo-38.png",
+        "19": "img/logo-19.png"
+    },
 
     "permissions": [
-        "notifications",
+        "activeTab",
+	    "notifications",
         "storage"
     ]
 }
