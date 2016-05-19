@@ -27,7 +27,7 @@ $('#customServer').click(function() {
 		$('#customServerSelector').append(
 			Mustache.render(Cryptodog.templates['customServer'], {
 				name: 'Cryptodog (Tor Hidden Service)',
-				domain: 'doggyfipznipbaia.onion',
+				domain: 'crypto.dog',
 				xmpp: 'conference.crypto.dog',
 				relay: 'http://doggyfipznipbaia.onion/http-bind'
 			})
