@@ -2,19 +2,12 @@
 
 # Cryptodog
 
-Cryptodog is a community fork of the popular encrypted messaging app, [Cryptocat](https://github.com/cryptocat/cryptocat).
+Cryptodog is a community fork of the **original**, browser-based encrypted chat app, [Cryptocat](https://web.archive.org/web/20151217150336/https://crypto.cat/).
 
-## An honest statement on Cryptodog's security
+We offer two things:
 
-By the time of its death in February 2016, Cryptocat (the first incarnation) had suffered [numerous](https://isecpartners.github.io/publications/iSEC_Cryptocat_iOS.pdf), [documented](https://leastauthority.com/static/publications/LeastAuthority-Cryptocat-audit-report.pdf) security flaws. Some were nothing short of [fatal](https://tobtu.com/decryptocat.php).
-
-Cryptodog **retains any flaws present in Cryptocat 2.2.2**. The underlying cryptographic protocols are identical, and the implementation has not changed whatsoever. In fact, the addition of new features into Cryptodog increases its attack surface, possibly rendering it *even less secure* than Cryptocat.
-
-This is not to be taken lightly. If you're looking for a secure, private messaging client, **look elsewhere**. [Signal](https://whispersystems.org/) and [Ricochet](https://ricochet.im/) are good places to start.
-
-Cryptodog is best characterized as a toy. It is not secure in any true sense and will likely never be. If you're using it in a risky environment, or for anything other than casual purposes, you're using it wrong.
-
-If you accept these facts, by all means, use Cryptodog. Just don't expect it to protect you.
+* A modified Cryptocat client, tweaked for performance, aesthetics, and usability
+* A public server fully compatible with both clients
 
 ## Differences from Cryptocat
 
@@ -28,19 +21,29 @@ If you accept these facts, by all means, use Cryptodog. Just don't expect it to 
 * Desktop notifications
 * Unicode emoticons
 * Easier to localize
-* And of course, different bugs (if you catch any, please don't hesitate to open an issue or pull request here!)
 
 ## Usage
-Signed Chrome and Firefox extensions are on the roadmap.
 
-In the meantime, you can load this repository as an unpacked Chrome extension (in developer mode), or you can use our hosted client at: https://cryptodog.github.io
+The recommended way to run Cryptodog is via our [Chrome/Chromium extension](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec). This ensures you always have the official, most recent version. A Firefox extension will be released in the near future.
 
-## Coding Style
+If you don't care about that and just want to test out Cryptodog, we have a [hosted client on GitHub Pages](https://cryptodog.github.io). You should be able to access it from most mobile browsers as well.
 
-When working on the code, please follow these rules:
-* Use semicolons at the end of statements
-* Use double-quotes (" ") instead of single-quotes (' ') for strings
-* Use `item.key` notation instead of `item["key"]` notation when possible
+Or, if you prefer the stock Cryptocat extension, that's fine too. The official Cryptocat addon is compatible with our server. Just enter this information in the "Custom server" dialog:
 
-## Thanks
-* xor - UI Rework, misc patches
+    **Domain**: crypto.dog
+    **XMPP Conference Server**: conference.crypto.dog
+    **BOSH/WebSocket Relay**: https://crypto.dog/http-bind
+
+Bug reports are welcome, and in fact, encouraged. If you find a bug in either the Cryptodog client or server, please open an issue here on the GitHub repository.
+
+## Security Caveats
+
+Cryptodog is experimental software. It is suitable for educational and casual purposes only.
+
+**Do not use Cryptodog if you have a strong need for anonymity and privacy.** This includes journalists, sources, activists, and citizens of oppressive countries.
+
+### Technical
+
+Cryptodog is based on version 2.2.2 of Cryptocat. The vast majority of changes are UI-related; neither the client cryptography nor server backend have been modified. However, this does not preclude Cryptodog from introducing vulnerabilities not present in Cryptocat.
+
+For further details regarding Cryptodog's security model, see the [Cryptocat Wiki](https://web.archive.org/web/20160216105404/https://github.com/cryptocat/cryptocat/wiki).
