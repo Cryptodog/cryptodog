@@ -31,7 +31,9 @@ If you don't care about that and just want to test out Cryptodog, we have a [hos
 Or, if you prefer the stock Cryptocat extension, that's fine too. The official Cryptocat addon is compatible with our server. Just enter this information in the "Custom server" dialog:
 
 **Domain**: crypto.dog
+
 **XMPP Conference Server**: conference.crypto.dog
+
 **BOSH/WebSocket Relay**: https://crypto.dog/http-bind
 
 Bug reports are welcome, and in fact, encouraged. If you find a bug in either the Cryptodog client or server, please open an issue here on the GitHub repository.
