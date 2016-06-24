@@ -7,7 +7,7 @@
         "blog": "Blog",
         "customServer": "Custom server",
         "reset": "Reset",
-        "conversationName": "conversation name",
+        "conversationName": "lobby",
         "nickname": "nickname",
         "connect": "connect",
         "conversationNameTooltip": "Enter a name for your conversation and share it with people you'd like to talk to, or join <strong>lobby</strong> to meet new people!",
