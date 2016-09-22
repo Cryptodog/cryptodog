@@ -28,6 +28,15 @@ Cryptodog.buddies = {}
 // For persistent ignores.
 Cryptodog.ignoredNicknames = []
 
+// Toggle for audio notifications
+Cryptodog.allowAudio = false;
+
+// Sounds
+Cryptodog.audio = {};
+Cryptodog.audio.newMessage = new Audio("snd/msgGet.mp3");
+Cryptodog.audio.userJoin = new Audio("snd/userJoin.mp3");
+Cryptodog.audio.userLeave = new Audio("snd/userLeave.mp3");
+
 // image used for notifications
 var notifImg = "img/logo-128.png";
 
@@ -135,6 +144,9 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
+		}
+		if (Cryptodog.allowAudio) {
+			Cryptodog.audio.newMessage.play();
 		}
 		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
 		message = Strophe.xmlescape(message);
@@ -753,6 +765,16 @@ var buddyNotification = function(nickname, join) {
 		$('#conversationWindow').append(status);
 	}
 	Cryptodog.UI.scrollDownConversation(400, true);
+
+	if (Cryptodog.allowAudio) {
+		if (join) {
+			Cryptodog.audio.userJoin.play();
+		}
+		else {
+			Cryptodog.audio.userLeave.play();
+		}
+	}	
+
 	desktopNotification(notifImg,
 		nickname + ' has ' + (join ? 'joined ' : 'left ')
 		+ Cryptodog.me.conversation, '', 7);
