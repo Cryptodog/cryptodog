@@ -327,11 +327,13 @@ Cryptodog.UI = {
 				Cryptodog.allowAudio = false;
 				Cryptodog.storage.setItem('audioNotifications', 'false');
 				$('#audioToggle').attr('data-utip', 'Audio notifications off');
+				$('#audioToggle').attr('src', 'img/icons/volume-mute.svg');
 			}
 			else {
 				Cryptodog.allowAudio = true;
 				Cryptodog.storage.setItem('audioNotifications', 'true');
 				$('#audioToggle').attr('data-utip', 'Audio notifications on');
+				$('#audioToggle').attr('src', 'img/icons/volume-medium.svg');
 			}
 		});
 
