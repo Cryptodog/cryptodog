@@ -503,7 +503,7 @@ Cryptodog.UI = {
 					}
 				});
 				Cryptodog.storage.getItem('audioNotifications', function(key){
-					if ((key === 'true') || !key){
+					if (key === 'true'){
 						$('#audioToggle').click();
 					}
 				});
