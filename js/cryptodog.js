@@ -29,13 +29,14 @@ Cryptodog.buddies = {}
 Cryptodog.ignoredNicknames = []
 
 // Toggle for audio notifications
-Cryptodog.allowAudio = false;
+Cryptodog.allowSoundNotifications = false;
 
 // Sounds
-Cryptodog.audio = {};
-Cryptodog.audio.newMessage = new Audio("snd/msgGet.mp3");
-Cryptodog.audio.userJoin = new Audio("snd/userJoin.mp3");
-Cryptodog.audio.userLeave = new Audio("snd/userLeave.mp3");
+Cryptodog.audio = {
+	newMessage: new Audio("snd/msgGet.mp3"),
+	userJoin: new Audio("snd/userJoin.mp3"),
+	userLeave: new Audio("snd/userLeave.mp3")
+};
 
 // image used for notifications
 var notifImg = "img/logo-128.png";
@@ -144,7 +145,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-			if (Cryptodog.allowAudio) {
+			if (Cryptodog.allowSoundNotifications) {
 				Cryptodog.audio.newMessage.play();
 			}
 			desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
@@ -766,7 +767,7 @@ var buddyNotification = function(nickname, join) {
 	}
 	Cryptodog.UI.scrollDownConversation(400, true);
 
-	if (Cryptodog.allowAudio) {
+	if (Cryptodog.allowSoundNotifications) {
 		if (join) {
 			Cryptodog.audio.userJoin.play();
 		}
