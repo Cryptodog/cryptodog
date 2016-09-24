@@ -144,11 +144,11 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
+			if (Cryptodog.allowAudio) {
+				Cryptodog.audio.newMessage.play();
+			}
+			desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
 		}
-		if (Cryptodog.allowAudio) {
-			Cryptodog.audio.newMessage.play();
-		}
-		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
 		message = Strophe.xmlescape(message);
 		message = Cryptodog.UI.addLinks(message);
 		message = Cryptodog.UI.addEmoticons(message);
