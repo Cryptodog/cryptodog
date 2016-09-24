@@ -171,7 +171,7 @@ Cryptodog.UI = {
 			{
 				"data": '🐱',
 				"regex": /(\s|^)(:|(=))-?3(?=(\s|$))/gi
-		 },		    // :3 - Cat face
+			},		    // :3 - Cat face
 			{
 				"data": '😮',
 				"regex": /(\s|^)(:|(=))-?o(?=(\s|$))/gi
@@ -184,9 +184,9 @@ Cryptodog.UI = {
 				"data": '☹',
 				"regex": /(\s|^)(:|(=))-?\((?=(\s|$))/gi
 			},	// :( - Sad
-				{
-					"data": '😊',
-					"regex": /(\s|^)(:|(=))-?\)(?=(\s|$))/gi
+			{
+				"data": '😊',
+				"regex": /(\s|^)(:|(=))-?\)(?=(\s|$))/gi
 			},	// :) - Happy
 			{
 				"data": '😛',
@@ -320,6 +320,20 @@ Cryptodog.UI = {
 				$('#darkMode').attr('data-utip', 'Light mode');
 			}
 		})
+
+		// Audio notifications toggle button
+		$('#audioToggle').click(function() {
+			if(Cryptodog.allowAudio) {
+				Cryptodog.allowAudio = false;
+				Cryptodog.storage.setItem('audioNotifications', 'false');
+				$('#audioToggle').attr('data-utip', 'Audio notifications off');
+			}
+			else {
+				Cryptodog.allowAudio = true;
+				Cryptodog.storage.setItem('audioNotifications', 'true');
+				$('#audioToggle').attr('data-utip', 'Audio notifications on');
+			}
+		});
 
 		// Status button.
 		$('#status').click(function() {
@@ -488,8 +502,7 @@ Cryptodog.UI = {
 				});
 				Cryptodog.storage.getItem('audioNotifications', function(key){
 					if ((key === 'true') || !key){
-						$('#audio').click();
-						$('#utip').hide();
+						$('#audioToggle').click();
 					}
 				});
 			}, 800);
