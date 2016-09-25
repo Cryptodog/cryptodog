@@ -20,7 +20,7 @@ Cryptodog.me = {
 	mpPublicKey:   null,
 	mpFingerprint: null,
 	currentBuddy:  null,
-	color:         randomColor({luminosity: 'dark'})
+	color:         "#FFF" // overwritten on connect
 }
 
 Cryptodog.buddies = {}
@@ -1108,7 +1108,8 @@ $('#CryptodogLogin').submit(function() {
 	// Prepare keys and connect.
 	else {
 		$('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly');
-		Cryptodog.xmpp.showKeyPreparationDialog(function() {
+		Cryptodog.xmpp.showKeyPreparationDialog(function () {
+			Cryptodog.me.color = randomColor({ luminosity: 'dark' });
 			Cryptodog.xmpp.connect();
 		});
 	}
