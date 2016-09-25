@@ -24,7 +24,6 @@ Cryptodog.UI = {
 		$('#bubble').animate({ 'left': '+=5px' }, 130)
 			.animate({ 'left': '-=10px' }, 130)
 			.animate({ 'left': '+=5px' }, 130);
-		//$('#loginInfo').animate({ 'background-color': '#E93028' }, 200);
 	},
 
 	// Handle detected new keys.
@@ -122,7 +121,6 @@ Cryptodog.UI = {
 
 	logout: function() {
 		$('#loginInfo').text(Cryptodog.locale['loginMessage']['thankYouUsing']);
-		//$('#loginInfo').animate({ 'background-color': '#bb7a20' }, 200);
 		document.title = 'Cryptodog';
 		$('#conversationInfo,#optionButtons').fadeOut();
 		$('#header').animate({ 'background-color': 'transparent' });
