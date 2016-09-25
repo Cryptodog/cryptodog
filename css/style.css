@@ -269,7 +269,7 @@ div#bubble .loginForm #nickname {
 	border: 0;
 	outline: 0;
 	background: transparent;
-	border-bottom: 2px solid #0087AF; /*#999*/
+	border-bottom: 2px solid #0087AF; 
 }
 
 div#bubble #loginSubmit {
@@ -280,7 +280,6 @@ div#bubble #loginSubmit {
 	position: relative;
 	bottom: 2px;
 	font-size: 1.6em;
-	/*background: #bb7a20;*/
 	background: #0087AF;
 }
 
@@ -291,7 +290,6 @@ div#bubble #loginSubmit:hover {
 div#loginInfo {
 	text-align: center;
 	font-size: 1.3em;
-	/*background: #999;*/
 	background: transparent;
 	padding: 3px;
 	color: #FFF;
