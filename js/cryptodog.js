@@ -314,11 +314,9 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	if (!id) { id = getUniqueBuddyID() }
 	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, id, status)
 	$('#buddyList').queue(function() {
-		var shortNick = shortenString(nickname, 11);
-		var buddyNick = ascii.test(nickname) ? shortNick : shortNick + " [!]";
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
-			shortNickname: buddyNick,
+			shortNickname: shortenString(nickname, 11),
 			status: status
 		})
 		var placement = determineBuddyPlacement(nickname, id, status)
@@ -342,6 +340,9 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	$('#buddyList').dequeue()
 	if (buddy.ignored()){
 		$('#buddy-' + buddy.id).addClass('ignored')
+	}
+	if (!ascii.test(buddy.nickname)) {
+		$('#buddy-' + buddy.id).addClass('warning');
 	}
 }
 

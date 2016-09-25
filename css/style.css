@@ -506,6 +506,10 @@ BUDDY LIST
 	background-image: url("../img/icons/user.svg");
 }
 
+.buddy.warning span.loginTypeIcon {
+	background-image: url("../img/icons/user-minus.svg");
+}
+
 .buddy span.shortNickname {
 	margin-left: 18px;
 }
