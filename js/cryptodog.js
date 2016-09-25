@@ -45,6 +45,9 @@ Notification.requestPermission(function(permission){
 	log("asked for notification permission, got '" + permission + "'");
 });
 
+// checks if a string is composed of displayable ASCII chars
+var ascii = /^[ -~]+$/;
+
 /*
 -------------------
 END GLOBAL SCOPE
@@ -311,9 +314,11 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	if (!id) { id = getUniqueBuddyID() }
 	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, id, status)
 	$('#buddyList').queue(function() {
+		var shortNick = shortenString(nickname, 11);
+		var buddyNick = ascii.test(nickname) ? shortNick : shortNick + " [!]";
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
-			shortNickname: shortenString(nickname, 11),
+			shortNickname: buddyNick,
 			status: status
 		})
 		var placement = determineBuddyPlacement(nickname, id, status)
