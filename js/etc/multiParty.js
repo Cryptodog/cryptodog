@@ -241,6 +241,7 @@ Cryptodog.multiParty.receiveMessage = function(sender, myName, message) {
 		else if (message['type'] === 'message') {
 			// Make sure message is being sent to all chat room participants
 			var recipients = Object.keys(Cryptodog.buddies)
+			recipients.push(Cryptodog.me.nickname);
 			var missingRecipients = []
 			recipients.splice(recipients.indexOf(sender), 1)
 			for (var r = 0; r !== recipients.length; r++) {
@@ -274,8 +275,10 @@ Cryptodog.multiParty.receiveMessage = function(sender, myName, message) {
 			var hmac = CryptoJS.lib.WordArray.create()
 			var i
 			for (i = 0; i !== sortedRecipients.length; i++) {
-				hmac.concat(CryptoJS.enc.Base64.parse(message['text'][sortedRecipients[i]]['message']))
-				hmac.concat(CryptoJS.enc.Base64.parse(message['text'][sortedRecipients[i]]['iv']))
+				if (missingRecipients.indexOf(sortedRecipients[i]) < 0){
+					hmac.concat(CryptoJS.enc.Base64.parse(message['text'][sortedRecipients[i]]['message']))
+					hmac.concat(CryptoJS.enc.Base64.parse(message['text'][sortedRecipients[i]]['iv']))
+				}
 			}
 			if (
 				!OTR.HLP.compare(
