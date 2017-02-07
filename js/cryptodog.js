@@ -1044,7 +1044,7 @@ $('#userInputText').keydown(function(e) {
 				d, '', null, t, 'paused'
 			);
 			Cryptodog.me.composing = false;
-		}, 7000, destination, type);
+		}, 1800, destination, type);
 	}
 })
 

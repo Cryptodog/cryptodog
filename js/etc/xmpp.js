@@ -7,7 +7,7 @@ Cryptodog.xmpp.defaultServer = {
 	name: 'Cryptodog',
 	domain: 'crypto.dog',
 	conference: 'conference.crypto.dog',
-	relay: 'https://crypto.dog/http-bind'
+	relay: 'ws://localhost:5280/websocket'
 };
 
 Cryptodog.xmpp.currentServer = {};
@@ -197,13 +197,15 @@ Cryptodog.xmpp.onMessage = function(message) {
 	if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
 		return true
 	}
+
 	// Check if message has a 'composing' notification.
-	if ($(message).find('composing').length && !body.length) {
+	if ($(message).attr("id") === "composing" && !body.length) {
 		$('#buddy-' + Cryptodog.buddies[nickname].id).addClass('composing')
 		return true
 	}
+
 	// Check if message has a 'paused' (stopped writing) notification.
-	if ($(message).find('paused').length) {
+	if ($(message).attr("id") === "paused") {
 		$('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing')
 	}
 	// Check if message is a group chat message.
