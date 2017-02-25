@@ -4,10 +4,10 @@ Cryptodog.xmpp.currentStatus = 'online';
 Cryptodog.xmpp.connection = null;
 
 Cryptodog.xmpp.defaultServer = {
-	name: 'Cryptodog',
-	domain: 'crypto.dog',
-	conference: 'conference.crypto.dog',
-	relay: 'ws://localhost:5280/websocket'
+	name: 'Internet Krypto Klub',
+	domain: 'ikrypto.club',
+	conference: 'conference.ikrypto.club',
+	relay: 'wss://ikrypto.club/socket'
 };
 
 Cryptodog.xmpp.currentServer = {};
