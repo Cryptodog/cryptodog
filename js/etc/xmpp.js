@@ -173,7 +173,8 @@ Cryptodog.xmpp.reconnect = function() {
 		else if ((status === Strophe.Status.CONNFAIL) || (status === Strophe.Status.DISCONNECTED)) {
 			if (Cryptodog.loginError) {
 				window.setTimeout(function() {
-					Cryptodog.xmpp.reconnect()
+					// Cryptodog.xmpp.reconnect()
+					console.log("not reconnecting")
 				}, 5000)
 			}
 		}
