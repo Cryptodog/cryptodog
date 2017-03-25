@@ -5,7 +5,7 @@ Cryptodog.xmpp.connection = null;
 
 Cryptodog.xmpp.defaultServer = {
 	name: 'Internet Krypto Klub',
-	domain: 'ikrypto.club',
+	domain: 'anon.ikrypto.club',
 	conference: 'conference.ikrypto.club',
 	relay: 'wss://ikrypto.club/socket'
 };
