@@ -214,6 +214,7 @@ Cryptodog.UI = {
 			var e = Cryptodog.UI.emoticons[i];
 			message = message.replace(e.regex, ' <span class="monospace">' + e.data + '</span>');
 		}
+
 		return message;
 	},
 

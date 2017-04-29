@@ -151,12 +151,14 @@ Cryptodog.xmpp.onConnected = function() {
 		})
 	}, 800)
 	Cryptodog.loginError = true
+	Cryptodog.reconnectError = false
 }
 
 // Reconnect to the same chatroom, on accidental connection loss.
 Cryptodog.xmpp.reconnect = function() {
+	Cryptodog.reconnectError = false;
 	if (Cryptodog.xmpp.connection) {
-	    Cryptodog.xmpp.connection.reset()
+		Cryptodog.xmpp.connection.reset();
 	}
 	Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay)
 	Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
@@ -171,11 +173,14 @@ Cryptodog.xmpp.reconnect = function() {
 			)
 		}
 		else if ((status === Strophe.Status.CONNFAIL) || (status === Strophe.Status.DISCONNECTED)) {
-			if (Cryptodog.loginError) {
-				window.setTimeout(function() {
-					// Cryptodog.xmpp.reconnect()
-					console.log("not reconnecting")
-				}, 5000)
+			if (Cryptodog.reconnectError == false) {
+				Cryptodog.reconnectError = true;
+				
+				if (Cryptodog.loginError) {
+					window.setTimeout(function() {
+						Cryptodog.xmpp.reconnect()
+					}, 2000)
+				}
 			}
 		}
 	})
@@ -211,11 +216,17 @@ Cryptodog.xmpp.onMessage = function(message) {
 	}
 	// Check if message is a group chat message.
 	else if (type === 'groupchat' && body.length) {
+		// Prevent spam attacks
+		if(body.length > 2000) {
+			return true;
+		}
 		$('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing')
 		body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body)
+
 		if (typeof(body) === 'string') {
 			Cryptodog.addToConversation(body, nickname, 'groupChat', 'message')
 		}
+
 	}
 	// Check if this is a private OTR message.
 	else if (type === 'chat') {

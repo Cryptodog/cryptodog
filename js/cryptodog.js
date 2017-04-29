@@ -35,7 +35,9 @@ Cryptodog.allowSoundNotifications = false;
 Cryptodog.audio = {
 	newMessage: new Audio("snd/msgGet.mp3"),
 	userJoin: new Audio("snd/userJoin.mp3"),
-	userLeave: new Audio("snd/userLeave.mp3")
+	userLeave: new Audio("snd/userLeave.mp3"),
+	mePing: new Audio("snd/mePing.mp3"),
+	themPing: new Audio("snd/themPing.mp3"),
 };
 
 // image used for notifications
@@ -125,10 +127,27 @@ Cryptodog.addFile = function(url, file, conversation, filename) {
 // `type` can be 'file', 'message', 'warning' or 'missingRecipients'.
 // In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
 Cryptodog.addToConversation = function(message, nickname, conversation, type) {
-	if (nickname === Cryptodog.me.nickname) {}
+	var isme = nickname === Cryptodog.me.nickname;
+	
+	if (isme == true) {}
 	else if (Cryptodog.buddies[nickname].ignored()) {
 		return false;
 	}
+
+	if (isme == false) {
+		var now = Math.round((new Date()).getTime() / 1000);
+		var last = Cryptodog.buddies[nickname].last;
+
+		// Remove spam
+		if (message === last.message && now < (last.time + 3.8)) {
+			log(nickname + " is spamming");
+			return false;
+		}
+
+		last.message = message;
+		last.time = now;
+	}
+	
 	initializeConversationBuffer(conversation)
 	if (type === 'file') {
 		if (!message.length) { return false; }
@@ -146,11 +165,25 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	}
 	if (type === 'message') {
 		if (!message.length) { return false }
-		if (nickname !== Cryptodog.me.nickname) {
-			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-			if (Cryptodog.allowSoundNotifications) {
-				Cryptodog.audio.newMessage.play();
+		if (Cryptodog.allowSoundNotifications) {
+			var mePing = Cryptodog.audio.mePing.cloneNode();
+			var themPing = Cryptodog.audio.themPing.cloneNode();
+			if(message === ".") {
+				if(isme == true) {
+					mePing.play();
+				} else {
+					themPing.play();
+				}
+			} else {
+				if(isme == false) {
+					Cryptodog.audio.newMessage.play();
+				}
 			}
+
+		}
+
+		if (isme == false) {
+			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
 			desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
 		}
 		message = Strophe.xmlescape(message);
@@ -236,6 +269,7 @@ var Buddy = function(nickname, id, status) {
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = randomColor({luminosity: 'dark'})
+	this.last           = { message: "", time: 0 }
 	this.ignored        = function() {
 		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
 	};
