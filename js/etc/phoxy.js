@@ -4,7 +4,7 @@ Cryptodog.kommy.utils = {};
 Cryptodog.kommy.utils.replaceAll = function (input, search, replacement) {
     var target = input;
     return target.replace(new RegExp(search), replacement);
-}
+};
 
 Cryptodog.kommy.utils.encodeBase64 = function (iny) {
     var input = btoa(iny);
@@ -12,7 +12,7 @@ Cryptodog.kommy.utils.encodeBase64 = function (iny) {
     var input = Cryptodog.kommy.utils.replaceAll(input, /=/g, "-");
     var input = Cryptodog.kommy.utils.replaceAll(input, /\//g, "_");
     return input;
-}
+};
 
 Cryptodog.kommy.http = {};
 
@@ -50,7 +50,7 @@ Cryptodog.kommy.http.request = (function () {
                             return;
                         }
                         if (_this.isBinary == true) {
-                            resolve(Utils_1.Utils.ab2buf(_this.req.response));
+                            resolve(new Uint8Array(_this.req.response));
                         }
                         else {
                             resolve(_this.req.responseText);
@@ -98,10 +98,10 @@ Cryptodog.kommy.http.client = (function () {
 Cryptodog.kommy.isPhoxyServer = function (url) {
     var cli = new Cryptodog.kommy.http.client();
     if (url.startsWith("wss://")) {
-        var getUrl = Cryptodog.kommy.utils.replaceAll(url, "wss", "https");
+        url = Cryptodog.kommy.utils.replaceAll(url, "wss", "https");
     }
 
-    return cli.getText(getUrl + "?phoxy=q");
+    return cli.getText(url + "?phoxy=q");
 };
 
 Cryptodog.kommy.verifyURL = function (url, cb) {
