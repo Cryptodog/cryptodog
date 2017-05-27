@@ -17,6 +17,15 @@ $('#customServer').click(function() {
 	if (!document.getElementById('customServerSelector').firstChild) {
 		$('#customServerSelector').append(
 			Mustache.render(Cryptodog.templates['customServer'], {
+				name: 'Internet Krypto Klub',
+				domain: 'anon.ikrypto.club',
+				xmpp: 'conference.ikrypto.club',
+				relay: 'wss://ikrypto.club/socket'
+			})
+		)
+
+		$('#customServerSelector').append(
+			Mustache.render(Cryptodog.templates['customServer'], {
 				name: 'Cryptodog',
 				domain: 'crypto.dog',
 				xmpp: 'conference.crypto.dog',
