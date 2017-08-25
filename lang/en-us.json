@@ -19,6 +19,7 @@
         "enterNickname": "Please enter a nickname.",
         "nicknameAlphanumeric": "Nickname can be letters or numbers only.",
         "nicknameInUse": "Nickname in use.",
+        "userIsBanned":  "You have been banned.",
         "authenticationFailure": "Authentication failure.",
         "connectionFailed": "Connection failed.",
         "thankYouUsing": "Thank you for using Cryptodog.",

@@ -3,16 +3,16 @@
 
 Cryptodog.templates = {
 
-	customServer: '<option data-domain="{{domain}}" data-xmpp="{{xmpp}}" data-relay="{{relay}}">'
+	// customServer: '<option data-domain="{{domain}}" data-xmpp="{{xmpp}}" data-relay="{{relay}}">'
+	// 	+ '{{name}}</option>',
+customServer: '<option  data-relay="{{relay}}">'
 		+ '{{name}}</option>',
-
 	buddy: '<div class="buddy" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">'
 		+ '<span class="loginTypeIcon"></span><span class="shortNickname">{{shortNickname}}</span>'
 		+ '<div class="buddyMenu" id="menu-{{buddyID}}"></div></div>',
 
 	buddyMenu: '<div class="buddyMenuContents" id="{{buddyID}}-contents">'
 		+ '<li class="option1">{{displayInfo}}</li>'
-		+ '<li class="option2">{{sendEncryptedFile}}</li>'
 		+ '<li class="option3">{{ignore}}</li>'
 		+ '</div>',
 
@@ -65,7 +65,7 @@ Cryptodog.templates = {
 	file: '<div class="fileProgressBar" data-file="{{file}}" data-id="{{id}}">'
 		+ '<div class="fileProgressBarFill" data-file="{{file}}" data-id="{{id}}"></div></div>',
 
-	fileLink: '<a href="{{url}}" class="fileView" target="_blank" download="{{filename}}">{{downloadFile}}</a>',
+	fileLink: '<a href="#" id={{id}} onmouseover="Cryptodog.socket.handleDownloadLink(this, \'{{dlLink}}\');" class="fileView" target="_blank">{{downloadFile}}</a>',
 
 	fileLinkMac: '<a href="{{url}}" class="fileView" download="{{filename}}">{{downloadFile}}</a>',
 

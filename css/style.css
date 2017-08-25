@@ -7,7 +7,7 @@ PRE-DEFINED TAGS
 noscript {
 	text-align: center;
 	font-size: 25px;
-	color: #bb7a20;
+	color: #0087AF;
 }
 
 body {
@@ -176,7 +176,7 @@ div#bubble #logoText {
 	display: inline-block;
 	position: relative;
 	z-index: 100;
-	color: #bb7a20;
+	color: #0087AF;
 	-webkit-font-smoothing: none;
 	font-size: 30px;
 	font-weight: bold;
@@ -284,7 +284,7 @@ div#bubble #loginSubmit {
 }
 
 div#bubble #loginSubmit:hover {
-	background: #c99536;
+	background: #00b1e5;
 }
 
 div#loginInfo {
@@ -522,7 +522,7 @@ BUDDY LIST
 }
 
 .buddy.currentConversation {
-	background-color: #bb7a20;;
+	background-color: #0087AF;;
 	color: #FFF !important;
 }
 
@@ -809,7 +809,7 @@ DIALOG BOX
 	margin: -35px 20px 0 0;
 	border-radius: 5px 0 5px 5px;
 	font-size: 1.2em;
-	background: #bb7a20;
+	background: #0087AF;
 	border: none;
 	word-wrap: break-word;
 }
@@ -1021,8 +1021,13 @@ CONVERSATION WINDOW
 }
 
 #conversationWindow .authStatus[data-auth=true] {
-	background-color: #bb7a20;
+	background-color: #0087AF;
 	background-image: none;
+}
+
+#conversationWindow .authStatus[data-auth=server] {
+	background-color: #000;
+	background-image: url("../img/icons/server.svg");
 }
 
 #conversationWindow .timeStamp {
@@ -1114,7 +1119,7 @@ CONVERSATION WINDOW
 	margin: 10px 3px 0 0;
 	border-radius: 0 0 7px 0;
 	font-size: 1.8em;
-	background: #bb7a20;
+	background: #0087AF;
 }
 
 #userInputSend:hover {
@@ -1173,4 +1178,9 @@ CONVERSATION WINDOW
     font-size: 1.3em;
 	position: relative;
 	top: 1px;
+}
+
+pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
