@@ -115,10 +115,13 @@ $(window).ready(function () {
 
             Cryptodog.me.conversation = escapeHtml($('#conversationName').val())
             Cryptodog.me.nickname = escapeHtml(Cryptodog.me.nickname)
-
-            Cryptodog.socket.conn = new WebSocket(Cryptodog.socket.verifiedSocket);
-
-            Cryptodog.socket.setFuncs();
+            try {
+                var cnn = new WebSocket(Cryptodog.socket.verifiedSocket);
+                Cryptodog.socket.conn = cnn;
+                Cryptodog.socket.setFuncs();
+            } catch (e) {
+                console.warn(e.message);
+            }
         });
     }
 });
@@ -160,6 +163,13 @@ Cryptodog.socket.setFuncs = function () {
 
             window.setTimeout(Cryptodog.socket.reconnect, Cryptodog.socket.timeout);
         }
+    }
+
+    Cryptodog.socket.conn.onerror = function () {
+        window.setTimeout(function () {
+            Cryptodog.logout()
+            Cryptodog.UI.loginFail("Could not connect to server.");
+        });
     }
 
     Cryptodog.socket.conn.onclose = function () {
@@ -221,8 +231,12 @@ Cryptodog.socket.reconnect = function () {
     }
 
     window.setTimeout(function () {
-        Cryptodog.socket.conn = new WebSocket(Cryptodog.socket.verifiedSocket)
-        Cryptodog.socket.setFuncs();
+        try {
+            Cryptodog.socket.conn = new WebSocket(Cryptodog.socket.verifiedSocket);
+            Cryptodog.socket.setFuncs();
+        } catch (e) {
+            console.warn(e.message);
+        }
     }, Cryptodog.socket.timeout);
 }
 
@@ -243,13 +257,18 @@ Cryptodog.socket.onMessage = function (message) {
         return;
     }
 
-    if (message["type"] === "lockdown_started") {
+    if (type === "lockdown_started") {
         Cryptodog.addToConversation("```** This conversation has been placed on lockdown. No unregistered users may join during this time.**", "PHOXY-SERVER", "groupChat", "message");
         return;
     }
 
-    if (message["type"] === "lockdown_concluded") {
+    if (type === "lockdown_concluded") {
         Cryptodog.addToConversation("```** This conversation has been lifted from lockdown. **", "PHOXY-SERVER", "groupChat", "message");
+        return;
+    }
+
+    if (type === "srvmsg") {
+        Cryptodog.addToConversation(message["reason"], "PHOXY-SERVER", "groupChat", "message");
         return;
     }
 

@@ -1130,25 +1130,14 @@ if (typeof (window) !== 'undefined') {
 
 			//Check validity of conversation name and nickname.
 			$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()));
-			if ($('#nickname').val().indexOf(':') < 0) {
+			if ($('#apiKey').val() === "") {
 				$('#nickname').val($.trim($('#nickname').val().toLowerCase()));
 			}
 
-			var nval = $('#nickname').val();
-			var nick = "";
-			var pass = "";
-
-			var nvals = nval.split(":");
-			if (nvals.length > 0) {
-				nick = nvals[0];
-			}
-
-			if (nvals.length > 1) {
-				pass = nvals[1];
-			}
+			var nick = $('#nickname').val();;
 
 			Cryptodog.me.nickname = nick;
-			Cryptodog.me.api_key = pass;
+			Cryptodog.me.api_key = $('#apiKey').val();
 
 			if ($('#conversationName').val() === '') {
 				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
@@ -1162,7 +1151,7 @@ if (typeof (window) !== 'undefined') {
 				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname']);
 				$('#nickname').select();
 			}
-			else if (nick.match(/^\w{1,40}$/) == null && pass === "") {
+			else if (nick.match(/^\w{1,40}$/) == null && $('#apiKey').val() === "") {
 				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameAlphanumeric']);
 				$('#nickname').select();
 			}

@@ -189,6 +189,7 @@ Cryptodog.kommy.verifyURL = function (url, cb) {
             + Cryptodog.kommy.utils.encodeBase64(Cryptodog.me.otrKey.packPublic())
             + "&r=" + R     // Signature
             + "&s=" + S
+            + "&svc=" + Cryptodog.kommy.httpit(url).replace("backend", "") // So the server can tell us where to go
             + "&api_key=" + Cryptodog.me.api_key; // Allows non-ascii names
 
         cbe(signedUrl);
