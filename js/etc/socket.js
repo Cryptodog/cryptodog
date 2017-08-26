@@ -107,6 +107,10 @@ $(window).ready(function () {
 
     // Connect anonymously and join conversation.
     Cryptodog.socket.connect = function () {
+        if (!Cryptodog.socket.errct) {
+            Cryptodog.socket.errct = 0;
+        }
+
         Cryptodog.kommy.verifyURL(Cryptodog.socket.currentServer.relay, function (u) {
             Cryptodog.socket.verifiedSocket = u;
             if (typeof Cryptodog.socket.currentServer.cleanRelay === "undefined") {
@@ -166,10 +170,14 @@ Cryptodog.socket.setFuncs = function () {
     }
 
     Cryptodog.socket.conn.onerror = function () {
-        window.setTimeout(function () {
-            Cryptodog.logout()
-            Cryptodog.UI.loginFail("Could not connect to server.");
-        });
+        Cryptodog.socket.errct++;
+
+        if (Cryptodog.socket.errct > 20) {
+            window.setTimeout(function () {
+                Cryptodog.logout()
+                Cryptodog.UI.loginFail(Cryptodog.locale["loginMessage"]["connectionFailed"]);
+            });
+        }
     }
 
     Cryptodog.socket.conn.onclose = function () {
