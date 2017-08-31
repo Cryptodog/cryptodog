@@ -252,6 +252,15 @@ Cryptodog.socket.quit = function () {
     Cryptodog.socket.conn.close();
 }
 
+Cryptodog.socket.sendColor = function () {
+    Cryptodog.socket.send({
+        type: "groupchat",
+        chatroom: Cryptodog.me.conversation,
+        object: JSON.parse(Cryptodog.multiParty.sendMessage(JSON.stringify(
+            { type: "change_color", value: Cryptodog.me.color }, true
+        )))
+    });
+}
 // Handle incoming messages from the XMPP server.
 Cryptodog.socket.onMessage = function (message) {
     var nickname = cleanNickname(message['nickname'])
@@ -312,6 +321,7 @@ Cryptodog.socket.onMessage = function (message) {
         for (var u = 0; u < 4000; u += 2000) {
             window.setTimeout(Cryptodog.socket.sendPublicKey, u, nickname)
         }
+        window.setTimeout(Cryptodog.socket.sendColor, 6000);
         Cryptodog.socket.sendStatus(); // Propagate away status to newcomers.
     }
 
@@ -362,14 +372,22 @@ Cryptodog.socket.onMessage = function (message) {
             var dat = JSON.parse(data);
             body = dat["body"];
 
-            if (dat["type"] == "file") {
+            if (dat["type"] === "change_color") {
+                if (Cryptodog.UI.validHexcode(dat["value"])) {
+                    Cryptodog.UI.changeColor(nickname, dat["value"]);
+                }
+
+                return;
+            }
+
+            if (dat["type"] === "file") {
                 Cryptodog.addToConversation(btoa(JSON.stringify({
                     object: dat, nick: nickname, win: "groupChat"
                 })), nickname, "groupChat", 'file')
                 return;
             }
 
-            if (dat["type"] == "message") {
+            if (dat["type"] === "message") {
                 if (body.length > 2000) {
                     return true;
                 }

@@ -358,7 +358,10 @@ if (typeof (window) !== 'undefined') {
 						buffer.clone()
 					).html()
 				});
-
+			},
+			changeColor: function(hexcode) {
+				this.color = hexcode;
+				Cryptodog.UI.changeColor(this.nickname, hexcode);
 			}
 		}
 
@@ -570,6 +573,7 @@ if (typeof (window) !== 'undefined') {
 			Cryptodog.UI.logout();
 			Cryptodog.loginError = false;
 			Cryptodog.socket.quit()
+			Cryptodog.socket.conn.close();
 			Cryptodog.socket.conn = null;
 
 			for (var b in Cryptodog.buddies) {
@@ -1160,6 +1164,15 @@ if (typeof (window) !== 'undefined') {
 				$('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly');
 				Cryptodog.socket.showKeyPreparationDialog(function () {
 					Cryptodog.me.color = randomColor({ luminosity: 'dark' });
+					Cryptodog.storage.getItem("color", function(val, err) {
+						if(err || val == undefined) {
+							return;
+						}
+
+						Cryptodog.UI.changeColor(Cryptodog.me.nickname, val);
+						Cryptodog.socket.sendColor();
+					});
+
 					Cryptodog.socket.connect();
 				});
 			}

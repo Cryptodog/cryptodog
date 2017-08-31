@@ -71,14 +71,14 @@ customServer: '<option  data-relay="{{relay}}">'
 
 	missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
-	message: '<div class="line" style="border-color:{{color}};"><span class="sender" data-sender="{{nickname}}"'
+	message: '<div class="line" data-sender="{{nickname}}" style="border-color:{{color}};"><span class="sender" data-sender="{{nickname}}"'
 		+ ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="authStatus" data-auth="{{authStatus}}" '
 		+ 'data-utip-gravity="se"></span>'
 		+ '<span class="nickname">{{nickname}}</span></span>{{&message}}</div>',
 
 	authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
 
-	userJoin: '<div class="userJoin" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>'
+	userJoin: '<div class="userJoin" data-sender="{{nickname}}" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>'
 		+ '<strong>+</strong>{{nickname}}</div>',
 
 	userLeave: '<div class="userLeave"><span class="timestamp">{{currentTime}}</span>'
