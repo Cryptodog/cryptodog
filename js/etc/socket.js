@@ -284,6 +284,16 @@ Cryptodog.socket.onMessage = function (message) {
         return;
     }
 
+    if (type === "syncstate") {
+        Object.keys(Cryptodog.buddies).forEach(function(bud) {
+            log("Removing desynced buddy "+ bud);
+            if(!message["state"].includes(bud)) {
+                Cryptodog.removeBuddy(bud);
+            }
+        });
+        return; 
+    }
+
     if (type === "srvmsg") {
         Cryptodog.addToConversation(message["reason"], "PHOXY-SERVER", "groupChat", "message");
         return;
