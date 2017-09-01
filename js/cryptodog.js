@@ -580,7 +580,7 @@ if (typeof (window) !== 'undefined') {
 			Cryptodog.socket.conn = null;
 			Cryptodog.previousMessages = [];
 			Cryptodog.messageCycle = 0;
-			
+
 			for (var b in Cryptodog.buddies) {
 				if (Cryptodog.buddies.hasOwnProperty(b)) {
 					delete Cryptodog.buddies[b];
@@ -1056,17 +1056,22 @@ if (typeof (window) !== 'undefined') {
 
 				Cryptodog.messageCycle--;
 				if(Cryptodog.messageCycle == -1) {
-					Cryptodog.messageCycle = Cryptodog.previousMessages.length - 1;
-				} 
+					Cryptodog.messageCycle = Cryptodog.previousMessages.length;
+					$('#userInputText').val("");
+				} else {
+					$('#userInputText').val("");
+				}
 				$('#userInputText').val(Cryptodog.previousMessages[Cryptodog.messageCycle]);
 			}
 
 			if (e.keyCode === 40) {
 				Cryptodog.messageCycle++;
 				if(Cryptodog.messageCycle == Cryptodog.previousMessages.length) {
-					Cryptodog.messageCycle = Cryptodog.previousMessages.length - 1;
+					Cryptodog.messageCycle = 0;
+					$('#userInputText').val("");
+				} else {
+					$('#userInputText').val(Cryptodog.previousMessages[Cryptodog.messageCycle]);
 				}
-				$('#userInputText').val(Cryptodog.previousMessages[Cryptodog.messageCycle]);
 			}
 
 			if (e.keyCode === 9) {
