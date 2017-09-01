@@ -326,6 +326,10 @@ Cryptodog.socket.onMessage = function (message) {
         return true
     }
 
+    if (nickname === undefined) {
+        return false;
+    }
+
     if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
         Cryptodog.addBuddy(nickname, null, 'online')
         for (var u = 0; u < 4000; u += 2000) {
