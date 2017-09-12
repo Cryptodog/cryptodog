@@ -529,8 +529,6 @@ var afterConnect = function () {
 
     // Send status upon (re)connect.
     Cryptodog.socket.sendStatus();
-
-
 }
 
 // Clean nickname so that it's safe to use.
