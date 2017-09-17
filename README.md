@@ -12,6 +12,7 @@ We offer two things:
 ## Differences from Cryptocat
 
 * Dark theme with more contrast, easier on eyes
+* General and security bug fixes
 * Better tab-complete
 * Loads faster
 * Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
