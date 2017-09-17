@@ -188,7 +188,8 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		currentTime: currentTime(true),
 		authStatus: authStatus,
 		message: message,
-		color: Cryptodog.getUserColor(nickname)
+		color: Cryptodog.getUserColor(nickname),
+		style: type == 'warning' ? 'italic' : 'normal'
 	});
 
 	conversationBuffers[conversation] += renderedMessage

@@ -122,8 +122,6 @@ Cryptodog.multiParty = function() {};
     };
 
     // Issue a warning for decryption failure to the main conversation window
-    /* TODO: Improve style of message warning. Right now, it looks like an ordinary message 
-    /* that any user can send. */
     Cryptodog.multiParty.messageWarning = function(sender) {
         var messageWarning = Cryptodog.locale['warnings']['messageWarning'].replace('(NICKNAME)', sender);
         Cryptodog.addToConversation(messageWarning, sender, 'groupChat', 'warning');
