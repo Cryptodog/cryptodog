@@ -8,15 +8,15 @@ Cryptodog.multiParty = function() {};
     var correctIvLength = function(iv) {
         var ivAsWordArray = CryptoJS.enc.Base64.parse(iv);
         var ivAsArray = ivAsWordArray.words;
-		
-		// Adds 0 as the 4th element, causing the equivalent
+
+        // Adds 0 as the 4th element, causing the equivalent
         // bytestring to have a length of 16 bytes, with
         // \x00\x00\x00\x00 at the end.
         // Without this, crypto-js will take in a counter of
         // 12 bytes, and the first 2 counter iterations will
         // use 0, instead of 0 and then 1.
-		// See https://github.com/cryptocat/cryptocat/issues/258
-		ivAsArray.push(0);
+        // See https://github.com/cryptocat/cryptocat/issues/258
+        ivAsArray.push(0);
 
         return CryptoJS.lib.WordArray.create(ivAsArray);
     };
@@ -81,8 +81,8 @@ Cryptodog.multiParty = function() {};
                 )
             )
         );
-		
-		return {
+
+        return {
             message: CryptoJS.lib.WordArray.create(sharedSecret.words.slice(0, 8)),
             hmac: CryptoJS.lib.WordArray.create(sharedSecret.words.slice(8, 16))
         };
@@ -123,7 +123,7 @@ Cryptodog.multiParty = function() {};
     Cryptodog.multiParty.messageTag = function(message) {
         for (var i = 0; i < 8; i++) {
             message = CryptoJS.SHA512(message);
-		}
+        }
 
         return message.toString(CryptoJS.enc.Base64);
     };
@@ -206,10 +206,10 @@ Cryptodog.multiParty = function() {};
         } catch (err) {
             console.log('multiParty: failed to parse message object');
             return false;
-		}
-		
-		var type = message['type'];
-		var text = message['text'];
+        }
+
+        var type = message['type'];
+        var text = message['text'];
 
         if (typeof text[myName] === 'object') {
             // Detect public key reception, store public key and generate shared secret
@@ -227,30 +227,26 @@ Cryptodog.multiParty = function() {};
                 // the one we have
                 if (buddy.mpPublicKey && !BigInt.equals(buddy.mpPublicKey, publicKey)) {
                     buddy.updateMpKeys(publicKey);
-					Cryptodog.UI.removeAuthAndWarn(sender);
-
+                    Cryptodog.UI.removeAuthAndWarn(sender);
                 } else if (!buddy.mpPublicKey && buddy.authenticated) {
                     // If we're missing their key, make sure we aren't already
                     // authenticated (prevents a possible active attack)
                     buddy.updateMpKeys(publicKey);
-					Cryptodog.UI.removeAuthAndWarn(sender);
-
+                    Cryptodog.UI.removeAuthAndWarn(sender);
                 } else {
                     buddy.updateMpKeys(publicKey);
                 }
 
                 return false;
-			
-			} else if (type === 'publicKeyRequest') {
+            } else if (type === 'publicKeyRequest') {
                 // Detect public key request and send public key
                 Cryptodog.xmpp.sendPublicKey(sender);
-			
-			} else if (type === 'message') {
+            } else if (type === 'message') {
                 var recipients = Object.keys(Cryptodog.buddies);
                 recipients.push(Cryptodog.me.nickname);
                 recipients.splice(recipients.indexOf(sender), 1);
 
-				// Find missing recipients: those for whom the message isn't encrypted
+                // Find missing recipients: those for whom the message isn't encrypted
                 var missingRecipients = [];
 
                 for (var i = 0; i < recipients.length; i++) {
@@ -292,12 +288,7 @@ Cryptodog.multiParty = function() {};
                     }
                 }
 
-                if (
-                    !OTR.HLP.compare(
-                        text[myName]['hmac'],
-                        HMAC(hmac, Cryptodog.buddies[sender].mpSecretKey['hmac'])
-                    )
-                ) {
+                if (!OTR.HLP.compare(text[myName]['hmac'], HMAC(hmac, Cryptodog.buddies[sender].mpSecretKey['hmac']))) {
                     console.log('multiParty: HMAC failure');
                     Cryptodog.multiParty.messageWarning(sender);
                     return false;
@@ -342,12 +333,11 @@ Cryptodog.multiParty = function() {};
 
                 // Convert to UTF8
                 return plaintext.toString(CryptoJS.enc.Utf8);
-			
-			} else {
+            } else {
                 console.log('multiParty: Unknown message type: ' + type);
                 Cryptodog.multiParty.messageWarning(sender);
             }
-		}
+        }
         return false;
     };
 
