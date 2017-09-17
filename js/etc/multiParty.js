@@ -111,7 +111,19 @@ Cryptodog.multiParty = function() {};
         return JSON.stringify(answer);
     };
 
+    // Request public key from `nickname`
+    Cryptodog.multiParty.sendPublicKeyRequest = function(nickname) {
+        var answer = {};
+        answer['type'] = 'publicKeyRequest';
+        answer['text'] = {};
+        answer['text'][nickname] = {};
+
+        return JSON.stringify(answer);
+    };
+
     // Issue a warning for decryption failure to the main conversation window
+    /* TODO: Improve style of message warning. Right now, it looks like an ordinary message 
+    /* that any user can send. */
     Cryptodog.multiParty.messageWarning = function(sender) {
         var messageWarning = Cryptodog.locale['warnings']['messageWarning'].replace('(NICKNAME)', sender);
         Cryptodog.addToConversation(messageWarning, sender, 'groupChat', 'warning');
@@ -145,6 +157,17 @@ Cryptodog.multiParty = function() {};
         for (var b in Cryptodog.buddies) {
             if (Cryptodog.buddies[b].mpSecretKey) {
                 sortedRecipients.push(b);
+            } else {
+                /* TODO: Measure performance on this.
+                /* I don't want to introduce a bottleneck in something as common
+                /* as sending a message. We might have to do this in an async way. */
+
+                // We don't have the buddy's key, likely because of connection issues.
+                // In other words, they're "borked".
+
+                // Request their key
+                console.log('Requesting public key from ' + b);
+                Cryptodog.xmpp.sendPublicKeyRequest(b);
             }
         }
 
@@ -242,6 +265,20 @@ Cryptodog.multiParty = function() {};
                 // Detect public key request and send public key
                 Cryptodog.xmpp.sendPublicKey(sender);
             } else if (type === 'message') {
+                if (!Cryptodog.buddies[sender].mpSecretKey) {
+                    // We don't have the sender's key, likely because of connection issues.
+                    // In other words, they're "borked".
+
+                    // Issue a placeholder warning message so the user knows something is wrong
+                    Cryptodog.multiParty.messageWarning(sender);
+
+                    // Request their key
+                    console.log('Requesting public key from ' + sender);
+                    Cryptodog.xmpp.sendPublicKeyRequest(sender);
+
+                    return false;
+                }
+
                 var recipients = Object.keys(Cryptodog.buddies);
                 recipients.push(Cryptodog.me.nickname);
                 recipients.splice(recipients.indexOf(sender), 1);
@@ -269,10 +306,6 @@ Cryptodog.multiParty = function() {};
 
                 if (missingRecipients.length) {
                     Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
-                }
-
-                if (!Cryptodog.buddies[sender].mpSecretKey) {
-                    return false;
                 }
 
                 // Sort recipients
