@@ -1092,14 +1092,15 @@ $('#CryptodogLogin').submit(function() {
 	if (($('#loginSubmit').attr('readonly') === 'readonly')) {
 		return false;
 	}
-	//Check validity of conversation name and nickname.
+
 	$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()));
-	$('#nickname').val($.trim($('#nickname').val().toLowerCase()));
+	$('#nickname').val($.trim($('#nickname').val()));
+
 	if ($('#conversationName').val() === '') {
 		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
 		$('#conversationName').select();
 	}
-	else if (!$('#conversationName').val().match(/^\w{1,20}$/)) {
+	else if (!$('#conversationName').val().match(/^\w{1,1023}$/)) {
 		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['conversationAlphanumeric']);
 		$('#conversationName').select();
 	}
@@ -1107,11 +1108,8 @@ $('#CryptodogLogin').submit(function() {
 		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname']);
 		$('#nickname').select();
 	}
-	else if (!$('#nickname').val().match(/^\w{1,16}$/)) {
-		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameAlphanumeric']);
-		$('#nickname').select();
-	}
-	// Prepare keys and connect.
+
+	// Prepare keys and connect
 	else {
 		$('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly');
 		Cryptodog.xmpp.showKeyPreparationDialog(function () {
