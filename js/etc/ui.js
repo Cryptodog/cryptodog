@@ -300,32 +300,6 @@ Cryptodog.UI = {
 		$('#fill').animate({ 'width': '100%', 'opacity': '1' }, 10000, 'linear');
 	},
 
-	validHexcode: function(input) {
-		return /[0-9A-Fa-f]{6}/g.test(input);
-	},
-
-	changeColor(nickname, hexcode) {
-		if(nickname === Cryptodog.me.nickname) {
-			Cryptodog.me.color = hexcode;
-			Cryptodog.storage.setItem("color", hexcode);
-		} else {
-			Cryptodog.buddies[nickname].color = hexcode;
-		}
-
-		log("Changing " + nickname + " color to " + hexcode);
-		document.querySelectorAll(".line[data-sender=" + nickname + "]").forEach(function (element) {
-			element.style = "border-color:" + hexcode + "; top: 0px; opacity: 1;";
-		});
-
-		document.querySelectorAll(".sender[data-sender=" + nickname + "]").forEach(function (element) {
-			element.style = "background-color:" + hexcode + ";";
-		});
-
-		document.querySelectorAll(".userJoin[data-sender=" + nickname + "]").forEach(function (element) {
-			element.style = "background-color:" + hexcode + ";";
-		});
-	},
-
 	/*
 	-------------------
 	USER INTERFACE BINDINGS
@@ -344,15 +318,8 @@ Cryptodog.UI = {
 				document.body.classList.add('darkMode');
 				$('#darkMode').attr('data-utip', 'Light mode');
 			}
-		});
+		})
 
-
-		$('#changeColorBtn').change(function (ev) {
-			Cryptodog.UI.changeColor(Cryptodog.me.nickname, ev.target.value)
-			Cryptodog.socket.sendColor();
-		});
-
-		// File upload
 		$('#uploadFileBtn').change(function (ev) {
 			var filename = Cryptodog.kommy.utils.randomHex();
 			var h = new Cryptodog.kommy.http.client();
