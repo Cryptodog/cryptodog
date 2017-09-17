@@ -285,13 +285,13 @@ Cryptodog.socket.onMessage = function (message) {
     }
 
     if (type === "syncstate") {
-        Object.keys(Cryptodog.buddies).forEach(function (bud) {
-            if (!message["state"].includes(bud)) {
-                log("Removing desynced buddy " + bud);
+        Object.keys(Cryptodog.buddies).forEach(function(bud) {
+            if(!message["state"].includes(bud)) {
+                log("Removing desynced buddy "+ bud);
                 Cryptodog.removeBuddy(bud);
             }
         });
-        return;
+        return; 
     }
 
     if (type === "srvmsg") {
@@ -330,20 +330,21 @@ Cryptodog.socket.onMessage = function (message) {
         return false;
     }
 
-    if (type === "user_join") {
-        window.setTimeout(Cryptodog.socket.sendPublicKey, 2000, nickname);
-        window.setTimeout(Cryptodog.socket.sendColor, 3000);
-        Cryptodog.socket.sendStatus(); // Propagate away status to newcomers.
-    }
-
     if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
         Cryptodog.addBuddy(nickname, null, 'online')
+        for (var u = 0; u < 4000; u += 2000) {
+            window.setTimeout(Cryptodog.socket.sendPublicKey, u, nickname)
+        }
+        window.setTimeout(Cryptodog.socket.sendColor, 6000);
+        Cryptodog.socket.sendStatus(); // Propagate away status to newcomers.
     }
 
     if (message["type"] === "unavailable") {
         Cryptodog.removeBuddy(nickname);
         return;
     }
+
+
 
     // If message is from someone not on buddy list, ignore.
     if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
@@ -529,8 +530,6 @@ var afterConnect = function () {
 
     // Send status upon (re)connect.
     Cryptodog.socket.sendStatus();
-
-
 }
 
 // Clean nickname so that it's safe to use.
