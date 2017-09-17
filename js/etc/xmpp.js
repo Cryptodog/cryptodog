@@ -336,6 +336,18 @@ $(window).ready(function() {
         );
     };
 
+    // Request public key from `nickname`
+    Cryptodog.xmpp.sendPublicKeyRequest = function(nickname) {
+        Cryptodog.xmpp.connection.muc.message(
+            Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
+            null,
+            Cryptodog.multiParty.sendPublicKeyRequest(nickname),
+            null,
+            'groupchat',
+            'active'
+        );
+    };
+
     // Send your current status to the XMPP server.
     Cryptodog.xmpp.sendStatus = function() {
         var status = '';
