@@ -240,11 +240,10 @@ div#bubble .loginForm {
 }
 
 div#bubble .loginForm [type=text] {
-	bottom: 100px;
 	margin: 9px 0;
 	border: none;
 	display: block;
-	padding: 2px;
+	padding: 7px;
 	text-align: center;
 	resize: none;
 	background: #999;
@@ -261,31 +260,6 @@ div#bubble .loginForm #conversationName {
 	background: transparent;
 	border-bottom: 2px solid #0087AF;
 }
-
-div#bubble .loginForm #nickname {
-	border-radius: 4px 0 0 0;
-	width: 450px;
-	font-size: 2em;
-	margin: 0;
-	display: inline;
-	border: 0;
-	outline: 0;
-	background: transparent;
-	border-bottom: 2px solid #0087AF; 
-}
-
-div#bubble .loginForm #apiKey {
-	width: 300px;
-	font-size: 2em;
-	margin: 0;
-	display: inline;
-	border: 0;
-	outline: 0;
-	text-align: center;
-	background: transparent;
-	border-bottom: 2px solid #0087AF; 
-}
-
 
 div#bubble .loginForm #nickname {
 	width: 300px;
