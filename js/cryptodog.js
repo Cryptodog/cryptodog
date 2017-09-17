@@ -23,9 +23,6 @@ Cryptodog.me = {
 	color: "#FFF" // overwritten on connect
 }
 
-Cryptodog.previousMessages = [];
-Cryptodog.messageCycle = 0;
-
 Cryptodog.buddies = {}
 
 // For persistent ignores.
@@ -578,9 +575,7 @@ if (typeof (window) !== 'undefined') {
 			Cryptodog.socket.quit()
 			Cryptodog.socket.conn.close();
 			Cryptodog.socket.conn = null;
-			Cryptodog.previousMessages = [];
-			Cryptodog.messageCycle = 0;
-			
+
 			for (var b in Cryptodog.buddies) {
 				if (Cryptodog.buddies.hasOwnProperty(b)) {
 					delete Cryptodog.buddies[b];
@@ -994,10 +989,6 @@ if (typeof (window) !== 'undefined') {
 		// Submit user input.
 		$('#userInput').submit(function () {
 			var body = $.trim($('#userInputText').val())
-			if(body === "") {
-				return;
-			} 
-			Cryptodog.previousMessages.push(body);
 			var message = JSON.stringify({
 				type: "message",
 				body: body
@@ -1048,27 +1039,6 @@ if (typeof (window) !== 'undefined') {
 		// User input key event detection.
 		// (Message submission, nick completion...)
 		$('#userInputText').keydown(function (e) {
-			// Key up: cycle through messages
-			if (e.keyCode === 38) {
-				if( Cryptodog.previousMessages.length == 0) {
-					return;
-				}
-
-				Cryptodog.messageCycle--;
-				if(Cryptodog.messageCycle == -1) {
-					Cryptodog.messageCycle = Cryptodog.previousMessages.length - 1;
-				} 
-				$('#userInputText').val(Cryptodog.previousMessages[Cryptodog.messageCycle]);
-			}
-
-			if (e.keyCode === 40) {
-				Cryptodog.messageCycle++;
-				if(Cryptodog.messageCycle == Cryptodog.previousMessages.length) {
-					Cryptodog.messageCycle = Cryptodog.previousMessages.length - 1;
-				}
-				$('#userInputText').val(Cryptodog.previousMessages[Cryptodog.messageCycle]);
-			}
-
 			if (e.keyCode === 9) {
 				e.preventDefault()
 				var nickComplete = nicknameCompletion($(this).val())
@@ -1080,7 +1050,6 @@ if (typeof (window) !== 'undefined') {
 				e.preventDefault();
 				$('#userInput').submit();
 				Cryptodog.me.composing = false;
-				Cryptodog.messageCycle = Cryptodog.previousMessages.length;
 				return true;
 			}
 			if (!isCharacterKeyPress(e)) return;
