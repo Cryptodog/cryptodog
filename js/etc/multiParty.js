@@ -236,7 +236,7 @@ Cryptodog.multiParty.receiveMessage = function(sender, myName, message) {
 		}
 		// Detect public key request and send public key
 		else if (message['type'] === 'publicKeyRequest') {
-			Cryptodog.socket.sendPublicKey(sender)
+			Cryptodog.xmpp.sendPublicKey(sender)
 		}
 		else if (message['type'] === 'message') {
 			// Make sure message is being sent to all chat room participants
