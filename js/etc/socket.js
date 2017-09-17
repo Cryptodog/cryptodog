@@ -286,8 +286,8 @@ Cryptodog.socket.onMessage = function (message) {
 
     if (type === "syncstate") {
         Object.keys(Cryptodog.buddies).forEach(function(bud) {
+            log("Removing desynced buddy "+ bud);
             if(!message["state"].includes(bud)) {
-                log("Removing desynced buddy "+ bud);
                 Cryptodog.removeBuddy(bud);
             }
         });
