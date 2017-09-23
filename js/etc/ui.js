@@ -321,7 +321,7 @@ Cryptodog.UI = {
 
 		// Audio notifications toggle button
 		$('#audioToggle').click(function() {
-			if(Cryptodog.allowSoundNotifications) {
+			if (Cryptodog.allowSoundNotifications) {
 				Cryptodog.allowSoundNotifications = false;
 				Cryptodog.storage.setItem('audioNotifications', 'false');
 				$('#audioToggle').attr('data-utip', 'Audio notifications off');
@@ -333,6 +333,8 @@ Cryptodog.UI = {
 				$('#audioToggle').attr('data-utip', 'Audio notifications on');
 				$('#audioToggle').attr('src', 'img/icons/volume-medium.svg');
 			}
+			
+			$('#audioToggle').mouseenter();
 		});
 
 		// Status button.
