@@ -181,6 +181,13 @@ $(window).ready(function() {
             Cryptodog.xmpp.connection.reset();
         }
 
+        // We want to resend our public key to everyone once we reconnect.
+        for (var b in Cryptodog.buddies) {
+            if (Cryptodog.buddies.hasOwnProperty(b)) {
+                Cryptodog.buddies[b].hasMyMPKey = false;
+            }
+        }
+
         Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay);
 
         Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
@@ -300,13 +307,6 @@ $(window).ready(function() {
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Create buddy element if buddy is new
             Cryptodog.addBuddy(nickname, null, 'online');
-
-            for (var i = 0; i < 4000; i += 2000) {
-                window.setTimeout(Cryptodog.xmpp.sendPublicKey, i, nickname);
-            }
-
-            // Propagate away status to newcomers.
-            Cryptodog.xmpp.sendStatus();
         } else if (
             $(presence)
                 .find('show')
@@ -321,6 +321,18 @@ $(window).ready(function() {
         }
 
         Cryptodog.buddyStatus(nickname, status);
+
+        // If they don't have our MP key (either they just joined, or we just (re)connected):
+        // send it to them, along with our away status.
+        if (!Cryptodog.buddies[nickname].hasMyMPKey) {
+            for (var i = 0; i < 4000; i += 2000) {
+                window.setTimeout(Cryptodog.xmpp.sendPublicKey, i, nickname);
+            }
+
+            // Propagate away status to newcomers.
+            Cryptodog.xmpp.sendStatus();
+        }
+
         return true;
     };
 
@@ -334,6 +346,8 @@ $(window).ready(function() {
             'groupchat',
             'active'
         );
+
+        Cryptodog.buddies[nickname].hasMyMPKey = true;
     };
 
     // Request public key from `nickname`
