@@ -232,6 +232,7 @@ var Buddy = function(nickname, id, status) {
 	this.mpPublicKey    = null
 	this.mpFingerprint  = null
 	this.mpSecretKey    = null
+	this.hasMyMPKey     = false
 	this.nickname       = nickname
 	this.genFingerState = null
 	this.status         = status
@@ -240,7 +241,7 @@ var Buddy = function(nickname, id, status) {
 	this.ignored        = function() {
 		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
 	};
-
+	
 	this.toggleIgnored = function() {
 		if (this.ignored()) {
 			Cryptodog.ignoredNicknames.splice(Cryptodog.ignoredNicknames.indexOf(this.nickname), 1);
