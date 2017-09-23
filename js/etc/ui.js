@@ -308,7 +308,6 @@ Cryptodog.UI = {
 		// Buttons:
 		// Dark mode button
 		$('#darkMode').click(function() {
-			var $this = $(this);
 			if (document.body.classList.contains('darkMode')) {
 				document.body.classList.remove('darkMode');
 				$('#darkMode').attr('data-utip', 'Dark mode');
@@ -316,7 +315,9 @@ Cryptodog.UI = {
 			else {
 				document.body.classList.add('darkMode');
 				$('#darkMode').attr('data-utip', 'Light mode');
-			}
+            }
+            
+            $('#darkMode').mouseenter();
 		})
 
 		// Audio notifications toggle button
