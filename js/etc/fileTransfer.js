@@ -141,9 +141,15 @@ Cryptodog.otr.ibbHandler = function(type, from, sid, data, seq) {
 		case 'open':
 			var file = rcvFile[from][sid].filename
 			rcvFile[from][sid].key = Cryptodog.buddies[nick].fileKey[file]
-			if (sid.match(/^\w{1,64}$/) && rcvFile[from][sid].mime.match(fileMIME)) {
+			
+			// Latest version of Strophe.js (2017-09-30) uses this UID format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+			// https://github.com/strophe/strophejs/blob/ea459e987cc166b33a33efa99cac9b02beb12a98/strophe.js#L2916
+			// But doing this match at all seems unnecessary.
+			// TODO: Look into ramifications of removing it.
+			if (sid.match(/^\w{8}-\w{4}-4\w{3}-\w{4}-\w{12}$/) && rcvFile[from][sid].mime.match(fileMIME)) {
 				Cryptodog.addToConversation(sid, nick, Cryptodog.buddies[nick].id, 'file')
 			}
+			
 			delete Cryptodog.buddies[nick].fileKey[file]
 			break
 		case 'data':
