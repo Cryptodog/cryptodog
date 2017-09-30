@@ -236,13 +236,13 @@ $(window).ready(function() {
         }
 
         // Check if message has a 'composing' notification.
-        if ($(message).find('composing').length && !body.length) {
+        if ($(message).attr('id') === 'composing' && !body.length) {
             $('#buddy-' + Cryptodog.buddies[nickname].id).addClass('composing');
             return true;
         }
 
         // Check if message has a 'paused' (stopped writing) notification.
-        if ($(message).find('paused').length) {
+        if ($(message).attr('id') === 'paused') {
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
         } else if (type === 'groupchat' && body.length) {
             // Check if message is a group chat message.
