@@ -20,6 +20,15 @@ $(window).ready(function() {
                     name: 'Cryptodog',
                     domain: 'crypto.dog',
                     xmpp: 'conference.crypto.dog',
+                    relay: 'wss://crypto.dog/websocket'
+                })
+            );
+
+            $('#customServerSelector').append(
+                Mustache.render(Cryptodog.templates['customServer'], {
+                    name: 'Cryptodog (BOSH)',
+                    domain: 'crypto.dog',
+                    xmpp: 'conference.crypto.dog',
                     relay: 'https://crypto.dog/http-bind'
                 })
             );
@@ -29,16 +38,16 @@ $(window).ready(function() {
                     name: 'Cryptodog (Tor Hidden Service)',
                     domain: 'crypto.dog',
                     xmpp: 'conference.crypto.dog',
-                    relay: 'http://doggyfipznipbaia.onion/http-bind'
+                    relay: 'ws://doggyfipznipbaia.onion/websocket'
                 })
             );
 
             $('#customServerSelector').append(
                 Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptocrap',
-                    domain: 'cryptocrap.xyz',
-                    xmpp: 'conference.cryptocrap.xyz',
-                    relay: 'https://cryptocrap.xyz/http-bind'
+                    name: 'Cryptodog (Tor Hidden Service) (BOSH)',
+                    domain: 'crypto.dog',
+                    xmpp: 'conference.crypto.dog',
+                    relay: 'http://doggyfipznipbaia.onion/http-bind'
                 })
             );
         }
