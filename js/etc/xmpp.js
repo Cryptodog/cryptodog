@@ -7,7 +7,7 @@ Cryptodog.xmpp.defaultServer = {
     name: 'Cryptodog',
     domain: 'crypto.dog',
     conference: 'conference.crypto.dog',
-    relay: 'https://crypto.dog/http-bind'
+    relay: 'wss://crypto.dog/websocket'
 };
 
 Cryptodog.xmpp.currentServer = {};
