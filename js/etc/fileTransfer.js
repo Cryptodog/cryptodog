@@ -26,7 +26,7 @@ Cryptodog.otr.beginSendFile = function(data) {
 		return
 	}
 	else if (data.file.size > (Cryptodog.otr.maximumFileSize * 1024)) {
-		$('#fileInfoField').text(Cryptodog.locale['chatWindow']['fileSizeError'])
+		$('#fileInfoField').text(Cryptodog.locale['chatWindow']['fileSizeError'].replace('(SIZE)', Cryptodog.otr.maximumFileSize / 1024))
 		return
 	}
 	else {
