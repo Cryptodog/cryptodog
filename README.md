@@ -7,7 +7,7 @@ Cryptodog is a community fork of the **original**, browser-based encrypted chat 
 We offer two things:
 
 * A modified Cryptocat client, tweaked for performance, aesthetics, and usability
-* A public server fully compatible with both clients
+* A public server (crypto.dog)
 
 ## Differences from Cryptocat
 
@@ -28,14 +28,6 @@ We offer two things:
 The recommended way to run Cryptodog is via our [Chrome/Chromium extension](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec). This ensures you always have the official, most recent version. A Firefox extension will be released in the near future.
 
 If you don't care about that and just want to test out Cryptodog, we have a [hosted client on GitHub Pages](https://cryptodog.github.io). You should be able to access it from most mobile browsers as well.
-
-Or, if you prefer the stock Cryptocat extension, that's fine too. The official Cryptocat addon is compatible with our server. Just enter this information in the "Custom server" dialog:
-
-**Domain**: crypto.dog
-
-**XMPP Conference Server**: conference.crypto.dog
-
-**BOSH/WebSocket Relay**: https://crypto.dog/http-bind
 
 Bug reports are welcome, and in fact, encouraged. If you find a bug in either the Cryptodog client or server, please open an issue here on the GitHub repository.
 
