@@ -2,7 +2,7 @@
 
 # Cryptodog
 
-Cryptodog is a community fork of the **original**, browser-based encrypted chat app, [Cryptocat](https://web.archive.org/web/20151217150336/https://crypto.cat/).
+Cryptodog is a community-developed fork of the original Cryptocat browser extension, which was [discontinued in February 2016](https://web.archive.org/web/20160225040533/https://crypto.cat/).
 
 We offer two things:
 
@@ -11,31 +11,31 @@ We offer two things:
 
 ## Differences from Cryptocat
 
-* Dark theme with more contrast, easier on eyes
 * General and security bug fixes
+* Dark theme with more contrast, easier on eyes
 * Better tab-complete
-* Loads faster
+* Faster loading
 * Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
 * Slight animation tweaks and additions
-* Your ignore list persists across your session
+* Persistent ignore list
 * Colored names in chat to improve readability
 * Desktop notifications
 * Unicode emoticons
-* Easier to localize
+* Easier localization
 
 ## Usage
 
 The recommended way to run Cryptodog is via our [Chrome/Chromium extension](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec). This ensures you always have the official, most recent version. A Firefox extension will be released in the near future.
 
-If you don't care about that and just want to test out Cryptodog, we have a [hosted client on GitHub Pages](https://cryptodog.github.io). You should be able to access it from most mobile browsers as well.
+If you just want to test out Cryptodog, we have a [client hosted on GitHub Pages](https://cryptodog.github.io).
 
-Bug reports are welcome, and in fact, encouraged. If you find a bug in either the Cryptodog client or server, please open an issue here on the GitHub repository.
+Bug reports are encouraged! If you find a flaw in the Cryptodog client or server, please open an issue here on GitHub.
 
 ## Security Caveats
 
 Cryptodog is experimental software. It is suitable for educational and casual purposes only.
 
-**Do not use Cryptodog if you have a strong need for anonymity and privacy**. This includes journalists, sources, activists, and citizens of oppressive countries.
+**Do not use Cryptodog if you have a critical need for anonymity and privacy**. This includes journalists, sources, activists, and citizens of oppressive countries.
 
 ### Technical
 
