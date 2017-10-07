@@ -793,7 +793,7 @@ var buddyNotification = function(nickname, join) {
 var sendFile = function(nickname) {
 	var sendFileDialog = Mustache.render(Cryptodog.templates.sendFile, {
 		sendEncryptedFile: Cryptodog.locale['chatWindow']['sendEncryptedFile'],
-		fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo']
+		fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo'].replace('(SIZE)', Cryptodog.otr.maximumFileSize / 1024)
 	});
 	ensureOTRdialog(nickname, false, function() {
 		Cryptodog.UI.dialogBox(sendFileDialog, {
