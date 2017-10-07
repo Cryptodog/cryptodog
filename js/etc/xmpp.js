@@ -285,8 +285,13 @@ $(window).ready(function() {
             return true;
         }
 
-        // Ignore if presence status is coming from myself.
         if (nickname === Cryptodog.me.nickname) {
+            // Unavailable presence from us: we've been kicked, so try to reconnect.
+            if ($(presence).attr('type') === 'unavailable') {
+                Cryptodog.xmpp.reconnect();
+            }
+
+            // Ignore if presence status is coming from myself.
             return true;
         }
 
