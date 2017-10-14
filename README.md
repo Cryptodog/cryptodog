@@ -25,7 +25,7 @@ We offer two things:
 
 ## Usage
 
-The recommended way to run Cryptodog is via our [Chrome/Chromium extension](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec). This ensures you always have the official, most recent version. A Firefox extension will be released in the near future.
+The recommended way to run Cryptodog is via our [Chrome](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/cryptodog) extensions. Using our browser extension ensures you always have the official, most recent version.
 
 If you just want to test out Cryptodog, we have a [client hosted on GitHub Pages](https://cryptodog.github.io).
 
