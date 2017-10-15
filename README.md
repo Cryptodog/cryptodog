@@ -46,3 +46,7 @@ Cryptodog is experimental software. It is suitable for educational and casual pu
 Cryptodog is based on version 2.2.2 of Cryptocat. The vast majority of changes are UI-related; neither the client cryptography nor server backend have been modified. However, this does not preclude Cryptodog from introducing vulnerabilities not present in Cryptocat.
 
 For further details regarding Cryptodog's security model, see the [Cryptocat Wiki](https://web.archive.org/web/20160216105404/https://github.com/cryptocat/cryptocat/wiki).
+
+## Contact
+
+General queries should be sent to contact@crypto.dog.
