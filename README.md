@@ -29,7 +29,11 @@ The recommended way to run Cryptodog is via our [Chrome](https://chrome.google.c
 
 If you just want to test out Cryptodog, we have a [client hosted on GitHub Pages](https://cryptodog.github.io).
 
+## Bugs
+
 Bug reports are encouraged! If you find a flaw in the Cryptodog client or server, please open an issue here on GitHub.
+
+If you believe the issue is particularly sensitive with regard to security, we would appreciate *coordinated disclosure*. Our security contact is security@crypto.dog, and you can find our PGP key [here](https://crypto.dog/security.asc).
 
 ## Security Caveats
 
