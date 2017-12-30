@@ -432,7 +432,7 @@ Cryptodog.UI = {
                     // check if user actually accepted
                     if (Notification.permission == 'denied') {
                         Cryptodog.desktopNotifications = false;
-                        Cryprodog.storage.setItem('desktopNotifications', 'false');
+                        Cryptodog.storage.setItem('desktopNotifications', 'false');
                     }
                 } else if (notifStatus == 'unknown') {
                     // browser doesn't support desktop notifications
