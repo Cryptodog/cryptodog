@@ -181,13 +181,6 @@ $(window).ready(function() {
             Cryptodog.xmpp.connection.reset();
         }
 
-        // We want to resend our public key to everyone once we reconnect.
-        for (var b in Cryptodog.buddies) {
-            if (Cryptodog.buddies.hasOwnProperty(b)) {
-                Cryptodog.buddies[b].hasMyMPKey = false;
-            }
-        }
-
         Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay);
 
         Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
@@ -312,6 +305,9 @@ $(window).ready(function() {
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Create buddy element if buddy is new
             Cryptodog.addBuddy(nickname, null, 'online');
+            
+            // Propagate away status to newcomers.
+            Cryptodog.xmpp.sendStatus();
         } else if (
             $(presence)
                 .find('show')
@@ -326,48 +322,46 @@ $(window).ready(function() {
         }
 
         Cryptodog.buddyStatus(nickname, status);
-
-        // If they don't have our MP key (either they just joined, or we just (re)connected):
-        // send it to them, along with our away status.
-        if (!Cryptodog.buddies[nickname].hasMyMPKey) {
-            for (var i = 0; i < 4000; i += 2000) {
-                window.setTimeout(Cryptodog.xmpp.sendPublicKey, i, nickname);
-            }
-
-            // Propagate away status to newcomers.
-            Cryptodog.xmpp.sendStatus();
-        }
-
         return true;
     };
 
-    // Send your own multiparty public key to `nickname`, via XMPP-MUC.
-    Cryptodog.xmpp.sendPublicKey = function(nickname) {
+    // Send our own multiparty public key to the room, via XMPP-MUC.
+    Cryptodog.xmpp.sendPublicKey = function() {
         Cryptodog.xmpp.connection.muc.message(
             Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
             null,
-            Cryptodog.multiParty.sendPublicKey(nickname),
-            null,
-            'groupchat',
-            'active'
-        );
-
-        Cryptodog.buddies[nickname].hasMyMPKey = true;
-    };
-
-    // Request public key from `nickname`
-    Cryptodog.xmpp.sendPublicKeyRequest = function(nickname) {
-        Cryptodog.xmpp.connection.muc.message(
-            Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-            null,
-            Cryptodog.multiParty.sendPublicKeyRequest(nickname),
+            Cryptodog.multiParty.sendPublicKey(),
             null,
             'groupchat',
             'active'
         );
     };
 
-    // Send your current status to the XMPP server.
+    // Request public key from `nickname`.
+    Cryptodog.xmpp.requestPublicKey = function(nickname) {
+        Cryptodog.xmpp.connection.muc.message(
+            Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
+            null,
+            Cryptodog.multiParty.requestPublicKey(nickname),
+            null,
+            'groupchat',
+            'active'
+        );
+    };
+
+    // Request public key from all room occupants.
+    Cryptodog.xmpp.requestPublicKeyAll = function() {
+        Cryptodog.xmpp.connection.muc.message(
+            Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
+            null,
+            Cryptodog.multiParty.requestPublicKeyAll(),
+            null,
+            'groupchat',
+            'active'
+        );
+    };
+
+    // Send our current status to the XMPP server.
     Cryptodog.xmpp.sendStatus = function() {
         var status = '';
 
@@ -391,6 +385,8 @@ $(window).ready(function() {
         Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler);
 
         Cryptodog.xmpp.sendStatus();
+        Cryptodog.xmpp.sendPublicKey();
+        Cryptodog.xmpp.requestPublicKeyAll();
     };
 
     // Extract nickname (part after forward slash) from JID

@@ -232,7 +232,6 @@ var Buddy = function(nickname, id, status) {
 	this.mpPublicKey    = null
 	this.mpFingerprint  = null
 	this.mpSecretKey    = null
-	this.hasMyMPKey     = false
 	this.nickname       = nickname
 	this.genFingerState = null
 	this.status         = status
