@@ -238,7 +238,10 @@ Cryptodog.multiParty = function() {};
 
             var publicKey = BigInt.base642bigInt(message['key']);
 
-            if (buddy.mpPublicKey && !BigInt.equals(buddy.mpPublicKey, publicKey)) {
+            if (buddy.mpPublicKey && BigInt.equals(buddy.mpPublicKey, publicKey)) {
+                // We already have this key.
+                return false;
+            } else if (buddy.mpPublicKey && !BigInt.equals(buddy.mpPublicKey, publicKey)) {
                 // If it's a different key than the one we have, warn user.
                 Cryptodog.UI.removeAuthAndWarn(sender);
             } else if (!buddy.mpPublicKey && buddy.authenticated) {
