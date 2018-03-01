@@ -102,8 +102,8 @@ Cryptodog.multiParty = function() {};
     };
 
     Cryptodog.multiParty.PublicKey = function(key) {
-        this.type = 'public_key',
-        this.text = BigInt.bigInt2base64(key, 32)
+        this.type = 'public_key';
+        this.text = BigInt.bigInt2base64(key, 32);
     };
 
     Cryptodog.multiParty.PublicKeyRequest = function(name) {
