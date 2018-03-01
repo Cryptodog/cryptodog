@@ -101,27 +101,18 @@ Cryptodog.multiParty = function() {};
             .toUpperCase();
     };
 
-    // Send our public key to all room occupants.
-    Cryptodog.multiParty.sendPublicKey = function() {
-        return JSON.stringify({
-            'type': 'publicKey',
-            'key': BigInt.bigInt2base64(Cryptodog.me.mpPublicKey, 32)
-        });
-    }
-
-    // Request public key from `nickname`.
-    Cryptodog.multiParty.requestPublicKey = function(nickname) {
-        return JSON.stringify({
-            'type': 'publicKeyRequest',
-            'name': nickname
-        });
+    Cryptodog.multiParty.PublicKey = function(key) {
+        this.type = 'public_key',
+        this.text = BigInt.bigInt2base64(key, 32)
     };
 
-    // Request public key from all room occupants.
-    Cryptodog.multiParty.requestPublicKeyAll = function() {
-        return JSON.stringify({
-            'type': 'publicKeyRequest',
-        });
+    Cryptodog.multiParty.PublicKeyRequest = function(name) {
+        this.type = 'public_key_request';
+        if (name) {
+            this.text = name;
+        } else {
+            this.text = '';
+        }
     };
 
     // Issue a warning for decryption failure to the main conversation window
@@ -228,15 +219,15 @@ Cryptodog.multiParty = function() {};
             return false;
         }
 
-        var type = message['type'];
+        var type = message.type;
 
-        if (type === 'publicKey') {
-            if (typeof message['key'] !== 'string') {
+        if (type === 'public_key') {
+            if (typeof message.text !== 'string') {
                 console.log('multiParty: invalid public key from ' + sender);
                 return false;
             }
 
-            var publicKey = BigInt.base642bigInt(message['key']);
+            var publicKey = BigInt.base642bigInt(message.text);
 
             if (buddy.mpPublicKey && BigInt.equals(buddy.mpPublicKey, publicKey)) {
                 // We already have this key.
@@ -250,8 +241,8 @@ Cryptodog.multiParty = function() {};
             }
 
             buddy.updateMpKeys(publicKey);
-        } else if (type === 'publicKeyRequest') {            
-            if (!message['name'] || message['name'] === Cryptodog.me.nickname) {
+        } else if (type === 'public_key_request') {            
+            if (!message.text || message.text === Cryptodog.me.nickname) {
                 Cryptodog.xmpp.sendPublicKey();
             }
         } else if (type === 'message') {
