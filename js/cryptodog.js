@@ -6,7 +6,7 @@ GLOBAL VARIABLES
 -------------------
 */
 
-Cryptodog.version = '2.4.0'
+Cryptodog.version = '2.5.0'
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -232,7 +232,6 @@ var Buddy = function(nickname, id, status) {
 	this.mpPublicKey    = null
 	this.mpFingerprint  = null
 	this.mpSecretKey    = null
-	this.hasMyMPKey     = false
 	this.nickname       = nickname
 	this.genFingerState = null
 	this.status         = status

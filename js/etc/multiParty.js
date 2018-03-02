@@ -101,24 +101,18 @@ Cryptodog.multiParty = function() {};
             .toUpperCase();
     };
 
-    // Send my public key in response to a public key request.
-    Cryptodog.multiParty.sendPublicKey = function(nickname) {
-        var answer = {};
-        answer['type'] = 'publicKey';
-        answer['text'] = {};
-        answer['text'][nickname] = {};
-        answer['text'][nickname]['message'] = BigInt.bigInt2base64(Cryptodog.me.mpPublicKey, 32);
-        return JSON.stringify(answer);
+    Cryptodog.multiParty.PublicKey = function(key) {
+        this.type = 'public_key';
+        this.text = BigInt.bigInt2base64(key, 32);
     };
 
-    // Request public key from `nickname`
-    Cryptodog.multiParty.sendPublicKeyRequest = function(nickname) {
-        var answer = {};
-        answer['type'] = 'publicKeyRequest';
-        answer['text'] = {};
-        answer['text'][nickname] = {};
-
-        return JSON.stringify(answer);
+    Cryptodog.multiParty.PublicKeyRequest = function(name) {
+        this.type = 'public_key_request';
+        if (name) {
+            this.text = name;
+        } else {
+            this.text = '';
+        }
     };
 
     // Issue a warning for decryption failure to the main conversation window
@@ -138,7 +132,6 @@ Cryptodog.multiParty = function() {};
         return message.toString(CryptoJS.enc.Base64);
     };
 
-    // Send message.
     Cryptodog.multiParty.sendMessage = function(message) {
         // Convert from UTF8
         message = CryptoJS.enc.Utf8.parse(message);
@@ -160,12 +153,10 @@ Cryptodog.multiParty = function() {};
                 /* I don't want to introduce a bottleneck in something as common
                 /* as sending a message. We might have to do this in an async way. */
 
-                // We don't have the buddy's key, likely because of connection issues.
-                // In other words, they're "borked".
-
-                // Request their key
+                // We don't have the sender's key - they're "borked".
+                // Request their key.
                 console.log('Requesting public key from ' + b);
-                Cryptodog.xmpp.sendPublicKeyRequest(b);
+                Cryptodog.xmpp.requestPublicKey(b);
             }
         }
 
@@ -218,7 +209,6 @@ Cryptodog.multiParty = function() {};
         return JSON.stringify(encrypted);
     };
 
-    // Receive message. Detects requests/reception of public keys
     Cryptodog.multiParty.receiveMessage = function(sender, myName, message) {
         var buddy = Cryptodog.buddies[sender];
 
@@ -229,51 +219,46 @@ Cryptodog.multiParty = function() {};
             return false;
         }
 
-        var type = message['type'];
-        var text = message['text'];
+        var type = message.type;
 
-        if (typeof text[myName] === 'object') {
-            // Detect public key reception, store public key and generate shared secret
-            if (type === 'publicKey') {
-                var msg = text[myName].message;
-
-                if (typeof msg !== 'string') {
-                    console.log('multiParty: publicKey without message field');
-                    return false;
-                }
-
-                var publicKey = BigInt.base642bigInt(msg);
-
-                // If we already have a public key for this buddy, make sure it's
-                // the one we have
-                if (buddy.mpPublicKey && !BigInt.equals(buddy.mpPublicKey, publicKey)) {
-                    buddy.updateMpKeys(publicKey);
-                    Cryptodog.UI.removeAuthAndWarn(sender);
-                } else if (!buddy.mpPublicKey && buddy.authenticated) {
-                    // If we're missing their key, make sure we aren't already
-                    // authenticated (prevents a possible active attack)
-                    buddy.updateMpKeys(publicKey);
-                    Cryptodog.UI.removeAuthAndWarn(sender);
-                } else {
-                    buddy.updateMpKeys(publicKey);
-                }
-
+        if (type === 'public_key') {
+            if (typeof message.text !== 'string') {
+                console.log('multiParty: invalid public key from ' + sender);
                 return false;
-            } else if (type === 'publicKeyRequest') {
-                // Detect public key request and send public key
-                Cryptodog.xmpp.sendPublicKey(sender);
-            } else if (type === 'message') {
-                if (!Cryptodog.buddies[sender].mpSecretKey) {
-                    // We don't have the sender's key, likely because of connection issues.
-                    // In other words, they're "borked".
+            }
 
-                    // Issue a placeholder warning message so the user knows something is wrong
-                    Cryptodog.multiParty.messageWarning(sender);
+            var publicKey = BigInt.base642bigInt(message.text);
 
-                    // Request their key
+            if (buddy.mpPublicKey && BigInt.equals(buddy.mpPublicKey, publicKey)) {
+                // We already have this key.
+                return false;
+            } else if (buddy.mpPublicKey && !BigInt.equals(buddy.mpPublicKey, publicKey)) {
+                // If it's a different key than the one we have, warn user.
+                Cryptodog.UI.removeAuthAndWarn(sender);
+            } else if (!buddy.mpPublicKey && buddy.authenticated) {
+                // If we're missing their key and they're authenticated, warn user (prevents a possible active attack).
+                Cryptodog.UI.removeAuthAndWarn(sender);
+            }
+
+            buddy.updateMpKeys(publicKey);
+        } else if (type === 'public_key_request') {            
+            if (!message.text || message.text === Cryptodog.me.nickname) {
+                Cryptodog.xmpp.sendPublicKey();
+            }
+        } else if (type === 'message') {
+            var text = message['text'];
+
+            if (typeof text[myName] !== 'object') {
+                console.log('multiParty: invalid message from ' + sender);
+                Cryptodog.multiParty.messageWarning(sender);
+                return false;
+            } else {
+                if (!(buddy.mpSecretKey)) {
+                    // We don't have the sender's key - they're "borked".
+                    // Request their key and warn the user.
                     console.log('Requesting public key from ' + sender);
-                    Cryptodog.xmpp.sendPublicKeyRequest(sender);
-
+                    Cryptodog.xmpp.requestPublicKey(sender);
+                    Cryptodog.multiParty.messageWarning(sender);
                     return false;
                 }
 
@@ -319,7 +304,7 @@ Cryptodog.multiParty = function() {};
                     }
                 }
 
-                if (!OTR.HLP.compare(text[myName]['hmac'], HMAC(hmac, Cryptodog.buddies[sender].mpSecretKey['hmac']))) {
+                if (!OTR.HLP.compare(text[myName]['hmac'], HMAC(hmac, buddy.mpSecretKey['hmac']))) {
                     console.log('multiParty: HMAC failure');
                     Cryptodog.multiParty.messageWarning(sender);
                     return false;
@@ -337,7 +322,7 @@ Cryptodog.multiParty = function() {};
                 // Decrypt
                 var plaintext = decryptAES(
                     text[myName]['message'],
-                    Cryptodog.buddies[sender].mpSecretKey['message'],
+                    buddy.mpSecretKey['message'],
                     text[myName]['iv']
                 );
 
@@ -364,11 +349,11 @@ Cryptodog.multiParty = function() {};
 
                 // Convert to UTF8
                 return plaintext.toString(CryptoJS.enc.Utf8);
-            } else {
-                console.log('multiParty: Unknown message type: ' + type);
-                Cryptodog.multiParty.messageWarning(sender);
             }
+        } else {
+            console.log('multiParty: unknown message type "' + type + '" from ' + sender);
         }
+
         return false;
     };
 
