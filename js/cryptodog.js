@@ -1111,6 +1111,9 @@ $('#CryptodogLogin').submit(function() {
 	// Prepare keys and connect
 	else {
 		$('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly');
+		Cryptodog.me.conversation = $('#conversationName').val();
+		Cryptodog.me.nickname = $('#nickname').val();
+		
 		Cryptodog.xmpp.showKeyPreparationDialog(function () {
 			Cryptodog.me.color = randomColor({ luminosity: 'dark' });
 			Cryptodog.xmpp.connect();
