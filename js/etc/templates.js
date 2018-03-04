@@ -74,8 +74,6 @@ Cryptodog.templates = {
 
     fileLink: '<a href="{{url}}" class="fileView" target="_blank" download="{{filename}}">{{downloadFile}}</a>',
 
-    fileLinkMac: '<a href="{{url}}" class="fileView" download="{{filename}}">{{downloadFile}}</a>',
-
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
     message:

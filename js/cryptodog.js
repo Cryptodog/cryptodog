@@ -101,15 +101,13 @@ Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
 // Convert Data blob/url to downloadable file, replacing the progress bar.
 Cryptodog.addFile = function(url, file, conversation, filename) {
 	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[conversation].id]);
-	var fileLinkString = 'fileLink';
-	if (navigator.userAgent === 'Chrome (Mac app)') {
-		fileLinkString += 'Mac';
-	}
-	var fileLink = Mustache.render(Cryptodog.templates[fileLinkString], {
+	
+	var fileLink = Mustache.render(Cryptodog.templates.fileLink, {
 		url: url,
 		filename: filename,
 		downloadFile: Cryptodog.locale['chatWindow']['downloadFile']
 	});
+	
 	$('.fileProgressBar')
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[conversation].id)
