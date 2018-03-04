@@ -92,7 +92,5 @@ Cryptodog.templates = {
 
     userLeave:
         '<div class="userLeave"><span class="timestamp">{{currentTime}}</span>' +
-        '<strong>-</strong>{{nickname}}</div>',
-
-    notUsingCryptodog: '<div class="notUsingCryptodogWarning" dir="{{dir}}">{{text}}</div>'
+        '<strong>-</strong>{{nickname}}</div>'
 };
