@@ -83,9 +83,6 @@ $(window).ready(function() {
 
     // Connect anonymously and join conversation.
     Cryptodog.xmpp.connect = function() {
-        Cryptodog.me.conversation = Strophe.xmlescape($('#conversationName').val());
-        Cryptodog.me.nickname = Strophe.xmlescape($('#nickname').val());
-
         Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay);
 
         Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {

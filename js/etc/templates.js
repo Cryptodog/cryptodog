@@ -74,8 +74,6 @@ Cryptodog.templates = {
 
     fileLink: '<a href="{{url}}" class="fileView" target="_blank" download="{{filename}}">{{downloadFile}}</a>',
 
-    fileLinkMac: '<a href="{{url}}" class="fileView" download="{{filename}}">{{downloadFile}}</a>',
-
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
     message:
@@ -92,7 +90,5 @@ Cryptodog.templates = {
 
     userLeave:
         '<div class="userLeave"><span class="timestamp">{{currentTime}}</span>' +
-        '<strong>-</strong>{{nickname}}</div>',
-
-    notUsingCryptodog: '<div class="notUsingCryptodogWarning" dir="{{dir}}">{{text}}</div>'
+        '<strong>-</strong>{{nickname}}</div>'
 };

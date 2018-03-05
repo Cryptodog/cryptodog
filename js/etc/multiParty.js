@@ -148,15 +148,6 @@ Cryptodog.multiParty = function() {};
         for (var b in Cryptodog.buddies) {
             if (Cryptodog.buddies[b].mpSecretKey) {
                 sortedRecipients.push(b);
-            } else {
-                /* TODO: Measure performance on this.
-                /* I don't want to introduce a bottleneck in something as common
-                /* as sending a message. We might have to do this in an async way. */
-
-                // We don't have the sender's key - they're "borked".
-                // Request their key.
-                console.log('Requesting public key from ' + b);
-                Cryptodog.xmpp.requestPublicKey(b);
             }
         }
 
