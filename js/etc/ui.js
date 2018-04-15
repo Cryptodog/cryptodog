@@ -175,8 +175,24 @@ Cryptodog.UI = {
         });
     },
 
+    // Open base64 Data URI in new window.
+    openDataInNewWindow: function(url) {
+        var win = window.open();
+        var image = new Image();
+        image.src = url;
+        win.document.write(image.outerHTML);
+        win.focus();
+    },
+
     // Convert message URLs to links. Used internally.
     addLinks: function(message) {
+        /** Handle image data URIs gracefully:
+        Check if message is truly a data URI. (only binary image formats permitted, to avoid XSS)*/
+        var imgURIregex = /^data:(image\/jpeg|image\/png|image\/gif)\;(base64)\,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)$/;
+        if (imgURIregex.test(message)) {
+            return "<a href=\"#\" onclick=\"Cryptodog.UI.openDataInNewWindow(&quot;" + message + "&quot)\">[Embedded image]</a>";
+        }
+
         return message.autoLink();
     },
 
