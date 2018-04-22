@@ -208,13 +208,30 @@ Cryptodog.UI = {
         return true;
     },
 
+    addDataLinks: function(input) {
+        var icopy   = input;
+        var el      = input.split(" ");
+        var results = [];
+    
+        el.forEach(function(v, i) {
+            if (Cryptodog.UI.validateImageURI(v)) {
+                results.push(v);
+            }
+        });
+        
+        results.forEach(function(v, i) {
+            icopy = icopy.replace(v, "<a data-uri-data=\"" + v + "\" class=\"data-uri-clickable\" href=\"#\">[Embedded image]</a>");
+        });
+        
+        return icopy;
+    },
+       
+
     // Convert message URLs to links. Used internally.
     addLinks: function(message) {
         // Handle image data URIs gracefully:
         // Check if message is truly a data URI. (only binary image formats permitted, to avoid XSS)*/
-        if (Cryptodog.UI.validateImageURI(message)) {
-            return "<a data-uri-data=\"" + message + "\" class=\"data-uri-clickable\" href=\"#\">[Embedded image]</a>";
-        }
+        message = Cryptodog.UI.addDataLinks(message);
 
         return message.autoLink();
     },
