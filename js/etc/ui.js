@@ -184,13 +184,36 @@ Cryptodog.UI = {
         win.focus();
     },
 
+    // Make sure the string pURI is a legitimate data URI, and is of an accepted image format.
+    validateImageURI: function(pURI) {
+        var rgx = function() { return new RegExp(/^(data:)([\w\/\+]+);(charset=[\w-]+|base64).*,(.*)/gi); };
+
+        if (!rgx().test(pURI)) {
+            return false;
+        }
+
+        var acceptedMimes = [
+            "image/png",
+            "image/jpeg",
+            "image/gif"
+        ];
+
+        var elements = rgx().exec(pURI);
+        var mimeType = elements[2];
+
+        if (!acceptedMimes.includes(mimeType)) {
+            return false;
+        }
+
+        return true;
+    },
+
     // Convert message URLs to links. Used internally.
     addLinks: function(message) {
-        /** Handle image data URIs gracefully:
-        Check if message is truly a data URI. (only binary image formats permitted, to avoid XSS)*/
-        var imgURIregex = /^data:(image\/jpeg|image\/png|image\/gif)\;(base64)\,(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)$/;
-        if (imgURIregex.test(message)) {
-            return "<a href=\"#\" onclick=\"Cryptodog.UI.openDataInNewWindow(&quot;" + message + "&quot)\">[Embedded image]</a>";
+        // Handle image data URIs gracefully:
+        // Check if message is truly a data URI. (only binary image formats permitted, to avoid XSS)*/
+        if (Cryptodog.UI.validateImageURI(message)) {
+            return "<a data-uri-data=\"" + message + "\" class=\"data-uri-clickable\" href=\"#\">[Embedded image]</a>";
         }
 
         return message.autoLink();

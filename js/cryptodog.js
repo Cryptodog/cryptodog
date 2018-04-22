@@ -200,6 +200,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	else {
 		$('#buddy-' + conversation).addClass('newMessage');
 	}
+	Cryptodog.rebindDataURIs();
 }
 
 // Show a preview for a received message from a buddy.
@@ -293,6 +294,7 @@ Buddy.prototype = {
 		//	}
 		//	conversationBuffers[thisBuffer] = $('<div>').append(buffer.clone()).html();
 		//}
+
 		$.each(authStatusBuffers, function(i, thisBuffer) {
 			var buffer = $(conversationBuffers[thisBuffer])
 			$.each(buffer.find('span').filterByData('sender', nickname),
@@ -464,6 +466,19 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 		}
 	})
 	$('#conversationWindow').children().addClass('visibleLine');
+	Cryptodog.rebindDataURIs();
+}
+
+// Handle click event on all embedded data URI messages
+Cryptodog.rebindDataURIs = function() {
+	function handleDataUriClick() {
+		Cryptodog.UI.openDataInNewWindow(this.getAttribute("data-uri-data"));
+	}
+
+	var clickables = document.querySelectorAll(".data-uri-clickable");
+	clickables.forEach(function(link, i) {
+		link.addEventListener("click", handleDataUriClick.bind(link));
+	});
 }
 
 // Display buddy information, including fingerprints and authentication.
