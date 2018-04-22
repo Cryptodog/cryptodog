@@ -209,10 +209,11 @@ Cryptodog.UI = {
     },
 
     addDataLinks: function(input) {
-        var icopy   = input;
-        var el      = input.split(" ");
-        var results = [];
-    
+        var icopy    = input;
+        var el       = input.split(" ");
+        var results  = [];
+        var replaced = {};
+        
         el.forEach(function(v, i) {
             if (v !== "") {
                 if (Cryptodog.UI.validateImageURI(v)) {
@@ -220,10 +221,17 @@ Cryptodog.UI = {
                 }
             }
         });
-        
+
         results.forEach(function(v, i) {
-            icopy = icopy.replace(v, "<a data-uri-data=\"" + v + "\" class=\"data-uri-clickable\" href=\"#\">[Embedded image]</a>");
+            if (replaced[v] == 1) {
+                v = " " + v;
+            }
+
+            icopy = icopy.replace(v, "<a data-uri-data=\"" + v.replace(" ", "") + "\" class=\"data-uri-clickable\" href=\"#\">[Embedded image]</a>");
+            replaced[v] = 1;
         });
+
+        replaced = null;
         
         return icopy;
     },
