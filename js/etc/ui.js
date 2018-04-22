@@ -214,8 +214,10 @@ Cryptodog.UI = {
         var results = [];
     
         el.forEach(function(v, i) {
-            if (Cryptodog.UI.validateImageURI(v)) {
-                results.push(v);
+            if (v !== "") {
+                if (Cryptodog.UI.validateImageURI(v)) {
+                    results.push(v);
+                }
             }
         });
         
