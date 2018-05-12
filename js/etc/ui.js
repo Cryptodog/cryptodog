@@ -184,65 +184,16 @@ Cryptodog.UI = {
         win.focus();
     },
 
-    // Make sure the string pURI is a legitimate data URI, and is of an accepted image format.
-    validateImageURI: function(pURI) {
-        var rgx = function() { return new RegExp(/^(data:)([\w\/\+]+);(charset=[\w-]+|base64).*,(.*)/gi); };
-
-        if (!rgx().test(pURI)) {
-            return false;
-        }
-
-        var acceptedMimes = [
-            "image/png",
-            "image/jpeg",
-            "image/gif"
-        ];
-
-        var elements = rgx().exec(pURI);
-        var mimeType = elements[2];
-
-        if (!acceptedMimes.includes(mimeType)) {
-            return false;
-        }
-
-        return true;
+    addDataLinks: function(message) {
+        // Make sure the string is a legitimate data URI, and is of an accepted image format.
+        var re = /data:image\/(png|jpeg|gif);(charset=[\w-]+|base64)?,\S+/gi;
+        return message.replace(re, '<a data-uri-data="$&" class="data-uri-clickable" href="#">[Embedded image]</a>');
     },
-
-    addDataLinks: function(input) {
-        var icopy    = input;
-        var el       = input.split(" ");
-        var results  = [];
-        var replaced = {};
-        
-        el.forEach(function(v, i) {
-            if (v !== "") {
-                if (Cryptodog.UI.validateImageURI(v)) {
-                    results.push(v);
-                }
-            }
-        });
-
-        results.forEach(function(v, i) {
-            if (replaced[v] == 1) {
-                v = " " + v;
-            }
-
-            icopy = icopy.replace(v, "<a data-uri-data=\"" + v.replace(" ", "") + "\" class=\"data-uri-clickable\" href=\"#\">[Embedded image]</a>");
-            replaced[v] = 1;
-        });
-
-        replaced = null;
-        
-        return icopy;
-    },
-       
 
     // Convert message URLs to links. Used internally.
     addLinks: function(message) {
         // Handle image data URIs gracefully:
-        // Check if message is truly a data URI. (only binary image formats permitted, to avoid XSS)*/
         message = Cryptodog.UI.addDataLinks(message);
-
         return message.autoLink();
     },
 
