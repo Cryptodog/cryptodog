@@ -80,7 +80,7 @@ GLOBAL INTERFACE FUNCTIONS
 // Can be used to filter out types of names
 Cryptodog.isFiltered = function(name) {
 	return false;
-} 
+}
 
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
@@ -145,6 +145,8 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	if (type === 'message') {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
+			Cryptodog.buddies[nickname].messageCount++;
+
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
 			if (Cryptodog.allowSoundNotifications) {
 				Cryptodog.audio.newMessage.play();
@@ -153,7 +155,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		}
 		message = Strophe.xmlescape(message);
 		message = Cryptodog.UI.addLinks(message);
-		message = Cryptodog.UI.addEmoticons(message);
+		message = Cryptodog.UI.addEmoticons(message);	
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
@@ -222,6 +224,10 @@ Cryptodog.messagePreview = function(message, nickname) {
 	}
 }
 
+// Buddies who exceed this message rate will be automatically ignored
+Cryptodog.maxMessageCount = 5;
+Cryptodog.maxMessageInterval = 3000;
+
 // Buddy constructor
 var Buddy = function(nickname, id, status) {
 	this.id             = id
@@ -236,6 +242,9 @@ var Buddy = function(nickname, id, status) {
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = randomColor({luminosity: 'dark'})
+	
+	// Regularly reset at the interval defined by Cryptodog.maxMessageInterval
+	this.messageCount   = 0
 	this.ignored        = function() {
 		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
 	};
