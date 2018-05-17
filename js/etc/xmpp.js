@@ -387,10 +387,11 @@ $(window).ready(function() {
             for (var nickname in Cryptodog.buddies) {
                 var buddy = Cryptodog.buddies[nickname];
                 
-                if (buddy.messageCount > Cryptodog.maxMessageCount) {
+                if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
                     buddy.toggleIgnored();
                     console.log('Automatically ignored ' + nickname);
                 }
+
                 buddy.messageCount = 0;
             }
         }, Cryptodog.maxMessageInterval);

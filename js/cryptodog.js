@@ -224,6 +224,28 @@ Cryptodog.messagePreview = function(message, nickname) {
 	}
 }
 
+Cryptodog.buddyWhitelistEnabled = false;
+
+// Automatically ignore newcomers who aren't in the current buddies list
+Cryptodog.toggleBuddyWhitelist = function() {
+	if (Cryptodog.buddyWhitelistEnabled) {
+		Cryptodog.isFiltered = function(nickname) {
+			return false;
+		};
+
+		Cryptodog.buddyWhitelistEnabled = false;
+	} else {
+		var whitelist = Object.keys(Cryptodog.buddies);
+		Cryptodog.isFiltered = function(nickname) {
+			return !whitelist.includes(nickname);
+		};
+
+		Cryptodog.buddyWhitelistEnabled = true;
+	}    
+};
+
+Cryptodog.autoIgnore = true;
+
 // Buddies who exceed this message rate will be automatically ignored
 Cryptodog.maxMessageCount = 5;
 Cryptodog.maxMessageInterval = 3000;

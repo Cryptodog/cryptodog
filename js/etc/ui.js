@@ -374,7 +374,19 @@ Cryptodog.UI = {
 	-------------------
     */
     userInterfaceBindings: function() {
-        // Buttons:
+        $('#buddyWhitelist').click(function() {
+            if (Cryptodog.buddyWhitelistEnabled) {
+                $(this).attr('src', 'img/icons/users.svg');
+                $(this).attr('data-utip', 'Buddy whitelist: off');
+            } else {
+                $(this).attr('src', 'img/icons/lock.svg');
+                $(this).attr('data-utip', 'Buddy whitelist: on');
+            }
+
+            $(this).mouseenter();
+            Cryptodog.toggleBuddyWhitelist();
+        });
+
         // Dark mode button
         $('#darkMode').click(function() {
             if (document.body.classList.contains('darkMode')) {
@@ -393,12 +405,12 @@ Cryptodog.UI = {
             if (Cryptodog.allowSoundNotifications) {
                 Cryptodog.allowSoundNotifications = false;
                 Cryptodog.storage.setItem('audioNotifications', 'false');
-                $('#audioToggle').attr('data-utip', 'Audio notifications off');
+                $('#audioToggle').attr('data-utip', 'Audio notifications: off');
                 $('#audioToggle').attr('src', 'img/icons/volume-mute.svg');
             } else {
                 Cryptodog.allowSoundNotifications = true;
                 Cryptodog.storage.setItem('audioNotifications', 'true');
-                $('#audioToggle').attr('data-utip', 'Audio notifications on');
+                $('#audioToggle').attr('data-utip', 'Audio notifications: on');
                 $('#audioToggle').attr('src', 'img/icons/volume-medium.svg');
             }
 
