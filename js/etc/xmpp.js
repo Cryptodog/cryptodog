@@ -247,6 +247,11 @@ $(window).ready(function() {
             // Check if this is a private OTR message.
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
+            if (body.length > Cryptodog.otr.maxMessageLength) {
+                console.log('xmpp: refusing to decrypt large OTR message (' + body.length + ' bytes) from ' + nickname);
+                return true;
+            }
+
             Cryptodog.buddies[nickname].otr.receiveMsg(body);
         }
         return true;
