@@ -175,8 +175,25 @@ Cryptodog.UI = {
         });
     },
 
+    // Open base64 Data URI in new window.
+    openDataInNewWindow: function(url) {
+        var win = window.open();
+        var image = new Image();
+        image.src = url;
+        win.document.write(image.outerHTML);
+        win.focus();
+    },
+
+    addDataLinks: function(message) {
+        // Make sure the string is a legitimate data URI, and is of an accepted image format.
+        var re = /data:image\/(png|jpeg|gif);(charset=[\w-]+|base64)?,\S+/gi;
+        return message.replace(re, '<a data-uri-data="$&" class="data-uri-clickable" href="#">[Embedded image]</a>');
+    },
+
     // Convert message URLs to links. Used internally.
     addLinks: function(message) {
+        // Handle image data URIs gracefully:
+        message = Cryptodog.UI.addDataLinks(message);
         return message.autoLink();
     },
 
@@ -357,7 +374,19 @@ Cryptodog.UI = {
 	-------------------
     */
     userInterfaceBindings: function() {
-        // Buttons:
+        $('#buddyWhitelist').click(function() {
+            if (Cryptodog.buddyWhitelistEnabled) {
+                $(this).attr('src', 'img/icons/users.svg');
+                $(this).attr('data-utip', 'Buddy whitelist: off');
+            } else {
+                $(this).attr('src', 'img/icons/lock.svg');
+                $(this).attr('data-utip', 'Buddy whitelist: on');
+            }
+
+            $(this).mouseenter();
+            Cryptodog.toggleBuddyWhitelist();
+        });
+
         // Dark mode button
         $('#darkMode').click(function() {
             if (document.body.classList.contains('darkMode')) {
@@ -376,12 +405,12 @@ Cryptodog.UI = {
             if (Cryptodog.allowSoundNotifications) {
                 Cryptodog.allowSoundNotifications = false;
                 Cryptodog.storage.setItem('audioNotifications', 'false');
-                $('#audioToggle').attr('data-utip', 'Audio notifications off');
+                $('#audioToggle').attr('data-utip', 'Audio notifications: off');
                 $('#audioToggle').attr('src', 'img/icons/volume-mute.svg');
             } else {
                 Cryptodog.allowSoundNotifications = true;
                 Cryptodog.storage.setItem('audioNotifications', 'true');
-                $('#audioToggle').attr('data-utip', 'Audio notifications on');
+                $('#audioToggle').attr('data-utip', 'Audio notifications: on');
                 $('#audioToggle').attr('src', 'img/icons/volume-medium.svg');
             }
 

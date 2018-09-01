@@ -4,6 +4,8 @@
     // Cryptodog OTR functions and callbacks.
     Cryptodog.otr = {};
 
+    Cryptodog.otr.maxMessageLength = 5000;
+
     // Construct a new OTR conversation
     Cryptodog.otr.add = function(nickname) {
         // file protocol doesn't support WebWorkers

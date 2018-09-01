@@ -6,7 +6,7 @@ GLOBAL VARIABLES
 -------------------
 */
 
-Cryptodog.version = '2.5.1'
+Cryptodog.version = '2.5.2'
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -80,7 +80,7 @@ GLOBAL INTERFACE FUNCTIONS
 // Can be used to filter out types of names
 Cryptodog.isFiltered = function(name) {
 	return false;
-} 
+}
 
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
@@ -145,6 +145,8 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	if (type === 'message') {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
+			Cryptodog.buddies[nickname].messageCount++;
+
 			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
 			if (Cryptodog.allowSoundNotifications) {
 				Cryptodog.audio.newMessage.play();
@@ -153,7 +155,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		}
 		message = Strophe.xmlescape(message);
 		message = Cryptodog.UI.addLinks(message);
-		message = Cryptodog.UI.addEmoticons(message);
+		message = Cryptodog.UI.addEmoticons(message);	
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
@@ -200,6 +202,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	else {
 		$('#buddy-' + conversation).addClass('newMessage');
 	}
+	Cryptodog.rebindDataURIs();
 }
 
 // Show a preview for a received message from a buddy.
@@ -221,6 +224,32 @@ Cryptodog.messagePreview = function(message, nickname) {
 	}
 }
 
+Cryptodog.buddyWhitelistEnabled = false;
+
+// Automatically ignore newcomers who aren't in the current buddies list
+Cryptodog.toggleBuddyWhitelist = function() {
+	if (Cryptodog.buddyWhitelistEnabled) {
+		Cryptodog.isFiltered = function(nickname) {
+			return false;
+		};
+
+		Cryptodog.buddyWhitelistEnabled = false;
+	} else {
+		var whitelist = Object.keys(Cryptodog.buddies);
+		Cryptodog.isFiltered = function(nickname) {
+			return !whitelist.includes(nickname);
+		};
+
+		Cryptodog.buddyWhitelistEnabled = true;
+	}    
+};
+
+Cryptodog.autoIgnore = true;
+
+// Buddies who exceed this message rate will be automatically ignored
+Cryptodog.maxMessageCount = 5;
+Cryptodog.maxMessageInterval = 3000;
+
 // Buddy constructor
 var Buddy = function(nickname, id, status) {
 	this.id             = id
@@ -235,6 +264,9 @@ var Buddy = function(nickname, id, status) {
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = randomColor({luminosity: 'dark'})
+	
+	// Regularly reset at the interval defined by Cryptodog.maxMessageInterval
+	this.messageCount   = 0
 	this.ignored        = function() {
 		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
 	};
@@ -293,6 +325,7 @@ Buddy.prototype = {
 		//	}
 		//	conversationBuffers[thisBuffer] = $('<div>').append(buffer.clone()).html();
 		//}
+
 		$.each(authStatusBuffers, function(i, thisBuffer) {
 			var buffer = $(conversationBuffers[thisBuffer])
 			$.each(buffer.find('span').filterByData('sender', nickname),
@@ -464,6 +497,19 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 		}
 	})
 	$('#conversationWindow').children().addClass('visibleLine');
+	Cryptodog.rebindDataURIs();
+}
+
+// Handle click event on all embedded data URI messages
+Cryptodog.rebindDataURIs = function() {
+	function handleDataUriClick() {
+		Cryptodog.UI.openDataInNewWindow(this.getAttribute("data-uri-data"));
+	}
+
+	var clickables = document.querySelectorAll(".data-uri-clickable");
+	clickables.forEach(function(link, i) {
+		link.addEventListener("click", handleDataUriClick.bind(link));
+	});
 }
 
 // Display buddy information, including fingerprints and authentication.

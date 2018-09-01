@@ -247,6 +247,11 @@ $(window).ready(function() {
             // Check if this is a private OTR message.
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
+            if (body.length > Cryptodog.otr.maxMessageLength) {
+                console.log('xmpp: refusing to decrypt large OTR message (' + body.length + ' bytes) from ' + nickname);
+                return true;
+            }
+
             Cryptodog.buddies[nickname].otr.receiveMsg(body);
         }
         return true;
@@ -363,6 +368,8 @@ $(window).ready(function() {
         );
     };
 
+    var autoIgnore;
+
     // Executed (manually) after connection.
     var afterConnect = function() {
         $('.conversationName').animate({ 'background-color': '#bb7a20' });
@@ -373,6 +380,21 @@ $(window).ready(function() {
         Cryptodog.xmpp.sendStatus();
         Cryptodog.xmpp.sendPublicKey();
         Cryptodog.xmpp.requestPublicKey();
+
+        clearInterval(autoIgnore);
+
+        autoIgnore = setInterval(function() {
+            for (var nickname in Cryptodog.buddies) {
+                var buddy = Cryptodog.buddies[nickname];
+                
+                if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
+                    buddy.toggleIgnored();
+                    console.log('Automatically ignored ' + nickname);
+                }
+
+                buddy.messageCount = 0;
+            }
+        }, Cryptodog.maxMessageInterval);
     };
 
     // Extract nickname (part after forward slash) from JID

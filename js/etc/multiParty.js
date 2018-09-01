@@ -56,6 +56,8 @@ Cryptodog.multiParty = function() {};
         return CryptoJS.HmacSHA512(msg, key).toString(CryptoJS.enc.Base64);
     };
 
+    Cryptodog.multiParty.maxMessageLength = 5000;
+
     // Generate private key (32 random bytes)
     // Represented as BigInt
     Cryptodog.multiParty.genPrivateKey = function() {
@@ -309,6 +311,12 @@ Cryptodog.multiParty = function() {};
                 }
 
                 usedIVs.push(text[myName]['iv']);
+
+                if (text[myName]['message'].length > Cryptodog.multiParty.maxMessageLength) {
+                    Cryptodog.multiParty.messageWarning(sender);
+                    console.log('multiParty: refusing to decrypt large message (' + text[myName]['message'].length + ' bytes) from ' + sender);
+                    return false;
+                }
 
                 // Decrypt
                 var plaintext = decryptAES(

@@ -4,8 +4,8 @@
 <head>
     <title>Cryptodog</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; connect-src *;">
-
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src *;">
+    
     <meta name="referrer" content="no-referrer" />
     <link rel="stylesheet" media="screen" href="css/style.css" type="text/css" />
     <link rel="stylesheet" href="css/jquery.utip.css" type="text/css" />
@@ -70,11 +70,12 @@
                     <span class="conversationName"></span>
                 </span>
                 <div id="optionButtons" dir="ltr">
+                    <img class="button" id="buddyWhitelist" src="img/icons/users.svg" alt="" data-utip-gravity="sw" data-utip="Buddy whitelist: off" />
                     <img class="button" id="darkMode" src="img/icons/contrast.svg" alt="" data-utip-gravity="sw" data-utip="Light mode" />
                     <img class="button" id="status" src="img/icons/checkmark.svg" alt="" data-utip-gravity="sw" />
                     <img class="button" id="myInfo" src="img/icons/key.svg" alt="" data-utip-gravity="sw" />
                     <img class="button" id="notifications" src="img/icons/bubble2.svg" alt="" data-utip-gravity="sw" />
-                    <img class="button" id="audioToggle" src="img/icons/volume-mute.svg" alt="" data-utip-gravity="sw" data-utip="Audio notifications off"
+                    <img class="button" id="audioToggle" src="img/icons/volume-mute.svg" alt="" data-utip-gravity="sw" data-utip="Audio notifications: off"
                     />
                     <img class="button" id="logout" src="img/icons/switch.svg" alt="" data-utip-gravity="sw" />
                 </div>
@@ -152,7 +153,7 @@
                     </div>
                 </div>
                 <form id="userInput">
-                    <textarea id="userInputText"></textarea>
+                    <textarea id="userInputText" maxlength="3072"></textarea>
                     <input type="submit" value="►" id="userInputSend" />
                 </form>
             </div>
