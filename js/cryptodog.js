@@ -503,12 +503,15 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 // Handle click event on all embedded data URI messages
 Cryptodog.rebindDataURIs = function() {
 	function handleDataUriClick() {
+		var x = Math.random();
 		Cryptodog.UI.openDataInNewWindow(this.getAttribute("data-uri-data"));
 	}
 
 	var clickables = document.querySelectorAll(".data-uri-clickable");
 	clickables.forEach(function(link, i) {
-		link.addEventListener("click", handleDataUriClick.bind(link));
+		var linkClone = link.cloneNode(true);
+		link.parentNode.replaceChild(linkClone, link);
+		linkClone.addEventListener("click", handleDataUriClick.bind(link));
 	});
 }
 
