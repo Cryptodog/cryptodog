@@ -503,7 +503,6 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 // Handle click event on all embedded data URI messages
 Cryptodog.rebindDataURIs = function() {
 	function handleDataUriClick() {
-		var x = Math.random();
 		Cryptodog.UI.openDataInNewWindow(this.getAttribute("data-uri-data"));
 	}
 
