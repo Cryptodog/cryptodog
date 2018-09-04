@@ -27,31 +27,40 @@ $(window).ready(function() {
         Cryptodog.xmpp.currentServer.relay = key ? key : Cryptodog.xmpp.defaultServer.relay;
     });
 
+
     // Prepares necessary encryption key operations before XMPP connection.
     // Shows a progress bar while doing so.
     Cryptodog.xmpp.showKeyPreparationDialog = function(callback) {
-        Cryptodog.me.mpPrivateKey = Cryptodog.multiParty.genPrivateKey();
+        Cryptodog.storage.getItem('persistenceEnabled', function(key) {
+            var key = key || {};    
+            if (key.enabled) {
+                Cryptodog.me.mpPrivateKey = CryptoJS.enc.Base64.parse(key.mp);
+                Cryptodog.me.otrKey = DSA.parsePrivate(key.otr);
+            } else {
+                Cryptodog.me.mpPrivateKey = Cryptodog.multiParty.genPrivateKey();
+            }
 
-        Cryptodog.me.mpPublicKey = Cryptodog.multiParty.genPublicKey(Cryptodog.me.mpPrivateKey);
-        Cryptodog.me.mpFingerprint = Cryptodog.multiParty.genFingerprint();
+            Cryptodog.me.mpPublicKey = Cryptodog.multiParty.genPublicKey(Cryptodog.me.mpPrivateKey);
+            Cryptodog.me.mpFingerprint = Cryptodog.multiParty.genFingerprint();
+    
+            // If we already have keys, just skip to the callback.
+            if (Cryptodog.me.otrKey) {
+                callback();
+                return;
+            }
 
-        // If we already have keys, just skip to the callback.
-        if (Cryptodog.me.otrKey) {
-            callback();
-            return;
-        }
+            $('#loginInfo').text(Cryptodog.locale['loginMessage']['generatingKeys']);
 
-        $('#loginInfo').text(Cryptodog.locale['loginMessage']['generatingKeys']);
-
-        // Add delay to key generation when on the file protocol
-        // Since the UI freezes when generating keys without WebWorkers
-        if (window.location.protocol === 'file:') {
-            setTimeout(function() {
+            // Add delay to key generation when on the file protocol
+            // Since the UI freezes when generating keys without WebWorkers
+            if (window.location.protocol === 'file:') {
+                setTimeout(function() {
+                    Cryptodog.xmpp.prepareKeys(callback);
+                }, 100);
+            } else {
                 Cryptodog.xmpp.prepareKeys(callback);
-            }, 100);
-        } else {
-            Cryptodog.xmpp.prepareKeys(callback);
-        }
+            }
+        });
     };
 
     // See above.
