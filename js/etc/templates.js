@@ -19,6 +19,7 @@ Cryptodog.templates = {
     myInfo:
         '<div class="title">{{nickname}}</div>' +
         '<div id="displayInfo">' +
+        '<input id="optIntoPersistence" type="checkbox"><span>Persist keys locally (this may be dangerous if used improperly).</span></input></br>' +
         '{{groupFingerprint}}<br /><span id="multiPartyFingerprint"></span><br />' +
         '{{otrFingerprint}}<br /><span id="otrFingerprint"></span></div>',
 

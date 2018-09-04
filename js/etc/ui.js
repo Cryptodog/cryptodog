@@ -68,6 +68,10 @@ Cryptodog.UI = {
         var state = Cryptodog.buddies[nickname].genFingerState;
         Cryptodog.buddies[nickname].genFingerState = null;
 
+        if (state.noAnimation) {
+            return state.cb();
+        }
+
         $('#fill')
             .stop()
             .animate({ width: '100%', opacity: '1' }, 400, 'linear', function() {
