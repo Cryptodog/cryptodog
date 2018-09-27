@@ -450,6 +450,9 @@ Cryptodog.buddyStatus = function(nickname, status) {
 
 // Handle buddy going offline.
 Cryptodog.removeBuddy = function(nickname) {
+	if (!Cryptodog.buddies[nickname]) {
+		return;
+	}
 	var buddyID = Cryptodog.buddies[nickname].id;
 	var buddyElement = $('.buddy').filterByData('id', buddyID);
 	delete Cryptodog.buddies[nickname];
@@ -616,8 +619,6 @@ Cryptodog.displayInfo = function(nickname) {
 		}
 		$('#otrFingerprint').text(getFingerprint(nickname, true));
 		$('#multiPartyFingerprint').text(getFingerprint(nickname, false));
-
-		var persist = false;
 
 		Cryptodog.storage.getItem('persistenceEnabled', function(e) {
 			if (e) {
@@ -960,6 +961,8 @@ var ensureOTRdialog = function(nickname, close, cb, noAnimation) {
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
 		return cb();
 	}
+
+	noAnimation = noAnimation || false;
 
 	if (!noAnimation) {
 		Cryptodog.UI.progressBarOTR()
