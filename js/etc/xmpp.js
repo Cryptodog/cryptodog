@@ -314,6 +314,12 @@ $(window).ready(function() {
             Cryptodog.removeBuddy(nickname);
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
+            // Don't render user join if it violates mutelist rules.
+            if (Cryptodog.isMutelisted(nickname)) {
+                log("Silently filtered " + nickname);
+                return true;
+            }
+
             // Create buddy element if buddy is new
             Cryptodog.addBuddy(nickname, null, 'online');
             

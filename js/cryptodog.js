@@ -94,6 +94,89 @@ Cryptodog.storeAuthList = function() {
 	Cryptodog.storage.setItem("authList", Cryptodog.authList);
 }
 
+// A list of globally accessible URLs containing blocklist data 
+Cryptodog.mutelistSources = [];
+
+// Array of RegExp's that match blocked nickname strings
+Cryptodog.mutelistNicks = [];
+
+Cryptodog.loadMutelists = function(cb) {
+	var wg = Cryptodog.mutelistSources.length;
+
+	function done() {
+		wg --;
+
+		if (wg == 0) {
+			cb();
+		}
+	}
+
+	// Reset old regexes.
+	Cryptodog.mutelistNicks    = []; 
+	Cryptodog.mutelistSources.forEach(function(blSrc) {
+		fetch(blSrc, {
+			cache: "no-store"
+		})
+		.then(function(data) {
+			if (data.status == 200) {
+				return data.json();
+			} else {
+				done();
+			}
+		})
+		.then(function(d) {
+			for (var i = 0; i < d.nicks.length; i++) {
+				var l = d.nicks[i];
+				if (typeof l == 'string') {
+					var rgx = new RegExp(l);
+					Cryptodog.mutelistNicks.push(rgx);
+				}
+			}
+			done();
+		})
+		.catch(function(){});
+	});
+}
+
+Cryptodog.isMutelisted = function(nickname) {
+	for (var i = 0; i < Cryptodog.mutelistNicks.length; i++) {
+		var rgx = Cryptodog.mutelistNicks[i];
+		if (rgx.test(nickname)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Cryptodog.cleanupMutedNicks = function() {
+	Object.keys(Cryptodog.buddies)
+	.forEach(function(b) {
+		if (Cryptodog.isMutelisted(b)) {
+			Cryptodog.removeBuddy(b);
+		}
+	});
+}
+
+window.setInterval(function() {
+	Cryptodog.loadMutelists(function() {
+		Cryptodog.cleanupMutedNicks();
+	});
+}, 10000)
+
+fetch("muteSources.json", {})
+.then(function(data) {
+	if (data.status == 200) {
+		return data.json();
+	}
+})
+.then(function(d) {
+	if (d && d.constructor.name == "Array") {
+		Cryptodog.mutelistSources = d;
+		Cryptodog.loadMutelists();
+	}
+});
+
 // Load persistence
 Cryptodog.storage.getItem('persistenceEnabled', function(e) {
 	if (e) {
