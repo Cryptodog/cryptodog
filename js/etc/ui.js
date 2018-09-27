@@ -66,11 +66,17 @@ Cryptodog.UI = {
     // Close generating fingerprints dialog.
     closeGenerateFingerprints: function(nickname) {
         var state = Cryptodog.buddies[nickname].genFingerState;
-        Cryptodog.buddies[nickname].genFingerState = null;
+
+        if (!state) {
+            return;
+        }
 
         if (state.noAnimation) {
+            Cryptodog.buddies[nickname].genFingerState = null;
             return state.cb();
         }
+
+        Cryptodog.buddies[nickname].genFingerState = null;
 
         $('#fill')
             .stop()
