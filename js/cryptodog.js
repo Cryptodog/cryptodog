@@ -924,7 +924,7 @@ var handleNotificationTimeout = function() {
 	}, this);
 }
 
-window.setInterval(handleNotificationTimeout, 1000);
+window.setInterval(handleNotificationTimeout, 60000);
 
 function notificationTruncate(msg) {
    // Chrome truncates its notifications on its own, but firefox doesn't for some reason
