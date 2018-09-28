@@ -100,6 +100,9 @@ Cryptodog.mutelistSources = [];
 // Array of RegExp's that match blocked nickname strings
 Cryptodog.mutelistNicks = [];
 
+// Array of RegExp's that match blocked message strings
+Cryptodog.mutelistPhrases = [];
+
 Cryptodog.loadMutelists = function(cb) {
 	var wg = Cryptodog.mutelistSources.length;
 
@@ -112,8 +115,10 @@ Cryptodog.loadMutelists = function(cb) {
 	}
 
 	// Reset old regexes.
-	Cryptodog.mutelistNicks    = []; 
+	Cryptodog.mutelistNicks   = []; 
+	Cryptodog.mutelistPhrases = []; 
 	Cryptodog.mutelistSources.forEach(function(blSrc) {
+		// Request list update from url 'blSrc'
 		fetch(blSrc, {
 			cache: "no-store"
 		})
@@ -125,11 +130,21 @@ Cryptodog.loadMutelists = function(cb) {
 			}
 		})
 		.then(function(d) {
+			// Add nicknames
 			for (var i = 0; i < d.nicks.length; i++) {
 				var l = d.nicks[i];
 				if (typeof l == 'string') {
 					var rgx = new RegExp(l);
 					Cryptodog.mutelistNicks.push(rgx);
+				}
+			}
+
+			// Add phrases
+			for (var i = 0; i < d.phrases.length; i++) {
+				var l = d.phrases[i];
+				if (typeof l == 'string') {
+					var rgx = new RegExp(l);
+					Cryptodog.mutelistPhrases.push(rgx);
 				}
 			}
 			done();
@@ -254,6 +269,16 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	}
 	if (type === 'message') {
 		if (!message.length) { return false }
+
+		// Detect if phrase is not allowed by mutelist rules.
+		for (var i = 0; i < Cryptodog.mutelistPhrases.length; i++) {
+			var rgx = Cryptodog.mutelistPhrases[i];
+			if (rgx.test(message)) {
+				Cryptodog.removeBuddy(nickname);
+				log(nickname + " sent illegal phrase.");
+				return false;
+			}
+		}
 		if (nickname !== Cryptodog.me.nickname) {
 			Cryptodog.buddies[nickname].messageCount++;
 
