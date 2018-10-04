@@ -40,7 +40,7 @@
         }
 
         // Drop messages from unknown users
-        if (!Cryptodog.buddies[nickname]) {
+        if (typeof Cryptodog.buddies[nickname] == 'undefined') {
             return;
         }
 
