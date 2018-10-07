@@ -1,6 +1,7 @@
 // uTip, unobtrusive tooltips for jQuery
-// Version 0.1.1
+// Version 0.1.2
 // (c) Syme (git @ symeapp)
+// Updated by Cryptodog (https://github.com/Cryptodog) for jQuery 3
 // Released under the MIT license
 
 (function($) {
@@ -8,7 +9,7 @@
   var Utip = {};
 
   Utip.create = function(e){
-
+    
     var $this = $(this);
 
     // Get data attributes
@@ -103,8 +104,9 @@
   };
 
   $.fn.utip = function() {
-    $(document).on('mouseenter', this.selector, Utip.create);
-    return this;
+    return $(this).each(function() {
+      $(this).on('mouseenter', Utip.create);
+    });
   };
 
 })(jQuery);
