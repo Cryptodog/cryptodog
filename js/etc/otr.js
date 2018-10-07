@@ -39,6 +39,11 @@
             return;
         }
 
+        // Drop messages from unknown users
+        if (typeof Cryptodog.buddies[nickname] == 'undefined') {
+            return;
+        }
+
         Cryptodog.addToConversation(msg, nickname, Cryptodog.buddies[nickname].id, 'message');
 
         if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored()) {
@@ -63,6 +68,10 @@
         /*jshint camelcase:false */
         var buddy = Cryptodog.buddies[nickname];
 
+        if (!buddy) {
+            return;
+        }
+
         if (state === OTR.CONST.STATUS_AKE_SUCCESS) {
             var fingerprint = buddy.otr.their_priv_pk.fingerprint();
 
@@ -80,6 +89,9 @@
     // Store received filename.
     var onFile = function(nickname, type, key, filename) {
         var buddy = Cryptodog.buddies[nickname];
+        if (!buddy) {
+            return;
+        }
 
         // filename is being relied on as diversifier
         // and should continue to be generated uniquely
@@ -155,6 +167,10 @@
     var onSMPAnswer = function(nickname, type, data, act) {
         var chatWindow = Cryptodog.locale.chatWindow,
             buddy = Cryptodog.buddies[nickname];
+
+        if (!buddy) {
+            return;
+        }
 
         switch (type) {
             case 'question':
