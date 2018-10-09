@@ -311,7 +311,9 @@ $(window).ready(function() {
 
         // Detect buddy going offline.
         if ($(presence).attr('type') === 'unavailable') {
-            Cryptodog.removeBuddy(nickname);
+            if (Cryptodog.buddies[nickname]) {
+                Cryptodog.removeBuddy(nickname);
+            }
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Don't render user join if it violates mutelist rules.

@@ -491,7 +491,6 @@ Buddy.prototype = {
 				buffer.clone()
 			).html()
 		});
-
 	}
 }
 
