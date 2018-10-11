@@ -1337,6 +1337,9 @@ $('#conversationName').click(function() {
 $('#nickname').click(function() {
 	$(this).select();
 })
+
+Cryptodog.trimNames = true;
+
 $('#CryptodogLogin').submit(function() {
 	// Don't submit if form is already being processed.
 	if (($('#loginSubmit').attr('readonly') === 'readonly')) {
@@ -1344,7 +1347,9 @@ $('#CryptodogLogin').submit(function() {
 	}
 
 	$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()));
-	$('#nickname').val($.trim($('#nickname').val()));
+	if (Cryptodog.trimNames) {
+		$('#nickname').val($.trim($('#nickname').val()));
+	}
 
 	if ($('#conversationName').val() === '') {
 		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
