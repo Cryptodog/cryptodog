@@ -751,7 +751,7 @@ Cryptodog.displayInfo = function(nickname) {
 				$('#optIntoPersistence').prop('checked', true);
 				Cryptodog.storage.setItem('persistenceEnabled', {
 					'enabled': true,
-					'mp':      BigInt.bigInt2base64(Cryptodog.me.mpPrivateKey),
+					'mp':      BigInt.bigInt2base64(Cryptodog.me.mpPrivateKey, 32),
 					'otr':     Cryptodog.me.otrKey.packPrivate()
 				});
 			}
