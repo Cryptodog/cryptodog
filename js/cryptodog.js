@@ -437,6 +437,9 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 
 // Set a buddy's status to `online` or `away`.
 Cryptodog.buddyStatus = function(nickname, status) {
+	if (typeof Cryptodog.buddies[nickname] == 'undefined') {
+		return;
+	}
 	Cryptodog.buddies[nickname].status = status
 	var thisBuddy = $('#buddy-' + Cryptodog.buddies[nickname].id)
 	var placement = determineBuddyPlacement(
@@ -641,7 +644,7 @@ Cryptodog.displayInfo = function(nickname) {
 				$('#optIntoPersistence').prop('checked', true);
 				Cryptodog.storage.setItem('persistenceEnabled', {
 					'enabled': true,
-					'mp':      BigInt.bigInt2base64(Cryptodog.me.mpPrivateKey, 32),
+					'mp':      BigInt.bigInt2base64(Cryptodog.me.mpPrivateKey),
 					'otr':     Cryptodog.me.otrKey.packPrivate()
 				});
 			}
