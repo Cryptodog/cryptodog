@@ -32,5 +32,9 @@ Cryptodog.storage = {
                 log('Removed ' + key + ' from storage');
             }
         });
+    },
+
+    clear: function() {
+        localforage.clear();
     }
 };
