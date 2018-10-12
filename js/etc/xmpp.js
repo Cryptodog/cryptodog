@@ -34,7 +34,7 @@ $(window).ready(function() {
         Cryptodog.storage.getItem('persistenceEnabled', function(key) {
             var key = key || {};    
             if (key.enabled) {
-                Cryptodog.me.mpPrivateKey = CryptoJS.enc.Base64.parse(key.mp);
+                Cryptodog.me.mpPrivateKey = BigInt.base642bigInt(key.mp);
                 Cryptodog.me.otrKey = DSA.parsePrivate(key.otr);
             } else {
                 Cryptodog.me.mpPrivateKey = Cryptodog.multiParty.genPrivateKey();
@@ -311,7 +311,9 @@ $(window).ready(function() {
 
         // Detect buddy going offline.
         if ($(presence).attr('type') === 'unavailable') {
-            Cryptodog.removeBuddy(nickname);
+            if (typeof Cryptodog.buddies[nickname] !== 'undefined') {
+                Cryptodog.removeBuddy(nickname);
+            }
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Don't render user join if it violates mutelist rules.

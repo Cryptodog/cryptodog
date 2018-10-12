@@ -39,15 +39,20 @@
             return;
         }
 
-        // Drop messages from unknown users
-        if (typeof Cryptodog.buddies[nickname] == 'undefined') {
-            return;
-        }
+        try {
+            // Drop messages from unknown users
+            if (typeof Cryptodog.buddies[nickname] == 'undefined') {
+                return;
+            }
 
-        Cryptodog.addToConversation(msg, nickname, Cryptodog.buddies[nickname].id, 'message');
+            Cryptodog.addToConversation(msg, nickname, Cryptodog.buddies[nickname].id, 'message');
 
-        if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored()) {
-            Cryptodog.messagePreview(msg, nickname);
+            if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored()) {
+                Cryptodog.messagePreview(msg, nickname);
+            }
+
+        } catch (e) {
+            console.log("Strange error: " + nickname);
         }
     };
 

@@ -491,7 +491,6 @@ Buddy.prototype = {
 				buffer.clone()
 			).html()
 		});
-
 	}
 }
 
@@ -545,6 +544,9 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 
 // Set a buddy's status to `online` or `away`.
 Cryptodog.buddyStatus = function(nickname, status) {
+	if (typeof Cryptodog.buddies[nickname] == 'undefined') {
+		return;
+	}
 	Cryptodog.buddies[nickname].status = status
 	var thisBuddy = $('#buddy-' + Cryptodog.buddies[nickname].id)
 	var placement = determineBuddyPlacement(
@@ -1335,6 +1337,9 @@ $('#conversationName').click(function() {
 $('#nickname').click(function() {
 	$(this).select();
 })
+
+Cryptodog.trimNames = true;
+
 $('#CryptodogLogin').submit(function() {
 	// Don't submit if form is already being processed.
 	if (($('#loginSubmit').attr('readonly') === 'readonly')) {
@@ -1342,7 +1347,9 @@ $('#CryptodogLogin').submit(function() {
 	}
 
 	$('#conversationName').val($.trim($('#conversationName').val().toLowerCase()));
-	$('#nickname').val($.trim($('#nickname').val()));
+	if (Cryptodog.trimNames) {
+		$('#nickname').val($.trim($('#nickname').val()));
+	}
 
 	if ($('#conversationName').val() === '') {
 		Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
