@@ -346,8 +346,11 @@ Cryptodog.multiParty = function() {};
 
                 plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
 
-                // Convert to UTF8
-                return plaintext.toString(CryptoJS.enc.Utf8);
+                try {
+                    return plaintext.toString(CryptoJS.enc.Utf8);
+                } catch (e) {
+                    console.log('multiParty: invalid UTF-8 message from ' + sender);
+                }
             }
         } else {
             console.log('multiParty: unknown message type "' + type + '" from ' + sender);
