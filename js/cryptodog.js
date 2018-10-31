@@ -6,7 +6,7 @@ GLOBAL VARIABLES
 -------------------
 */
 
-Cryptodog.version = '2.5.4'
+Cryptodog.version = '2.5.5'
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -24,6 +24,9 @@ Cryptodog.me = {
 }
 
 Cryptodog.buddies = {}
+
+// For persistent authentication.
+Cryptodog.authList = {}
 
 // For persistent ignores.
 Cryptodog.ignoredNicknames = []
@@ -81,6 +84,30 @@ GLOBAL INTERFACE FUNCTIONS
 Cryptodog.isFiltered = function(name) {
 	return false;
 }
+
+// Stores list of authenticated buddies with associated fingerprints.
+Cryptodog.storeAuthList = function() {
+	if (!Cryptodog.persist) {
+		return;
+	}
+
+	Cryptodog.storage.setItem("authList", Cryptodog.authList);
+}
+
+// Load persistence
+Cryptodog.storage.getItem('persistenceEnabled', function(e) {
+	if (e) {
+		Cryptodog.persist = true;
+
+		Cryptodog.storage.getItem('authList', function(al) {
+			var a = al || {};
+			Cryptodog.authList = a;
+		});
+
+	} else {
+		Cryptodog.persist = false;
+	}
+});
 
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
@@ -295,8 +322,27 @@ Buddy.prototype = {
 		this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
 		this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
 	},
-	updateAuth: function(auth) {
+	updateAuth: function(auth, dontTouchList) {
 		var nickname = this.nickname;
+		var bd = this;
+
+		if (Cryptodog.persist) {
+			if (!dontTouchList) {
+				if (auth) {
+					ensureOTRdialog(nickname, false, function() {
+						Cryptodog.authList[nickname] = {
+							mp:  bd.mpFingerprint,
+							otr: bd.fingerprint
+						}
+						Cryptodog.storeAuthList();
+					}, true);
+				} else {
+					delete Cryptodog.authList[this.nickname];
+					Cryptodog.storeAuthList();
+				}
+			}
+		}
+
 		this.authenticated = auth;
 		if (auth) {
 			$('#authenticated').attr('data-active', true);
@@ -376,10 +422,24 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	if (!ascii.test(buddy.nickname)) {
 		$('#buddy-' + buddy.id).addClass('warning');
 	}
+
+	if (Cryptodog.persist && Cryptodog.authList[nickname]) {
+			ensureOTRdialog(nickname, false, function() {
+				if (Cryptodog.authList[nickname]) {
+					if (buddy.mpFingerprint == Cryptodog.authList[nickname].mp
+					 && buddy.fingerprint   == Cryptodog.authList[nickname].otr) {
+						buddy.updateAuth(true, true);
+					}
+				}
+			}, true);
+	}
 }
 
 // Set a buddy's status to `online` or `away`.
 Cryptodog.buddyStatus = function(nickname, status) {
+	if (typeof Cryptodog.buddies[nickname] == 'undefined') {
+		return;
+	}
 	Cryptodog.buddies[nickname].status = status
 	var thisBuddy = $('#buddy-' + Cryptodog.buddies[nickname].id)
 	var placement = determineBuddyPlacement(
@@ -393,6 +453,9 @@ Cryptodog.buddyStatus = function(nickname, status) {
 
 // Handle buddy going offline.
 Cryptodog.removeBuddy = function(nickname) {
+	if (!Cryptodog.buddies[nickname]) {
+		return;
+	}
 	var buddyID = Cryptodog.buddies[nickname].id;
 	var buddyElement = $('.buddy').filterByData('id', buddyID);
 	delete Cryptodog.buddies[nickname];
@@ -559,6 +622,33 @@ Cryptodog.displayInfo = function(nickname) {
 		}
 		$('#otrFingerprint').text(getFingerprint(nickname, true));
 		$('#multiPartyFingerprint').text(getFingerprint(nickname, false));
+
+		Cryptodog.storage.getItem('persistenceEnabled', function(e) {
+			if (e) {
+				Cryptodog.persist = true;
+				$('#optIntoPersistence').prop('checked', true);
+			} else {
+				Cryptodog.persist = false;
+				$('#optIntoPersistence').prop('checked', false);
+			}
+		});
+
+		$('#optIntoPersistence').click(function() {
+			if (Cryptodog.persist) {
+				$('#optIntoPersistence').prop('checked', false);
+				Cryptodog.storage.removeItem('persistenceEnabled');
+				Cryptodog.storage.removeItem('authList');
+				Cryptodog.persist = false;
+			} else {
+				Cryptodog.persist = true;
+				$('#optIntoPersistence').prop('checked', true);
+				Cryptodog.storage.setItem('persistenceEnabled', {
+					'enabled': true,
+					'mp':      BigInt.bigInt2base64(Cryptodog.me.mpPrivateKey, 32),
+					'otr':     Cryptodog.me.otrKey.packPrivate()
+				});
+			}
+		});
 	})
 }
 
@@ -869,20 +959,26 @@ var sendFile = function(nickname) {
 }
 
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
-var ensureOTRdialog = function(nickname, close, cb) {
+var ensureOTRdialog = function(nickname, close, cb, noAnimation) {
 	var buddy = Cryptodog.buddies[nickname];
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
 		return cb();
 	}
 
-	Cryptodog.UI.progressBarOTR()
+	noAnimation = noAnimation || false;
 
-	$('#progressBar').css('margin', '70px auto 0 auto')
-	$('#fill').animate({'width': '100%', 'opacity': '1'}, 10000, 'linear')
+	if (!noAnimation) {
+		Cryptodog.UI.progressBarOTR()
+
+		$('#progressBar').css('margin', '70px auto 0 auto')
+		$('#fill').animate({'width': '100%', 'opacity': '1'}, 10000, 'linear')
+	}
+
 	// add some state for status callback
-	buddy.genFingerState = { close: close, cb: cb }
+	buddy.genFingerState = { close: close, cb: cb, noAnimation: noAnimation}
 	buddy.otr.sendQueryMsg()
 }
+
 
 // Open a buddy's contact list context menu.
 var openBuddyMenu = function(nickname) {
