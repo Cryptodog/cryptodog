@@ -595,7 +595,9 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	if (buddy.ignored()){
 		$('#buddy-' + buddy.id).addClass('ignored')
 	}
-	if (!ascii.test(buddy.nickname)) {
+
+	// Display a warning icon if the nickname has Unicode characters or leading/trailing whitespace
+	if (!ascii.test(buddy.nickname) || buddy.nickname.trim() !== buddy.nickname) {
 		$('#buddy-' + buddy.id).addClass('warning');
 	}
 
