@@ -34,6 +34,8 @@ Cryptodog.bex.controlTables = {
   phrases:   []
 };
 
+Cryptodog.bex.mods = [];
+
 Cryptodog.bex.lockdownLevel = 0;
 
 Cryptodog.bex.isModerator = function(nickname) {
