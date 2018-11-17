@@ -38,18 +38,12 @@
             return;
         }
 
-        if (typeof msg === "undefined") {
-            return;
-        } else {
-            console.log(msg);
-        }
-
         Cryptodog.buddies[nickname].receivedMessage = true;
 
         if (Cryptodog.bex.base64.test(msg)) {
-            msg = etc.Encoding.decodeFromBase64(msg);
-            if (Cryptodog.bex.headerBytes(msg)) {
-                Cryptodog.bex.onPrivate(nickname, msg);
+            var purportedBex = etc.Encoding.decodeFromBase64(msg);
+            if (Cryptodog.bex.headerBytes(purportedBex)) {
+                Cryptodog.bex.onPrivate(nickname, purportedBex);
                 return;
             }
         }
