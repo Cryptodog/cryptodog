@@ -19,6 +19,24 @@ body {
 	line-height: 2em;
 }
 
+.dragover {
+	filter:  blur(4px) opacity(.2);
+}
+
+#addFileIcon {
+	width:  156px;
+	height: 156px;
+  position: fixed;
+	left: 50%;
+	margin-top: 200px;
+	margin-left: -78px;
+	pointer-events: none;
+}
+
+#addFileIcon.invisible {
+	display: none;
+}
+
 a {
 	color: #999;
 	text-decoration: none;
@@ -508,6 +526,14 @@ BUDDY LIST
 	background-image: url("../img/icons/user-minus.svg");
 }
 
+.buddy.isBot span.loginTypeIcon {
+	background-image: url("../img/icons/bot.svg");
+}
+
+.buddy.isMod span.loginTypeIcon {
+	background-image: url("../img/icons/kingpin.svg");
+}
+
 .buddy span.shortNickname {
 	margin-left: 18px;
 }
@@ -622,6 +648,16 @@ BUDDY LIST
 	background-image: url("../img/icons/pencil2.svg");
 	background-position: 80% 5px;
 	background-size: 12px 12px;
+}
+
+.speaking {
+	background-image: url("../img/icons/volume-medium.svg");
+	background-position: 80% 5px;
+	background-size: 12px 12px;
+}
+
+img.displayAttachment {
+	max-width: 350px;
 }
 
 /*

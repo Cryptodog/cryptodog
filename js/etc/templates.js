@@ -12,7 +12,7 @@ Cryptodog.templates = {
     buddyMenu:
         '<div class="buddyMenuContents" id="{{buddyID}}-contents">' +
         '<li class="option1">{{displayInfo}}</li>' +
-        '<li class="option2">{{sendEncryptedFile}}</li>' +
+        '<li class="option2">{{electAsModerator}}</li>' +
         '<li class="option3">{{ignore}}</li>' +
         '</div>',
 
@@ -70,23 +70,23 @@ Cryptodog.templates = {
         '<div id="fileInfoField">{{fileTransferInfo}}</div>',
 
     file:
-        '<div class="fileProgressBar" data-file="{{file}}" data-id="{{id}}">' +
-        '<div class="fileProgressBarFill" data-file="{{file}}" data-id="{{id}}"></div></div>',
+        '<div class="fileProgressBar" data-id="{{id}}">' +
+        '<div class="fileProgressBarFill" data-id="{{id}}" style="width: {{progress}};"></div></div>',
 
-    fileLink: '<a href="{{url}}" class="fileView" target="_blank" download="{{filename}}">{{downloadFile}}</a>',
+    fileLink: '<a href="#" id={{id}} class="fileView">{{downloadFile}}</a>',
 
-    missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
+    missingRecipients: '<div style="top: 0; opacity: 1;" class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
     message:
-        '<div class="line" style="border-color:{{color}};"><span class="sender" data-sender="{{nickname}}"' +
-        ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="authStatus" data-auth="{{authStatus}}" ' +
+        '<div class="line" style="border-color:{{color}}; opacity: 1; top: 0;"><span class="sender" data-sender="{{nickname}}"' +
+        ' data-timestamp="{{currentTime}}" style="background-color:{{color}}; color: {{textColor}}"><span class="authStatus" data-auth="{{authStatus}}" ' +
         'data-utip-gravity="se"></span>' +
         '<span class="nickname">{{nickname}}</span></span><span style="font-style:{{style}};">{{&message}}</span></div>',
 
     authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
 
     userJoin:
-        '<div class="userJoin" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>' +
+        '<div class="userJoin" style="background-color:{{color}}; color: {{textColor}};"><span class="timestamp">{{currentTime}}</span>' +
         '<strong>+</strong>{{nickname}}</div>',
 
     userLeave:

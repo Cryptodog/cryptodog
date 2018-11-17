@@ -134,9 +134,13 @@ Cryptodog.multiParty = function() {};
         return message.toString(CryptoJS.enc.Base64);
     };
 
-    Cryptodog.multiParty.sendMessage = function(message) {
-        // Convert from UTF8
-        message = CryptoJS.enc.Utf8.parse(message);
+    Cryptodog.multiParty.sendMessage = function(message, b64) {
+        if (b64) {
+            message = CryptoJS.enc.Base64.parse(message);
+        } else {
+            // Convert from UTF8
+            message = CryptoJS.enc.Utf8.parse(message);
+        }
 
         // Add 64 bytes of padding
         message.concat(Cryptodog.random.rawBytes(64));
@@ -234,12 +238,21 @@ Cryptodog.multiParty = function() {};
             }
 
             buddy.updateMpKeys(publicKey);
+            if (buddy._sentPublicKey) {
+                buddy.dispatchConnect();
+            }
         } else if (type === 'public_key_request') {            
             if (!message.text || message.text === Cryptodog.me.nickname) {
                 Cryptodog.xmpp.sendPublicKey();
             }
         } else if (type === 'message') {
             var text = message['text'];
+
+            if (text === null) {
+                console.log('multiParty: invalid message from ' + sender);
+                Cryptodog.multiParty.messageWarning(sender);
+                return false;
+            }
 
             if (typeof text[myName] !== 'object') {
                 console.log('multiParty: invalid message from ' + sender);
@@ -346,8 +359,22 @@ Cryptodog.multiParty = function() {};
 
                 plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
 
-                // Convert to UTF8
-                return plaintext.toString(CryptoJS.enc.Utf8);
+                var bytes = etc.Encoding.decodeFromBase64(plaintext.toString(CryptoJS.enc.Base64));
+                var header = bytes.slice(0, 3);
+
+                if (Cryptodog.bex.headerBytes(header)) {
+                    // We have received a confirmed BEX message.
+                    Cryptodog.bex.onGroup(sender, bytes);
+                } else {
+                    // Not a BEX message, but we still need to check if it's valid UTF-8.
+                    if (etc.Encoding.validateUTF8(bytes)) {
+                        return etc.Encoding.encodeToUTF8(bytes);
+                    }
+
+                    console.log("received invalid utf8 from " + sender);
+                    // This is not valid UTF-8.
+                    return false;
+                }
             }
         } else {
             console.log('multiParty: unknown message type "' + type + '" from ' + sender);

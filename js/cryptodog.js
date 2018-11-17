@@ -6,7 +6,7 @@ GLOBAL VARIABLES
 -------------------
 */
 
-Cryptodog.version = '2.5.4'
+Cryptodog.version = '2.6.0';
 
 Cryptodog.me = {
 	newMessages:   0,
@@ -23,13 +23,14 @@ Cryptodog.me = {
 	color:         "#FFF" // overwritten on connect
 }
 
-Cryptodog.buddies = {}
+Cryptodog.colors  = {};
+Cryptodog.buddies = {};
 
 // For persistent authentication.
-Cryptodog.authList = {}
+Cryptodog.authList = {};
 
 // For persistent ignores.
-Cryptodog.ignoredNicknames = []
+Cryptodog.ignoredNicknames = [];
 
 // Toggle for audio notifications
 Cryptodog.allowSoundNotifications = false;
@@ -38,7 +39,9 @@ Cryptodog.allowSoundNotifications = false;
 Cryptodog.audio = {
 	newMessage: new Audio("snd/msgGet.mp3"),
 	userJoin: new Audio("snd/userJoin.mp3"),
-	userLeave: new Audio("snd/userLeave.mp3")
+	userLeave: new Audio("snd/userLeave.mp3"),
+	rtcConnect: new Audio("snd/rtcConnect.mp3"),
+	rtcDisconnect: new Audio("snd/rtcDisconnect.mp3")
 };
 
 // image used for notifications
@@ -71,7 +74,7 @@ Cryptodog.UI.setVersion(Cryptodog.version);
 // Seed RNG.
 Cryptodog.random.setSeed(Cryptodog.random.generateSeed());
 
-var conversationBuffers = {};
+var conversationArrays = {};
 
 /*
 -------------------
@@ -109,66 +112,191 @@ Cryptodog.storage.getItem('persistenceEnabled', function(e) {
 	}
 });
 
-// Update a file transfer progress bar.
-Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
-	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[recipient].id]);
-	var progress = (chunk * 100) / (Math.ceil(size / Cryptodog.otr.chunkSize));
-	if (progress > 100) { progress = 100 }
-	$('.fileProgressBarFill')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[recipient].id)
-		.animate({'width': progress + '%'});
-	conversationBuffer.find('.fileProgressBarFill')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[recipient].id)
-		.width(progress + '%');
-	conversationBuffers[Cryptodog.buddies[recipient].id] = $('<div>').append($(conversationBuffer).clone()).html();
-}
-
-// Convert Data blob/url to downloadable file, replacing the progress bar.
-Cryptodog.addFile = function(url, file, conversation, filename) {
-	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[conversation].id]);
+window.addEventListener("load", function() {
+	document.querySelector("#changeColorBtn").addEventListener("change", function(e) {
+		var color = e.target.value;
+		var tst   = /^\#[a-fA-F0-9]{6}$/
 	
-	var fileLink = Mustache.render(Cryptodog.templates.fileLink, {
-		url: url,
-		filename: filename,
-		downloadFile: Cryptodog.locale['chatWindow']['downloadFile']
+		if (tst.test(color) == false) {
+			alert("Invalid color: " + color);
+			return;
+		}
+	
+		Cryptodog.changeBuddyColor(Cryptodog.me.nickname, color);
+		Cryptodog.storage.setItem("color", color);
+		document.querySelector("#changeColorBtn").value = color;
 	});
-	
-	$('.fileProgressBar')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[conversation].id)
-		.replaceWith(fileLink)
-	conversationBuffer.find('.fileProgressBar')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[conversation].id)
-		.replaceWith(fileLink);
-	conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html();
-}
+
+	// Check if WebRTC is supported by the browser.
+	// If so, add some UI buttons.
+	if (Cryptodog.bex.rtcSupport()) {
+		$("#optionButtons").prepend(
+			`<img
+				class="button"
+				id="micToggleBtn"
+				src="img/icons/mic-none.svg"
+				alt=""
+				data-utip-gravity="sw"
+				data-utip="` + Cryptodog.bex.strings.noMic + `" />
+			
+			<img
+				class="button"
+				id="voiceChatBtn"
+				src="img/icons/voice-disconnected.svg"
+				alt=""
+				data-connected="false"
+				data-utip-gravity="sw"
+				data-utip="` + Cryptodog.bex.strings.voiceDisconnected + `" />`);
+				
+		Cryptodog.bex.micState   = "none";
+		Cryptodog.bex.rtcEnabled = false;
+
+		$("#voiceChatBtn").utip();
+		$("#micToggleBtn").utip();
+
+		$("#voiceChatBtn").click(function() {
+			var $this = this;
+			if ($($this).attr("data-connected") == "true") {
+				Cryptodog.audio.rtcDisconnect.play();
+				Cryptodog.bex.rtcEnabled = false;
+				Cryptodog.bex.disconnectRTCVoiceChat();
+				$($this).attr("data-utip", Cryptodog.bex.strings.voiceDisconnected);
+				$($this).attr("data-connected", "false");
+				$($this).attr("src", "img/icons/voice-disconnected.svg");
+				$($this).mouseenter();
+				return;
+			}
+
+			Cryptodog.bex.rtcEnabled = true;
+			Cryptodog.bex.initRTCVoiceChat(Cryptodog.bex.voiceStream);
+			Cryptodog.audio.rtcConnect.play();
+			$($this).attr("data-utip", Cryptodog.bex.strings.voiceConnected);
+			$($this).attr("data-connected", "true");
+			$($this).attr("src", "img/icons/voice-connected.svg");
+			$($this).mouseenter();
+		});
+
+		$("#micToggleBtn").click(function() {
+			var $this = this;
+
+			if (Cryptodog.bex.micState == "none") {
+				var voiceSetup = false;
+
+				function setupVoice(stream) {
+					voiceSetup = true;
+					if (stream) {
+						Cryptodog.bex.voiceStream = stream;
+						// if we are connected to our buddies as RTC peers,
+						// we need to send them this new mic stream by re-negotiating our RTCPeerConnections.
+						if (Cryptodog.bex.rtcEnabled) {
+							Cryptodog.bex.initRTCVoiceChat(stream);
+						}
+
+						$($this).attr("data-utip", Cryptodog.bex.strings.unmutedMic);
+						$($this).attr("src", "img/icons/mic-unmuted.svg");
+						$($this).mouseenter();
+						Cryptodog.bex.micState = "unmuted";
+					}
+				}
+
+				function onStream(micStream) {
+					setupVoice(micStream);
+				}
+
+				function onStreamError(micError) {
+					console.warn(micError);
+					alert("No microphone found: check console.");
+					setupVoice();
+				}
+
+				// Asks the user for permission
+				navigator.mediaDevices.getUserMedia({
+					audio: {
+						noiseSuppression: true
+					},
+
+					video: false
+				})
+				.then(onStream)
+				.catch(onStreamError);
+				return;
+			} 
+
+			// mute
+			if (Cryptodog.bex.micState == "unmuted") {
+				Cryptodog.bex.micState = "muted";
+				Cryptodog.bex.voiceStream.getAudioTracks()[0].enabled = false;
+				$($this).attr("data-utip", Cryptodog.bex.strings.mutedMic);
+				$($this).attr("src", "img/icons/mic-muted.svg");
+				$($this).mouseenter();
+				return;
+			}
+
+			// unmute
+			if (Cryptodog.bex.micState == "muted") {
+				Cryptodog.bex.micState = "unmuted";
+				Cryptodog.bex.voiceStream.getAudioTracks()[0].enabled = true;
+				$($this).attr("data-utip", Cryptodog.bex.strings.unmutedMic);
+				$($this).attr("src", "img/icons/mic-unmuted.svg");
+				$($this).mouseenter();
+
+				return;
+			}
+		});
+	}
+
+	$("body").on("dragenter dragstart dragend dragleave dragover drag drop", function (e) {
+    e.preventDefault();
+	});
+
+	// Drag & drop file transfer
+	$("body").on("dragover", function() {
+		if (Cryptodog.xmpp.connection === null) return;
+		$("#bubbleWrapper").addClass("dragover");
+		$("#addFileIcon").removeClass("invisible");
+	});
+
+	$("body").on("dragleave", function() {
+		if (Cryptodog.xmpp.connection === null) return;
+		$("#bubbleWrapper").removeClass("dragover");
+		$("#addFileIcon").addClass("invisible");
+	});
+
+	$("body").on("drop", function(ev) {
+		if (Cryptodog.xmpp.connection === null) return;
+
+		var items = ev.originalEvent.dataTransfer.files;
+		if (items) {
+			for (var i = 0; i < items.length; i++) {
+				Cryptodog.fileTransfer.readFile(items[i]);
+			}
+		}
+
+		$("#bubbleWrapper").removeClass("dragover");
+		$("#addFileIcon").addClass("invisible");
+	});
+
+	// Upload button
+	var fbtn = document.querySelector("#uploadFileBtn");
+
+	// Ask OS to to hide unacceptable files from the upload menu
+	var accept = Object.keys(Cryptodog.bex.mimeExtensions).join(",");
+	fbtn.setAttribute("accept", accept);
+
+	fbtn.addEventListener("change", function() {
+		var file   = fbtn.files[0];
+
+		Cryptodog.fileTransfer.readFile(file);
+	});
+
+	// Show whether a user is speaking based on audio stream levels.
+	window.setInterval(Cryptodog.bex.updateLevelDisplay, 128);
+});
 
 // Add a `message` from `nickname` to the `conversation` display and log.
 // `type` can be 'file', 'message', 'warning' or 'missingRecipients'.
 // In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
 Cryptodog.addToConversation = function(message, nickname, conversation, type) {
-	if (nickname === Cryptodog.me.nickname) {}
-	else if (Cryptodog.buddies[nickname].ignored()) {
-		return false;
-	}
-	initializeConversationBuffer(conversation)
-	if (type === 'file') {
-		if (!message.length) { return false; }
-		var id = conversation;
-		if (nickname !== Cryptodog.me.nickname) {
-			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-			id = Cryptodog.buddies[nickname].id;
-		}
-		message = Mustache.render(
-			Cryptodog.templates.file, {
-				file: message,
-				id: id
-			}
-		);
-	}
 	if (type === 'message') {
 		if (!message.length) { return false }
 		if (nickname !== Cryptodog.me.nickname) {
@@ -182,54 +310,49 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		}
 		message = Strophe.xmlescape(message);
 		message = Cryptodog.UI.addLinks(message);
-		message = Cryptodog.UI.addEmoticons(message);	
+		message = Cryptodog.UI.addEmoticons(message);
+		message = message.replace(/:/g, '&#58;');
+
+		pushAndRedraw(conversation, {
+			type:    "message",
+			nickname: nickname,
+			message:  message,
+			time:     currentTime(true),
+			color:    Cryptodog.getUserColor(nickname)
+		});
+
+		if (conversation === Cryptodog.me.currentBuddy) {
+			Cryptodog.UI.scrollDownConversation(400, true);
+		}
+		else {
+			$('#buddy-' + conversation).addClass('newMessage');
+		}
+		return true;
 	}
 	if (type === 'warning') {
 		if (!message.length) { return false }
 		message = Strophe.xmlescape(message);
+		pushAndRedraw(conversation, {
+			type:    "warning",
+			nickname: nickname,
+			message:  message,
+			time:     currentTime(true),
+			color:    Cryptodog.getUserColor(nickname)
+		});
+		return true;
 	}
 	if (type === 'missingRecipients') {
 		if (!message.length) { return false }
 		message = message.join(', ');
-		message = Mustache.render(Cryptodog.templates.missingRecipients, {
-			text: Cryptodog.locale.warnings.missingRecipientWarning
-				.replace('(NICKNAME)', message),
-			dir: Cryptodog.locale.direction
+		pushAndRedraw(conversation, {
+			type:    "missingRecipients",
+			message:  message
 		})
-		conversationBuffers[conversation] += message;
 		if (conversation === Cryptodog.me.currentBuddy) {
-			$('#conversationWindow').append(message);
-			$('.missingRecipients').last().animate({'top': '0', 'opacity': '1'}, 100);
 			Cryptodog.UI.scrollDownConversation(400, true);
 		}
 		return true;
 	}
-	var authStatus = false;
-	if ((nickname === Cryptodog.me.nickname) || Cryptodog.buddies[nickname].authenticated) {
-		authStatus = true;
-	}
-	message = message.replace(/:/g, '&#58;');
-
-	var renderedMessage = Mustache.render(Cryptodog.templates.message, {
-		nickname: shortenString(nickname, 16),
-		currentTime: currentTime(true),
-		authStatus: authStatus,
-		message: message,
-		color: Cryptodog.getUserColor(nickname),
-		style: type == 'warning' ? 'italic' : 'normal'
-	});
-
-	conversationBuffers[conversation] += renderedMessage
-	if (conversation === Cryptodog.me.currentBuddy) {
-		$('#conversationWindow').append(renderedMessage);
-		$('.line').last().animate({'top': '0', 'opacity': '1'}, 100);
-		Cryptodog.UI.bindSenderElement($('.line').last().find('.sender'));
-		Cryptodog.UI.scrollDownConversation(400, true);
-	}
-	else {
-		$('#buddy-' + conversation).addClass('newMessage');
-	}
-	Cryptodog.rebindDataURIs();
 }
 
 // Show a preview for a received message from a buddy.
@@ -290,7 +413,9 @@ var Buddy = function(nickname, id, status) {
 	this.genFingerState = null
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
-	this.color          = randomColor({luminosity: 'dark'})
+	this.color          = Cryptodog.colors[nickname] || "#000000"
+	this._sentPublicKey = false;
+	this.dispatchedConnect = false;
 	
 	// Regularly reset at the interval defined by Cryptodog.maxMessageInterval
 	this.messageCount   = 0
@@ -302,10 +427,21 @@ var Buddy = function(nickname, id, status) {
 		if (this.ignored()) {
 			Cryptodog.ignoredNicknames.splice(Cryptodog.ignoredNicknames.indexOf(this.nickname), 1);
 			$('#buddy-' + this.id).removeClass('ignored');
+			if (Cryptodog.bex.rtcEnabled) {
+				Cryptodog.bex.connectStreamToPeer(this.nickname, Cryptodog.bex.voiceStream);
+			}
 		}
 		else {
 			Cryptodog.ignoredNicknames.push(this.nickname);
 			$('#buddy-' + this.id).addClass('ignored');
+			if (this.rtc) {
+				this.rtc.tracks.forEach(function(track) {
+					track.pause();
+					track = null;
+				});
+
+				this.rtc.rtcConn.close();
+			}
 		}
 	};
 
@@ -317,6 +453,44 @@ var Buddy = function(nickname, id, status) {
 
 Buddy.prototype = {
 	constructor: Buddy,
+
+	dispatchConnect: function() {
+		if (this.dispatchedConnect === true) {
+			return;
+		}
+
+		this.dispatchedConnect = true;
+
+		if (this._onConnect) {
+			this._onConnect();
+		}
+	},
+
+	onConnect: function(cb) {
+		this._onConnect = cb;
+	},
+
+	updateIcons: function() {
+		var budIcon = $('#buddy-' + this.id);
+		if (this.authenticated === 2) {
+			budIcon.addClass('isMod');
+			return;
+		} else {
+			budIcon.removeClass('isMod');
+		}
+
+		if (this.bot) {
+			budIcon.addClass('isBot');
+		} else {
+			budIcon.removeClass('isBot');
+		}
+	},
+
+	// sets a buddy's icon to indicate they're a bot
+	setBot: function(bool) {
+		this.bot = bool;
+		this.updateIcons();
+	},
 	updateMpKeys: function(publicKey) {
 		this.mpPublicKey = publicKey;
 		this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
@@ -329,10 +503,11 @@ Buddy.prototype = {
 		if (Cryptodog.persist) {
 			if (!dontTouchList) {
 				if (auth) {
-					ensureOTRdialog(nickname, false, function() {
+					Cryptodog.ensureOTRdialog(nickname, false, function() {
 						Cryptodog.authList[nickname] = {
-							mp:  bd.mpFingerprint,
-							otr: bd.fingerprint
+							mp:    bd.mpFingerprint,
+							otr:   bd.fingerprint,
+							level: auth
 						}
 						Cryptodog.storeAuthList();
 					}, true);
@@ -352,38 +527,39 @@ Buddy.prototype = {
 			$('#authenticated').attr('data-active', false);
 			$('#notAuthenticated').attr('data-active', true);
 		}
-		//for (var value in $('span').filterByData('sender', nickname)) {
-		//	$(value).find('.authStatus').attr('data-auth', auth);
-		//}
-		$.each($('span').filterByData('sender', nickname),
-			function(index, value) {
-				$(value).find('.authStatus').attr('data-auth', auth);
-			}
-		);
+
 		var authStatusBuffers = [
 			'groupChat',
 			Cryptodog.buddies[nickname].id
 		];
-		//for (var thisBuffer in authStatusBuffers) {
-		//	var buffer = $(conversationBuffers[thisBuffer]);
-		//	for (var value in buffer.find('span').filterByData('sender', nickname)) {
-		//		$(value).find('.authStatus').attr('data-auth', auth);
-		//	}
-		//	conversationBuffers[thisBuffer] = $('<div>').append(buffer.clone()).html();
-		//}
 
-		$.each(authStatusBuffers, function(i, thisBuffer) {
-			var buffer = $(conversationBuffers[thisBuffer])
-			$.each(buffer.find('span').filterByData('sender', nickname),
-				function(index, value) {
-					$(value).find('.authStatus').attr('data-auth', auth)
-				}
-			)
-			conversationBuffers[thisBuffer] = $('<div>').append(
-				buffer.clone()
-			).html()
-		});
+		this.updateIcons();
 
+		redrawConversation(Cryptodog.me.currentBuddy);
+	}
+}
+
+Cryptodog.transmitMyColor = function() {
+	Cryptodog.bex.transmitGroup([{
+			header: Cryptodog.bex.op.SET_COLOR, 
+			color:  Cryptodog.me.color}]);
+}
+
+Cryptodog.changeBuddyColor = function(nickname, color) {
+	if (nickname == Cryptodog.me.nickname) {
+		// Propagate color to other users
+		Cryptodog.me.color = color;
+		Cryptodog.transmitMyColor();
+
+		// Display the new color
+		redrawConversation(Cryptodog.me.currentBuddy);
+		return;
+	}
+
+	if (Cryptodog.buddies[nickname]) {
+		Cryptodog.buddies[nickname].color = color;
+		Cryptodog.colors[nickname] = color;
+		redrawConversation(Cryptodog.me.currentBuddy);
 	}
 }
 
@@ -424,11 +600,11 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	}
 
 	if (Cryptodog.persist && Cryptodog.authList[nickname]) {
-			ensureOTRdialog(nickname, false, function() {
+			Cryptodog.ensureOTRdialog(nickname, false, function() {
 				if (Cryptodog.authList[nickname]) {
 					if (buddy.mpFingerprint == Cryptodog.authList[nickname].mp
 					 && buddy.fingerprint   == Cryptodog.authList[nickname].otr) {
-						buddy.updateAuth(true, true);
+						buddy.updateAuth(Cryptodog.authList[nickname].level, true);
 					}
 				}
 			}, true);
@@ -455,6 +631,13 @@ Cryptodog.buddyStatus = function(nickname, status) {
 Cryptodog.removeBuddy = function(nickname) {
 	if (!Cryptodog.buddies[nickname]) {
 		return;
+	}
+	if (Cryptodog.buddies[nickname].rtc) {
+		Cryptodog.buddies[nickname].rtc.rtcConn.close();
+		if (Cryptodog.buddies[nickname].rtc.meter) {
+			Cryptodog.buddies[nickname].rtc.meter.stop();
+		}
+		Cryptodog.buddies[nickname].rtc = null;
 	}
 	var buddyID = Cryptodog.buddies[nickname].id;
 	var buddyElement = $('.buddy').filterByData('id', buddyID);
@@ -543,10 +726,10 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 	}
 	var id = buddyElement.attr('data-id');
 	Cryptodog.me.currentBuddy = id;
-	initializeConversationBuffer(id);
+	initializeConversationArray(id);
 	// Switch currently active conversation.
-	$('#conversationWindow').html(conversationBuffers[id]);
-	Cryptodog.UI.bindSenderElement();
+	redrawConversation(id);
+
 	Cryptodog.UI.scrollDownConversation(0, false);
 	$('#userInputText').focus();
 	$('#buddy-' + id).addClass('currentConversation');
@@ -595,7 +778,7 @@ Cryptodog.displayInfo = function(nickname) {
 		ask:                chatWindow.ask,
 		identityVerified:   chatWindow.identityVerified
 	})
-	ensureOTRdialog(nickname, false, function() {
+	Cryptodog.ensureOTRdialog(nickname, false, function() {
 		if (isMe) {
 			Cryptodog.UI.dialogBox(infoDialog, {
 				height: 250,
@@ -654,6 +837,7 @@ Cryptodog.displayInfo = function(nickname) {
 
 // Executes on user logout.
 Cryptodog.logout = function() {
+	Cryptodog.bex.disconnectRTCVoiceChat();
 	Cryptodog.UI.logout();
 	Cryptodog.loginError = false;
 	Cryptodog.xmpp.connection.muc.leave(
@@ -669,7 +853,7 @@ Cryptodog.logout = function() {
 		}
 	}
 
-	conversationBuffers = {};
+	conversationArrays = {};
 }
 
 Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
@@ -714,10 +898,12 @@ var currentTime = function(seconds) {
 	return time.join(':');
 }
 
+Cryptodog.currentTime = currentTime;
+
 // Initializes a conversation buffer. Internal use.
-var initializeConversationBuffer = function(id) {
-	if (!conversationBuffers.hasOwnProperty(id)) {
-		conversationBuffers[id] = '';
+var initializeConversationArray = function(id) {
+	if (!conversationArrays.hasOwnProperty(id)) {
+		conversationArrays[id] = [];
 	}
 }
 
@@ -774,17 +960,18 @@ var getFingerprint = function(nickname, OTR) {
 // Bind `nickname`'s authentication dialog buttons and options.
 var bindAuthDialog = function(nickname) {
 	var buddy = Cryptodog.buddies[nickname]
+	// May be equivalent to 2 (Moderator status!)
 	if (Cryptodog.buddies[nickname].authenticated) {
-		buddy.updateAuth(true);
+		buddy.updateAuth(Cryptodog.buddies[nickname].authenticated);
 	}
 	else {
-		buddy.updateAuth(false);
+		buddy.updateAuth(0);
 	}
 	$('#authenticated').unbind('click').bind('click', function() {
-		buddy.updateAuth(true);
+		buddy.updateAuth(1);
 	})
 	$('#notAuthenticated').unbind('click').bind('click', function() {
-		buddy.updateAuth(false);
+		buddy.updateAuth(0);
 	})
 	// If the current locale doesn't have the translation
 	// for the auth slides yet, then don't display the option
@@ -821,7 +1008,7 @@ var bindAuthDialog = function(nickname) {
 		$('#authSubmit').unbind('click').bind('click', function(e) {
 			e.preventDefault();
 		})
-		buddy.updateAuth(false);
+		buddy.updateAuth(0);
 		answer = Cryptodog.prepareAnswer(answer, true, buddy.mpFingerprint);
 		buddy.otr.smpSecret(answer, question);
 	})
@@ -887,27 +1074,14 @@ var desktopNotification = function(image, title, body, timeout) {
 // Add a join/part notification to the conversation window.
 // If 'join === true', shows join notification, otherwise shows part.
 var buddyNotification = function(nickname, join) {
-	// Otherwise, go ahead
-	var status
-	if (join) {
-		Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-		status = Mustache.render(Cryptodog.templates.userJoin, {
-			nickname: nickname,
-			currentTime: currentTime(false),
-			color: Cryptodog.getUserColor(nickname)
-		});
-	}
-	else {
-		status = Mustache.render(Cryptodog.templates.userLeave, {
-			nickname: nickname,
-			currentTime: currentTime(false)
-		});
-	}
-	initializeConversationBuffer('groupChat');
-	conversationBuffers['groupChat'] += status;
-	if (Cryptodog.me.currentBuddy === 'groupChat') {
-		$('#conversationWindow').append(status);
-	}
+	initializeConversationArray('groupChat');
+	conversationArrays['groupChat'].push({
+		type:     join === true ? "join" : "leave",
+		nickname: nickname,
+		time:     currentTime(false),
+		color:    Cryptodog.getUserColor(nickname)
+	});
+
 	Cryptodog.UI.scrollDownConversation(400, true);
 
 	if (Cryptodog.allowSoundNotifications) {
@@ -917,49 +1091,257 @@ var buddyNotification = function(nickname, join) {
 		else {
 			Cryptodog.audio.userLeave.play();
 		}
-	}	
+	}
+
+	redrawConversation('groupChat');
 
 	desktopNotification(notifImg,
 		nickname + ' has ' + (join ? 'joined ' : 'left ')
 		+ Cryptodog.me.conversation, '', 7);
 }
 
-// Send encrypted file.
-var sendFile = function(nickname) {
-	var sendFileDialog = Mustache.render(Cryptodog.templates.sendFile, {
-		sendEncryptedFile: Cryptodog.locale['chatWindow']['sendEncryptedFile'],
-		fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo'].replace('(SIZE)', Cryptodog.otr.maximumFileSize / 1024)
-	});
-	ensureOTRdialog(nickname, false, function() {
-		Cryptodog.UI.dialogBox(sendFileDialog, {
-			height: 250,
-			closeable: true
-		});
-		$('#fileSelector').change(function(e) {
-			e.stopPropagation()
-			if (this.files) {
-				var file = this.files[0]
-				var filename = Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex)
-				filename += file.name.match(/\.(\w)+$/)[0]
-				Cryptodog.buddies[nickname].otr.sendFile(filename)
-				var key = Cryptodog.buddies[nickname].fileKey[filename]
-				Cryptodog.otr.beginSendFile({
-					file: file,
-					filename: filename,
-					to: nickname,
-					key: key
-				});
-				delete Cryptodog.buddies[nickname].fileKey[filename];
+function getContrastYIQ(hexcolor){
+	var r = parseInt(hexcolor.substr(0,2),16);
+	var g = parseInt(hexcolor.substr(2,2),16);
+	var b = parseInt(hexcolor.substr(4,2),16);
+	var yiq = ((r*299)+(g*587)+(b*114))/1000;
+	return (yiq >= 128) ? 'black' : 'white';
+}
+
+function pushAndRedraw(id, msg) {
+	if (msg.nickname) {
+		var nickname = msg.nickname;
+		if (nickname === Cryptodog.me.nickname) {}
+		else if (Cryptodog.buddies[nickname].ignored()) {
+			return false;
+		}
+	}
+
+	if (Cryptodog.me.currentBuddy === id) {
+		Cryptodog.UI.scrollDownConversation(400, true);
+	}
+
+	if (msg.type === "filelink") {
+		desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + " sent you a file attachment", 7);
+		Cryptodog.buddies[nickname].messageCount++;
+
+		Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
+		if (Cryptodog.allowSoundNotifications) {
+			Cryptodog.audio.newMessage.play();
+		}
+	}
+
+	initializeConversationArray(id);
+	conversationArrays[id].push(msg);
+	redrawConversation(id);
+}
+
+Cryptodog.pushAndRedraw = pushAndRedraw;
+Cryptodog.redraw = redrawConversation;
+
+// if the number of elements in a conversation exceeds this length, old messages are trimmed out.
+Cryptodog.maxConversationLength = 512;
+
+function redrawConversation(id) {
+	// We shouldn't redraw at this moment.
+	if (Cryptodog.me.currentBuddy !== id) {
+		return;
+	} 
+
+	$("#conversationWindow").html("");
+
+	var arr = conversationArrays[id];
+	if (typeof arr == "undefined") {
+		return;
+	}
+
+	// Delete old messages, so they get GCd and don't negatively impact performance
+	if (arr.length > Cryptodog.maxConversationLength) {
+		arr = arr.slice(arr.length-Cryptodog.maxConversationLength);
+	}
+ 
+	for (var i = 0; i < arr.length; i++ ) {
+		var el = arr[i];
+
+		var color     = el.color;
+		var textcolor = 'white';
+
+		var authStatus = false;
+		if (el.nickname === Cryptodog.me.nickname) {
+			authStatus = true;
+		} else {
+			if (Cryptodog.buddies[el.nickname]) {
+				if (Cryptodog.buddies[el.nickname].authenticated) {
+					authStatus = true;
+				}
 			}
-		})
-		$('#fileSelectButton').click(function() {
-			$('#fileSelector').click();
-		});
-	})
+		}
+	
+		var color = Cryptodog.getUserColor(el.nickname);
+
+
+		// Determines whether this user's nickname should be displayed in white or black, depending on the 
+		// contrast of their chosen color.
+		textcolor = getContrastYIQ(color.slice(1));
+
+		if (el.type == "fileupload") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+				nickname:    el.nickname,
+				currentTime: el.time,
+				color:       color,
+				textColor:   textcolor,
+				authStatus:  authStatus,
+				message:     Mustache.render(Cryptodog.templates.file, {
+					id:          el.id,
+					progress:    el.progress
+				})
+			}));
+		}
+
+		if (el.type == "filedownload") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+				nickname:    el.nickname,
+				currentTime: el.time,
+				color:       color,
+				textColor:   textcolor,
+				authStatus:  authStatus,
+				message:     Mustache.render(Cryptodog.templates.file, {
+					id:          el.fileID,
+					progress:    el.progress
+				})
+			}));
+		}
+
+		if (el.type == "filelink") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+				nickname:    el.nickname,
+				currentTime: el.time,
+				color:       color,
+				textColor:   textcolor,
+				authStatus:  authStatus,
+				message:     Mustache.render(Cryptodog.templates.fileLink, {
+					id:           el.fileID,
+					downloadFile: "View " + el.mime
+				})
+			}));
+
+			$("#" + el.fileID).on("click", { el: el }, function(evt) {
+				var link = evt.data.el;
+				if (typeof link.fileID == "undefined") {
+					return;
+				}
+
+				link.type = "filedownload";
+				link.progress = 0;
+
+				try {
+					var xhr = new XMLHttpRequest();
+					xhr.responseType = "arraybuffer";
+
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState === 4) {
+							if (xhr.status == 200) {
+								var box = new Uint8Array(xhr.response);
+								if (box.length > link.prefixSize) {
+									var data = etc.crypto.nacl.secretbox.open(box, link.nonce, link.key);
+									if (data) {
+										data = data.slice(link.prefixSize);
+										var blob = new Blob([data]);
+										blob = blob.slice(0, blob.size, link.mime);
+										var bloburi = URL.createObjectURL(blob);
+										link.type = "message";
+										link.message = `<a target="_blank" href="${bloburi}">[${link.mime}]</a>`;
+										redrawConversation(id);
+										return;
+									}
+								} else {
+									console.log("box size is", box.length, "whereas prefix is", link.prefixSize);
+								}
+							}
+
+							link.type = "warning";
+							link.message = "Could not download: this file was deleted";
+							redrawConversation(id);
+						}
+					}
+
+					xhr.onprogress = function(ev) {
+						var progress = Math.floor((ev.loaded / ev.total) * 100);
+						el.progress = progress;
+						$('.fileProgressBarFill')
+						.filterByData('id', el.fileID)
+						.animate({'width': progress + '%'}, 50);
+					}
+
+					xhr.open("GET", new etc.URL(Cryptodog.bex.server).subPath(`files/${link.fileID}`).toString());
+					xhr.send();
+				} catch (e) {
+					console.warn(e);
+				}
+
+				redrawConversation(id);
+			});
+		}
+
+		if (el.type == "join") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.userJoin, {
+				nickname:    el.nickname,
+				currentTime: el.time,
+				color:       color,
+				textColor:   textcolor
+			}));
+		}
+
+		if (el.type == "leave") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.userLeave, {
+				nickname:    el.nickname,
+				currentTime: el.time,
+			}));
+		}
+
+
+		if (el.type == "message") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+				nickname:     shortenString(el.nickname, 16),
+				currentTime:  el.time,
+				authStatus:   authStatus,
+				message:      el.message,
+				color:        color,
+				textColor:    textcolor,
+				style:        'normal'
+			}));
+		}
+
+		if (el.type == "warning") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+				nickname:     shortenString(el.nickname, 16),
+				currentTime:  el.time,
+				authStatus:   authStatus,
+				message:      el.message,
+				color:        color,
+				textColor:    textcolor,
+				style:        'italic'
+			}));
+		}
+
+		if (el.type == "missingRecipients") {
+			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.missingRecipients, {
+				text: Cryptodog.locale.warnings.missingRecipientWarning
+					.replace('(NICKNAME)', el.message),
+				dir: Cryptodog.locale.direction
+			}));
+		}
+	}
+
+	Cryptodog.rebindDataURIs();
+
+	$(".sender").each(function(_, el) {
+		Cryptodog.UI.bindSenderElement($(el));
+	});
 }
 
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
-var ensureOTRdialog = function(nickname, close, cb, noAnimation) {
+Cryptodog.ensureOTRdialog = function(nickname, close, cb, noAnimation) {
 	var buddy = Cryptodog.buddies[nickname];
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
 		return cb();
@@ -996,13 +1378,15 @@ var openBuddyMenu = function(nickname) {
 		});
 		return;
 	}
+	var electMod = "Elect as moderator";
+	var revokeMod = "Revoke moderator status";
 	$menu.attr('status', 'active');
 	$menu.css('background-image', 'url("img/icons/circle-up.svg")');
 	$buddy.delay(10).animate({'height': 130}, 180, function() {
 		$buddy.append(
 			Mustache.render(Cryptodog.templates.buddyMenu, {
 				buddyID: buddy.id,
-				sendEncryptedFile: chatWindow.sendEncryptedFile,
+				electAsModerator: buddy.authenticated == 2 ? revokeMod : electMod,
 				displayInfo: chatWindow.displayInfo,
 				ignore: ignoreAction
 			})
@@ -1016,7 +1400,15 @@ var openBuddyMenu = function(nickname) {
 		});
 		$contents.find('.option2').click(function(e) {
 			e.stopPropagation();
-			sendFile(nickname);
+			if (buddy.authenticated !== 2) {
+				if (confirm("Elect this user as moderator? This may give them extreme powers over your client, such as blocking and removing users.") === true) {
+					$contents.find(".option2").text(revokeMod);
+					buddy.updateAuth(2);
+				}
+			} else {
+					$contents.find(".option2").text(electMod);
+					buddy.updateAuth(0);
+			}
 			$menu.click();
 		});
 		$contents.find('.option3').click(function(e) {
@@ -1068,7 +1460,15 @@ var nicknameCompletion = function(input) {
 
 // Get color by nickname
 Cryptodog.getUserColor = function(nickname){
-	return nickname === Cryptodog.me.nickname ? Cryptodog.me.color : Cryptodog.buddies[nickname].color;
+	if (nickname === Cryptodog.me.nickname) {
+		return Cryptodog.me.color;
+	}
+
+	if (Cryptodog.buddies[nickname]) {
+		return Cryptodog.buddies[nickname].color;
+	}
+
+	return Cryptodog.colors[nickname] || "#000000";
 }
 
 // Handle new message count
@@ -1110,6 +1510,17 @@ USER INTERFACE BINDINGS
 $('#userInput').submit(function() {
 	var message = $.trim($('#userInputText').val())
 	$('#userInputText').val('')
+
+	if (Cryptodog.bex.base64.test(message) && Cryptodog.me.currentBuddy !== 'groupChat') {
+		var purportedBex = etc.Encoding.decodeFromBase64(message);
+		if (purportedBex.length >= 3) {
+			if (Cryptodog.bex.headerBytes(purportedBex)) {
+				alert("You attempted to send a BEX message.");
+				return false;
+			}
+		}
+	}
+
 	if (!message.length) { return false }
 	if (Cryptodog.me.currentBuddy !== 'groupChat') {
 		Cryptodog.buddies[
@@ -1177,15 +1588,26 @@ $('#userInputText').keydown(function(e) {
 	}
 	if (!Cryptodog.me.composing) {
 		Cryptodog.me.composing = true;
-		Cryptodog.xmpp.connection.muc.message(
-			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-			destination, '', null, type, 'composing'
-		);
+		if (type === 'groupchat') {
+			Cryptodog.bex.transmitGroup([
+				{header: Cryptodog.bex.op.COMPOSING}
+			]);
+		} else {
+			Cryptodog.bex.transmitPrivate(destination, [
+				{header: Cryptodog.bex.op.COMPOSING}
+			])
+		}
+
 		window.setTimeout(function(d, t) {
-			Cryptodog.xmpp.connection.muc.message(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-				d, '', null, t, 'paused'
-			);
+			if (type === 'groupchat') {
+				Cryptodog.bex.transmitGroup([
+					{header: Cryptodog.bex.op.PAUSED}
+				]);
+			} else {
+				Cryptodog.bex.transmitPrivate(destination, [
+					{header: Cryptodog.bex.op.PAUSED}
+				])
+			}
 			Cryptodog.me.composing = false;
 		}, 7000, destination, type);
 	}

@@ -13,6 +13,9 @@ We offer two things:
 
 * General and security bug fixes
 * Dark theme with more contrast, easier on eyes
+* Opt-in persistent authentication list and long-term key storage
+* VoIP conference calls using WebRTC
+* Faster file transfer with support for group conversations and Drag & Drop mechanism
 * Better tab-complete
 * Faster loading
 * Vector icons (better scaling on hiDPI displays and zoom levels other than 100%)
@@ -25,7 +28,7 @@ We offer two things:
 
 ## Usage
 
-The recommended way to run Cryptodog is via our [Chrome](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/cryptodog) extensions. Using our browser extension ensures you always have the official, most recent version.
+The recommended way to run Cryptodog is via our [Chrome](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/cryptodog) extensions. Using our browser extension ensures you always have the official, most recent version. It also avoids the threat of a code poisoning attack, where official Cryptodog code is replaced with malicious code on a web host like GitHub Pages.
 
 If you just want to test out Cryptodog, we have a [client hosted on GitHub Pages](https://cryptodog.github.io).
 

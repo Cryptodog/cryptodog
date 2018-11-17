@@ -50,6 +50,15 @@ $(window).ready(function() {
                     relay: 'http://doggyfipznipbaia.onion/http-bind'
                 })
             );
+
+            $('#customServerSelector').append(
+                Mustache.render(Cryptodog.templates['customServer'], {
+                    name: 'Cryptodog (Tor Hidden Service) (BOSH)',
+                    domain: 'crypto.dog',
+                    xmpp: 'conference.crypto.dog',
+                    relay: 'http://doggyfipznipbaia.onion/http-bind'
+                })
+            );
         }
 
         $('#languages').hide();

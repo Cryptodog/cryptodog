@@ -209,6 +209,8 @@ $(window).ready(function() {
         });
     };
 
+    Cryptodog.bex.base64 = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+
     // Handle incoming messages from the XMPP server.
     Cryptodog.xmpp.onMessage = function(message) {
         var nickname = extractNickname($(message).attr('from'));
@@ -236,17 +238,16 @@ $(window).ready(function() {
 
         // Check if message has a 'composing' notification.
         if ($(message).attr('id') === 'composing' && !body.length) {
-            $('#buddy-' + Cryptodog.buddies[nickname].id).addClass('composing');
             return true;
         }
 
         // Check if message has a 'paused' (stopped writing) notification.
         if ($(message).attr('id') === 'paused') {
-            $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
         } else if (type === 'groupchat' && body.length) {
             // Check if message is a group chat message.
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
+            Cryptodog.bex.lastTransmissionFrom = nickname;
             body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
 
             if (typeof body === 'string') {
@@ -316,9 +317,33 @@ $(window).ready(function() {
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Create buddy element if buddy is new
             Cryptodog.addBuddy(nickname, null, 'online');
-            
             // Propagate away status to newcomers.
             Cryptodog.xmpp.sendStatus();
+
+            Cryptodog.buddies[nickname].onConnect(function() {
+                if (Cryptodog.bex.controlTables.keys.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
+                    Cryptodog.removeBuddy(nickname);
+                    return;
+                }
+
+                // Send color and connection status as one message
+                var introPacket = [{
+                    header: Cryptodog.bex.op.SET_COLOR, 
+                    color:  Cryptodog.me.color
+                }];
+                
+                if (Cryptodog.me.status === 'online') {
+                    introPacket.push({
+                        header: Cryptodog.bex.op.STATUS_ONLINE
+                    });
+                } else {
+                    introPacket.push({
+                        header: Cryptodog.bex.op.STATUS_AWAY
+                    });
+                }
+                
+                Cryptodog.bex.transmitGroup(introPacket);
+            });
         } else if (
             $(presence)
                 .find('show')
@@ -336,6 +361,15 @@ $(window).ready(function() {
         return true;
     };
 
+    Cryptodog.xmpp.sendReliablePrivateMessage = function(nickname, message) {
+        Cryptodog.bex.ensureOTR(nickname, function () {
+            var buddy = Cryptodog.buddies[nickname];
+            if (buddy) {
+                buddy.otr.sendMsg(etc.Encoding.encodeToBase64(message));
+            }
+        });
+    }
+
     /* Send our multiparty public key to all room occupants. */
     Cryptodog.xmpp.sendPublicKey = function() {
         Cryptodog.xmpp.connection.muc.message(
@@ -346,6 +380,14 @@ $(window).ready(function() {
             'groupchat',
             'active'
         );
+
+        Object.keys(Cryptodog.buddies).map(function(nickname) {
+            var buddy = Cryptodog.buddies[nickname];
+            buddy._sentPublicKey = true;
+            if (buddy.mpSecretKey !== null) {
+                buddy.dispatchConnect();
+            }
+        });
     };
 
     /* Request public key from `nickname`.
@@ -381,29 +423,38 @@ $(window).ready(function() {
 
     // Executed (manually) after connection.
     var afterConnect = function() {
-        $('.conversationName').animate({ 'background-color': '#bb7a20' });
-
-        Cryptodog.xmpp.connection.ibb.addIBBHandler(Cryptodog.otr.ibbHandler);
-        Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler);
-
-        Cryptodog.xmpp.sendStatus();
-        Cryptodog.xmpp.sendPublicKey();
-        Cryptodog.xmpp.requestPublicKey();
-
-        clearInterval(autoIgnore);
-
-        autoIgnore = setInterval(function() {
-            for (var nickname in Cryptodog.buddies) {
-                var buddy = Cryptodog.buddies[nickname];
-                
-                if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
-                    buddy.toggleIgnored();
-                    console.log('Automatically ignored ' + nickname);
-                }
-
-                buddy.messageCount = 0;
+        Cryptodog.storage.getItem("color", function(item) {
+            if (item) {
+                Cryptodog.me.color = item;
+                document.querySelector("#changeColorBtn").value = item;
             }
-        }, Cryptodog.maxMessageInterval);
+
+            $('.conversationName').animate({ 'background-color': '#bb7a20' });
+
+            Cryptodog.xmpp.sendPublicKey();
+            Cryptodog.xmpp.requestPublicKey();
+            Cryptodog.xmpp.sendStatus();
+
+            setTimeout(function() {
+                // wait for session to initialize
+                Cryptodog.transmitMyColor();
+            }, 3000);
+
+            clearInterval(autoIgnore);
+
+            autoIgnore = setInterval(function() {
+                for (var nickname in Cryptodog.buddies) {
+                    var buddy = Cryptodog.buddies[nickname];
+                    
+                    if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
+                        buddy.toggleIgnored();
+                        console.log('Automatically ignored ' + nickname);
+                    }
+
+                    buddy.messageCount = 0;
+                }
+            }, Cryptodog.maxMessageInterval);
+        });
     };
 
     // Extract nickname (part after forward slash) from JID

@@ -1,8 +1,8 @@
 /*!
 
-  otr.js v0.2.12 - 2014-04-15
-  (c) 2014 - Arlo Breault <arlolra@gmail.com>
-  Freely distributed under the MPL v2.0 license.
+  otr.js v0.2.16 - 2018-11-11
+  (c) 2018 - Arlo Breault <arlolra@gmail.com>
+  Freely distributed under the MPL-2.0 license.
 
   This file is concatenated for the browser.
   Please see: https://github.com/arlolra/otr
@@ -98,7 +98,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = HLP = {}
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.mod.js')
+    BigInt = require('../vendor/bigint.js')
   } else {
     if (root.OTR) root.OTR.HLP = HLP
     if (root.DSA) root.DSA.HLP = HLP
@@ -141,6 +141,17 @@
     child.__super__ = parent.prototype
   }
 
+  // assumes 32-bit
+  function intCompare(x, y) {
+    var z = ~(x ^ y)
+    z &= z >> 16
+    z &= z >> 8
+    z &= z >> 4
+    z &= z >> 2
+    z &= z >> 1
+    return z & 1
+  }
+
   // constant-time string comparison
   HLP.compare = function (str1, str2) {
     if (str1.length !== str2.length)
@@ -148,7 +159,7 @@
     var i = 0, result = 0
     for (; i < str1.length; i++)
       result |= str1[i].charCodeAt(0) ^ str2[i].charCodeAt(0)
-    return result === 0
+    return intCompare(result, 0)
   }
 
   HLP.randomExponent = function () {
@@ -436,7 +447,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = DSA
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.mod.js')
+    BigInt = require('../vendor/bigint.js')
     WWPath = require('path').join(__dirname, '/dsa-webworker.js')
     HLP = require('./helpers.js')
   } else {
@@ -1047,7 +1058,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = AKE
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.mod.js')
+    BigInt = require('../vendor/bigint.js')
     CONST = require('./const.js')
     HLP = require('./helpers.js')
     DSA = require('./dsa.js')
@@ -1160,7 +1171,7 @@
       HLP.debug.call(this.otr, 'success')
 
       if (BigInt.equals(this.their_y, this.our_dh.publicKey))
-        return this.otr.error('equal keys - we have a problem.', true)
+        return this.otr.error('equal keys - we have a problem.')
 
       this.otr.our_old_dh = this.our_dh
       this.otr.their_priv_pk = this.their_priv_pk
@@ -1267,7 +1278,7 @@
 
           // verify gy is legal 2 <= gy <= N-2
           if (!HLP.checkGroup(this.their_y, N_MINUS_2))
-            return this.otr.error('Illegal g^y.', true)
+            return this.otr.error('Illegal g^y.')
 
           this.createKeys(this.their_y)
 
@@ -1303,11 +1314,11 @@
           var hash = CryptoJS.SHA256(CryptoJS.enc.Latin1.parse(gxmpi))
 
           if (!HLP.compare(this.hashed, hash.toString(CryptoJS.enc.Latin1)))
-            return this.otr.error('Hashed g^x does not match.', true)
+            return this.otr.error('Hashed g^x does not match.')
 
           // verify gx is legal 2 <= g^x <= N-2
           if (!HLP.checkGroup(this.their_y, N_MINUS_2))
-            return this.otr.error('Illegal g^x.', true)
+            return this.otr.error('Illegal g^x.')
 
           this.createKeys(this.their_y)
 
@@ -1321,7 +1332,7 @@
             , this.m1
             , HLP.packCtr(0)
           )
-          if (vsm[0]) return this.otr.error(vsm[0], true)
+          if (vsm[0]) return this.otr.error(vsm[0])
 
           // store their key
           this.their_keyid = vsm[1]
@@ -1363,7 +1374,7 @@
             , this.m1_prime
             , HLP.packCtr(0)
           )
-          if (vsm[0]) return this.otr.error(vsm[0], true)
+          if (vsm[0]) return this.otr.error(vsm[0])
 
           // store their key
           this.their_keyid = vsm[1]
@@ -1446,7 +1457,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = SM
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.mod.js')
+    BigInt = require('../vendor/bigint.js')
     EventEmitter = require('../vendor/eventemitter.js')
     CONST = require('./const.js')
     HLP = require('./helpers.js')
@@ -1609,10 +1620,12 @@
 
         this.smpstate = CONST.SMPSTATE_EXPECT0
 
-        // assume utf8 question
-        question = CryptoJS.enc.Latin1
-          .parse(question)
-          .toString(CryptoJS.enc.Utf8)
+        if (question) {
+          // assume utf8 question
+          question = CryptoJS.enc.Latin1
+            .parse(question)
+            .toString(CryptoJS.enc.Utf8)
+        }
 
         // invoke question
         this.trigger('question', [question])
@@ -1881,7 +1894,7 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = OTR
     CryptoJS = require('../vendor/crypto.js')
-    BigInt = require('../vendor/bigint.mod.js')
+    BigInt = require('../vendor/bigint.js')
     EventEmitter = require('../vendor/eventemitter.js')
     SMWPath = require('path').join(__dirname, '/sm-webworker.js')
     CONST = require('./const.js')
@@ -1919,6 +1932,11 @@
   // JavaScript integers
   var MAX_INT = Math.pow(2, 53) - 1  // doubles
   var MAX_UINT = Math.pow(2, 31) - 1  // bitwise operators
+
+  // an internal callback
+  function OTRCB(cb) {
+    this.cb = cb
+  }
 
   // OTR contructor
   function OTR(options) {
@@ -2100,8 +2118,12 @@
   OTR.prototype.io = function (msg, meta) {
 
     // buffer
-    msg = ([].concat(msg)).map(function(m){
-       return { msg: m, meta: meta }
+    msg = ([].concat(msg)).map(function(m, i, arr) {
+       var obj = { msg: m }
+       if (!(meta instanceof OTRCB) ||
+         i === (arr.length - 1)  // only cb after last fragment is sent
+       ) obj.meta = meta
+       return obj
     })
     this.outgoing = this.outgoing.concat(msg)
 
@@ -2109,8 +2131,13 @@
     ;(function send(first) {
       if (!first) {
         if (!self.outgoing.length) return
-        var elem = self.outgoing.shift()
+        var elem = self.outgoing.shift(), cb = null
+        if (elem.meta instanceof OTRCB) {
+          cb = elem.meta.cb
+          elem.meta = null
+        }
         self.trigger('io', [elem.msg, elem.meta])
+        if (cb) cb()
       }
       setTimeout(send, first ? 0 : self.send_interval)
     }(true))
@@ -2206,12 +2233,12 @@
 
   OTR.prototype.prepareMsg = function (msg, esk) {
     if (this.msgstate !== CONST.MSGSTATE_ENCRYPTED || this.their_keyid === 0)
-      return this.error('Not ready to encrypt.')
+      return this.notify('Not ready to encrypt.')
 
     var sessKeys = this.sessKeys[1][0]
 
     if (sessKeys.send_counter >= MAX_INT)
-      return this.error('Should have rekeyed by now.')
+      return this.notify('Should have rekeyed by now.')
 
     sessKeys.send_counter += 1
 
@@ -2232,7 +2259,7 @@
     send += ctr.substring(0, 8)
 
     if (Math.ceil(msg.length / 8) >= MAX_UINT)  // * 16 / 128
-      return this.error('Message is too long.')
+      return this.notify('Message is too long.')
 
     var aes = HLP.encryptAes(
         CryptoJS.enc.Latin1.parse(msg)
@@ -2251,7 +2278,7 @@
       , this.our_instance_tag
       , this.their_instance_tag
     )
-    if (send[0]) return this.error(send[0])
+    if (send[0]) return this.notify(send[0])
 
     // emit extra symmetric key
     if (esk) this.trigger('file', ['send', sessKeys.extra_symkey, esk])
@@ -2272,7 +2299,7 @@
     var ign = (msg[0] === '\x01')
 
     if (this.msgstate !== CONST.MSGSTATE_ENCRYPTED || msg.length !== 8) {
-      if (!ign) this.error('Received an unreadable encrypted message.', true)
+      if (!ign) this.error('Received an unreadable encrypted message.')
       return
     }
 
@@ -2280,12 +2307,12 @@
     var their_keyid = this.their_keyid - HLP.readLen(msg[1])
 
     if (our_keyid < 0 || our_keyid > 1) {
-      if (!ign) this.error('Not of our latest keys.', true)
+      if (!ign) this.error('Not of our latest keys.')
       return
     }
 
     if (their_keyid < 0 || their_keyid > 1) {
-      if (!ign) this.error('Not of your latest keys.', true)
+      if (!ign) this.error('Not of your latest keys.')
       return
     }
 
@@ -2380,16 +2407,17 @@
 
   OTR.prototype.smpSecret = function (secret, question) {
     if (this.msgstate !== CONST.MSGSTATE_ENCRYPTED)
-      return this.error('Must be encrypted for SMP.')
+      return this.notify('Must be encrypted for SMP.')
 
     if (typeof secret !== 'string' || secret.length < 1)
-      return this.error('Secret is required.')
+      return this.notify('Secret is required.')
 
     if (!this.sm) this._smInit()
 
     // utf8 inputs
     secret = CryptoJS.enc.Utf8.parse(secret).toString(CryptoJS.enc.Latin1)
-    question = CryptoJS.enc.Utf8.parse(question).toString(CryptoJS.enc.Latin1)
+    if (question)
+      question = CryptoJS.enc.Utf8.parse(question).toString(CryptoJS.enc.Latin1)
 
     this.sm.rcvSecret(secret, question)
   }
@@ -2440,7 +2468,7 @@
         break
       case CONST.MSGSTATE_FINISHED:
         this.storedMgs.push({msg: msg, meta: meta})
-        this.error('Message cannot be sent at this time.')
+        this.notify('Message cannot be sent at this time.', 'warn')
         return
       case CONST.MSGSTATE_ENCRYPTED:
         msg = this.prepareMsg(msg)
@@ -2452,7 +2480,7 @@
     if (msg) this.io(msg, meta)
   }
 
-  OTR.prototype.receiveMsg = function (msg) {
+  OTR.prototype.receiveMsg = function (msg, meta) {
 
     // parse type
     msg = Parse.parseMsg(this, msg)
@@ -2461,18 +2489,26 @@
 
     switch (msg.cls) {
       case 'error':
-        this.error(msg.msg)
+        this.notify(msg.msg)
         return
       case 'ake':
         if ( msg.version === CONST.OTR_VERSION_3 &&
           this.checkInstanceTags(msg.instance_tags)
-        ) return  // ignore
+        ) {
+          this.notify(
+            'Received a message intended for a different session.', 'warn')
+          return  // ignore
+        }
         this.ake.handleAKE(msg)
         return
       case 'data':
         if ( msg.version === CONST.OTR_VERSION_3 &&
           this.checkInstanceTags(msg.instance_tags)
-        ) return  // ignore
+        ) {
+          this.notify(
+            'Received a message intended for a different session.', 'warn')
+          return  // ignore
+        }
         msg.msg = this.handleDataMsg(msg)
         msg.encrypted = true
         break
@@ -2484,7 +2520,7 @@
         // check for encrypted
         if ( this.REQUIRE_ENCRYPTION ||
              this.msgstate !== CONST.MSGSTATE_PLAINTEXT
-        ) this.error('Received an unencrypted message.')
+        ) this.notify('Received an unencrypted message.', 'warn')
 
         // received a plaintext message
         // stop sending the whitespace tag
@@ -2495,7 +2531,7 @@
           this.doAKE(msg)
     }
 
-    if (msg.msg) this.trigger('ui', [msg.msg, !!msg.encrypted])
+    if (msg.msg) this.trigger('ui', [msg.msg, !!msg.encrypted, meta])
   }
 
   OTR.prototype.checkInstanceTags = function (it) {
@@ -2519,20 +2555,19 @@
     } else if (this.ALLOW_V2 && ~msg.ver.indexOf(CONST.OTR_VERSION_2)) {
       this.ake.initiateAKE(CONST.OTR_VERSION_2)
     } else {
-      // is this an error?
-      this.error('OTR conversation requested, ' +
-        'but no compatible protocol version found.')
+      this.notify('OTR conversation requested, ' +
+        'but no compatible protocol version found.', 'warn')
     }
   }
 
-  OTR.prototype.error = function (err, send) {
-    if (send) {
-      if (!this.debug) err = "An OTR error has occurred."
-      err = '?OTR Error:' + err
-      this.io(err)
-      return
-    }
-    this.trigger('error', [err])
+  OTR.prototype.error = function (err) {
+    if (!this.debug) err = 'An OTR error has occurred.'
+    this.io('?OTR Error:' + err)
+    this.notify(err)
+  }
+
+  OTR.prototype.notify = function (err, severity) {
+    this.trigger('error', [err, severity || 'error'])
   }
 
   OTR.prototype.sendStored = function () {
@@ -2545,18 +2580,18 @@
 
   OTR.prototype.sendFile = function (filename) {
     if (this.msgstate !== CONST.MSGSTATE_ENCRYPTED)
-      return this.error('Not ready to encrypt.')
+      return this.notify('Not ready to encrypt.')
 
     if (this.ake.otr_version !== CONST.OTR_VERSION_3)
-      return this.error('Protocol v3 required.')
+      return this.notify('Protocol v3 required.')
 
-    if (!filename) return this.error('Please specify a filename.')
+    if (!filename) return this.notify('Please specify a filename.')
 
     // utf8 filenames
     var l1name = CryptoJS.enc.Utf8.parse(filename)
     l1name = l1name.toString(CryptoJS.enc.Latin1)
 
-    if (l1name.length >= 65532) return this.error('filename is too long.')
+    if (l1name.length >= 65532) return this.notify('Filename is too long.')
 
     var msg = '\x00'  // null byte
     msg += '\x00\x08'  // type 8 tlv
@@ -2568,14 +2603,18 @@
     this.io(msg)
   }
 
-  OTR.prototype.endOtr = function () {
+  OTR.prototype.endOtr = function (cb) {
     if (this.msgstate === CONST.MSGSTATE_ENCRYPTED) {
-      this.sendMsg('\x00\x00\x01\x00\x00')
+      if (typeof cb === 'function')
+        cb = new OTRCB(cb)
+      this.sendMsg('\x00\x00\x01\x00\x00', cb)
       if (this.sm) {
         if (this.smw) this.sm.worker.terminate()  // destroy webworker
         this.sm = null
       }
-    }
+    } else if (typeof cb === 'function')
+      setTimeout(cb, 0)
+
     this.msgstate = CONST.MSGSTATE_PLAINTEXT
     this.receivedPlaintext = false
     this.trigger('status', [CONST.STATUS_END_OTR])
