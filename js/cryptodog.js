@@ -112,6 +112,15 @@ Cryptodog.storage.getItem('persistenceEnabled', function(e) {
 	}
 });
 
+fetch("config.json")
+.then(function(resp) {
+	return resp.json();
+})
+.then(function(cfg) {
+	Cryptodog.bex.mods = cfg.mods || [];
+})
+.catch(function(err){});
+
 window.addEventListener("load", function() {
 	document.querySelector("#changeColorBtn").addEventListener("change", function(e) {
 		var color = e.target.value;
@@ -404,7 +413,7 @@ Cryptodog.maxMessageInterval = 3000;
 var Buddy = function(nickname, id, status) {
 	this.id             = id
 	this.fingerprint    = null
-	this.authenticated  = false
+	this.authenticated  = 0
 	this.fileKey        = null
 	this.mpPublicKey    = null
 	this.mpFingerprint  = null

@@ -945,6 +945,15 @@ Cryptodog.bex.kick = function(user) {
   Cryptodog.bex.invokeKeysTable();
 }
 
+Cryptodog.bex.lockdown = function(l) {
+  Cryptodog.bex.lockdownLevel = l;
+
+  Cryptodog.bex.transmitGroup([
+    { header: Cryptodog.bex.op.SET_LOCKDOWN_LEVEL,
+      level:  Cryptodog.bex.lockdownLevel }
+  ]);
+}
+
 Cryptodog.bex.syncKeysTable = function() {
   Cryptodog.bex.syncTable("keys");
 }

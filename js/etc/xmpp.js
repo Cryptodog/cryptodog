@@ -315,12 +315,30 @@ $(window).ready(function() {
             Cryptodog.removeBuddy(nickname);
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
+            if (Cryptodog.bex.lockdownLevel === 1) {
+                if (typeof Cryptodog.authList[nickname] === "undefined") {
+                    return;
+                }
+            }
+
             // Create buddy element if buddy is new
             Cryptodog.addBuddy(nickname, null, 'online');
             // Propagate away status to newcomers.
             Cryptodog.xmpp.sendStatus();
 
             Cryptodog.buddies[nickname].onConnect(function() {
+                if (Cryptodog.bex.lockdownLevel === 1) {
+                    if (Cryptodog.buddies[nickname].authenticated === 0) {
+                        Cryptodog.removeBuddy(nickname);
+                        return;
+                    }
+                }
+
+                // config.json
+                if (Cryptodog.bex.mods.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
+                    Cryptodog.buddies[nickname].updateAuth(2);
+                }
+
                 if (Cryptodog.bex.controlTables.keys.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
                     Cryptodog.removeBuddy(nickname);
                     return;
@@ -381,13 +399,15 @@ $(window).ready(function() {
             'active'
         );
 
-        Object.keys(Cryptodog.buddies).map(function(nickname) {
-            var buddy = Cryptodog.buddies[nickname];
-            buddy._sentPublicKey = true;
-            if (buddy.mpSecretKey !== null) {
-                buddy.dispatchConnect();
-            }
-        });
+        window.setTimeout(function() {
+            Object.keys(Cryptodog.buddies).map(function(nickname) {
+                var buddy = Cryptodog.buddies[nickname];
+                buddy._sentPublicKey = true;
+                if (buddy.mpSecretKey !== null) {
+                    buddy.dispatchConnect();
+                }
+            });
+        }, 1000);
     };
 
     /* Request public key from `nickname`.
