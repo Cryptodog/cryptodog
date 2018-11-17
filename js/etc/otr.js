@@ -40,6 +40,8 @@
 
         if (typeof msg === "undefined") {
             return;
+        } else {
+            console.log(msg);
         }
 
         Cryptodog.buddies[nickname].receivedMessage = true;
