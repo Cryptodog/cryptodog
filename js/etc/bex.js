@@ -327,6 +327,8 @@ Cryptodog.bex.onGroup = function (nickname, data) {
     return;
   }
 
+  console.log("BEX data from", nickname, data);
+
   packs.forEach(function (packet) {
     switch (packet.header) {
       case o.COMPOSING:
@@ -423,6 +425,10 @@ Cryptodog.bex.transmitGroup = function (packets) {
     var data = Cryptodog.bex.serialize(packets);
     var base64 = etc.Encoding.encodeToBase64(data);
     var encrypted = Cryptodog.multiParty.sendMessage(base64, true);
+
+    if (Cryptodog.xmpp.connection === null) {
+      return;
+    }
 
     Cryptodog.xmpp.connection.muc.message(
       Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,

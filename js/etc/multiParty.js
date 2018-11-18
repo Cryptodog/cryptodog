@@ -293,9 +293,7 @@ Cryptodog.multiParty = function() {};
                     }
                 }
 
-                if (missingRecipients.length) {
-                    Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
-                }
+ 
 
                 // Sort recipients
                 var sortedRecipients = Object.keys(text).sort();
@@ -366,8 +364,13 @@ Cryptodog.multiParty = function() {};
                     // We have received a confirmed BEX message.
                     Cryptodog.bex.onGroup(sender, bytes);
                 } else {
-                    // Not a BEX message, but we still need to check if it's valid UTF-8.
+                    // Not a BEX message, but we still need to check if it's valid UTF-8 before we can display it..
                     if (etc.Encoding.validateUTF8(bytes)) {
+                        // Don't show missing recipient warnings unless we're sure it's a displayable message.
+                        if (missingRecipients.length) {
+                            Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
+                        }
+
                         return etc.Encoding.encodeToUTF8(bytes);
                     }
 

@@ -1264,7 +1264,6 @@ function redrawConversation(id) {
 			continue;
 		}
 
-
 		if (el.type == "message") {
 			text += Mustache.render(Cryptodog.templates.message, {
 				nickname:     shortenString(el.nickname, 16),
