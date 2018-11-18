@@ -25,7 +25,9 @@ Cryptodog.bex.op = {
   // WebRTC
   ICE_CANDIDATE:      30,
   RTC_OFFER:          31,
-  RTC_ANSWER:         32
+  RTC_ANSWER:         32,
+  RTC_SIGNAL_CAPABILITY: 33,
+  RTC_SIGNAL_DISABLED:   44
 };
 
 Cryptodog.bex.controlTables = {
@@ -327,7 +329,7 @@ Cryptodog.bex.onGroup = function (nickname, data) {
     return;
   }
 
-  console.log("BEX data from", nickname, data);
+  console.log("BEX data from", nickname, packs);
 
   packs.forEach(function (packet) {
     switch (packet.header) {
@@ -395,6 +397,20 @@ Cryptodog.bex.onGroup = function (nickname, data) {
       case o.SET_CONTROL_TABLE:
       Cryptodog.bex.handleSetControlTable(nickname, packet);
       break;
+
+      case o.RTC_SIGNAL_CAPABILITY:
+      var bud = Cryptodog.buddies[nickname];
+      if (bud) {
+        bud.rtcCapable = true;
+      }
+      break;
+
+      case o.RTC_SIGNAL_DISABLED:
+      var bud = Cryptodog.buddies[nickname];
+      if (bud) {
+        bud.rtcCapable = false;
+      }
+      break;
     }
   });
 }
@@ -407,9 +423,9 @@ Cryptodog.bex.transmitGroup = function (packets) {
     // Timeout to avoid messages being dropped by the serverside rate limiter.
     var sinceLast = (Date.now() - Cryptodog.bex.lastTransmissionGroup);
     if (sinceLast < 1024) {
-      var timeout = 1536;
+      var timeout = 256;
       if (Cryptodog.bex.lastTransmissionFrom === Cryptodog.me.nickname) {
-        timeout += 512;
+        timeout += 400;
       }
       setTimeout(timeoutToTransmit, timeout);
     } else {
@@ -628,7 +644,12 @@ Cryptodog.bex.initRTCVoiceChat = function(stream) {
   Cryptodog.bex.voiceStream = stream;
 
   Object.keys(Cryptodog.buddies).forEach(function(bd) {
-    Cryptodog.bex.connectStreamToPeer(bd, stream);
+    var bud = Cryptodog.buddies[bd];
+    if (bud) {
+      if (bud.rtcCapable === true) {
+        Cryptodog.bex.connectStreamToPeer(bd, stream);
+      }
+    }
   });
 }
 

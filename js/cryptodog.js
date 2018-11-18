@@ -9,6 +9,7 @@ GLOBAL VARIABLES
 Cryptodog.version = '2.6.0';
 
 Cryptodog.me = {
+	status:        "online",
 	newMessages:   0,
 	windowFocus:   true,
 	composing:     false,
@@ -173,6 +174,10 @@ window.addEventListener("load", function() {
 				$($this).attr("data-connected", "false");
 				$($this).attr("src", "img/icons/voice-disconnected.svg");
 				$($this).mouseenter();
+
+				Cryptodog.bex.transmitGroup([
+					{ header: Cryptodog.bex.op.RTC_SIGNAL_DISABLED }
+				]);
 				return;
 			}
 
@@ -183,6 +188,10 @@ window.addEventListener("load", function() {
 			$($this).attr("data-connected", "true");
 			$($this).attr("src", "img/icons/voice-connected.svg");
 			$($this).mouseenter();
+
+			Cryptodog.bex.transmitGroup([
+				{ header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY }
+			]);
 		});
 
 		$("#micToggleBtn").click(function() {

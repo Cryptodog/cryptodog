@@ -359,6 +359,12 @@ $(window).ready(function() {
                         header: Cryptodog.bex.op.STATUS_AWAY
                     });
                 }
+
+                if (Cryptodog.bex.rtcEnabled) {
+                    introPacket.push({
+                        header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY
+                    })
+                }
                 
                 Cryptodog.bex.transmitGroup(introPacket);
             });
