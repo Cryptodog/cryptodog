@@ -137,131 +137,133 @@ window.addEventListener("load", function() {
 		document.querySelector("#changeColorBtn").value = color;
 	});
 
-	// Check if WebRTC is supported by the browser.
-	// If so, add some UI buttons.
-	if (Cryptodog.bex.rtcSupport()) {
-		$("#optionButtons").prepend(
-			`<img
-				class="button"
-				id="micToggleBtn"
-				src="img/icons/mic-none.svg"
-				alt=""
-				data-utip-gravity="sw"
-				data-utip="` + Cryptodog.bex.strings.noMic + `" />
-			
-			<img
-				class="button"
-				id="voiceChatBtn"
-				src="img/icons/voice-disconnected.svg"
-				alt=""
-				data-connected="false"
-				data-utip-gravity="sw"
-				data-utip="` + Cryptodog.bex.strings.voiceDisconnected + `" />`);
+	window.setTimeout(function() {
+		// Check if WebRTC is supported by the browser.
+		// If so, add some UI buttons.
+		if (Cryptodog.bex.rtcSupport()) {
+			$("#optionButtons").prepend(
+				`<img
+					class="button"
+					id="micToggleBtn"
+					src="img/icons/mic-none.svg"
+					alt=""
+					data-utip-gravity="sw"
+					data-utip="` + Cryptodog.bex.strings.noMic + `" />
 				
-		Cryptodog.bex.micState   = "none";
-		Cryptodog.bex.rtcEnabled = false;
+				<img
+					class="button"
+					id="voiceChatBtn"
+					src="img/icons/voice-disconnected.svg"
+					alt=""
+					data-connected="false"
+					data-utip-gravity="sw"
+					data-utip="` + Cryptodog.bex.strings.voiceDisconnected + `" />`);
+					
+			Cryptodog.bex.micState   = "none";
+			Cryptodog.bex.rtcEnabled = false;
 
-		$("#voiceChatBtn").utip();
-		$("#micToggleBtn").utip();
+			$("#voiceChatBtn").utip();
+			$("#micToggleBtn").utip();
 
-		$("#voiceChatBtn").click(function() {
-			var $this = this;
-			if ($($this).attr("data-connected") == "true") {
-				Cryptodog.audio.rtcDisconnect.play();
-				Cryptodog.bex.rtcEnabled = false;
-				Cryptodog.bex.disconnectRTCVoiceChat();
-				$($this).attr("data-utip", Cryptodog.bex.strings.voiceDisconnected);
-				$($this).attr("data-connected", "false");
-				$($this).attr("src", "img/icons/voice-disconnected.svg");
-				$($this).mouseenter();
+			$("#voiceChatBtn").click(function() {
+				var $this = this;
+				if ($($this).attr("data-connected") == "true") {
+					Cryptodog.audio.rtcDisconnect.play();
+					Cryptodog.bex.rtcEnabled = false;
+					Cryptodog.bex.disconnectRTCVoiceChat();
+					$($this).attr("data-utip", Cryptodog.bex.strings.voiceDisconnected);
+					$($this).attr("data-connected", "false");
+					$($this).attr("src", "img/icons/voice-disconnected.svg");
+					$($this).mouseenter();
+
+					Cryptodog.bex.transmitGroup([
+						{ header: Cryptodog.bex.op.RTC_SIGNAL_DISABLED }
+					]);
+					return;
+				}
 
 				Cryptodog.bex.transmitGroup([
-					{ header: Cryptodog.bex.op.RTC_SIGNAL_DISABLED }
+					{ header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY }
 				]);
-				return;
-			}
 
-			Cryptodog.bex.rtcEnabled = true;
-			Cryptodog.bex.initRTCVoiceChat(Cryptodog.bex.voiceStream);
-			Cryptodog.audio.rtcConnect.play();
-			$($this).attr("data-utip", Cryptodog.bex.strings.voiceConnected);
-			$($this).attr("data-connected", "true");
-			$($this).attr("src", "img/icons/voice-connected.svg");
-			$($this).mouseenter();
+				Cryptodog.bex.rtcEnabled = true;
+				Cryptodog.bex.initRTCVoiceChat(Cryptodog.bex.voiceStream);
+				Cryptodog.audio.rtcConnect.play();
+				$($this).attr("data-utip", Cryptodog.bex.strings.voiceConnected);
+				$($this).attr("data-connected", "true");
+				$($this).attr("src", "img/icons/voice-connected.svg");
+				$($this).mouseenter();
+			});
 
-			Cryptodog.bex.transmitGroup([
-				{ header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY }
-			]);
-		});
+			$("#micToggleBtn").click(function() {
+				var $this = this;
 
-		$("#micToggleBtn").click(function() {
-			var $this = this;
+				if (Cryptodog.bex.micState == "none") {
+					var voiceSetup = false;
 
-			if (Cryptodog.bex.micState == "none") {
-				var voiceSetup = false;
+					function setupVoice(stream) {
+						voiceSetup = true;
+						if (stream) {
+							Cryptodog.bex.voiceStream = stream;
+							// if we are connected to our buddies as RTC peers,
+							// we need to send them this new mic stream by re-negotiating our RTCPeerConnections.
+							if (Cryptodog.bex.rtcEnabled) {
+								Cryptodog.bex.initRTCVoiceChat(stream);
+							}
 
-				function setupVoice(stream) {
-					voiceSetup = true;
-					if (stream) {
-						Cryptodog.bex.voiceStream = stream;
-						// if we are connected to our buddies as RTC peers,
-						// we need to send them this new mic stream by re-negotiating our RTCPeerConnections.
-						if (Cryptodog.bex.rtcEnabled) {
-							Cryptodog.bex.initRTCVoiceChat(stream);
+							$($this).attr("data-utip", Cryptodog.bex.strings.unmutedMic);
+							$($this).attr("src", "img/icons/mic-unmuted.svg");
+							$($this).mouseenter();
+							Cryptodog.bex.micState = "unmuted";
 						}
-
-						$($this).attr("data-utip", Cryptodog.bex.strings.unmutedMic);
-						$($this).attr("src", "img/icons/mic-unmuted.svg");
-						$($this).mouseenter();
-						Cryptodog.bex.micState = "unmuted";
 					}
+
+					function onStream(micStream) {
+						setupVoice(micStream);
+					}
+
+					function onStreamError(micError) {
+						console.warn(micError);
+						alert("No microphone found: check console.");
+						setupVoice();
+					}
+
+					// Asks the user for permission
+					navigator.mediaDevices.getUserMedia({
+						audio: {
+							noiseSuppression: true
+						},
+
+						video: false
+					})
+					.then(onStream)
+					.catch(onStreamError);
+					return;
+				} 
+
+				// mute
+				if (Cryptodog.bex.micState == "unmuted") {
+					Cryptodog.bex.micState = "muted";
+					Cryptodog.bex.voiceStream.getAudioTracks()[0].enabled = false;
+					$($this).attr("data-utip", Cryptodog.bex.strings.mutedMic);
+					$($this).attr("src", "img/icons/mic-muted.svg");
+					$($this).mouseenter();
+					return;
 				}
 
-				function onStream(micStream) {
-					setupVoice(micStream);
+				// unmute
+				if (Cryptodog.bex.micState == "muted") {
+					Cryptodog.bex.micState = "unmuted";
+					Cryptodog.bex.voiceStream.getAudioTracks()[0].enabled = true;
+					$($this).attr("data-utip", Cryptodog.bex.strings.unmutedMic);
+					$($this).attr("src", "img/icons/mic-unmuted.svg");
+					$($this).mouseenter();
+
+					return;
 				}
-
-				function onStreamError(micError) {
-					console.warn(micError);
-					alert("No microphone found: check console.");
-					setupVoice();
-				}
-
-				// Asks the user for permission
-				navigator.mediaDevices.getUserMedia({
-					audio: {
-						noiseSuppression: true
-					},
-
-					video: false
-				})
-				.then(onStream)
-				.catch(onStreamError);
-				return;
-			} 
-
-			// mute
-			if (Cryptodog.bex.micState == "unmuted") {
-				Cryptodog.bex.micState = "muted";
-				Cryptodog.bex.voiceStream.getAudioTracks()[0].enabled = false;
-				$($this).attr("data-utip", Cryptodog.bex.strings.mutedMic);
-				$($this).attr("src", "img/icons/mic-muted.svg");
-				$($this).mouseenter();
-				return;
-			}
-
-			// unmute
-			if (Cryptodog.bex.micState == "muted") {
-				Cryptodog.bex.micState = "unmuted";
-				Cryptodog.bex.voiceStream.getAudioTracks()[0].enabled = true;
-				$($this).attr("data-utip", Cryptodog.bex.strings.unmutedMic);
-				$($this).attr("src", "img/icons/mic-unmuted.svg");
-				$($this).mouseenter();
-
-				return;
-			}
-		});
-	}
+			});
+		}
+	}, 1000);
 
 	$("body").on("dragenter dragstart dragend dragleave dragover drag drop", function (e) {
     e.preventDefault();

@@ -594,7 +594,7 @@ Cryptodog.bex.iceCfg = {
   "iceTransportPolicy": "relay",
 
   "iceServers": [{
-    "url":        "turn:" + new etc.URL(Cryptodog.bex.server).hostname + ":3478",
+    "urls":       "turn:" + new etc.URL(Cryptodog.bex.server).hostname + ":3478",
     "username":   "cryptodog",
     "credential": "preventing-ip-leakage"
   }]
@@ -839,6 +839,7 @@ Cryptodog.bex.connectStreamToPeer = function(peer, stream) {
     function(localDesc) {
       gcv.rtcConn.setLocalDescription(localDesc, function() {
         Cryptodog.bex.transmitGroup([
+					{ header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY },
           {
             header:     Cryptodog.bex.op.RTC_OFFER,
             target:     peer,
