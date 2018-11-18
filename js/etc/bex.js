@@ -73,7 +73,7 @@ Cryptodog.bex.invokeNicknamesTable = function() {
   Object.keys(Cryptodog.buddies)
   .forEach(function(n) {
     for (var i = 0; i < Cryptodog.bex.controlTables.nicknames.length; i++)
-      var nick = Cryptodog.bex.controlTables.nicknames[i];
+      var nick = new RegExp(Cryptodog.bex.controlTables.nicknames[i]);
       if (nick.test(n)) {
         Cryptodog.removeBuddy(n);
       }
