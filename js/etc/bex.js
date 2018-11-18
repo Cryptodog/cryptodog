@@ -72,22 +72,24 @@ Cryptodog.bex.invokeControlTables = function() {
 Cryptodog.bex.invokeNicknamesTable = function() {
   Object.keys(Cryptodog.buddies)
   .forEach(function(n) {
-    for (var i = 0; i < Cryptodog.bex.controlTables.nicknames.length; i++)
+    for (var i = 0; i < Cryptodog.bex.controlTables.nicknames.length; i++) {
       var nick = new RegExp(Cryptodog.bex.controlTables.nicknames[i]);
       if (nick.test(n)) {
         Cryptodog.removeBuddy(n);
       }
+    }
    });
 }
 
 Cryptodog.bex.invokeKeysTable = function() {
   Object.keys(Cryptodog.buddies)
   .forEach(function(n) {
-    for (var i = 0; i < Cryptodog.bex.controlTables.keys.length; i++)
+    for (var i = 0; i < Cryptodog.bex.controlTables.keys.length; i++) {
       var key = Cryptodog.bex.controlTables.keys[i];
       if (key === Cryptodog.buddies[n].mpFingerprint) {
         Cryptodog.removeBuddy(n);
       }
+    }
    });
 }
 
