@@ -1170,6 +1170,8 @@ function redrawConversation(id) {
 	if (arr.length > Cryptodog.maxConversationLength) {
 		arr = arr.slice(arr.length-Cryptodog.maxConversationLength);
 	}
+
+	var text = '';
  
 	for (var i = 0; i < arr.length; i++ ) {
 		var el = arr[i];
@@ -1196,7 +1198,7 @@ function redrawConversation(id) {
 		textcolor = getContrastYIQ(color.slice(1));
 
 		if (el.type == "fileupload") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+			text += Mustache.render(Cryptodog.templates.message, {
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
@@ -1206,11 +1208,12 @@ function redrawConversation(id) {
 					id:          el.id,
 					progress:    el.progress
 				})
-			}));
+			});
+			continue;
 		}
 
 		if (el.type == "filedownload") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+			text += Mustache.render(Cryptodog.templates.message, {
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
@@ -1220,11 +1223,12 @@ function redrawConversation(id) {
 					id:          el.fileID,
 					progress:    el.progress
 				})
-			}));
+			});
+			continue
 		}
 
 		if (el.type == "filelink") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+			text += Mustache.render(Cryptodog.templates.message, {
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
@@ -1234,7 +1238,7 @@ function redrawConversation(id) {
 					id:           el.fileID,
 					downloadFile: "View " + el.mime
 				})
-			}));
+			});
 
 			$("#" + el.fileID).on("click", { el: el }, function(evt) {
 				var link = evt.data.el;
@@ -1295,24 +1299,26 @@ function redrawConversation(id) {
 		}
 
 		if (el.type == "join") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.userJoin, {
+			text += Mustache.render(Cryptodog.templates.userJoin, {
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
 				textColor:   textcolor
-			}));
+			});
+			continue;
 		}
 
 		if (el.type == "leave") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.userLeave, {
+			text += Mustache.render(Cryptodog.templates.userLeave, {
 				nickname:    el.nickname,
 				currentTime: el.time,
-			}));
+			});
+			continue;
 		}
 
 
 		if (el.type == "message") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+			text += Mustache.render(Cryptodog.templates.message, {
 				nickname:     shortenString(el.nickname, 16),
 				currentTime:  el.time,
 				authStatus:   authStatus,
@@ -1320,11 +1326,12 @@ function redrawConversation(id) {
 				color:        color,
 				textColor:    textcolor,
 				style:        'normal'
-			}));
+			});
+			continue;
 		}
 
 		if (el.type == "warning") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.message, {
+			text += Mustache.render(Cryptodog.templates.message, {
 				nickname:     shortenString(el.nickname, 16),
 				currentTime:  el.time,
 				authStatus:   authStatus,
@@ -1332,17 +1339,20 @@ function redrawConversation(id) {
 				color:        color,
 				textColor:    textcolor,
 				style:        'italic'
-			}));
+			});
+			continue;
 		}
 
 		if (el.type == "missingRecipients") {
-			$("#conversationWindow").append(Mustache.render(Cryptodog.templates.missingRecipients, {
+			text += Mustache.render(Cryptodog.templates.missingRecipients, {
 				text: Cryptodog.locale.warnings.missingRecipientWarning
 					.replace('(NICKNAME)', el.message),
 				dir: Cryptodog.locale.direction
-			}));
+			});
 		}
 	}
+
+	$("#conversationWindow").html(text);
 
 	Cryptodog.rebindDataURIs();
 
