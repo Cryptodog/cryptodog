@@ -1166,6 +1166,8 @@ function redrawConversation(id) {
 		return;
 	}
 
+	var fileLinks = [];
+
 	// Delete old messages, so they get GCd and don't negatively impact performance
 	if (arr.length > Cryptodog.maxConversationLength) {
 		arr = arr.slice(arr.length-Cryptodog.maxConversationLength);
@@ -1240,62 +1242,8 @@ function redrawConversation(id) {
 				})
 			});
 
-			$("#" + el.fileID).on("click", { el: el }, function(evt) {
-				var link = evt.data.el;
-				if (typeof link.fileID == "undefined") {
-					return;
-				}
-
-				link.type = "filedownload";
-				link.progress = 0;
-
-				try {
-					var xhr = new XMLHttpRequest();
-					xhr.responseType = "arraybuffer";
-
-					xhr.onreadystatechange = function() {
-						if (xhr.readyState === 4) {
-							if (xhr.status == 200) {
-								var box = new Uint8Array(xhr.response);
-								if (box.length > link.prefixSize) {
-									var data = etc.crypto.nacl.secretbox.open(box, link.nonce, link.key);
-									if (data) {
-										data = data.slice(link.prefixSize);
-										var blob = new Blob([data]);
-										blob = blob.slice(0, blob.size, link.mime);
-										var bloburi = URL.createObjectURL(blob);
-										link.type = "message";
-										link.message = `<a target="_blank" href="${bloburi}">[${link.mime}]</a>`;
-										redrawConversation(id);
-										return;
-									}
-								} else {
-									console.log("box size is", box.length, "whereas prefix is", link.prefixSize);
-								}
-							}
-
-							link.type = "warning";
-							link.message = "Could not download: this file was deleted";
-							redrawConversation(id);
-						}
-					}
-
-					xhr.onprogress = function(ev) {
-						var progress = Math.floor((ev.loaded / ev.total) * 100);
-						el.progress = progress;
-						$('.fileProgressBarFill')
-						.filterByData('id', el.fileID)
-						.animate({'width': progress + '%'}, 50);
-					}
-
-					xhr.open("GET", new etc.URL(Cryptodog.bex.server).subPath(`files/${link.fileID}`).toString());
-					xhr.send();
-				} catch (e) {
-					console.warn(e);
-				}
-
-				redrawConversation(id);
-			});
+			fileLinks.push(el);
+			continue;
 		}
 
 		if (el.type == "join") {
@@ -1353,6 +1301,65 @@ function redrawConversation(id) {
 	}
 
 	$("#conversationWindow").html(text);
+
+	fileLinks.forEach(function(el) {
+		$("#" + el.fileID).on("click", { el: el }, function(evt) {
+			var link = evt.data.el;
+			if (typeof link.fileID == "undefined") {
+				return;
+			}
+
+			link.type = "filedownload";
+			link.progress = 0;
+
+			try {
+				var xhr = new XMLHttpRequest();
+				xhr.responseType = "arraybuffer";
+
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === 4) {
+						if (xhr.status == 200) {
+							var box = new Uint8Array(xhr.response);
+							if (box.length > link.prefixSize) {
+								var data = etc.crypto.nacl.secretbox.open(box, link.nonce, link.key);
+								if (data) {
+									data = data.slice(link.prefixSize);
+									var blob = new Blob([data]);
+									blob = blob.slice(0, blob.size, link.mime);
+									var bloburi = URL.createObjectURL(blob);
+									link.type = "message";
+									link.message = `<a target="_blank" href="${bloburi}">[${link.mime}]</a>`;
+									redrawConversation(id);
+									return;
+								}
+							} else {
+								console.log("box size is", box.length, "whereas prefix is", link.prefixSize);
+							}
+						}
+
+						link.type = "warning";
+						link.message = "Could not download: this file was deleted";
+						redrawConversation(id);
+					}
+				}
+
+				xhr.onprogress = function(ev) {
+					var progress = Math.floor((ev.loaded / ev.total) * 100);
+					el.progress = progress;
+					$('.fileProgressBarFill')
+					.filterByData('id', el.fileID)
+					.animate({'width': progress + '%'}, 50);
+				}
+
+				xhr.open("GET", new etc.URL(Cryptodog.bex.server).subPath(`files/${link.fileID}`).toString());
+				xhr.send();
+			} catch (e) {
+				console.warn(e);
+			}
+
+			redrawConversation(id);
+		});
+	})
 
 	Cryptodog.rebindDataURIs();
 
