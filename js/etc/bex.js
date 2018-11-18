@@ -236,7 +236,7 @@ Cryptodog.bex.deserialize = function (bytes) {
   }
 
   var elements = b.readUint();
-  if (elements > 8) return;
+  if (elements > 8) return [];
 
   for (var i = 0; i < elements; i++) {
     var pack = {};
