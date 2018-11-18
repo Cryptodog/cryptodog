@@ -86,8 +86,10 @@ Cryptodog.bex.invokeKeysTable = function() {
   .forEach(function(n) {
     for (var i = 0; i < Cryptodog.bex.controlTables.keys.length; i++) {
       var key = Cryptodog.bex.controlTables.keys[i];
-      if (key === Cryptodog.buddies[n].mpFingerprint) {
-        Cryptodog.removeBuddy(n);
+      if (Cryptodog.buddies[n]) {
+        if (key === Cryptodog.buddies[n].mpFingerprint) {
+          Cryptodog.removeBuddy(n);
+        }
       }
     }
    });
