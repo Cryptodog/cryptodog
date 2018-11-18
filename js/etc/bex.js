@@ -60,6 +60,8 @@ Cryptodog.bex.handleSetControlTable = function(nickname, packet) {
       Cryptodog.bex.controlTables[packet.tableKey] = packet.table;
     }
   }
+
+  Cryptodog.bex.invokeControlTables();
 }
 
 Cryptodog.bex.invokeControlTables = function() {
