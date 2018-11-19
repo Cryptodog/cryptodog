@@ -1215,6 +1215,10 @@ function redrawConversation(id) {
 	
 		var color = Cryptodog.getUserColor(el.nickname);
 
+		var budID = "null";
+		if (Cryptodog.buddies[el.nickname]) {
+			budID = Cryptodog.buddies[el.nickname].id;
+		}
 
 		// Determines whether this user's nickname should be displayed in white or black, depending on the 
 		// contrast of their chosen color.
@@ -1222,6 +1226,7 @@ function redrawConversation(id) {
 
 		if (el.type == "fileupload") {
 			text += Mustache.render(Cryptodog.templates.message, {
+				id:          budID,
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
@@ -1237,6 +1242,7 @@ function redrawConversation(id) {
 
 		if (el.type == "filedownload") {
 			text += Mustache.render(Cryptodog.templates.message, {
+				id:          budID,
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
@@ -1252,6 +1258,7 @@ function redrawConversation(id) {
 
 		if (el.type == "filelink") {
 			text += Mustache.render(Cryptodog.templates.message, {
+				id:          budID,
 				nickname:    el.nickname,
 				currentTime: el.time,
 				color:       color,
@@ -1287,6 +1294,7 @@ function redrawConversation(id) {
 
 		if (el.type == "message") {
 			text += Mustache.render(Cryptodog.templates.message, {
+				id:           budID,
 				nickname:     shortenString(el.nickname, 16),
 				currentTime:  el.time,
 				authStatus:   authStatus,
@@ -1300,6 +1308,7 @@ function redrawConversation(id) {
 
 		if (el.type == "warning") {
 			text += Mustache.render(Cryptodog.templates.message, {
+				id:           budID,
 				nickname:     shortenString(el.nickname, 16),
 				currentTime:  el.time,
 				authStatus:   authStatus,
@@ -1390,7 +1399,9 @@ function redrawConversation(id) {
 
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
 Cryptodog.ensureOTRdialog = function(nickname, close, cb, noAnimation) {
+	console.log("ensuring OTR for ", nickname);
 	var buddy = Cryptodog.buddies[nickname];
+
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
 		return cb();
 	}

@@ -314,7 +314,7 @@ Cryptodog.UI = {
             $(this).text(
                 $(this)
                     .parent()
-                    .attr('data-sender')
+                    .attr('data-nick')
             );
         });
 
@@ -348,10 +348,16 @@ Cryptodog.UI = {
         $($this).attr('data-utip-click', 'Cryptodog.displayInfo()');
 
         senderElement.find('.authStatus').click(function() {
+            var bid = $(this)
+                .parent()
+                .attr('data-sender');
+
+            var nick = Cryptodog.getBuddyNicknameByID(bid);
+
+            if (!Cryptodog.buddies[nick]) return;
+
             Cryptodog.displayInfo(
-                $(this)
-                    .parent()
-                    .attr('data-sender')
+                nick
             );
         });
     },
