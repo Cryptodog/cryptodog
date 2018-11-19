@@ -373,29 +373,7 @@ $(window).ready(function() {
                     }
                 }
 
-                // Send color and connection status as one message
-                var introPacket = [{
-                    header: Cryptodog.bex.op.SET_COLOR, 
-                    color:  Cryptodog.me.color
-                }];
-                
-                if (Cryptodog.me.status === 'online') {
-                    introPacket.push({
-                        header: Cryptodog.bex.op.STATUS_ONLINE
-                    });
-                } else {
-                    introPacket.push({
-                        header: Cryptodog.bex.op.STATUS_AWAY
-                    });
-                }
-
-                if (Cryptodog.bex.rtcEnabled) {
-                    introPacket.push({
-                        header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY
-                    });
-                }
-                
-                Cryptodog.bex.transmitGroup(introPacket);
+                Cryptodog.bex.sendIntro();
                 return true;
             });
         } else if (

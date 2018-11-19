@@ -22,6 +22,8 @@ Cryptodog.bex.op = {
   CLEAR_DEAD_USERS:   12,
   SET_CONTROL_TABLE:  13,
   SET_LOCKDOWN_LEVEL: 14,
+  WHITELIST_USER:     15,
+
   // WebRTC
   ICE_CANDIDATE:      30,
   RTC_OFFER:          31,
@@ -214,6 +216,10 @@ Cryptodog.bex.serialize = function(array) {
         e.writeString(packet.table[i]);
       }
       break;
+
+      case o.WHITELIST_USER:
+      e.writeString(packet.target);
+      break;
     }
   }
 
@@ -314,6 +320,10 @@ Cryptodog.bex.deserialize = function (bytes) {
       for (var i = 0; i < pack.table.length; i++) {
         pack.table[i] = b.readString();
       }
+      break;
+
+      case o.WHITELIST_USER:
+      pack.target = b.readString();
       break;
     }
 
@@ -417,6 +427,26 @@ Cryptodog.bex.onGroup = function (nickname, data) {
       var bud = Cryptodog.buddies[nickname];
       if (bud) {
         bud.rtcCapable = false;
+      }
+      break;
+
+      case o.WHITELIST_USER:
+      if (Cryptodog.bex.lockdownLevel === 1 && Cryptodog.bex.isModerator(nickname)) {
+        if (!Cryptodog.buddies[packet.target]) {
+          if (packet.target !== Cryptodog.me.nickname) {
+            Cryptodog.addBuddy(packet.target, null, "online");
+
+            Cryptodog.xmpp.sendPublicKey();
+
+            window.setTimeout(function () { 
+              Cryptodog.xmpp.requestPublicKey(packet.target);
+            }, 600);
+
+            Cryptodog.buddies[packet.target].onConnect(function () {
+              Cryptodog.bex.sendIntro();
+            });
+          }
+        }
       }
       break;
     }
@@ -1009,4 +1039,30 @@ Cryptodog.bex.syncTable = function(key) {
       table:    Cryptodog.bex.controlTables[key]
     }
   ]);
+}
+
+Cryptodog.bex.sendIntro = function() {
+    // Send color and connection status as one message
+    var introPacket = [{
+      header: Cryptodog.bex.op.SET_COLOR, 
+      color:  Cryptodog.me.color
+  }];
+  
+  if (Cryptodog.me.status === 'online') {
+      introPacket.push({
+          header: Cryptodog.bex.op.STATUS_ONLINE
+      });
+  } else {
+      introPacket.push({
+          header: Cryptodog.bex.op.STATUS_AWAY
+      });
+  }
+
+  if (Cryptodog.bex.rtcEnabled) {
+      introPacket.push({
+          header: Cryptodog.bex.op.RTC_SIGNAL_CAPABILITY
+      });
+  }
+  
+  Cryptodog.bex.transmitGroup(introPacket);
 }
