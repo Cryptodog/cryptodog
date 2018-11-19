@@ -559,6 +559,8 @@ Buddy.prototype = {
 	}
 }
 
+Cryptodog.Buddy = Buddy;
+
 Cryptodog.transmitMyColor = function() {
 	Cryptodog.bex.transmitGroup([{
 			header: Cryptodog.bex.op.SET_COLOR, 
@@ -585,8 +587,14 @@ Cryptodog.changeBuddyColor = function(nickname, color) {
 
 // Build new buddy.
 Cryptodog.addBuddy = function(nickname, id, status) {
-	if (!id) { id = getUniqueBuddyID() }
-	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, id, status)
+	var buddy;
+	if (!Cryptodog.buddies[nickname]) {
+		if (!id) { id = getUniqueBuddyID() }
+		buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, id, status)
+	} else {
+		buddy = Cryptodog.buddies[nickname];
+		id = buddy.id;
+	}
 	$('#buddyList').queue(function() {
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
@@ -941,6 +949,8 @@ var getUniqueBuddyID = function() {
 	}
 	return buddyID;
 }
+
+Cryptodog.getUniqueBuddyID = getUniqueBuddyID;
 
 // Simply shortens a string `string` to length `length.
 // Adds '..' to delineate that string was shortened.

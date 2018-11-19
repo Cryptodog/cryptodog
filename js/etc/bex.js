@@ -74,13 +74,21 @@ Cryptodog.bex.invokeControlTables = function() {
 Cryptodog.bex.invokeNicknamesTable = function() {
   Object.keys(Cryptodog.buddies)
   .forEach(function(n) {
-    for (var i = 0; i < Cryptodog.bex.controlTables.nicknames.length; i++) {
-      var nick = new RegExp(Cryptodog.bex.controlTables.nicknames[i]);
-      if (nick.test(n)) {
-        Cryptodog.removeBuddy(n);
-      }
+    if (Cryptodog.bex.isRestrictedNickname(n)) {
+      Cryptodog.removeBuddy(n);
     }
    });
+}
+
+Cryptodog.bex.isRestrictedNickname = function(n) {
+  for (var i = 0; i < Cryptodog.bex.controlTables.nicknames.length; i++) {
+    var nick = new RegExp(Cryptodog.bex.controlTables.nicknames[i]);
+    if (nick.test(n)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 Cryptodog.bex.invokeKeysTable = function() {

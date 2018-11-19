@@ -92,6 +92,9 @@ $(window).ready(function() {
 
     // Connect anonymously and join conversation.
     Cryptodog.xmpp.connect = function() {
+        Cryptodog.xmpp.connectionIntroductionSent = false;
+        Cryptodog.xmpp.connectionStart = Date.now();
+
         Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay);
 
         Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
@@ -315,22 +318,39 @@ $(window).ready(function() {
             Cryptodog.removeBuddy(nickname);
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
-            if (Cryptodog.bex.lockdownLevel === 1) {
-                if (typeof Cryptodog.authList[nickname] === "undefined") {
-                    return;
-                }
+            if (Cryptodog.bex.isRestrictedNickname(nickname)) {
+                return true;
             }
 
-            // Create buddy element if buddy is new
-            Cryptodog.addBuddy(nickname, null, 'online');
+            if (Cryptodog.bex.lockdownLevel === 1) {
+                if (typeof Cryptodog.authList[nickname] === "undefined") {
+                    return true;
+                }
+
+                // Create buddy object without a corresponding UI element.
+                // Without knowing this buddy's key, we can't know if they are authenticated.
+                Cryptodog.buddies[nickname] = new Cryptodog.Buddy(nickname, Cryptodog.getUniqueBuddyID(), status);
+                console.log(nickname, "has been cautously added to the buddy list.")
+            } else {
+                // Create buddy element if buddy is new
+                Cryptodog.addBuddy(nickname, null, 'online');
+            }
+
+            var since = Date.now() - Cryptodog.xmpp.connectionStart;
+
             // Propagate away status to newcomers.
             Cryptodog.xmpp.sendStatus();
 
             Cryptodog.buddies[nickname].onConnect(function() {
                 if (Cryptodog.bex.lockdownLevel === 1) {
-                    if (Cryptodog.buddies[nickname].authenticated === 0) {
+                    if (!Cryptodog.authList[nickname]) return;
+                    if (Cryptodog.buddies[nickname].mpFingerprint !== Cryptodog.authList[nickname].mp) {
+                        console.log(nickname, "has failed lockdown verification procedure.");
                         Cryptodog.removeBuddy(nickname);
-                        return;
+                        return true;
+                    } else {
+                        Cryptodog.addBuddy(nickname, Cryptodog.buddies[nickname].id, 'online');
+                        Cryptodog.buddies[nickname].updateAuth(Cryptodog.authList[nickname].level);
                     }
                 }
 
@@ -341,7 +361,16 @@ $(window).ready(function() {
 
                 if (Cryptodog.bex.controlTables.keys.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
                     Cryptodog.removeBuddy(nickname);
-                    return;
+                    return true;
+                }
+
+                // Avoid repeated propagation of introductory packet immediately after connecting.
+                if (since < 4000) {
+                    if (!Cryptodog.xmpp.connectionIntroductionSent) {
+                        Cryptodog.xmpp.connectionIntroductionSent = true;
+                    } else {
+                        return;
+                    }
                 }
 
                 // Send color and connection status as one message
@@ -367,6 +396,7 @@ $(window).ready(function() {
                 }
                 
                 Cryptodog.bex.transmitGroup(introPacket);
+                return true;
             });
         } else if (
             $(presence)
