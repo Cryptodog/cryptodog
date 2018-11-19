@@ -697,7 +697,7 @@ Cryptodog.bex.handleRTCOffer = function (nickname, packet) {
 
   if (Cryptodog.bex.voiceChatInitialized && Cryptodog.bex.rtcEnabled) {
     if (Cryptodog.bex.rtcSupport()) {
-      if (typeof Cryptodog.buddies[nickname].rtc !== "undefined") {
+      if (typeof Cryptodog.buddies[nickname].rtc !== "undefined" && Cryptodog.buddies[nickname].rtc !== null) {
         Cryptodog.buddies[nickname].rtc.rtcConn.close();
         Cryptodog.buddies[nickname].rtc = null;
       }
