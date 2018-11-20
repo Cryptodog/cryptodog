@@ -5,9 +5,8 @@ Cryptodog.templates = {
     customServer: '<option data-domain="{{domain}}" data-xmpp="{{xmpp}}" data-relay="{{relay}}">' + '{{name}}</option>',
 
     buddy:
-        '<div class="buddy" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">' +
         '<span class="loginTypeIcon"></span><span class="shortNickname">{{shortNickname}}</span>' +
-        '<div class="buddyMenu" id="menu-{{buddyID}}"></div></div>',
+        '<div class="buddyMenu" id="menu-{{buddyID}}" status="{{active}}"></div>',
 
     buddyMenu:
         '<div class="buddyMenuContents" id="{{buddyID}}-contents">' +

@@ -38,6 +38,10 @@
             return;
         }
 
+        if (Cryptodog.buddies[nickname].ignored()) {
+            return;
+        }
+
         Cryptodog.buddies[nickname].receivedMessage = true;
 
         if (Cryptodog.bex.base64.test(msg)) {

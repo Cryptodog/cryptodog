@@ -589,6 +589,7 @@ BUDDY LIST
 	margin: 5px 0 0 -2px;
 	font-size: 0.9em;
 	width: 100px;
+	transition: none;
 }
 
 .buddyMenuContents li {

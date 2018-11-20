@@ -351,6 +351,14 @@ Cryptodog.bex.onGroup = function (nickname, data) {
 
   packs.forEach(function (packet) {
     switch (packet.header) {
+      case o.STATUS_ONLINE:
+      Cryptodog.buddyStatus(nickname, "online");
+      break;
+
+      case o.STATUS_AWAY:
+      Cryptodog.buddyStatus(nickname, "away");
+      break;
+
       case o.COMPOSING:
       $('#buddy-' + Cryptodog.buddies[nickname].id).addClass('composing');
       break;

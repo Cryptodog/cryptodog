@@ -65,7 +65,7 @@ Cryptodog.UI = {
                     Cryptodog.displayInfo(nickname);
                 }
             }
-        });
+        }); 
     },
 
     // Close generating fingerprints dialog.
@@ -84,18 +84,22 @@ Cryptodog.UI = {
         Cryptodog.buddies[nickname].genFingerState = null;
 
         $('#fill')
-            .stop()
-            .animate({ width: '100%', opacity: '1' }, 400, 'linear', function() {
-                $('#dialogBoxContent').fadeOut(function() {
-                    $(this)
-                        .empty()
-                        .show();
-                    if (state.close) {
-                        $('#dialogBoxClose').click();
-                    }
-                    state.cb();
-                });
+            .stop(false, true)
+            .animate({ width: '100%', opacity: '1' }, 100, 'linear', function() {
+               
             });
+
+        window.setTimeout(function() {
+            $('#dialogBoxContent').fadeOut(function() {
+                $(this)
+                    .empty()
+                    .show();
+                if (state.close) {
+                    $('#dialogBoxClose').click();
+                }
+                state.cb();
+            });
+        }, 200);
     },
 
     // Displays a pretty dialog box with `data` as the content HTML.

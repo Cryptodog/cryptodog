@@ -313,6 +313,121 @@ window.addEventListener("load", function() {
 	window.setInterval(Cryptodog.bex.updateLevelDisplay, 128);
 });
 
+Cryptodog.redrawBuddyList = function() {
+	var botNames = [];
+	var onlineNames = [];
+	var awayNames = [];
+
+	Object.keys(Cryptodog.buddies)
+	.map((e) => {
+		if (Cryptodog.buddies[e].authenticated === 2) {
+			botNames.push(e);
+		} else {
+			if (Cryptodog.buddies[e].status === 'online') {
+				onlineNames.push(e);
+			} else {
+				awayNames.push(e);	
+			}
+		}
+	});
+
+	botNames.sort();
+	onlineNames.sort();
+	awayNames.sort();
+
+	var text = "";
+
+	var gcc = [
+		"buddy"
+	];
+
+	if (Cryptodog.me.currentBuddy === "groupChat") {
+		gcc.push("currentConversation");
+	}
+
+	var head = `<div class="` + gcc.join(" ")
+							+ `" id="buddy-groupChat"`
+							+ `" data-id="groupChat"`
+							+ `"><span>Conversation</span></div>`
+							+ `<span id="buddiesOnline"></span>`
+
+	var allNames = Array.prototype.concat(botNames, onlineNames, awayNames);
+	allNames = allNames.filter(function(a) {
+		return Cryptodog.buddies[a].visible === true;
+	});
+
+	for (var a = 0; a < allNames.length; a++) {
+		var nickname = allNames[a];
+		var buddy = Cryptodog.buddies[nickname];
+
+		var classes = ["buddy"];
+
+		if (nickname === Cryptodog.me.currentBuddy) {
+			classes.push("currentConversation");
+		}
+
+		if (buddy.ignored()){
+			classes.push('ignored')
+		}
+
+		// Display a warning icon if the nickname has Unicode characters or leading/trailing whitespace
+		if (!ascii.test(buddy.nickname) || buddy.nickname.trim() !== buddy.nickname) {
+			classes.push("warning");
+		}
+
+		if (buddy.authenticated === 2) {
+			classes.push("isMod");
+		} else {
+			if (buddy.bot === true) {
+				classes.push("isBot");
+			}
+		}
+
+		head += `<div class="` + classes.join(" ") + `"` +
+						`     id="buddy-` + buddy.id + `"`       +
+						`     status="`   + buddy.status + `"`   +
+						`     data-id="`  + buddy.id + `"`       +
+						`     dir="ltr" style="display: block;">` +
+						Mustache.render(Cryptodog.templates.buddy, {
+							buddyID: buddy.id,
+							shortNickname: shortenString(nickname, 11),
+							status: status,
+							active: buddy.menuActive === true ? "active" : "inactive"
+						}) +
+						`</div>`
+	}
+
+	$("#buddyList").html(head);
+
+	for (var a = 0; a < allNames.length; a++) {
+		var nickname = allNames[a];
+		var buddy = Cryptodog.buddies[nickname];
+
+		$('#buddy-' + buddy.id)
+			.unbind('click')
+			.click(function() {
+				Cryptodog.onBuddyClick($(this))
+			}
+		)
+		$('#menu-' + buddy.id)
+			.unbind('click')
+			.click(function(e) {
+				e.stopPropagation()
+				var pid = $(this).attr("id").split("-")[1];
+				var nick = Cryptodog.getBuddyNicknameByID(pid);
+				openBuddyMenu(nick, true)
+			}
+		)
+		if (buddy.menuActive === true) {
+			openBuddyMenu(nickname, false)
+		}
+	}
+
+	$("#buddy-groupChat").unbind("click").click(function() {
+		Cryptodog.onBuddyClick($(this))
+	});
+}
+
 // Add a `message` from `nickname` to the `conversation` display and log.
 // `type` can be 'file', 'message', 'warning' or 'missingRecipients'.
 // In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
@@ -434,6 +549,7 @@ var Buddy = function(nickname, id, status) {
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
 	this.color          = Cryptodog.colors[nickname] || "#000000"
+	this.menuActive     = false
 	this._sentPublicKey = false;
 	this.dispatchedConnect = false;
 	
@@ -595,39 +711,12 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 		buddy = Cryptodog.buddies[nickname];
 		id = buddy.id;
 	}
-	$('#buddyList').queue(function() {
-		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
-			buddyID: buddy.id,
-			shortNickname: shortenString(nickname, 11),
-			status: status
-		})
-		var placement = determineBuddyPlacement(nickname, id, status)
-		$(buddyTemplate).insertAfter(placement).slideDown(100, function() {
-			$('#buddy-' + buddy.id)
-				.unbind('click')
-				.click(function() {
-					Cryptodog.onBuddyClick($(this))
-				}
-			)
-			$('#menu-' + buddy.id).attr('status', 'inactive')
-				.unbind('click')
-				.click(function(e) {
-					e.stopPropagation()
-					openBuddyMenu(nickname)
-				}
-			)
-			buddyNotification(nickname, true)
-		})
-	})
-	$('#buddyList').dequeue()
-	if (buddy.ignored()){
-		$('#buddy-' + buddy.id).addClass('ignored')
-	}
 
-	// Display a warning icon if the nickname has Unicode characters or leading/trailing whitespace
-	if (!ascii.test(buddy.nickname) || buddy.nickname.trim() !== buddy.nickname) {
-		$('#buddy-' + buddy.id).addClass('warning');
-	}
+	buddy.visible = true;
+
+	buddyNotification(nickname, true)
+
+	Cryptodog.redrawBuddyList();
 
 	if (Cryptodog.persist && Cryptodog.authList[nickname]) {
 			Cryptodog.ensureOTRdialog(nickname, false, function() {
@@ -647,14 +736,8 @@ Cryptodog.buddyStatus = function(nickname, status) {
 		return;
 	}
 	Cryptodog.buddies[nickname].status = status
-	var thisBuddy = $('#buddy-' + Cryptodog.buddies[nickname].id)
-	var placement = determineBuddyPlacement(
-		nickname, Cryptodog.buddies[nickname].id, status
-	)
-	if (thisBuddy.attr('status') !== status) {
-		thisBuddy.attr('status', status)
-		thisBuddy.insertAfter(placement).slideDown(200)
-	}
+
+	Cryptodog.redrawBuddyList();
 }
 
 // Handle buddy going offline.
@@ -687,6 +770,7 @@ Cryptodog.removeBuddy = function(nickname) {
 			})
 		}
 	})
+	Cryptodog.redrawBuddyList();
 }
 
 // Determine where to place a buddy in the buddy list
@@ -1399,7 +1483,6 @@ function redrawConversation(id) {
 
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
 Cryptodog.ensureOTRdialog = function(nickname, close, cb, noAnimation) {
-	console.log("ensuring OTR for ", nickname);
 	var buddy = Cryptodog.buddies[nickname];
 
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
@@ -1417,31 +1500,39 @@ Cryptodog.ensureOTRdialog = function(nickname, close, cb, noAnimation) {
 
 	// add some state for status callback
 	buddy.genFingerState = { close: close, cb: cb, noAnimation: noAnimation}
-	buddy.otr.sendQueryMsg()
+	buddy.otr.sendQueryMsg();
 }
 
 
 // Open a buddy's contact list context menu.
-var openBuddyMenu = function(nickname) {
+var openBuddyMenu = function(nickname, animation) {
 	var buddy = Cryptodog.buddies[nickname],
 		chatWindow = Cryptodog.locale.chatWindow,
 		ignoreAction = chatWindow[buddy.ignored() ? 'unignore' : 'ignore'],
 		$menu = $('#menu-' + buddy.id),
 		$buddy = $('#buddy-' + buddy.id);
-	if ($menu.attr('status') === 'active') {
+	if ($menu.attr('status') === 'active' && animation) {
 		$menu.attr('status', 'inactive');
 		$menu.css('background-image', 'url("img/icons/circle-down.svg")');
-		$buddy.animate({'height': 15}, 190);
-		$('#' + buddy.id + '-contents').fadeOut(200, function() {
-			$(this).remove();
-		});
+		if (animation) {
+			$buddy.animate({'height': 15}, 190);
+			$('#' + buddy.id + '-contents').fadeOut(200, function() {
+				$(this).remove();
+			});
+		} else {
+			$('#' + buddy.id + '-contents').remove();
+		}
+		buddy.menuActive = false;
 		return;
 	}
+
+	buddy.menuActive = true;
 	var electMod = "Elect as moderator";
 	var revokeMod = "Revoke moderator status";
 	$menu.attr('status', 'active');
 	$menu.css('background-image', 'url("img/icons/circle-up.svg")');
-	$buddy.delay(10).animate({'height': 130}, 180, function() {
+
+	function render() {
 		$buddy.append(
 			Mustache.render(Cryptodog.templates.buddyMenu, {
 				buddyID: buddy.id,
@@ -1474,8 +1565,15 @@ var openBuddyMenu = function(nickname) {
 			e.stopPropagation();
 			buddy.toggleIgnored();
 			$menu.click();
-		});
-	})
+			});
+	}
+
+	if (animation) {
+		$buddy.delay(10).animate({'height': 130}, 180, render)
+	} else {
+		$buddy.css("height", 130);
+		render();
+	}
 }
 
 // Check for nickname completion.

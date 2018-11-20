@@ -326,15 +326,12 @@ $(window).ready(function() {
                 if (typeof Cryptodog.authList[nickname] === "undefined") {
                     return true;
                 }
-
-                // Create buddy object without a corresponding UI element.
-                // Without knowing this buddy's key, we can't know if they are authenticated.
-                Cryptodog.buddies[nickname] = new Cryptodog.Buddy(nickname, Cryptodog.getUniqueBuddyID(), status);
-                console.log(nickname, "has been cautously added to the buddy list.")
-            } else {
-                // Create buddy element if buddy is new
-                Cryptodog.addBuddy(nickname, null, 'online');
             }
+
+            // Create buddy object without a corresponding UI element.
+            // Without knowing this buddy's key, we can't know if they are authenticated.
+            Cryptodog.buddies[nickname] = new Cryptodog.Buddy(nickname, Cryptodog.getUniqueBuddyID(), status);
+            Cryptodog.buddies[nickname].visible = false;
 
             var since = Date.now() - Cryptodog.xmpp.connectionStart;
 
@@ -342,6 +339,15 @@ $(window).ready(function() {
             Cryptodog.xmpp.sendStatus();
 
             Cryptodog.buddies[nickname].onConnect(function() {
+                if (!Cryptodog.buddies[nickname]) {
+                    return true;
+                }
+
+                if (Cryptodog.bex.controlTables.keys.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
+                    Cryptodog.removeBuddy(nickname);
+                    return true;
+                }
+
                 if (Cryptodog.bex.lockdownLevel === 1) {
                     if (!Cryptodog.authList[nickname]) return;
                     if (Cryptodog.buddies[nickname].mpFingerprint !== Cryptodog.authList[nickname].mp) {
@@ -352,6 +358,8 @@ $(window).ready(function() {
                         Cryptodog.addBuddy(nickname, Cryptodog.buddies[nickname].id, 'online');
                         Cryptodog.buddies[nickname].updateAuth(Cryptodog.authList[nickname].level);
                     }
+                } else {
+                    Cryptodog.addBuddy(nickname, Cryptodog.buddies[nickname].id, 'online');
                 }
 
                 // config.json
@@ -481,8 +489,10 @@ $(window).ready(function() {
                     var buddy = Cryptodog.buddies[nickname];
                     
                     if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
-                        buddy.toggleIgnored();
-                        console.log('Automatically ignored ' + nickname);
+                        if (buddy.ignored() === false) {
+                            console.log('Automatically ignored ' + nickname);
+                            buddy.toggleIgnored();
+                        }
                     }
 
                     buddy.messageCount = 0;
