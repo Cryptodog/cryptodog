@@ -240,8 +240,12 @@ Cryptodog.multiParty = function() {};
             }
         } else if (type === 'message') {
             var text = message['text'];
+            
+            if (!text || typeof text !== 'object') {
+                return false;
+            }
 
-            if (typeof text[myName] !== 'object') {
+            if (!text[myName] || typeof text[myName] !== 'object') {
                 console.log('multiParty: invalid message from ' + sender);
                 Cryptodog.multiParty.messageWarning(sender);
                 return false;
