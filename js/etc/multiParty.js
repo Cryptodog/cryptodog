@@ -240,8 +240,12 @@ Cryptodog.multiParty = function() {};
             }
         } else if (type === 'message') {
             var text = message['text'];
+            
+            if (!text || typeof text !== 'object') {
+                return false;
+            }
 
-            if (typeof text[myName] !== 'object') {
+            if (!text[myName] || typeof text[myName] !== 'object') {
                 console.log('multiParty: invalid message from ' + sender);
                 Cryptodog.multiParty.messageWarning(sender);
                 return false;
@@ -278,10 +282,6 @@ Cryptodog.multiParty = function() {};
                     } catch (err) {
                         missingRecipients.push(recipients[i]);
                     }
-                }
-
-                if (missingRecipients.length) {
-                    Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
                 }
 
                 // Sort recipients
@@ -347,10 +347,18 @@ Cryptodog.multiParty = function() {};
                 plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
 
                 try {
-                    return plaintext.toString(CryptoJS.enc.Utf8);
+                    plaintext = plaintext.toString(CryptoJS.enc.Utf8);
                 } catch (e) {
                     console.log('multiParty: invalid UTF-8 message from ' + sender);
+                    return false;
                 }
+                
+                // Only show "missing recipients" warning if the message is readable
+                if (missingRecipients.length) {
+                    Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
+                }
+
+                return plaintext;
             }
         } else {
             console.log('multiParty: unknown message type "' + type + '" from ' + sender);
