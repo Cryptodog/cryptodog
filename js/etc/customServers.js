@@ -1,11 +1,25 @@
 $(window).ready(function() {
     'use strict';
 
-    fetch("config.json")
-    .then(function(txt) {
-        return txt.json();
-    })
-    .then(function(cfg) {
+    var menuOpen = false;
+
+    function onHide() {
+        menuOpen = false;
+        $('#customServerDialog').fadeOut(100, function() {
+            $('#footer').animate({ height: 20 }, 200);
+        });
+
+        Cryptodog.xmpp.currentServer.name = $('#customName').val();
+        Cryptodog.xmpp.currentServer.domain = $('#customDomain').val();
+        Cryptodog.xmpp.currentServer.conference = $('#customConferenceServer').val();
+        Cryptodog.xmpp.currentServer.relay = $('#customRelay').val();
+        Cryptodog.storage.setItem('serverName', Cryptodog.xmpp.currentServer.name);
+        Cryptodog.storage.setItem('domain', Cryptodog.xmpp.currentServer.domain);
+        Cryptodog.storage.setItem('conferenceServer', Cryptodog.xmpp.currentServer.conference);
+        Cryptodog.storage.setItem('relay', Cryptodog.xmpp.currentServer.relay);
+    }
+
+    Cryptodog.loadConfig().then(function() {
         var updateCustomServers = function() {
             var customServers = {};
             $('#customServerSelector option').each(function() {
@@ -19,17 +33,24 @@ $(window).ready(function() {
         };
 
         $('#customServer').click(function() {
+            if (menuOpen) {
+                onHide();
+                return;
+            }
+
             if (!document.getElementById('customServerSelector').firstChild) {
                 var text = "";
-                for (var i = 0; i < cfg.customServers.length; i++) {
-                    text += Mustache.render(cfg.customServers[i]);
+                for (var i = 0; i < Cryptodog.config.customServers.length; i++) {
+                    text += Mustache.render(Cryptodog.templates.customServer, Cryptodog.config.customServers[i]);
                 }
                 $("#customServerSelector").append(text);
             }
 
+            menuOpen = true;
+
             $('#languages').hide();
-            $('#footer').animate({ height: 220 }, function() {
-                $('#customServerDialog').fadeIn();
+            $('#footer').animate({ height: 220 }, 200, function() {
+                $('#customServerDialog').fadeIn(100);
                 $('#customName').val(Cryptodog.xmpp.currentServer.name);
                 $('#customDomain').val(Cryptodog.xmpp.currentServer.domain);
                 $('#customConferenceServer').val(Cryptodog.xmpp.currentServer.conference);
@@ -51,20 +72,7 @@ $(window).ready(function() {
 
                 $('#customServerSubmit')
                     .val(Cryptodog.locale['chatWindow']['cont'])
-                    .click(function() {
-                        $('#customServerDialog').fadeOut(200, function() {
-                            $('#footer').animate({ height: 14 });
-                        });
-
-                        Cryptodog.xmpp.currentServer.name = $('#customName').val();
-                        Cryptodog.xmpp.currentServer.domain = $('#customDomain').val();
-                        Cryptodog.xmpp.currentServer.conference = $('#customConferenceServer').val();
-                        Cryptodog.xmpp.currentServer.relay = $('#customRelay').val();
-                        Cryptodog.storage.setItem('serverName', Cryptodog.xmpp.currentServer.name);
-                        Cryptodog.storage.setItem('domain', Cryptodog.xmpp.currentServer.domain);
-                        Cryptodog.storage.setItem('conferenceServer', Cryptodog.xmpp.currentServer.conference);
-                        Cryptodog.storage.setItem('relay', Cryptodog.xmpp.currentServer.relay);
-                    });
+                    .click(onHide);
                 $('#customDomain').select();
             });
         });
@@ -173,5 +181,4 @@ $(window).ready(function() {
             $('#customRelay').val($(selectedOption).attr('data-relay'));
         });
     });
-
 });

@@ -75,6 +75,7 @@ Cryptodog.UI.setVersion(Cryptodog.version);
 // Seed RNG.
 Cryptodog.random.setSeed(Cryptodog.random.generateSeed());
 
+
 var conversationArrays = {};
 
 /*
@@ -82,6 +83,81 @@ var conversationArrays = {};
 GLOBAL INTERFACE FUNCTIONS
 -------------------
 */
+
+Cryptodog.theme = {
+	primary:   "#BB7A20",
+	secondary: "#00AEDE",
+	tertiary:  "#70B7DE"
+};
+
+Cryptodog.changeTheme = function(obj) {
+	Cryptodog.theme = obj;
+	Cryptodog.drawAutoStyle();
+}
+
+Cryptodog.getLineWidth = function() {
+	return window.innerWidth - 180;
+}
+
+Cryptodog.getConversationHeight = function() {
+	return window.innerHeight - 155;
+}
+
+Cryptodog.drawAutoStyle = function() {
+	$("#autoStyle").html(
+		`.themePrimary {
+			background-color: ${Cryptodog.theme.primary}
+		}
+
+		.themeSecondary {
+			background-color: ${Cryptodog.theme.secondary}
+		}
+		
+		.themeTertiary {
+			background-color: ${Cryptodog.theme.tertiary}
+		}
+
+		.textPrimary {
+			color: ${Cryptodog.theme.primary}
+		}
+
+		.textSecondary {
+			color: ${Cryptodog.theme.secondary}
+		}
+		
+		.textTertiary {
+			color: ${Cryptodog.theme.tertiary}
+		}
+
+		.line {
+			max-width: ${Cryptodog.getLineWidth()}px;
+		}
+		
+		#conversationWindow {
+			height: ${Cryptodog.getConversationHeight()}px;
+		}
+		
+		#utip {
+			background: ${Cryptodog.theme.primary};
+		}
+		`);
+}
+
+$(window).resize(function() {
+	Cryptodog.drawAutoStyle();
+});
+
+Cryptodog.menuActiveBuddy = function(nickname) {
+	if (!Cryptodog.buddies[nickname]) {
+		return false;
+	}
+
+	if (Cryptodog.buddies[nickname].menuActive === false) {
+		return false
+	}
+
+	return true;
+}
 
 // If returns true for a name, name is automatically ignored
 // Can be used to filter out types of names
@@ -113,16 +189,9 @@ Cryptodog.storage.getItem('persistenceEnabled', function(e) {
 	}
 });
 
-fetch("config.json")
-.then(function(resp) {
-	return resp.json();
-})
-.then(function(cfg) {
-	Cryptodog.bex.mods = cfg.mods || [];
-})
-.catch(function(err){});
-
 window.addEventListener("load", function() {
+	Cryptodog.drawAutoStyle();
+
 	document.querySelector("#changeColorBtn").addEventListener("change", function(e) {
 		var color = e.target.value;
 		var tst   = /^\#[a-fA-F0-9]{6}$/
@@ -342,7 +411,7 @@ Cryptodog.redrawBuddyList = function() {
 	];
 
 	if (Cryptodog.me.currentBuddy === "groupChat") {
-		gcc.push("currentConversation");
+		gcc.push("currentConversation", "themePrimary");
 	}
 
 	var head = `<div class="` + gcc.join(" ")
@@ -362,8 +431,8 @@ Cryptodog.redrawBuddyList = function() {
 
 		var classes = ["buddy"];
 
-		if (nickname === Cryptodog.me.currentBuddy) {
-			classes.push("currentConversation");
+		if (buddy.id === Cryptodog.me.currentBuddy) {
+			classes.push("currentConversation", "themePrimary");
 		}
 
 		if (buddy.ignored()){
@@ -447,7 +516,6 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		message = Cryptodog.UI.addLinks(message);
 		message = Cryptodog.UI.addEmoticons(message);
 		message = message.replace(/:/g, '&#58;');
-
 		pushAndRedraw(conversation, {
 			type:    "message",
 			nickname: nickname,
@@ -847,10 +915,12 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 	Cryptodog.UI.scrollDownConversation(0, false);
 	$('#userInputText').focus();
 	$('#buddy-' + id).addClass('currentConversation');
+	$('#buddy-' + id).addClass('themePrimary');
 	// Clean up finished conversations.
 	$('#buddyList div').each(function() {
 		if ($(this).attr('data-id') !== id) {
 			$(this).removeClass('currentConversation');
+			$(this).removeClass('themePrimary');
 			if (!$(this).hasClass('newMessage') && ($(this).attr('status') === 'offline')) {
 				$(this).slideUp(500, function() { $(this).remove() });
 			}
@@ -1465,7 +1535,7 @@ function redrawConversation(id) {
 					.animate({'width': progress + '%'}, 50);
 				}
 
-				xhr.open("GET", new etc.URL(Cryptodog.bex.server).subPath(`files/${link.fileID}`).toString());
+				xhr.open("GET", new etc.URL(Cryptodog.config.bexServer).subPath(`files/${link.fileID}`).toString());
 				xhr.send();
 			} catch (e) {
 				console.warn(e);
@@ -1555,6 +1625,10 @@ var openBuddyMenu = function(nickname, animation) {
 				if (confirm("Elect this user as moderator? This may give them extreme powers over your client, such as blocking and removing users.") === true) {
 					$contents.find(".option2").text(revokeMod);
 					buddy.updateAuth(2);
+					Cryptodog.bex.transmitGroup([
+						{header: Cryptodog.bex.op.MOD_ELECTED,
+						 target: nickname}
+					]);
 				}
 			} else {
 					$contents.find(".option2").text(electMod);
@@ -1563,9 +1637,9 @@ var openBuddyMenu = function(nickname, animation) {
 			$menu.click();
 		});
 		$contents.find('.option3').click(function(e) {
-			e.stopPropagation();
-			buddy.toggleIgnored();
-			$menu.click();
+				e.stopPropagation();
+				buddy.toggleIgnored();
+				$menu.click();
 			});
 	}
 

@@ -15,6 +15,7 @@
 	-webkit-user-select: none;
 	user-select: none;
 	-moz-user-select: none;
+	z-index: 5000;
 }
 #utip::before {
   position: absolute;

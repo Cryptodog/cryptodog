@@ -171,7 +171,7 @@ Cryptodog.UI = {
 
         $('#userInput').fadeOut(function() {
             $('#logoText').fadeIn();
-            $('#footer').animate({ height: 14 });
+            $('#footer').animate({ height: 20 });
 
             $('#conversationWrapper').fadeOut(function() {
                 $('#info,#loginOptions,#version,#loginInfo').fadeIn();
@@ -274,9 +274,11 @@ Cryptodog.UI = {
     addEmoticons: function(message) {
         for (var i = 0; i < Cryptodog.UI.emoticons.length; i++) {
             var e = Cryptodog.UI.emoticons[i];
-            message = message.replace(e.regex, ' <span class="monospace">' + e.data + '</span>');
+            message = message.replace(e.regex, e.data);
         }
-        return message;
+     
+        var zm = new ZIPmoji();
+        return zm.process(message, 256);
     },
 
     setEmoticonPack: function(packId) {
@@ -356,6 +358,11 @@ Cryptodog.UI = {
                 .parent()
                 .attr('data-sender');
 
+            if (bid === "null") {
+                Cryptodog.displayInfo(Cryptodog.me.nickname);
+                return;
+            }
+
             var nick = Cryptodog.getBuddyNicknameByID(bid);
 
             if (!Cryptodog.buddies[nick]) return;
@@ -413,6 +420,14 @@ Cryptodog.UI = {
 
             $(this).mouseenter();
             Cryptodog.toggleBuddyWhitelist();
+        });
+
+        $('#userInputSend').hover(function() {
+            $(this).addClass("themeSecondary");
+        });
+
+        $('#userInputSend').mouseleave(function() {
+            $(this).removeClass("themeSecondary");
         });
 
         // Dark mode button
@@ -657,13 +672,13 @@ Cryptodog.UI = {
 
         // Determine whether we are showing a top margin
         // Depending on window size
-        $(window).resize(function() {
-            if ($(window).height() < 650) {
-                $('#bubble').css('margin-top', '0');
-            } else {
-                $('#bubble').css('margin-top', '2%');
-            }
-        });
+        // $(window).resize(function() {
+        //     if ($(window).height() < 650) {
+        //         $('#bubble').css('margin-top', '0');
+        //     } else {
+        //         $('#bubble').css('margin-top', '2%');
+        //     }
+        // });
         $(window).resize();
     },
 

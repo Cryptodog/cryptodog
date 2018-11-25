@@ -11,7 +11,7 @@ Cryptodog.fileTransfer = function(file, result) {
 	var nonce     = etc.crypto.nacl.randomBytes(24);
 	var did       = etc.Encoding.encodeToHex(nonce);
 	var encrypted = etc.crypto.nacl.secretbox(envelope, nonce, key);
-	var server    = new etc.URL(Cryptodog.bex.server);
+	var server    = new etc.URL(Cryptodog.config.bexServer);
 	var request   = new XMLHttpRequest();
 
 	request.responseType = "arraybuffer";

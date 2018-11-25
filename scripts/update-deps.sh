@@ -33,5 +33,15 @@ function installSuperp00tEtc() {
   rm -rf $ETCLIB
 }
 
+function installZipMoji() {
+  bprint installing cross-platform Emoji support...
+  MOJI=$(tmp)
+  bgit https://github.com/superp00t/zipmoji.git $MOJI
+  cp $MOJI/dist/zipmoji.min.css css/zipmoji.min.css
+  cp $MOJI/dist/ZIPmoji.min.js js/lib/ZIPmoji.min.js
+  rm -rf $MOJI
+}
+
 installCryptoLibs
 installSuperp00tEtc
+installZipMoji

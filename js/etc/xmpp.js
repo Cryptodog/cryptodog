@@ -3,7 +3,10 @@ Cryptodog.xmpp = {};
 Cryptodog.xmpp.currentStatus = 'online';
 Cryptodog.xmpp.connection = null;
 
-Cryptodog.xmpp.defaultServer = {
+Cryptodog.loadConfig()
+.then(function() {
+
+Cryptodog.xmpp.defaultServer = Cryptodog.config.customServers[0] || {
     name: 'Cryptodog',
     domain: 'crypto.dog',
     conference: 'conference.crypto.dog',
@@ -156,7 +159,7 @@ $(window).ready(function() {
             $('#loginOptions,#languages,#customServerDialog').fadeOut(200);
             $('#version,#logoText,#loginInfo,#info').fadeOut(200);
             $('#header').animate({ 'background-color': '#444' });
-            $('.logo').animate({ margin: '-11px 5px 0 0' });
+            $('.logo').animate({ margin: '-11px 10px 0 0' });
 
             $('#login').fadeOut(200, function() {
                 $('#conversationInfo').fadeIn();
@@ -169,17 +172,12 @@ $(window).ready(function() {
                 $('#conversationWrapper').fadeIn();
                 $('#optionButtons').fadeIn();
 
-                $('#footer')
-                    .delay(200)
-                    .animate({ height: 60 }, function() {
-                        $('#userInput').fadeIn(200, function() {
-                            $('#userInputText').focus();
-                        });
-                    });
+                $('#userInput').css("display", "flex");
+                $('#userInputText').focus();
 
                 $('#buddyWrapper').slideDown();
             });
-        }, 800);
+        }, 200);
 
         Cryptodog.loginError = true;
     };
@@ -363,7 +361,7 @@ $(window).ready(function() {
                 }
 
                 // config.json
-                if (Cryptodog.bex.mods.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
+                if (Cryptodog.config.mods.includes(Cryptodog.buddies[nickname].mpFingerprint)) {
                     Cryptodog.buddies[nickname].updateAuth(2);
                 }
 
@@ -471,7 +469,7 @@ $(window).ready(function() {
                 document.querySelector("#changeColorBtn").value = item;
             }
 
-            $('.conversationName').animate({ 'background-color': '#bb7a20' });
+            $('.conversationName').addClass("themePrimary");
 
             Cryptodog.xmpp.sendPublicKey();
             Cryptodog.xmpp.requestPublicKey();
@@ -510,4 +508,5 @@ $(window).ready(function() {
         }
         return false;
     };
+});
 });

@@ -29,7 +29,7 @@ Cryptodog.bex.op = {
   RTC_OFFER:          31,
   RTC_ANSWER:         32,
   RTC_SIGNAL_CAPABILITY: 33,
-  RTC_SIGNAL_DISABLED:   44
+  RTC_SIGNAL_DISABLED:   34
 };
 
 Cryptodog.bex.controlTables = {
@@ -37,8 +37,6 @@ Cryptodog.bex.controlTables = {
   keys:      [],
   phrases:   []
 };
-
-Cryptodog.bex.mods = [];
 
 Cryptodog.bex.lockdownLevel = 0;
 
@@ -218,6 +216,7 @@ Cryptodog.bex.serialize = function(array) {
       break;
 
       case o.WHITELIST_USER:
+      case o.MOD_ELECTED:
       e.writeString(packet.target);
       break;
     }
@@ -323,6 +322,7 @@ Cryptodog.bex.deserialize = function (bytes) {
       break;
 
       case o.WHITELIST_USER:
+      case o.MOD_ELECTED:
       pack.target = b.readString();
       break;
     }
@@ -632,19 +632,19 @@ Cryptodog.bex.voiceChatInitialized = false;
 
 Cryptodog.bex.voiceChat = {};
 
-Cryptodog.bex.server = "https://bex.pg.ikrypto.club/";
+Cryptodog.bex.iceCfg = function() {
+  return {
+    // Force peers to go through TURN server
+    // Prevents IP leakage, but at the cost of additional latency :(
+    "iceTransportPolicy": "relay",
 
-Cryptodog.bex.iceCfg = {
-  // Force peers to go through TURN server
-  // Prevents IP leakage, but at the cost of additional latency :(
-  "iceTransportPolicy": "relay",
-
-  "iceServers": [{
-    "urls":       "turn:" + new etc.URL(Cryptodog.bex.server).hostname + ":3478",
-    "username":   "cryptodog",
-    "credential": "preventing-ip-leakage"
-  }]
-};
+    "iceServers": [{
+      "urls":       "turn:" + new etc.URL(Cryptodog.config.bexServer).hostname + ":3478",
+      "username":   "cryptodog",
+      "credential": "preventing-ip-leakage"
+    }]
+  };
+}
 
 Cryptodog.bex.strings = {
   noMic:      "No microphone: Click to request microphone permissions.",
@@ -753,7 +753,7 @@ Cryptodog.bex.handleRTCOffer = function (nickname, packet) {
       };
 
       Cryptodog.buddies[nickname].rtc = gcv;
-      gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg);
+      gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg());
 
       gcv.rtcConn.oniceconnectionstatechange = function(ev) {
         if (Cryptodog.bex.checkConnectionChange(nickname)) {

@@ -4,11 +4,13 @@
 <head>
     <title>Cryptodog</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob:; media-src 'self' blob:; connect-src *;">
-    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src *;">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <meta name="referrer" content="no-referrer" />
     <link rel="stylesheet" media="screen" href="css/style.css" type="text/css" />
     <link rel="stylesheet" href="css/jquery.utip.css" type="text/css" />
+    <link rel="stylesheet" href="css/zipmoji.min.css" type="text/css" />
     <link rel="icon" type="image/png" href="img/logo-32.png" />
 
     <link rel="prefetch" href="img/icons/kingpin.svg"/>
@@ -18,7 +20,9 @@
     <link rel="prefetch" href="img/icons/mic-none.svg"/>
     <link rel="prefetch" href="img/icons/palette.svg"/>
 
+    <script type="application/javascript" src="js/etc/config.js"></script>
     <script type="application/javascript" src="js/etc/debug.js"></script>
+    <script type="application/javascript" src="js/lib/ZIPmoji.min.js"></script>
     <script type="application/javascript" src="js/lib/superp00t-etc.min.js"></script>
     <script type="application/javascript" src="js/lib/SoundMeter.js"></script>
     <script type="application/javascript" src="js/lib/jquery/jquery-3.3.1.min.js"></script>
@@ -53,6 +57,8 @@
     <script type="application/javascript" src="js/lib/otr.js"></script>
     <script type="application/javascript" src="js/lib/elliptic.js"></script>
     <script type="application/javascript" src="js/etc/locale.js"></script>
+
+    <style id="autoStyle"></style>
 </head>
 
 <body class="darkMode">
@@ -75,7 +81,7 @@
         <div id="bubble">
             <div id="header">
                 <img src="img/logo.svg" alt="Cryptodog" class="logo" />
-                <span id="logoText" dir="ltr">Cryptodog</span>
+                <span id="logoText" class="textPrimary" dir="ltr">Cryptodog</span>
                 <span id="conversationInfo">
                     <span class="conversationName"></span>
                 </span>
@@ -174,7 +180,7 @@
                 </div>
                 <form id="userInput">
                     <textarea id="userInputText" maxlength="3072"></textarea>
-                    <input type="submit" value="►" id="userInputSend" />
+                    <input type="submit" value="►" class="themePrimary" id="userInputSend" />
                 </form>
             </div>
             <div id="conversationWrapper">
