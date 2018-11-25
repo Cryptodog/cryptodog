@@ -917,7 +917,7 @@ DIALOG BOX
 #progressBar {
 	margin-top: 10px;
 	height: 18px;
-	width: 100%;
+	width: 85%;
 	border: 1px solid #C0C0C0;
 	padding: 1px;
 }
