@@ -951,6 +951,7 @@ Cryptodog.displayInfo = function(nickname) {
 
 // Executes on user logout.
 Cryptodog.logout = function() {
+	Cryptodog.bex.lockdownLevel = 0;
 	Cryptodog.bex.disconnectRTCVoiceChat();
 	Cryptodog.UI.logout();
 	Cryptodog.loginError = false;
@@ -1256,7 +1257,7 @@ Cryptodog.pushAndRedraw = pushAndRedraw;
 Cryptodog.redraw = redrawConversation;
 
 // if the number of elements in a conversation exceeds this length, old messages are trimmed out.
-Cryptodog.maxConversationLength = 512;
+Cryptodog.maxConversationLength = 256;
 
 function redrawConversation(id) {
 	// We shouldn't redraw at this moment.
