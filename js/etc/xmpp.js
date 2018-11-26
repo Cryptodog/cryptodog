@@ -250,7 +250,7 @@ $(window).ready(function() {
 
             Cryptodog.bex.lastTransmissionFrom = nickname;
 
-            if (Cryptodog.menuActive(nickname) === true) {
+            if (Cryptodog.menuActiveBuddy(nickname) === true) {
                 body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
 
                 if (typeof body === 'string') {
