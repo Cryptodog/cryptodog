@@ -147,16 +147,12 @@ $(window).resize(function() {
 	Cryptodog.drawAutoStyle();
 });
 
-Cryptodog.menuActiveBuddy = function(nickname) {
+Cryptodog.buddyActive = function(nickname) {
 	if (!Cryptodog.buddies[nickname]) {
 		return false;
 	}
 
-	if (Cryptodog.buddies[nickname].menuActive === false) {
-		return false
-	}
-
-	return true;
+	return Cryptodog.buddies[nickname].visible;
 }
 
 // If returns true for a name, name is automatically ignored

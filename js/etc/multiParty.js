@@ -367,7 +367,7 @@ Cryptodog.multiParty = function() {};
                     // Not a BEX message, but we still need to check if it's valid UTF-8 before we can display it..
                     if (etc.Encoding.validateUTF8(bytes)) {
                         // Don't show missing recipient warnings unless we're sure it's a displayable message.
-                        if (missingRecipients.length) {
+                        if (missingRecipients.length && Cryptodog.buddyActive(sender)) {
                             Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
                         }
 

@@ -251,7 +251,7 @@ $(window).ready(function() {
             Cryptodog.bex.lastTransmissionFrom = nickname;
             body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
 
-            if (Cryptodog.menuActiveBuddy(nickname) === true) {
+            if (Cryptodog.buddyActive(nickname) === true) {
                 if (typeof body === 'string') {
                     Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
                 }
