@@ -249,10 +249,9 @@ $(window).ready(function() {
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
             Cryptodog.bex.lastTransmissionFrom = nickname;
+            body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
 
             if (Cryptodog.menuActiveBuddy(nickname) === true) {
-                body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
-
                 if (typeof body === 'string') {
                     Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
                 }
