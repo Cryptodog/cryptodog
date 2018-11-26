@@ -249,10 +249,13 @@ $(window).ready(function() {
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
             Cryptodog.bex.lastTransmissionFrom = nickname;
-            body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
 
-            if (typeof body === 'string') {
-                Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
+            if (Cryptodog.menuActive(nickname) === true) {
+                body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
+
+                if (typeof body === 'string') {
+                    Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
+                }
             }
         } else if (type === 'chat') {
             // Check if this is a private OTR message.

@@ -368,9 +368,7 @@ Cryptodog.multiParty = function() {};
                     if (etc.Encoding.validateUTF8(bytes)) {
                         // Don't show missing recipient warnings unless we're sure it's a displayable message.
                         if (missingRecipients.length) {
-                            if (Cryptodog.menuActiveBuddy(sender) === true) {
-                                Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
-                            }
+                            Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
                         }
 
                         return etc.Encoding.encodeToUTF8(bytes);
