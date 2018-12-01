@@ -22,7 +22,53 @@ body {
 
 .dragover {
 	filter:  blur(4px) opacity(.2);
+}
+
+.nodrop * {
 	pointer-events: none;
+}
+
+#commandPreview {
+	display: none;
+	background: #333;
+	color:      #FFF;
+	border: 1px solid #000;
+	position: absolute;
+	min-width: 340px;
+	width: 40vw;
+	bottom: 108px;
+	left: 15px;
+	border-radius: 4px 4px;
+	z-index: 1000;
+}
+
+#commandPreview > h3 {
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 1em;
+	color :#666;
+	text-transform: uppercase;
+}
+
+#commandPreview > span {
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	font-size: 1em;
+}
+
+.desc {
+	margin: 0;
+	float: right;
+	position: absolute;
+	right: 5px;
+}
+
+#commandPreview > * {
+	margin: 4px;
+}
+
+#commandPreviewContent {
+	min-height: 64px;
+	border-radius: 2px 2px;
 }
 
 #addFileIcon {
@@ -30,6 +76,7 @@ body {
 	height: 156px;
   position: fixed;
 	left: 50%;
+	top: 0%;
 	margin-top: 200px;
 	margin-left: -78px;
 	pointer-events: none;

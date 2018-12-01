@@ -140,6 +140,10 @@ Cryptodog.drawAutoStyle = function() {
 		#utip {
 			background: ${Cryptodog.theme.primary};
 		}
+
+		.commandSelected {
+			border: 1px solid ${Cryptodog.theme.primary};
+		}
 		`);
 }
 
@@ -337,12 +341,14 @@ window.addEventListener("load", function() {
 	// Drag & drop file transfer
 	$("body").on("dragover", function() {
 		if (Cryptodog.xmpp.connection === null) return;
+		$("#bubbleWrapper").addClass("nodrop");
 		$("#bubbleWrapper").addClass("dragover");
 		$("#addFileIcon").removeClass("invisible");
 	});
 
 	$("body").on("dragleave", function() {
 		if (Cryptodog.xmpp.connection === null) return;
+		$("#bubbleWrapper").removeClass("nodrop");
 		$("#bubbleWrapper").removeClass("dragover");
 		$("#addFileIcon").addClass("invisible");
 	});
@@ -358,6 +364,7 @@ window.addEventListener("load", function() {
 		}
 
 		$("#bubbleWrapper").removeClass("dragover");
+		$("#bubbleWrapper").removeClass("nodrop");
 		$("#addFileIcon").addClass("invisible");
 	});
 
@@ -542,6 +549,9 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	}
 	if (type === 'missingRecipients') {
 		if (!message.length) { return false }
+		message = message.filter(function(mr) {
+			return mr.visible === true;
+		})
 		message = message.join(', ');
 		pushAndRedraw(conversation, {
 			type:    "missingRecipients",
@@ -1017,6 +1027,7 @@ Cryptodog.displayInfo = function(nickname) {
 
 // Executes on user logout.
 Cryptodog.logout = function() {
+	Cryptodog.cmd.hidePreview();
 	Cryptodog.bex.lockdownLevel = 0;
 	Cryptodog.bex.disconnectRTCVoiceChat();
 	Cryptodog.UI.logout();
@@ -1728,6 +1739,8 @@ Cryptodog.newMessageCount = function(count){
 	}
 }
 
+Cryptodog.compose = true;
+
 /*
 -------------------
 USER INTERFACE BINDINGS
@@ -1749,6 +1762,9 @@ $('#userInput').submit(function() {
 		}
 	}
 
+	message = Cryptodog.cmd.interpret(message);
+	Cryptodog.cmd.hidePreview();
+
 	if (!message.length) { return false }
 	if (Cryptodog.me.currentBuddy !== 'groupChat') {
 		Cryptodog.buddies[
@@ -1759,6 +1775,9 @@ $('#userInput').submit(function() {
 		var ciphertext = JSON.parse(Cryptodog.multiParty.sendMessage(message));
 		var missingRecipients = [];
 		for (var i in Cryptodog.buddies) {
+			if (!Cryptodog.buddies[i].visible) {
+				continue;
+			}
 			if (typeof(ciphertext['text'][i]) !== 'object') {
 				missingRecipients.push(i);
 			}
@@ -1788,14 +1807,50 @@ function isCharacterKeyPress(e) {
 	return false;
 }
 
+document.querySelector(`#userInputText`).addEventListener("input", function() {
+	Cryptodog.cmd.updatePreview(this.value);
+});
+
 // User input key event detection.
 // (Message submission, nick completion...)
 $('#userInputText').keydown(function(e) {
+	if (e.keyCode == 38) {
+		e.preventDefault();
+		Cryptodog.cmd.tabIndex--;
+		if (Cryptodog.cmd.tabIndex === -1) {
+			Cryptodog.cmd.tabIndex = Cryptodog.cmd.suggest.length - 1;
+		}
+
+		$(".commandSelected").removeClass("commandSelected");
+		$("#suggest-" + Cryptodog.cmd.tabIndex).addClass("commandSelected");
+		Cryptodog.cmd.replaceHead();
+	}
+
+	if (e.keyCode == 40) {
+		e.preventDefault();
+		Cryptodog.cmd.tabIndex++;
+		if (Cryptodog.cmd.tabIndex === Cryptodog.cmd.suggest.length) {
+			Cryptodog.cmd.tabIndex = 0;
+		}
+
+		$(".commandSelected").removeClass("commandSelected");
+		$("#suggest-" + Cryptodog.cmd.tabIndex).addClass("commandSelected");
+		Cryptodog.cmd.replaceHead();
+	}
+
 	if (e.keyCode === 9) {
 		e.preventDefault()
-		var nickComplete = nicknameCompletion($(this).val())
-		if (nickComplete) {
-			$(this).val(nickComplete)
+		if (Cryptodog.cmd.head() !== Cryptodog.cmd.suggest[Cryptodog.cmd.tabIndex]) {
+			Cryptodog.cmd.replaceHead();
+		} else {
+			Cryptodog.cmd.tabIndex ++;
+			if (Cryptodog.cmd.tabIndex === Cryptodog.cmd.suggest.length) {
+				Cryptodog.cmd.tabIndex = 0;
+			}
+
+			$(".commandSelected").removeClass("commandSelected");
+			$("#suggest-" + Cryptodog.cmd.tabIndex).addClass("commandSelected");
+			Cryptodog.cmd.replaceHead();
 		}
 	}
 	else if (e.keyCode === 13) {
@@ -1814,7 +1869,8 @@ $('#userInputText').keydown(function(e) {
 		destination = Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy);
 		type = 'chat';
 	}
-	if (!Cryptodog.me.composing) {
+
+	if (!Cryptodog.me.composing && Cryptodog.compose) {
 		Cryptodog.me.composing = true;
 		if (type === 'groupchat') {
 			Cryptodog.bex.transmitGroup([
@@ -1910,6 +1966,7 @@ $('#CryptodogLogin').submit(function() {
 		
 		Cryptodog.xmpp.showKeyPreparationDialog(function () {
 			Cryptodog.me.color = randomColor({ luminosity: 'dark' });
+			document.querySelector("#changeColorBtn").value = Cryptodog.me.color;
 			Cryptodog.xmpp.connect();
 		});
 	}
