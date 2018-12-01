@@ -99,8 +99,8 @@ Cryptodog.cmd.updatePreview = function(buffer) {
   var emojis     = [];
 
   for (var bud in Cryptodog.buddies) {
-    if (bud.startsWith(head.toLowerCase())) {
-      buddies.push(bud + ":");
+    if (bud.toLowerCase().startsWith(head.toLowerCase())) {
+      buddies.push(bud);
     }
   }
 
