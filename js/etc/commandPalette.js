@@ -12,17 +12,41 @@ Cryptodog.cmd.commands = {
     cb: function() {
       Cryptodog.compose = false;
     }
+  },
+
+  lockdown: {
+    description: "Block unauthenticated users",
+    cb: function(ag) {
+      var level = 0;
+      if (ag.length === 0) {
+        level = 1;
+      } else {
+        level = parseInt(ag[0]);
+      }
+
+      Cryptodog.bex.lockdownLevel = level;
+    }
   }
 };
 
+Cryptodog.cmd.botCommands = {
+  "s-bl":    "Superblock a user",
+  "ratpost": "Post a rat",
+  "catpost": "Post a cat",
+  "quote":   "Post a quote"
+};
+
 Cryptodog.cmd.textTransforms = {
-  "/shrug":     [ /\/shrug/g,     "¯\\_(ツ)_/¯" ],
-  "/tableflip": [ /\/tableflip/g, "(╯°□°）╯︵ ┻━┻"],
-  "/unflip":    [ /\/unflip/g,    "┬─┬ノ( º _ ºノ)"],
-  "/srs":       [ /\/srs/g,       "ಠ_ಠ"],
-  "/joy":       [ /\/joy/g,       "(/◕ヮ◕)/"],
-  "/lenny":     [ /\/lenny/g,     "( ͡° ͜ʖ ͡°)"],
-  "/terror":    [ /\/terror/g,    "(╬ ಠ益ಠ)"]
+  "/shrug":       [ /\/shrug/g,     "¯\\_(ツ)_/¯" ],
+  "/tableflip":   [ /\/tableflip/g, "(╯°□°）╯︵ ┻━┻"],
+  "/unflip":      [ /\/unflip/g,    "┬─┬ノ( º _ ºノ)"],
+  "/srs":         [ /\/srs/g,       "ಠ_ಠ"],
+  "/joy":         [ /\/joy/g,       "(/◕ヮ◕)/"],
+  "/lenny":       [ /\/lenny/g,     "( ͡° ͜ʖ ͡°)"],
+  "/terror":      [ /\/terror/g,    "(╬ ಠ益ಠ)"],
+  "/cute":        [ /\/cute/g,       "(ノ^∇^)"],
+  "/cry":         [ /\/cry/g,        "(༎ຶ⌑༎ຶ)"],
+  "/crymeariver": [ /\/crymeariver/g, "༼ ༎ຶ ෴ ༎ຶ༽"]
 };
 
 Cryptodog.cmd.interpret = function(text) {
@@ -49,7 +73,7 @@ Cryptodog.cmd.interpret = function(text) {
     if (typeof obj.cb !== "function") {
       return "";
     }
-  
+
     var text = obj.cb(args.slice(1));
     if (!text) {
       return "";
@@ -93,6 +117,7 @@ Cryptodog.cmd.updatePreview = function(buffer) {
   var words = buffer.split(" ");
   var head = words[words.length-1];
 
+  var botcmd     = [];
   var buddies    = [];
   var commands   = [];
   var transforms = [];
@@ -101,6 +126,17 @@ Cryptodog.cmd.updatePreview = function(buffer) {
   for (var bud in Cryptodog.buddies) {
     if (bud.toLowerCase().startsWith(head.toLowerCase())) {
       buddies.push(bud);
+    }
+  }
+
+  for (var bcm in Cryptodog.cmd.botCommands) {
+    if (head === ".") {
+      botcmd.push(bcm);
+      continue;
+    }
+
+    if (("." + bcm).startsWith(head)) {
+      botcmd.push(bcm);
     }
   }
 
@@ -144,6 +180,15 @@ Cryptodog.cmd.updatePreview = function(buffer) {
       var bud = buddies[b];
       html += `<div id="suggest-${idx}" class="commandSelection"><span>${Mustache.escape(bud)}</span></div>`;
       Cryptodog.cmd.suggest.push(bud);
+      idx++;
+    }
+  }
+
+  if (botcmd.length > 0) {
+    html += "<h3>Bot Commands</h3>";
+    for (var i in botcmd) {
+      html += `<div id="suggest-${idx}" class="commandSelection"><span>.${botcmd[i]}<span><span class="desc">${Mustache.escape(Cryptodog.cmd.botCommands[botcmd[i]])}</span></div>`;
+      Cryptodog.cmd.suggest.push("." + botcmd[i]);
       idx++;
     }
   }
@@ -201,23 +246,42 @@ Cryptodog.cmd.updatePreview = function(buffer) {
   $("#suggest-0").addClass("commandSelected");
 }
 
+Cryptodog.cmd.userHead = "";
+
 Cryptodog.cmd.replaceHead = function() {
   var buffer = $("#userInputText").val();
 
+  var selection = Cryptodog.cmd.suggest[Cryptodog.cmd.tabIndex];
+
   if (buffer.length === 0) {
-    $("#userInputText").val(Cryptodog.cmd.suggest[Cryptodog.cmd.tabIndex]);
+    $("#userInputText").val(selection);
     return;
   }
 
-  var words = buffer.split(" ");
-  var head = words[words.length-1];
+  var uH = Cryptodog.cmd.userHead;
 
-  var prefix = words.slice(0, words.length-1);
+  if (Cryptodog.buddies[selection]) {
+    Cryptodog.cmd.userHead = selection;
+  } else {
+    Cryptodog.cmd.userHead = "";
+  }
 
-  prefix = prefix.concat(Cryptodog.cmd.suggest[Cryptodog.cmd.tabIndex]);
+  if (uH !== "" && uH !== selection) {
+    buffer = buffer.replace(new RegExp(escapeRegExp(uH) + "$"), selection);
+  } else {
+    if (buffer.endsWith(selection) === false) {
+    // console.log("Replaced ", uH, "with", selection);
+      var words = buffer.split(" ");
+      var head = words[words.length-1];
+    
+      var prefix = words.slice(0, words.length-1);
+    
+      buffer = prefix.concat(selection).join(" ");
+    }
+  }
 
-  $("#userInputText").val(prefix.join(" "));
-} 
+  $("#userInputText").val(buffer);
+}
 
 Cryptodog.cmd.hidePreview = function() {
   $("#commandPreview").html("");
