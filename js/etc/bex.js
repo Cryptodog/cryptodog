@@ -333,6 +333,18 @@ Cryptodog.bex.deserialize = function (bytes) {
   return packets;
 }
 
+Cryptodog.bex.headerToString = function(n) {
+  var dict = {};
+
+  for (var k in Cryptodog.bex.op) {
+    if (Cryptodog.bex.op[k] === n) {
+      return k;
+    }
+  }
+
+  return "(unknown BEX " + n + ")";
+}
+
 /**
  * Handles BEX data from the group conversation
  * 
@@ -347,9 +359,9 @@ Cryptodog.bex.onGroup = function (nickname, data) {
     return;
   }
 
-  console.log("BEX data from", nickname, packs);
-
   packs.forEach(function (packet) {
+    console.log(nickname + ": " + Cryptodog.bex.headerToString(packet.header), packet);
+
     switch (packet.header) {
       case o.STATUS_ONLINE:
       Cryptodog.buddyStatus(nickname, "online");
@@ -708,6 +720,11 @@ Cryptodog.bex.handleRTCAnswer = function (nickname, packet) {
   if (Cryptodog.bex.voiceChatInitialized && Cryptodog.bex.rtcEnabled) {
     if (Cryptodog.bex.rtcSupport() && typeof Cryptodog.buddies[nickname].rtc !== "undefined") {
       var gcv = Cryptodog.buddies[nickname].rtc;
+      if (gcv.rtcConn.signalingState === "stable") {
+        console.log(nickname + ": sent RTC answer in state stable.");
+        return;
+      }
+
       gcv.rtcConn.setRemoteDescription(
         new RTCSessionDescription({
           type: "answer",
@@ -731,7 +748,7 @@ Cryptodog.bex.checkConnectionChange = function (nickname) {
 
   var gcv = Cryptodog.buddies[nickname].rtc;
   if (gcv === null) {
-    return;
+    return false;
   }
 
   if (gcv.initialized == true) {
@@ -857,12 +874,17 @@ Cryptodog.bex.connectStreamToPeer = function(peer, stream) {
     tracks: []
   };
 
+  if (Cryptodog.buddies[peer].rtc && Cryptodog.buddies[peer].rtc !== null) {
+    Cryptodog.buddies[peer].rtc.rtcConn.close();
+  }
+
   Cryptodog.buddies[peer].rtc = gcv;
 
   gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg(), Cryptodog.bex.rtcConstraints);
 
   gcv.rtcConn.oniceconnectionstatechange = function(ev) {
     if (Cryptodog.bex.checkConnectionChange(peer)) {
+      console.log("Successfully connected stream to " + peer)
     }
   }
 
