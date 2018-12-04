@@ -476,7 +476,7 @@ Cryptodog.bex.onGroup = function (nickname, data) {
 Cryptodog.bex.transmitCohort = function(c) {
   Cryptodog.bex.lastTransmissionGroup = Date.now();
   Cryptodog.bex.lastTransmissionFrom = Cryptodog.me.nickname;
-  var data = Cryptodog.bex.serialize(packets);
+  var data = Cryptodog.bex.serialize(c);
   var base64 = etc.Encoding.encodeToBase64(data);
   var encrypted = Cryptodog.multiParty.sendMessage(base64, true);
 
