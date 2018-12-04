@@ -753,7 +753,7 @@ Cryptodog.bex.handleRTCOffer = function (nickname, packet) {
       };
 
       Cryptodog.buddies[nickname].rtc = gcv;
-      gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg(), Cryptodog.rtc.rtcConstraints);
+      gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg(), Cryptodog.bex.rtcConstraints);
 
       gcv.rtcConn.oniceconnectionstatechange = function(ev) {
         if (Cryptodog.bex.checkConnectionChange(nickname)) {
@@ -854,7 +854,7 @@ Cryptodog.bex.connectStreamToPeer = function(peer, stream) {
 
   Cryptodog.buddies[peer].rtc = gcv;
 
-  gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg(), Cryptodog.rtc.rtcConstraints);
+  gcv.rtcConn = new RTCPeerConnection(Cryptodog.bex.iceCfg(), Cryptodog.bex.rtcConstraints);
 
   gcv.rtcConn.oniceconnectionstatechange = function(ev) {
     if (Cryptodog.bex.checkConnectionChange(peer)) {
