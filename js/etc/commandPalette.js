@@ -98,7 +98,7 @@ Cryptodog.cmd.head = function () {
   var buffer = $("#userInputText").val();
   var words = buffer.split(" ");
   var head = words[words.length-1];
-  return head;
+  return head;  
 }
 
 Cryptodog.cmd.maxSuggestions = 8;
