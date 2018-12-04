@@ -473,41 +473,63 @@ Cryptodog.bex.onGroup = function (nickname, data) {
   });
 }
 
+Cryptodog.bex.transmitCohort = function(c) {
+  Cryptodog.bex.lastTransmissionGroup = Date.now();
+  Cryptodog.bex.lastTransmissionFrom = Cryptodog.me.nickname;
+  var data = Cryptodog.bex.serialize(packets);
+  var base64 = etc.Encoding.encodeToBase64(data);
+  var encrypted = Cryptodog.multiParty.sendMessage(base64, true);
+
+  if (Cryptodog.xmpp.connection === null) {
+    return;
+  }
+
+  Cryptodog.xmpp.connection.muc.message(
+    Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
+    null, encrypted, null, 'groupchat', 'active');
+}
+
+window.setInterval(function() {
+  if (Cryptodog.xmpp.connection === null) {
+    return;
+  }
+
+  if (Cryptodog.bex.groupMessages.length === 0) {
+    return;
+  }
+
+  var fi = Cryptodog.bex.groupMessages.slice(0, 2);
+  Cryptodog.bex.groupMessages = Cryptodog.bex.groupMessages.slice(2);
+
+  Cryptodog.bex.transmitCohort(fi);
+}, 200);
+
 Cryptodog.bex.lastTransmissionGroup = 0;
 Cryptodog.bex.lastTransmissionFrom  = "";
+Cryptodog.bex.groupMessages = [];
 
 Cryptodog.bex.transmitGroup = function (packets) {
-  function timeoutToTransmit() {
-    // Timeout to avoid messages being dropped by the serverside rate limiter.
-    var sinceLast = (Date.now() - Cryptodog.bex.lastTransmissionGroup);
-    if (sinceLast < 1024) {
-      var timeout = 256;
-      if (Cryptodog.bex.lastTransmissionFrom === Cryptodog.me.nickname) {
-        timeout += 400;
-      }
-      setTimeout(timeoutToTransmit, timeout);
-    } else {
-      transmit();
-    }
-  }
+  // function timeoutToTransmit() {
+  //   // Timeout to avoid messages being dropped by the serverside rate limiter.
+  //   var sinceLast = (Date.now() - Cryptodog.bex.lastTransmissionGroup);
+  //   if (sinceLast < 1024) {
+  //     var timeout = 256;
+  //     if (Cryptodog.bex.lastTransmissionFrom === Cryptodog.me.nickname) {
+  //       timeout += 400;
+  //     }
+  //     setTimeout(timeoutToTransmit, timeout);
+  //   } else {
+  //     transmit();
+  //   }
+  // }
 
-  timeoutToTransmit();
+  // timeoutToTransmit();
 
-  function transmit() {
-    Cryptodog.bex.lastTransmissionGroup = Date.now();
-    Cryptodog.bex.lastTransmissionFrom = Cryptodog.me.nickname;
-    var data = Cryptodog.bex.serialize(packets);
-    var base64 = etc.Encoding.encodeToBase64(data);
-    var encrypted = Cryptodog.multiParty.sendMessage(base64, true);
+  // function transmit() {
 
-    if (Cryptodog.xmpp.connection === null) {
-      return;
-    }
+  // }
 
-    Cryptodog.xmpp.connection.muc.message(
-      Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-      null, encrypted, null, 'groupchat', 'active');
-  }
+  Cryptodog.bex.groupMessages = Cryptodog.bex.groupMessages.concat(packets);
 }
 
 Cryptodog.bex.transmitPrivateUnreliably = function (nickname, packets) {
