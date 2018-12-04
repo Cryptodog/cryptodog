@@ -577,6 +577,11 @@ Cryptodog.bex.rtcSupport = function() {
     return false;
   }
 
+  // Opera does not appear to support standard WebRTC APIs.
+  if (navigator.userAgent.indexOf(" OPR") > 0) {
+    return false;
+  }
+
   return typeof window.RTCPeerConnection !== "undefined";
 }
 
