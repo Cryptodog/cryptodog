@@ -332,7 +332,7 @@ window.addEventListener("load", function() {
 				}
 			});
 		}
-	}, 1000);
+	}, 2275);
 
 	$("body").on("dragenter dragstart dragend dragleave dragover drag drop", function (e) {
     e.preventDefault();
