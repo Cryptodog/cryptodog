@@ -300,7 +300,8 @@ window.addEventListener("load", function() {
 					// Asks the user for permission
 					navigator.mediaDevices.getUserMedia({
 						audio: {
-							noiseSuppression: true
+							noiseSuppression: true,
+							autoGainControl:  false
 						},
 
 						video: false
