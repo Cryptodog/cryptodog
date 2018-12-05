@@ -37,16 +37,16 @@ Cryptodog.cmd.botCommands = {
 };
 
 Cryptodog.cmd.textTransforms = {
-  "/shrug":       [ /\/shrug/g,     "¯\\_(ツ)_/¯" ],
-  "/tableflip":   [ /\/tableflip/g, "(╯°□°）╯︵ ┻━┻"],
-  "/unflip":      [ /\/unflip/g,    "┬─┬ノ( º _ ºノ)"],
-  "/srs":         [ /\/srs/g,       "ಠ_ಠ"],
-  "/joy":         [ /\/joy/g,       "(/◕ヮ◕)/"],
-  "/lenny":       [ /\/lenny/g,     "( ͡° ͜ʖ ͡°)"],
-  "/terror":      [ /\/terror/g,    "(╬ ಠ益ಠ)"],
-  "/cute":        [ /\/cute/g,       "(ノ^∇^)"],
-  "/cry":         [ /\/cry/g,        "(༎ຶ⌑༎ຶ)"],
-  "/crymeariver": [ /\/crymeariver/g, "༼ ༎ຶ ෴ ༎ຶ༽"]
+  "/shrug":       [ /(^|[ ])\/shrug/g,     "¯\\_(ツ)_/¯" ],
+  "/tableflip":   [ /(^|[ ])\/tableflip/g, "(╯°□°）╯︵ ┻━┻"],
+  "/unflip":      [ /(^|[ ])\/unflip/g,    "┬─┬ノ( º _ ºノ)"],
+  "/srs":         [ /(^|[ ])\/srs/g,       "ಠ_ಠ"],
+  "/joy":         [ /(^|[ ])\/joy/g,       "(/◕ヮ◕)/"],
+  "/lenny":       [ /(^|[ ])\/lenny/g,     "( ͡° ͜ʖ ͡°)"],
+  "/terror":      [ /(^|[ ])\/terror/g,    "(╬ ಠ益ಠ)"],
+  "/cute":        [ /(^|[ ])\/cute/g,       "(ノ^∇^)"],
+  "/cry":         [ /(^|[ ])\/cry/g,        "(༎ຶ⌑༎ຶ)"],
+  "/crymeariver": [ /(^|[ ])\/crymeariver/g, "༼ ༎ຶ ෴ ༎ຶ༽"]
 };
 
 Cryptodog.cmd.interpret = function(text) {
