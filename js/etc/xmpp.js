@@ -471,7 +471,7 @@ $(window).ready(function() {
                 document.querySelector("#changeColorBtn").value = item;
             }
 
-            $('.conversationName').addClass("themePrimary");
+            $(".conversationName").animate("background-color", Cryptodog.theme.primary);
 
             Cryptodog.xmpp.sendPublicKey();
             Cryptodog.xmpp.requestPublicKey();
