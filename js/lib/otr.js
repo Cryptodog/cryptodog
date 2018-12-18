@@ -1,6 +1,6 @@
 /*!
 
-  otr.js v0.2.16 - 2018-11-11
+  otr.js v0.2.16 - 2018-12-08
   (c) 2018 - Arlo Breault <arlolra@gmail.com>
   Freely distributed under the MPL-2.0 license.
 
@@ -214,6 +214,17 @@
       , CryptoJS.enc.Latin1.parse(c)
       , opts
     )
+  }
+
+  HLP.utf8ToLatin = function (input) {
+    var src;
+    try {
+      src = CryptoJS.enc.Utf8.parse(input);
+    } catch (e) {
+      return "";
+    }
+
+    return src.toString(CryptoJS.enc.Latin1);
   }
 
   HLP.multPowMod = function (a, b, c, d, e) {
@@ -438,6 +449,7 @@
   }
 
 }).call(this)
+
 ;(function () {
   "use strict";
 
@@ -448,7 +460,12 @@
     module.exports = DSA
     CryptoJS = require('../vendor/crypto.js')
     BigInt = require('../vendor/bigint.js')
-    WWPath = require('path').join(__dirname, '/dsa-webworker.js')
+    var glob = window || global;
+    if (glob["__dirname"]) {
+	WWPath = require('path').join(__dirname, '/dsa-webworker.js')
+    } else {
+	WWPath = "/dsa-webworker.js"
+    }
     HLP = require('./helpers.js')
   } else {
     // copy over and expose internals
@@ -843,6 +860,7 @@
   }
 
 }).call(this)
+
 ;(function () {
   "use strict";
 
@@ -1896,7 +1914,13 @@
     CryptoJS = require('../vendor/crypto.js')
     BigInt = require('../vendor/bigint.js')
     EventEmitter = require('../vendor/eventemitter.js')
-    SMWPath = require('path').join(__dirname, '/sm-webworker.js')
+    var glob = global || window;
+    var dname = glob["__dirname"];
+    if (dname) {
+       SMWPath = require('path').join(dname, '/sm-webworker.js');
+    } else {
+       SMWPath = 'sm-webworker.js';
+    }
     CONST = require('./const.js')
     HLP = require('./helpers.js')
     Parse = require('./parse.js')
@@ -2360,7 +2384,14 @@
     }
 
     out = CryptoJS.enc.Latin1.parse(out)
-    return out.toString(CryptoJS.enc.Utf8)
+    // Data may not be UTF8
+    try {
+      out = out.toString(CryptoJS.encUtf8)
+    } catch (e) {
+      return ""
+    }
+
+    return out;
   }
 
   OTR.prototype.handleTLVs = function (tlvs, sessKeys) {
@@ -2415,9 +2446,9 @@
     if (!this.sm) this._smInit()
 
     // utf8 inputs
-    secret = CryptoJS.enc.Utf8.parse(secret).toString(CryptoJS.enc.Latin1)
+    secret = HLP.utf8ToLatin(secret);
     if (question)
-      question = CryptoJS.enc.Utf8.parse(question).toString(CryptoJS.enc.Latin1)
+      question = HLP.utf8ToLatin(question);
 
     this.sm.rcvSecret(secret, question)
   }
@@ -2449,8 +2480,7 @@
     if ( this.REQUIRE_ENCRYPTION ||
          this.msgstate !== CONST.MSGSTATE_PLAINTEXT
     ) {
-      msg = CryptoJS.enc.Utf8.parse(msg)
-      msg = msg.toString(CryptoJS.enc.Latin1)
+      msg = HLP.utf8ToLatin(msg);
     }
 
     switch (this.msgstate) {
@@ -2588,8 +2618,7 @@
     if (!filename) return this.notify('Please specify a filename.')
 
     // utf8 filenames
-    var l1name = CryptoJS.enc.Utf8.parse(filename)
-    l1name = l1name.toString(CryptoJS.enc.Latin1)
+    var l1name = HLP.utf8ToLatin(filename);
 
     if (l1name.length >= 65532) return this.notify('Filename is too long.')
 
@@ -2622,7 +2651,7 @@
 
   // attach methods
 
-  OTR.makeInstanceTag = function () {
+  OTR.makeInstanceTag = function () { 
     var num = BigInt.randBigInt(32)
     if (BigInt.greater(BigInt.str2bigInt('100', 16), num))
       return OTR.makeInstanceTag()
