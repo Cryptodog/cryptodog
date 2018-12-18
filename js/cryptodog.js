@@ -104,6 +104,20 @@ Cryptodog.getConversationHeight = function() {
 }
 
 Cryptodog.drawAutoStyle = function() {
+	var emoj = "";
+	if (/Firefox/.test(navigator.userAgent)) {
+		emoj += [".zm {",
+						 "display: inline-block;",
+						 "width:   1em;",
+						 "height:  1em;",
+						 "vertical-align: -.3em;",
+						 "}",
+						 ".messageBox.emojiOnly > .zm {",
+						 "vertical-align: -.1em;",
+						 "}"
+						].join("\n");
+	}
+	
 	$("#autoStyle").html(
 		`.themePrimary {
 			background-color: ${Cryptodog.theme.primary}
@@ -144,6 +158,8 @@ Cryptodog.drawAutoStyle = function() {
 		.commandSelected {
 			border: 1px solid ${Cryptodog.theme.primary};
 		}
+
+		${emoj}
 		`);
 }
 
