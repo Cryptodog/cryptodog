@@ -1179,6 +1179,10 @@ CONVERSATION WINDOW
 	max-width: 85%;
 }
 
+.messageBox.emojiOnly {
+	font-size: 1.8em;
+}
+
 .messageBox > img {
 	display: inline-block;
 	position: relative;

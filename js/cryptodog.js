@@ -516,16 +516,27 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 			}
 			desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
 		}
+
 		message = Strophe.xmlescape(message);
 		message = Cryptodog.UI.addLinks(message);
 		message = Cryptodog.UI.addEmoticons(message);
+
+		var emojiOnly = false;
+		if (message.length < 128) {
+			emojiOnly = ZIPmoji.isEntirelyEmoji(message);
+		}
+
+		var zm = new ZIPmoji();
+		message = zm.process(message, 256);
 		message = message.replace(/:/g, '&#58;');
+
 		pushAndRedraw(conversation, {
 			type:    "message",
 			nickname: nickname,
 			message:  message,
 			time:     currentTime(true),
-			color:    Cryptodog.getUserColor(nickname)
+			color:    Cryptodog.getUserColor(nickname),
+			emojiOnly: emojiOnly
 		});
 
 		if (conversation === Cryptodog.me.currentBuddy) {
@@ -1456,6 +1467,14 @@ function redrawConversation(id) {
 		}
 
 		if (el.type == "message") {
+			var _class = [
+				"messageBox"
+			];
+
+			if (el.emojiOnly) {
+				_class.push("emojiOnly");
+			}
+
 			text += Mustache.render(Cryptodog.templates.message, {
 				id:           budID,
 				nickname:     shortenString(el.nickname, 16),
@@ -1464,7 +1483,8 @@ function redrawConversation(id) {
 				message:      el.message,
 				color:        color,
 				textColor:    textcolor,
-				style:        'normal'
+				style:        'normal',
+				class:        _class.join(" ")
 			});
 			continue;
 		}

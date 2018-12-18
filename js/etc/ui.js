@@ -277,8 +277,7 @@ Cryptodog.UI = {
             message = message.replace(e.regex, e.data);
         }
      
-        var zm = new ZIPmoji();
-        return zm.process(message, 256);
+        return message;
     },
 
     setEmoticonPack: function(packId) {
