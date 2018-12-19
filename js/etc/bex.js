@@ -359,6 +359,10 @@ Cryptodog.bex.onGroup = function (nickname, data) {
     return;
   }
 
+  if (Cryptodog.buddies[nickname]) {
+    Cryptodog.buddies[nickname].usingBex = true;
+  }
+
   packs.forEach(function (packet) {
     console.log(nickname + ": " + Cryptodog.bex.headerToString(packet.header), packet);
 

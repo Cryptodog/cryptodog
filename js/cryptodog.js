@@ -1804,9 +1804,8 @@ $('#userInput').submit(function() {
 
 	if (!message.length) { return false }
 	if (Cryptodog.me.currentBuddy !== 'groupChat') {
-		Cryptodog.buddies[
-			Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy)
-		].otr.sendMsg(message);
+		var nick = Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy);
+		Cryptodog.xmpp.sendPMSemiReliably(nick, message);
 	}
 	else if (Object.keys(Cryptodog.buddies).length) {
 		var ciphertext = JSON.parse(Cryptodog.multiParty.sendMessage(message));

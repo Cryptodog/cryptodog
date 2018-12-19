@@ -401,6 +401,17 @@ $(window).ready(function() {
         return true;
     };
 
+    // Enable ping requirement if BEX is enabled; otherwise, use regular transmission
+    Cryptodog.xmpp.sendPMSemiReliably = function(nickname, message) {
+        var bud = Cryptodog.buddies[nickname];
+        if (!bud) return;
+        if (bud.usingBex) {
+            Cryptodog.xmpp.sendReliablePrivateMessage(nickname, message);
+        } else {
+            bud.otr.sendMsg(message);
+        }
+    }
+
     Cryptodog.xmpp.sendReliablePrivateMessage = function(nickname, message) {
         Cryptodog.bex.ensureOTR(nickname, function () {
             var buddy = Cryptodog.buddies[nickname];
