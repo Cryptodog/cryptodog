@@ -500,7 +500,7 @@ $(window).ready(function() {
                     var buddy = Cryptodog.buddies[nickname];
                     
                     if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
-                        if (buddy.ignored() === false) {
+                        if (buddy.ignored() === false && buddy.authenticated !== 2) {
                             console.log('Automatically ignored ' + nickname);
                             buddy.toggleIgnored();
                         }
