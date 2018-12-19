@@ -576,10 +576,12 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		return true;
 	}
 	if (type === 'missingRecipients') {
-		if (!message.length) { return false }
+		if (!message.length) { return false;  }
 		message = message.filter(function(mr) {
 			return mr.visible === true;
 		})
+		if (!message.length) { return false; }
+
 		message = message.join(', ');
 		pushAndRedraw(conversation, {
 			type:    "missingRecipients",
