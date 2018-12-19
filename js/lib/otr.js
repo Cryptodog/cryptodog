@@ -1,6 +1,6 @@
 /*!
 
-  otr.js v0.2.16 - 2018-12-08
+  otr.js v0.2.16 - 2018-12-18
   (c) 2018 - Arlo Breault <arlolra@gmail.com>
   Freely distributed under the MPL-2.0 license.
 
@@ -2386,7 +2386,7 @@
     out = CryptoJS.enc.Latin1.parse(out)
     // Data may not be UTF8
     try {
-      out = out.toString(CryptoJS.encUtf8)
+      out = out.toString(CryptoJS.enc.Utf8)
     } catch (e) {
       return ""
     }

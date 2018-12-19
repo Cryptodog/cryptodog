@@ -405,7 +405,7 @@ $(window).ready(function() {
         Cryptodog.bex.ensureOTR(nickname, function () {
             var buddy = Cryptodog.buddies[nickname];
             if (buddy) {
-                buddy.otr.sendMsg(etc.Encoding.encodeToBase64(message));
+                buddy.otr.sendMsg(message);
             }
         });
     }

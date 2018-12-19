@@ -537,7 +537,8 @@ Cryptodog.bex.transmitPrivateUnreliably = function (nickname, packets) {
   
   var bud = Cryptodog.buddies[nickname];
   if (bud) {
-    bud.otr.sendMsg(etc.Encoding.encodeToBase64(buffer));
+    var text = etc.Encoding.encodeToBase64(buffer);
+    bud.otr.sendMsg(text);
   } else {
     console.warn("No buddy", nickname);
   }
@@ -545,7 +546,8 @@ Cryptodog.bex.transmitPrivateUnreliably = function (nickname, packets) {
 
 Cryptodog.bex.transmitPrivate = function (nickname, packets) {
   var buffer = Cryptodog.bex.serialize(packets);
-  Cryptodog.xmpp.sendReliablePrivateMessage(nickname, buffer);
+  var text = etc.Encoding.encodeToBase64(buffer);
+  Cryptodog.xmpp.sendReliablePrivateMessage(nickname, text);
 }
 
 Cryptodog.bex.maxFileSize = 1024 * 1024 * 10;
