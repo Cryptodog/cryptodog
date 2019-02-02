@@ -381,10 +381,15 @@ $(window).ready(function() {
 
     // Executed (manually) after connection.
     var afterConnect = function() {
-        $('.conversationName').animate({ 'background-color': '#bb7a20' });
+        Cryptodog.xmpp.connection.ping.addPingHandler(function(ping) {
+            Cryptodog.xmpp.connection.ping.pong(ping);
+            return true;
+        });
 
         Cryptodog.xmpp.connection.ibb.addIBBHandler(Cryptodog.otr.ibbHandler);
         Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler);
+
+        $('.conversationName').animate({ 'background-color': '#bb7a20' });
 
         Cryptodog.xmpp.sendStatus();
         Cryptodog.xmpp.sendPublicKey();
