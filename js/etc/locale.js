@@ -78,7 +78,7 @@
             .find('span')
             .text(languageObject['chatWindow']['conversation']);
         
-        $('#languageSelect').text($('[data-locale=' + languageObject['language'] + ']').text());
+        $('#languageSelect').text(languageObject['language']);
         $('[data-login=cryptocat]').text(languageObject.login.groupChat);
         $('[data-utip]').utip();
         $('html').attr('dir', languageObject['direction']);

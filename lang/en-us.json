@@ -1,4 +1,5 @@
 {
+    "language": "Language",
     "direction": "ltr",
     "fonts": "\"Helvetica Neue\", Helvetica, Arial, Verdana",
     "loginWindow": {

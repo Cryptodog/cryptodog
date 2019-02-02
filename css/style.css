@@ -501,6 +501,8 @@ div#footer #languages {
 	position: relative;
 	margin: 30px 0 0 0;
 	width: 640px;
+	display: block;
+	margin: auto;
 }
 
 div#footer #languages li {
@@ -508,8 +510,8 @@ div#footer #languages li {
 	color: #FFF;
 	background: rgba(255, 255, 255, 0.08);
 	border-radius: 3px;
-	margin: 4px auto;
-	padding: 3px;
+	margin: 4px;
+	padding: 8px;
 	width: 80px;
 	list-style-type: none;
 }
