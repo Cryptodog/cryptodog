@@ -484,6 +484,11 @@ $(window).ready(function() {
 
             $(".conversationName").animate({"background-color": Cryptodog.theme.primary});
 
+            Cryptodog.xmpp.connection.ping.addPingHandler(function(ping) {
+                Cryptodog.xmpp.connection.ping.pong(ping);
+                return true;
+            });
+
             Cryptodog.xmpp.sendPublicKey();
             Cryptodog.xmpp.requestPublicKey();
             Cryptodog.xmpp.sendStatus();
