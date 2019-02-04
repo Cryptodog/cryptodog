@@ -290,7 +290,7 @@ var Buddy = function(nickname, id, status) {
 	this.genFingerState = null
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
-	this.color          = randomColor({luminosity: 'monochrome'})
+	this.color          = randomColor({luminosity: 'dark'})
 	
 	// Regularly reset at the interval defined by Cryptodog.maxMessageInterval
 	this.messageCount   = 0
