@@ -509,7 +509,12 @@ BUDDY LIST
 }
 
 .buddy span.shortNickname {
+	display: inline-block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 75px;
 	margin-left: 18px;
+	overflow: hidden;
 }
 
 .buddy[status=away] span {

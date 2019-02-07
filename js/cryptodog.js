@@ -391,10 +391,11 @@ Buddy.prototype = {
 Cryptodog.addBuddy = function(nickname, id, status) {
 	if (!id) { id = getUniqueBuddyID() }
 	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, id, status)
+
 	$('#buddyList').queue(function() {
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
-			shortNickname: shortenString(nickname, 9),
+			shortNickname: shortenString(nickname, 11),
 			status: status
 		})
 		var placement = determineBuddyPlacement(nickname, id, status)
