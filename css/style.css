@@ -1147,6 +1147,9 @@ CONVERSATION WINDOW
 	background: #777;
 	max-width: 165px;
 	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	margin: 0 0 8px 0;
 	padding: 0 5px;
 	color: #FFF;
