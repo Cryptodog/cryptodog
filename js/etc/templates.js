@@ -6,7 +6,7 @@ Cryptodog.templates = {
 
     buddy:
         '<div class="buddy" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">' +
-        '<span class="loginTypeIcon"></span><span class="shortNickname">{{shortNickname}}</span>' +
+        '<span class="loginTypeIcon"></span><span title="{{fullNickname}}" class="shortNickname">{{shortNickname}}</span>' +
         '<div class="buddyMenu" id="menu-{{buddyID}}"></div></div>',
 
     buddyMenu:
