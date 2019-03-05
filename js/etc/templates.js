@@ -44,6 +44,7 @@ Cryptodog.templates = {
         '<input type="password" id="authAnswer" placeholder="{{secretAnswer}}" maxlength="64" />' +
         '<input id="authSubmit" type="submit" value="{{ask}}" /></form>' +
         '<p id="authVerified">{{identityVerified}}</p></div>' +
+        '<input id="allowSMP" type="checkbox"><span>Allow this user to send me verification questions.</span></input><br/>' +
         '<div id="authTutorial"></div></div>',
 
     authTutorial:

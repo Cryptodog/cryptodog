@@ -109,6 +109,19 @@ Cryptodog.storage.getItem('persistenceEnabled', function(e) {
 	}
 });
 
+/* This is a map of lists specifying who is allowed to send us SMP questions:
+{
+	'our nickname 1': ['buddy nickname 1', 'buddy nickname 2'],
+	'our nickname 2': ['buddy nickname 2'],
+	...
+}
+We segment the lists by Cryptodog.me.nickname to prevent correlating users who use multiple nicknames. */
+Cryptodog.storage.getItem('smpAllowedList', function(v) {
+	if (!v) {
+		Cryptodog.storage.setItem('smpAllowedList', '{}');
+	}
+});
+
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
 	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[recipient].id]);
@@ -650,6 +663,33 @@ Cryptodog.displayInfo = function(nickname) {
 					'otr':     Cryptodog.me.otrKey.packPrivate()
 				});
 			}
+		});
+
+		Cryptodog.storage.getItem('smpAllowedList', function(v) {
+			let smpAllowedList = JSON.parse(v);
+
+			if (!smpAllowedList[Cryptodog.me.nickname]) {
+				smpAllowedList[Cryptodog.me.nickname] = [];
+				Cryptodog.storage.setItem('smpAllowedList', JSON.stringify(smpAllowedList));
+			}
+
+			$('#allowSMP').prop('checked', smpAllowedList[Cryptodog.me.nickname].indexOf(nickname) != -1);
+		});
+
+		$('#allowSMP').click(function() {
+			Cryptodog.storage.getItem('smpAllowedList', function(v) {
+				let smpAllowedList = JSON.parse(v);
+
+				let index = smpAllowedList[Cryptodog.me.nickname].indexOf(nickname);
+				if (index != -1) {
+					$('#allowSMP').prop('checked', false);
+					smpAllowedList[Cryptodog.me.nickname].splice(index, 1);
+				} else {
+					$('#allowSMP').prop('checked', true);
+					smpAllowedList[Cryptodog.me.nickname].push(nickname);
+				}
+				Cryptodog.storage.setItem('smpAllowedList', JSON.stringify(smpAllowedList));
+			});
 		});
 	})
 }

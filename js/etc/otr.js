@@ -101,54 +101,60 @@
     var onSMPQuestion = function(nickname, question) {
         var buddy = Cryptodog.buddies[nickname];
 
-        // Silently answer question if buddy is ignored.
-        if (buddy.ignored()) {
-            var answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
-            buddy.otr.smpSecret(answer);
-            if (!answer) {
-                buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
-            }
-            return;
-        }
+        Cryptodog.storage.getItem('smpAllowedList', function (v) {
+            let smpAllowedList = JSON.parse(v);
+            
+            let allowSMP = smpAllowedList[Cryptodog.me.nickname] && 
+                smpAllowedList[Cryptodog.me.nickname].indexOf(nickname) != -1;
 
-        var chatWindow = Cryptodog.locale.chatWindow,
-            answer = false;
-
-        var info = Mustache.render(Cryptodog.templates.authRequest, {
-            authenticate: chatWindow.authenticate,
-            authRequest: chatWindow.authRequest.replace('(NICKNAME)', nickname),
-            answerMustMatch: chatWindow.answerMustMatch.replace('(NICKNAME)', nickname),
-            question: question,
-            answer: chatWindow.answer
-        });
-
-        $('#dialogBoxClose').click();
-
-        window.setTimeout(function() {
-            Cryptodog.UI.dialogBox(info, {
-                height: 240,
-                closeable: true,
-
-                onAppear: function() {
-                    $('#authReplySubmit')
-                        .unbind('click')
-                        .bind('click', function(e) {
-                            e.preventDefault();
-                            answer = $('#authReply').val();
-                            answer = Cryptodog.prepareAnswer(answer, false, buddy.mpFingerprint);
-                            buddy.otr.smpSecret(answer);
-                            $('#dialogBoxClose').click();
-                        });
-                },
-
-                onClose: function() {
-                    if (answer) {
-                        return;
-                    }
+            // Silently answer question if buddy is ignored or not authorized to send us SMP questions.
+            if (!allowSMP || buddy.ignored()) {
+                var answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
+                buddy.otr.smpSecret(answer);
+                if (!answer) {
                     buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
                 }
+                return;
+            }
+
+            var chatWindow = Cryptodog.locale.chatWindow, answer = false;
+
+            var info = Mustache.render(Cryptodog.templates.authRequest, {
+                authenticate: chatWindow.authenticate,
+                authRequest: chatWindow.authRequest.replace('(NICKNAME)', nickname),
+                answerMustMatch: chatWindow.answerMustMatch.replace('(NICKNAME)', nickname),
+                question: question,
+                answer: chatWindow.answer
             });
-        }, 500);
+
+            $('#dialogBoxClose').click();
+
+            window.setTimeout(function() {
+                Cryptodog.UI.dialogBox(info, {
+                    height: 240,
+                    closeable: true,
+
+                    onAppear: function() {
+                        $('#authReplySubmit')
+                            .unbind('click')
+                            .bind('click', function(e) {
+                                e.preventDefault();
+                                answer = $('#authReply').val();
+                                answer = Cryptodog.prepareAnswer(answer, false, buddy.mpFingerprint);
+                                buddy.otr.smpSecret(answer);
+                                $('#dialogBoxClose').click();
+                            });
+                    },
+
+                    onClose: function() {
+                        if (answer) {
+                            return;
+                        }
+                        buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
+                    }
+                });
+            }, 500);
+        });
     };
 
     // Handle SMP callback
