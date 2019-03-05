@@ -58,8 +58,8 @@ Cryptodog.templates = {
 
     authRequest:
         '<div class="title">{{authenticate}}</div>' +
-        '<p>{{authRequest}}<br />' +
-        '<strong>{{question}}</strong><br /><br />' +
+        '<p>{{authRequest}}<br/>' +
+        '<span id="authReplyQuestion"><strong>{{question}}</strong></span><br/>' +
         '<form id="authReplyForm"><input id="authReply" type="password" placeholder="{{secretAnswer}}" maxlength="64" />' +
         '<input id="authReplySubmit" type="submit" value="{{answer}}" /></form></p>' +
         '<p>{{answerMustMatch}}</p>',

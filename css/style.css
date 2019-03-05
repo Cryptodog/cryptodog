@@ -645,6 +645,8 @@ DIALOG BOX
 	background: #FCFCFC;
 	display: none;
 	color: #151520;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
 }
 
 .dialogBoxError {
@@ -832,6 +834,11 @@ DIALOG BOX
 	border-radius: 5px 0 5px 5px;
 	padding: 4px;
 	width: 220px;
+}
+
+#authReplyQuestion {
+	display: block;
+	overflow: hidden;
 }
 
 #authReplySubmit {
