@@ -200,6 +200,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	if (type === 'warning') {
 		if (!message.length) { return false }
 		message = Strophe.xmlescape(message);
+		Cryptodog.buddies[nickname].messageCount++;
 	}
 	if (type === 'missingRecipients') {
 		if (!message.length) { return false }
