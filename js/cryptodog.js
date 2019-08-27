@@ -304,7 +304,7 @@ var Buddy = function(nickname, id, status) {
 	this.genFingerState = null
 	this.status         = status
 	this.otr            = Cryptodog.otr.add(nickname)
-	this.color          = randomColor({luminosity: 'dark'})
+	this.color          = Cryptodog.color.pop();
 	
 	// Regularly reset at the interval defined by Cryptodog.maxMessageInterval
 	this.messageCount   = 0
@@ -474,6 +474,9 @@ Cryptodog.removeBuddy = function(nickname) {
 	}
 	var buddyID = Cryptodog.buddies[nickname].id;
 	var buddyElement = $('.buddy').filterByData('id', buddyID);
+
+	Cryptodog.color.push(Cryptodog.buddies[nickname].color);
+
 	delete Cryptodog.buddies[nickname];
 	if (!buddyElement.length) {
 		return;
@@ -712,6 +715,7 @@ Cryptodog.logout = function() {
 		}
 	}
 
+	Cryptodog.color.reset();
 	conversationBuffers = {};
 }
 
@@ -1302,7 +1306,7 @@ $('#CryptodogLogin').submit(function() {
 		Cryptodog.me.nickname = $('#nickname').val();
 		
 		Cryptodog.xmpp.showKeyPreparationDialog(function () {
-			Cryptodog.me.color = randomColor({ luminosity: 'dark' });
+			Cryptodog.me.color = Cryptodog.color.pop();
 			Cryptodog.xmpp.connect();
 		});
 	}
