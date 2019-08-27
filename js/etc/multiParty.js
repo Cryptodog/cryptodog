@@ -349,7 +349,6 @@ Cryptodog.multiParty = function() {};
                 try {
                     plaintext = plaintext.toString(CryptoJS.enc.Utf8);
                 } catch (e) {
-                    console.log('multiParty: invalid UTF-8 message from ' + sender);
                     return false;
                 }
                 
