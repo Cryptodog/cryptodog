@@ -292,21 +292,16 @@ Cryptodog.UI = {
             senderElement = $('.sender');
         }
 
-        senderElement.children().unbind('mouseenter,mouseleave,click');
-        senderElement.find('.nickname').mouseenter(function() {
-            $(this).text(
-                $(this)
-                    .parent()
-                    .attr('data-timestamp')
-            );
+        senderElement.unbind('mouseenter,mouseleave,click');
+
+        // Show timestamp when mouse enters sender element.
+        senderElement.mouseenter(function() {
+            $(this).find('.nickname').text($(this).attr('data-timestamp'));
         });
 
-        senderElement.find('.nickname').mouseleave(function() {
-            $(this).text(
-                $(this)
-                    .parent()
-                    .attr('data-sender')
-            );
+        // Revert to showing nickname when mouse leaves the entire message line.
+        $('.line').mouseleave(function() {
+            $(this).find('.nickname').text($(this).find('.sender').attr('data-sender'));
         });
 
         senderElement.find('.authStatus').mouseenter(function() {
