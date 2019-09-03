@@ -44,6 +44,7 @@ Cryptodog.templates = {
         '<input type="password" id="authAnswer" placeholder="{{secretAnswer}}" maxlength="64" />' +
         '<input id="authSubmit" type="submit" value="{{ask}}" /></form>' +
         '<p id="authVerified">{{identityVerified}}</p></div>' +
+        '<input id="allowSMP" type="checkbox"><span>Allow this user to send me verification questions.</span></input><br/>' +
         '<div id="authTutorial"></div></div>',
 
     authTutorial:
@@ -57,8 +58,8 @@ Cryptodog.templates = {
 
     authRequest:
         '<div class="title">{{authenticate}}</div>' +
-        '<p>{{authRequest}}<br />' +
-        '<strong>{{question}}</strong><br /><br />' +
+        '<p>{{authRequest}}<br/>' +
+        '<span id="authReplyQuestion"><strong>{{question}}</strong></span><br/>' +
         '<form id="authReplyForm"><input id="authReply" type="password" placeholder="{{secretAnswer}}" maxlength="64" />' +
         '<input id="authReplySubmit" type="submit" value="{{answer}}" /></form></p>' +
         '<p>{{answerMustMatch}}</p>',

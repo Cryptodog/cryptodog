@@ -247,7 +247,12 @@ $(window).ready(function() {
             // Check if message is a group chat message.
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
-            body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
+            try {
+                body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
+            } catch (e) {
+                console.warn('xmpp: exception handling multiParty message from ' + nickname + ': ' + e);
+                return true;
+            }
 
             if (typeof body === 'string') {
                 Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
@@ -261,7 +266,11 @@ $(window).ready(function() {
                 return true;
             }
 
-            Cryptodog.buddies[nickname].otr.receiveMsg(body);
+            try {
+                Cryptodog.buddies[nickname].otr.receiveMsg(body);
+            } catch (e) {
+                console.warn('xmpp: exception handling OTR message from ' + nickname + ': ' + e);
+            }
         }
         return true;
     };
