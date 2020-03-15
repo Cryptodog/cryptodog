@@ -207,6 +207,11 @@ Cryptodog.UI = {
         return message.autoLink();
     },
 
+    // Contextual text formatting
+    addTextFormatting: function(message) {
+        return message.stylizeText();
+    },
+
     // Default emoticons (Unicode) - also in lang/emojis/unicode.json
     emoticons: [
         {

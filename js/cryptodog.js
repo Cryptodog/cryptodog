@@ -195,6 +195,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		}
 		message = Strophe.xmlescape(message);
 		message = Cryptodog.UI.addLinks(message);
+		message = Cryptodog.UI.addTextFormatting(message);
 		message = Cryptodog.UI.addEmoticons(message);	
 	}
 	if (type === 'warning') {
