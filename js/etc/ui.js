@@ -207,6 +207,27 @@ Cryptodog.UI = {
         return message.autoLink();
     },
 
+    // Simple text formatting
+    stylizeText: function(text) {
+        // Disable text formatting in messages that contain links to avoid interference
+        linkPattern = /(https?|ftps?):\/\//gi;
+
+        if (text.match(linkPattern) === null) {
+            // Swap ***.+*** for strong and italic text
+            strongItalicPattern = /\*\*\*((?!\s).+)\*\*\*/gi;
+            text = text.replace(strongItalicPattern, "<strong><i>$1</i></strong>");
+
+            // Swap **.+** for strong text
+            strongPattern = /\*\*((?!\s).+)\*\*/gi;
+            text = text.replace(strongPattern, "<strong>$1</strong>");
+
+            // Swap *.+* for italics
+            italicPattern = /\*((?!\s).+)\*/gi;
+            text = text.replace(italicPattern, "<i>$1</i>");
+        }
+        return text;
+    },
+
     // Default emoticons (Unicode) - also in lang/emojis/unicode.json
     emoticons: [
         {
