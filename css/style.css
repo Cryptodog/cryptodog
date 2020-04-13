@@ -1150,13 +1150,16 @@ CONVERSATION WINDOW
 
 .userJoin, .userLeave {
 	background: #777;
-	max-width: 165px;
+	width: 165px;
 	display: block;
 	margin: 0 0 8px 0;
 	padding: 0 5px;
 	color: #FFF;
 	border-radius: 3px 0 3px 3px;
 	font-size: 0.9em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .userLeave {
