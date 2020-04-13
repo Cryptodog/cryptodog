@@ -320,9 +320,8 @@ Cryptodog.UI = {
             $(this).find('.nickname').text($(this).attr('data-timestamp'));
         });
 
-        // Revert to showing nickname when mouse leaves the entire message line.
-        $('.line').mouseleave(function() {
-            $(this).find('.nickname').text($(this).find('.sender').attr('data-sender'));
+        senderElement.mouseleave(function() {
+            $(this).find('.nickname').text($(this).attr('data-sender'));
         });
 
         senderElement.find('.authStatus').mouseenter(function() {

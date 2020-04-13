@@ -226,7 +226,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 	message = message.replace(/:/g, '&#58;');
 
 	var renderedMessage = Mustache.render(Cryptodog.templates.message, {
-		nickname: shortenString(nickname, 16),
+		nickname: nickname,
 		currentTime: currentTime(true),
 		authStatus: authStatus,
 		message: message,

@@ -80,9 +80,8 @@ Cryptodog.templates = {
 
     message:
         '<div class="line" style="border-color:{{color}};"><span class="sender" data-sender="{{nickname}}"' +
-        ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="authStatus" data-auth="{{authStatus}}" ' +
-        'data-utip-gravity="se"></span>' +
-        '<span class="nickname">{{nickname}}</span></span><span style="font-style:{{style}};">{{&message}}</span></div>',
+        ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="nickname">{{nickname}}</nickname></span></span>' +
+        '<span style="font-style:{{style}};">{{&message}}</span></div>',
 
     authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
 
