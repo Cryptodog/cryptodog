@@ -558,6 +558,13 @@ Cryptodog.UI = {
         $('#nickname').click(function() {
             $(this).select();
         });
+
+        $(document).bind('mousedown', function (e) {
+            if (!$(e.target).parents('.buddyMenu').length > 0) {
+                $('.buddyMenu').hide();
+                $('.buddy.active').removeClass('active');
+            }
+        });
     },
 
     /*

@@ -5,12 +5,12 @@ Cryptodog.templates = {
     customServer: '<option data-domain="{{domain}}" data-xmpp="{{xmpp}}" data-relay="{{relay}}">' + '{{name}}</option>',
 
     buddy:
-        '<div class="buddy" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">' +
-        '<span class="loginTypeIcon"></span><span class="shortNickname">{{shortNickname}}</span>' +
-        '<div class="buddyMenu" id="menu-{{buddyID}}"></div></div>',
+        '<div class="buddy" title="{{nickname}}" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">' +
+        '<span class="nickname">{{nickname}}</span>' +
+        '</div>',
 
     buddyMenu:
-        '<div class="buddyMenuContents" id="{{buddyID}}-contents">' +
+        '<div class="buddyMenu" id="{{buddyID}}-menu">' +
         '<li class="option1">{{displayInfo}}</li>' +
         '<li class="option2">{{sendEncryptedFile}}</li>' +
         '<li class="option3">{{ignore}}</li>' +
@@ -79,17 +79,17 @@ Cryptodog.templates = {
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
     message:
-        '<div class="line" style="border-color:{{color}};"><span class="sender" data-sender="{{nickname}}"' +
+        '<div class="line" style="border-color:{{color}};"><span class="sender" title="{{nickname}}" data-sender="{{nickname}}"' +
         ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="nickname">{{nickname}}</nickname></span></span>' +
         '<span style="font-style:{{style}};">{{&message}}</span></div>',
 
     authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
 
     userJoin:
-        '<div class="userJoin" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>' +
+        '<div class="userJoin" title="{{nickname}}" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>' +
         '<strong>+</strong>{{nickname}}</div>',
 
     userLeave:
-        '<div class="userLeave"><span class="timestamp">{{currentTime}}</span>' +
+        '<div class="userLeave" title="{{nickname}}"><span class="timestamp">{{currentTime}}</span>' +
         '<strong>-</strong>{{nickname}}</div>'
 };

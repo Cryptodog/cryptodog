@@ -49,7 +49,7 @@
         "sendEncryptedFile": "Send encrypted file",
         "viewImage": "view image",
         "downloadFile": "download file",
-        "conversation": "Conversation",
+        "conversation": "Group",
         "fileTransferInfo": "Only ZIP files and images are accepted. Maximum file size: (SIZE) MB.",
         "fileTypeError": "Error: Please make sure your file is a ZIP file or an image.",
         "fileSizeError": "Error: File cannot be larger than (SIZE) MB.",

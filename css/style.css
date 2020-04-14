@@ -473,7 +473,7 @@ BUDDY LIST
 	height: 15px;
 	background: #444;
 	border-radius: 2px 0 0 2px;
-	margin-top: 2px;
+	margin-top: 1px;
 	background-position: 80% 4px;
 	background-repeat: no-repeat;
 	background-size: 14px 14px;
@@ -483,33 +483,11 @@ BUDDY LIST
 	font-size: 1em;
 	display: none;
 	position: relative;
-	cursor: default;
+	cursor: pointer;
 	z-index: 15;
-	/*transition: background-color 0.25s;*/
-	transition: ease-in 250ms;
-}
-
-.buddy span.loginTypeIcon {
-	width: 16px;
-	height: 16px;
-	background-repeat: no-repeat;
-	background-size: 16px 16px;
-	position: absolute;
-	left: 4px;
-	padding: 0;
-	margin: 0;
-	border-radius: 3px 0 3px 3px;
-	bottom: 4px;
-	background-position: top left;
-	background-image: url("../img/icons/user.svg");
-}
-
-.buddy.warning span.loginTypeIcon {
-	background-image: url("../img/icons/user-minus.svg");
-}
-
-.buddy span.shortNickname {
-	margin-left: 18px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .buddy[status=away] span {
@@ -522,7 +500,7 @@ BUDDY LIST
 }
 
 .buddy.currentConversation {
-	background-color: #bb7a20;;
+	background-color: #0087AF;
 	color: #FFF !important;
 }
 
@@ -534,48 +512,34 @@ BUDDY LIST
 	text-decoration: line-through;
 }
 
+.buddy:hover {
+	background-color: #00AEDE;
+}
+
+.buddy.active {
+	background-color: #70B7DE;
+}
+
 .buddyMenu {
-	position: relative;
-	z-index: 2;
-	float: right;
-	margin: 0;
-	background-image: url("../img/icons/circle-down.svg");
-	background-size: 10px 10px;
-	background-position: 2px 2px;
-	background-repeat: no-repeat;
-	width: 14px;
-	height: 14px;
-	cursor: pointer;
-	border-radius: 3px 0 3px 3px;
-	direction: rtl;
-}
-
-.buddyMenu:hover {
-	background-color: #C0C0C0;
-}
-
-.buddyMenu:active {
-	background-color: #444;
-}
-
-.buddyMenuContents {
-	display: none;
-	margin: 5px 0 0 -2px;
+	background-color: #434343;
+	border: 0.1em solid #00AEDE;
+	border-radius: 4px 4px 4px 4px;
+	z-index: 9999;
+    position: absolute;
+    overflow: hidden;
 	font-size: 0.9em;
-	width: 100px;
+	width: 110px;
 }
 
-.buddyMenuContents li {
+.buddyMenu li {
+	padding-left: 5px;
+	color: white;
 	list-style-type: none;
-	background: rgba(255, 255, 255, 0.3);
-	padding: 3px;
-	font-size: 0.9em;
+	font-size: 1em;
 	cursor: pointer;
-	margin: 5px 0;
-	border-radius: 3px 0 3px 4px;
 }
 
-.buddyMenuContents li:hover {
+.buddyMenu li:hover {
 	background: rgba(255, 255, 255, 0.2);
 }
 
@@ -811,7 +775,7 @@ DIALOG BOX
 	margin: -35px 20px 0 0;
 	border-radius: 5px 0 5px 5px;
 	font-size: 1.2em;
-	background: #bb7a20;
+	background: #0087AF;
 	border: none;
 	word-wrap: break-word;
 }
@@ -1028,7 +992,7 @@ CONVERSATION WINDOW
 }
 
 #conversationWindow .authStatus[data-auth=true] {
-	background-color: #bb7a20;
+	background-color: #0087AF;
 	background-image: none;
 }
 
@@ -1124,7 +1088,7 @@ CONVERSATION WINDOW
 	margin: 10px 3px 0 0;
 	border-radius: 0 0 7px 0;
 	font-size: 1.8em;
-	background: #bb7a20;
+	background: #0087AF;
 }
 
 #userInputSend:hover {

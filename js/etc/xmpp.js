@@ -398,7 +398,7 @@ $(window).ready(function() {
         Cryptodog.xmpp.connection.ibb.addIBBHandler(Cryptodog.otr.ibbHandler);
         Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler);
 
-        $('.conversationName').animate({ 'background-color': '#bb7a20' });
+        $('.conversationName').animate({ 'background-color': '#0087AF' });
 
         Cryptodog.xmpp.sendStatus();
         Cryptodog.xmpp.sendPublicKey();

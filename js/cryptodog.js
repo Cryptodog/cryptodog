@@ -409,7 +409,7 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	$('#buddyList').queue(function() {
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
-			shortNickname: shortenString(nickname, 11),
+			nickname: nickname,
 			status: status
 		})
 		var placement = determineBuddyPlacement(nickname, id, status)
@@ -420,13 +420,48 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 					Cryptodog.onBuddyClick($(this))
 				}
 			)
-			$('#menu-' + buddy.id).attr('status', 'inactive')
-				.unbind('click')
-				.click(function(e) {
-					e.stopPropagation()
-					openBuddyMenu(nickname)
-				}
-			)
+			$('#buddy-' + buddy.id).attr('status', 'inactive')
+				.unbind('contextmenu')
+				.contextmenu(function(e) {
+					e.preventDefault();
+					$(this).toggleClass('active');
+					let buddy = Cryptodog.buddies[nickname];
+
+					// Create buddy menu element if it doesn't exist.
+					if ($('#' + buddy.id + '-menu').length === 0) {
+						$('body').append(Mustache.render(Cryptodog.templates.buddyMenu, {
+							buddyID: buddy.id,
+							sendEncryptedFile: Cryptodog.locale.chatWindow.sendEncryptedFile,
+							displayInfo: Cryptodog.locale.chatWindow.displayInfo,
+							ignore: Cryptodog.locale.chatWindow[buddy.ignored() ? 'unignore' : 'ignore']
+						}));
+					}
+					let $menu = $('#' + buddy.id + '-menu');
+					
+					// Insert buddy menu at location of right-click.
+					$menu.css({
+						display: "block",
+						top: e.pageY + "px",
+						left: e.pageX + "px"
+					});
+					
+					// Register menu item events.
+					$menu.find('.option1').click(function(e) {
+						e.stopPropagation();
+						Cryptodog.displayInfo(nickname);
+						$menu.hide();
+					});
+					$menu.find('.option2').click(function(e) {
+						e.stopPropagation();
+						sendFile(nickname);
+						$menu.hide();
+					});
+					$menu.find('.option3').click(function(e) {
+						e.stopPropagation();
+						buddy.toggleIgnored();
+						$menu.hide();
+					});
+				})
 			buddyNotification(nickname, true)
 		})
 	})
@@ -1025,54 +1060,6 @@ var ensureOTRdialog = function(nickname, close, cb, noAnimation) {
 	// add some state for status callback
 	buddy.genFingerState = { close: close, cb: cb, noAnimation: noAnimation}
 	buddy.otr.sendQueryMsg()
-}
-
-
-// Open a buddy's contact list context menu.
-var openBuddyMenu = function(nickname) {
-	var buddy = Cryptodog.buddies[nickname],
-		chatWindow = Cryptodog.locale.chatWindow,
-		ignoreAction = chatWindow[buddy.ignored() ? 'unignore' : 'ignore'],
-		$menu = $('#menu-' + buddy.id),
-		$buddy = $('#buddy-' + buddy.id);
-	if ($menu.attr('status') === 'active') {
-		$menu.attr('status', 'inactive');
-		$menu.css('background-image', 'url("img/icons/circle-down.svg")');
-		$buddy.animate({'height': 15}, 190);
-		$('#' + buddy.id + '-contents').fadeOut(200, function() {
-			$(this).remove();
-		});
-		return;
-	}
-	$menu.attr('status', 'active');
-	$menu.css('background-image', 'url("img/icons/circle-up.svg")');
-	$buddy.delay(10).animate({'height': 130}, 180, function() {
-		$buddy.append(
-			Mustache.render(Cryptodog.templates.buddyMenu, {
-				buddyID: buddy.id,
-				sendEncryptedFile: chatWindow.sendEncryptedFile,
-				displayInfo: chatWindow.displayInfo,
-				ignore: ignoreAction
-			})
-		);
-		var $contents = $('#' + buddy.id + '-contents');
-		$contents.fadeIn(200);
-		$contents.find('.option1').click(function(e) {
-			e.stopPropagation();
-			Cryptodog.displayInfo(nickname);
-			$menu.click();
-		});
-		$contents.find('.option2').click(function(e) {
-			e.stopPropagation();
-			sendFile(nickname);
-			$menu.click();
-		});
-		$contents.find('.option3').click(function(e) {
-			e.stopPropagation();
-			buddy.toggleIgnored();
-			$menu.click();
-		});
-	})
 }
 
 // Check for nickname completion.
