@@ -816,15 +816,6 @@ var getUniqueBuddyID = function() {
 	return buddyID;
 }
 
-// Simply shortens a string `string` to length `length.
-// Adds '..' to delineate that string was shortened.
-var shortenString = function(string, length) {
-	if (string.length > length) {
-		return string.substring(0, (length - 2)) + '…';
-	}
-	return string;
-}
-
 // Get a fingerprint, formatted for readability.
 var getFingerprint = function(nickname, OTR) {
 	var buddy = Cryptodog.buddies[nickname],
