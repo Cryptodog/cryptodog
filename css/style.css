@@ -485,6 +485,11 @@ BUDDY LIST
 	position: relative;
 	cursor: pointer;
 	z-index: 15;
+}
+
+.buddy .nickname {
+	max-width: 90%;
+	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -584,8 +589,8 @@ BUDDY LIST
 
 .composing {
 	background-image: url("../img/icons/pencil2.svg");
-	background-position: 80% 5px;
-	background-size: 12px 12px;
+	background-position: 92%;
+	background-size: 10px 10px;
 }
 
 /*
