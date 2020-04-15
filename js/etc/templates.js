@@ -79,9 +79,10 @@ Cryptodog.templates = {
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 
     message:
-        '<div class="line" style="border-color:{{color}};"><span class="sender" title="{{nickname}}" data-sender="{{nickname}}"' +
-        ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="nickname">{{nickname}}</nickname></span></span>' +
-        '<span style="font-style:{{style}};">{{&message}}</span></div>',
+        '<div class="line" style="border-color:{{color}};">' +
+        '<span class="sender" title="{{nickname}}" data-sender="{{nickname}}"' +
+        ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="nickname">{{nickname}}</span></span>' +
+        '<span class="message" style="font-style:{{style}};">{{&message}}</span></div>',
 
     authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
 

@@ -1008,8 +1008,7 @@ CONVERSATION WINDOW
 #conversationWindow .sender {
 	padding: 5px;
 	font-size: 0.95em;
-	margin: 0 10px -7px -4px;
-	cursor: default;
+	margin: 0 10px 0 -4px;
 	border-radius: 0 0 3px 0;
 	padding: 2px 4px;
 	text-align: left;
@@ -1018,6 +1017,11 @@ CONVERSATION WINDOW
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+
+#conversationWindow .message {
+	vertical-align: middle;
 }
 
 #conversationWindow .nickHighlight {
