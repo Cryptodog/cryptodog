@@ -420,9 +420,8 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 					Cryptodog.onBuddyClick($(this))
 				}
 			)
-			$('#buddy-' + buddy.id).attr('status', 'inactive')
-				.unbind('contextmenu')
-				.contextmenu(function(e) {
+			$('#buddy-' + buddy.id).unbind('contextmenu').contextmenu(
+				function(e) {
 					e.preventDefault();
 					$(this).toggleClass('active');
 					let buddy = Cryptodog.buddies[nickname];
