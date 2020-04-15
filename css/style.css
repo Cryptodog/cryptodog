@@ -982,25 +982,6 @@ CONVERSATION WINDOW
 	overflow-y: scroll;
 }
 
-#conversationWindow .authStatus {
-	width: 16px;
-	height: 16px;
-	display: inline-block;
-	margin: 0 7px -4px -2px;
-	border-radius: 4px;
-	background-color: #EF6C74;
-	background-image: url("../img/icons/warning.svg");
-	background-size: 12px 12px;
-	background-position: 2px 2px;
-	background-repeat: no-repeat;
-	cursor: pointer;
-}
-
-#conversationWindow .authStatus[data-auth=true] {
-	background-color: #0087AF;
-	background-image: none;
-}
-
 #conversationWindow .timeStamp {
 	color: #151520;
 	text-shadow: 1px 1px #C0C0C0;
