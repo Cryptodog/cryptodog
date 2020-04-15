@@ -982,15 +982,6 @@ CONVERSATION WINDOW
 	overflow-y: scroll;
 }
 
-#conversationWindow .timeStamp {
-	color: #151520;
-	text-shadow: 1px 1px #C0C0C0;
-	font-size: 0.8em;
-	font-family: monospace;
-	vertical-align: 1px;
-	display: none;
-}
-
 #conversationWindow .sender {
 	font-size: 0.95em;
 	margin: 0 10px 0 -4px;
