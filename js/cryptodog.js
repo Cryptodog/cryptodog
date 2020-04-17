@@ -367,9 +367,7 @@ Buddy.prototype = {
 			$('#authenticated').attr('data-active', false);
 			$('#notAuthenticated').attr('data-active', true);
 		}
-		//for (var value in $('span').filterByData('sender', nickname)) {
-		//	$(value).find('.authStatus').attr('data-auth', auth);
-		//}
+
 		$.each($('span').filterByData('sender', nickname),
 			function(index, value) {
 				$(value).find('.authStatus').attr('data-auth', auth);
@@ -379,13 +377,6 @@ Buddy.prototype = {
 			'groupChat',
 			Cryptodog.buddies[nickname].id
 		];
-		//for (var thisBuffer in authStatusBuffers) {
-		//	var buffer = $(conversationBuffers[thisBuffer]);
-		//	for (var value in buffer.find('span').filterByData('sender', nickname)) {
-		//		$(value).find('.authStatus').attr('data-auth', auth);
-		//	}
-		//	conversationBuffers[thisBuffer] = $('<div>').append(buffer.clone()).html();
-		//}
 
 		$.each(authStatusBuffers, function(i, thisBuffer) {
 			var buffer = $(conversationBuffers[thisBuffer])
