@@ -409,7 +409,7 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 					Cryptodog.onBuddyClick($(this))
 				}
 			)
-			$('#buddy-' + buddy.id).unbind().contextmenu(function(e) {
+			$('#buddy-' + buddy.id).unbind('contextmenu').contextmenu(function(e) {
 					e.preventDefault();
 					$(this).toggleClass('active');
 					let buddy = Cryptodog.buddies[nickname];
@@ -444,7 +444,6 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 						$menu.hide();
 					});
 					$menu.find('.option3').unbind().click(function(e) {
-						console.log('it hit!');
 						e.stopPropagation();
 						buddy.toggleIgnored();
 						$menu.hide();
