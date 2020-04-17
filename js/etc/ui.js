@@ -307,7 +307,6 @@ Cryptodog.UI = {
         });
     },
 
-    // Bind sender element to show authStatus information and timestamps.
     bindSenderElement: function(senderElement) {
         if (!senderElement) {
             senderElement = $('.sender');
@@ -322,44 +321,6 @@ Cryptodog.UI = {
 
         senderElement.mouseleave(function() {
             $(this).find('.nickname').text($(this).attr('data-sender'));
-        });
-
-        senderElement.find('.authStatus').mouseenter(function() {
-            if ($(this).attr('data-auth') === 'true') {
-                $(this).attr('data-utip', Cryptodog.locale.auth.authenticated);
-            } else {
-                $(this).attr(
-                    'data-utip',
-                    Mustache.render(Cryptodog.templates.authStatusFalseUtip, {
-                        text: Cryptodog.locale.auth.userNotAuthenticated,
-                        learnMore: Cryptodog.locale.auth.clickToLearnMore
-                    })
-                );
-            }
-
-            // This is pretty ugly, sorry! Feel free to clean up via pull request.
-            var bgc = $(this).css('background-color');
-            var boxShadow = bgc.replace('rgb', 'rgba').substring(0, bgc.length - 1) + ', 0.3)';
-            $(this).attr(
-                'data-utip-style',
-                JSON.stringify({
-                    width: 'auto',
-                    'max-width': '110px',
-                    'font-size': '11px',
-                    'background-color': bgc,
-                    'box-shadow': '0 0 0 2px ' + boxShadow
-                })
-            );
-
-            $(this).attr('data-utip-click', 'Cryptodog.displayInfo()');
-        });
-
-        senderElement.find('.authStatus').click(function() {
-            Cryptodog.displayInfo(
-                $(this)
-                    .parent()
-                    .attr('data-sender')
-            );
         });
     },
 
