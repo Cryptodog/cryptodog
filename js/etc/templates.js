@@ -83,8 +83,6 @@ Cryptodog.templates = {
         ' data-timestamp="{{currentTime}}" style="background-color:{{color}};"><span class="nickname">{{nickname}}</span></span>' +
         '<span class="message" style="font-style:{{style}};">{{&message}}</span></div>',
 
-    authStatusFalseUtip: '<div id="authStatusUtip">{{text}}<br /><strong>{{learnMore}}</strong></div>',
-
     userJoin:
         '<div class="userJoin" title="{{nickname}}" style="background-color:{{color}};"><span class="timestamp">{{currentTime}}</span>' +
         '<strong>+</strong>{{nickname}}</div>',
