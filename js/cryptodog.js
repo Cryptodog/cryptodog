@@ -414,14 +414,11 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 		})
 		var placement = determineBuddyPlacement(nickname, id, status)
 		$(buddyTemplate).insertAfter(placement).slideDown(100, function() {
-			$('#buddy-' + buddy.id)
-				.unbind('click')
-				.click(function() {
+			$('#buddy-' + buddy.id).unbind().click(function() {
 					Cryptodog.onBuddyClick($(this))
 				}
 			)
-			$('#buddy-' + buddy.id).unbind('contextmenu').contextmenu(
-				function(e) {
+			$('#buddy-' + buddy.id).unbind().contextmenu(function(e) {
 					e.preventDefault();
 					$(this).toggleClass('active');
 					let buddy = Cryptodog.buddies[nickname];
@@ -445,17 +442,18 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 					});
 					
 					// Register menu item events.
-					$menu.find('.option1').click(function(e) {
+					$menu.find('.option1').unbind().click(function(e) {
 						e.stopPropagation();
 						Cryptodog.displayInfo(nickname);
 						$menu.hide();
 					});
-					$menu.find('.option2').click(function(e) {
+					$menu.find('.option2').unbind().click(function(e) {
 						e.stopPropagation();
 						sendFile(nickname);
 						$menu.hide();
 					});
-					$menu.find('.option3').click(function(e) {
+					$menu.find('.option3').unbind().click(function(e) {
+						console.log('it hit!');
 						e.stopPropagation();
 						buddy.toggleIgnored();
 						$menu.hide();
