@@ -219,11 +219,6 @@ $(window).ready(function() {
 
         var type = $(message).attr('type');
 
-        // If archived message, ignore.
-        if ($(message).find('delay').length !== 0) {
-            return true;
-        }
-
         // If message is from me, ignore.
         if (nickname === Cryptodog.me.nickname) {
             return true;
