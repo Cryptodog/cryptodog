@@ -44,9 +44,7 @@ Cryptodog.audio = {
 // image used for notifications
 var notifImg = "img/logo-128.png";
 
-Notification.requestPermission(function(permission){
-	log("asked for notification permission, got '" + permission + "'");
-});
+Notification.requestPermission();
 
 // checks if a string is composed of displayable ASCII chars
 var ascii = /^[ -~]+$/;
@@ -896,7 +894,6 @@ var handleNotificationTimeout = function() {
 		element.timeout -= 1;
 		if (element.timeout <= 0) {
 			element.notification.close();
-			log("expiring notification");
 			removalIndexes.push(currentNotifications.indexOf(element));
 		}
 	}, this);
@@ -911,7 +908,6 @@ function notificationTruncate(msg) {
    // Chrome truncates its notifications on its own, but firefox doesn't for some reason
 	var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	if (msg.length > 50 && is_firefox) {
-		//log("Truncating notification");
 		return msg.substring(0,50) + "…";
 	}
 	return msg;
@@ -919,15 +915,12 @@ function notificationTruncate(msg) {
 
 var desktopNotification = function(image, title, body, timeout) {
 	if (Cryptodog.me.windowFocus) {
-		//log("tried to show desktop notif, but window had focus");
 		return false;
 	}
 	if (!Cryptodog.desktopNotifications) {
-		//log("tried to show desktop notif, but notifs are off");
 		return false;
 	}
 	var notificationStatus = Notification.permission;
-	log("showing desktop notif, status is '" + notificationStatus + "', title is: " + title)
 	if (notificationStatus == 'granted') {
 		var n = new Notification(title, {
 			body: notificationTruncate(body),
@@ -1054,7 +1047,7 @@ var nicknameCompletion = function(input) {
 				});
 			}
 			catch (err) {
-				log("completion: " + err);
+				console.log(err);
 			}
 		}
 	}
@@ -1067,7 +1060,6 @@ var nicknameCompletion = function(input) {
 		}
 	}, this);
 
-	log("completion.matcher: score=" + largest.score + ", value=" + largest.value)
 	if (input.match(/\s/)) {
 		suffix = ' ';
 	}

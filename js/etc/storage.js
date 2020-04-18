@@ -8,7 +8,7 @@ Cryptodog.storage = {
             if (err) {
                 console.error(err);
             } else {
-                log('Set (' + key + ', ' + value + ') in storage');
+                console.log('Set (' + key + ', ' + value + ') in storage');
             }
         });
     },
@@ -18,7 +18,7 @@ Cryptodog.storage = {
             if (err) {
                 console.error(err);
             } else {
-                log('Read (' + key + ', ' + value + ') from storage');
+                console.log('Read (' + key + ', ' + value + ') from storage');
             }
             callback(value);
         });
@@ -29,7 +29,7 @@ Cryptodog.storage = {
             if (err) {
                 console.error(err);
             } else {
-                log('Removed ' + key + ' from storage');
+                console.log('Removed ' + key + ' from storage');
             }
         });
     }

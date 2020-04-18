@@ -10,19 +10,14 @@
 
     // alternate async JSON-based language object builder
     Cryptodog.locale.buildObject = function(locale, refresh) {
-        log('Locale builder invoked');
-
         // make locale lowercase
         locale = locale.toLowerCase();
 
         // get a list of available languages
         $.getJSON('lang/langlist.json', function(langlist) {
-            log('Got langlist');
-
             // handle aliases
             if (langlist['aliases'].hasOwnProperty(locale)) {
                 var newlang = langlist['aliases'][locale];
-                log(locale + ' -> ' + newlang);
                 locale = newlang;
             }
 
@@ -31,19 +26,13 @@
                 // language not present, default to en-US
                 console.warn("Locale '" + locale + "' was not found, defaulting to en-US.");
                 locale = 'en-us';
-            } else {
-                log("Locale '" + locale + "' found, loading.");
             }
-
             $.getJSON('lang/' + locale + '.json', function(data) {
-                log("Got language file '" + locale + "'");
                 for (var o in data) {
                     if (data.hasOwnProperty(o)) {
                         Cryptodog.locale[o] = data[o];
                     }
                 }
-                
-                log(refresh ? 'Caller requested refresh' : 'Caller did not request refresh');
                 if (refresh) Cryptodog.locale.refresh(data);
             });
         });
@@ -95,7 +84,6 @@
     // Populate language
     if (typeof window !== 'undefined') {
         $(window).ready(function() {
-            log('Window ready, loading default language');
             Cryptodog.locale.set('en-US', true);
         });
     }
