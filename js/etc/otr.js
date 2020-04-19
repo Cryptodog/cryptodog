@@ -112,7 +112,7 @@
                 var answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
                 buddy.otr.smpSecret(answer);
                 if (!answer) {
-                    buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
+                    buddy.otr.smpSecret(CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16)));
                 }
                 return;
             }
@@ -150,7 +150,7 @@
                         if (answer) {
                             return;
                         }
-                        buddy.otr.smpSecret(Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex));
+                        buddy.otr.smpSecret(CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16)));
                     }
                 });
             }, 500);
