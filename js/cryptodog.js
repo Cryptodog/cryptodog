@@ -791,7 +791,7 @@ var initializeConversationBuffer = function(id) {
 
 // Get a unique buddy identifier.
 var getUniqueBuddyID = function() {
-	var buddyID = Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex);
+	var buddyID = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
 	for (var b in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(b)) {
 			if (Cryptodog.buddies[b].id === buddyID) {
@@ -993,7 +993,7 @@ var sendFile = function(nickname) {
 			e.stopPropagation()
 			if (this.files) {
 				var file = this.files[0]
-				var filename = Cryptodog.random.encodedBytes(16, CryptoJS.enc.Hex)
+				var filename = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
 				filename += file.name.match(/\.(\w)+$/)[0]
 				Cryptodog.buddies[nickname].otr.sendFile(filename)
 				var key = Cryptodog.buddies[nickname].fileKey[filename]
