@@ -139,7 +139,7 @@ Cryptodog.multiParty = function() {};
         message = CryptoJS.enc.Utf8.parse(message);
 
         // Add 64 bytes of padding
-        message.concat(Cryptodog.random.rawBytes(64));
+        message.concat(CryptoJS.lib.WordArray.random(64));
 
         var encrypted = {
             text: {},
@@ -159,11 +159,11 @@ Cryptodog.multiParty = function() {};
 
         for (var i = 0; i < sortedRecipients.length; i++) {
             // Generate a random IV
-            var iv = Cryptodog.random.encodedBytes(12, CryptoJS.enc.Base64);
+            var iv = CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(12));
 
             // Do not reuse IVs
             while (usedIVs.indexOf(iv) >= 0) {
-                iv = Cryptodog.random.encodedBytes(12, CryptoJS.enc.Base64);
+                iv = CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(12));
             }
 
             usedIVs.push(iv);
