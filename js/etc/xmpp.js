@@ -314,7 +314,7 @@ $(window).ready(function() {
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Create buddy element if buddy is new
-            Cryptodog.addBuddy(nickname, null, 'online');
+            Cryptodog.addBuddy(nickname, 'online');
             
             // Propagate away status to newcomers.
             Cryptodog.xmpp.sendStatus();
@@ -331,7 +331,7 @@ $(window).ready(function() {
             status = 'away';
         }
 
-        Cryptodog.buddyStatus(nickname, status);
+        Cryptodog.buddies[nickname].setStatus(status);
         return true;
     };
 

@@ -66,7 +66,7 @@ INTIALIZATION
 
 Cryptodog.UI.setVersion(Cryptodog.version);
 
-var conversationBuffers = {};
+Cryptodog.conversationBuffers = {};
 
 /*
 -------------------
@@ -119,7 +119,7 @@ Cryptodog.storage.getItem('smpAllowedList', function(v) {
 
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
-	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[recipient].id]);
+	var conversationBuffer = $(Cryptodog.conversationBuffers[Cryptodog.buddies[recipient].id]);
 	var progress = (chunk * 100) / (Math.ceil(size / Cryptodog.otr.chunkSize));
 	if (progress > 100) { progress = 100 }
 	$('.fileProgressBarFill')
@@ -130,12 +130,12 @@ Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[recipient].id)
 		.width(progress + '%');
-	conversationBuffers[Cryptodog.buddies[recipient].id] = $('<div>').append($(conversationBuffer).clone()).html();
+	Cryptodog.conversationBuffers[Cryptodog.buddies[recipient].id] = $('<div>').append($(conversationBuffer).clone()).html();
 }
 
 // Convert Data blob/url to downloadable file, replacing the progress bar.
 Cryptodog.addFile = function(url, file, conversation, filename) {
-	var conversationBuffer = $(conversationBuffers[Cryptodog.buddies[conversation].id]);
+	var conversationBuffer = $(Cryptodog.conversationBuffers[Cryptodog.buddies[conversation].id]);
 	
 	var fileLink = Mustache.render(Cryptodog.templates.fileLink, {
 		url: url,
@@ -151,7 +151,7 @@ Cryptodog.addFile = function(url, file, conversation, filename) {
 		.filterByData('file', file)
 		.filterByData('id', Cryptodog.buddies[conversation].id)
 		.replaceWith(fileLink);
-	conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html();
+	Cryptodog.conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html();
 }
 
 // Add a `message` from `nickname` to the `conversation` display and log.
@@ -206,7 +206,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 				.replace('(NICKNAME)', message),
 			dir: Cryptodog.locale.direction
 		})
-		conversationBuffers[conversation] += message;
+		Cryptodog.conversationBuffers[conversation] += message;
 		if (conversation === Cryptodog.me.currentBuddy) {
 			$('#conversationWindow').append(message);
 			$('.missingRecipients').last().animate({'top': '0', 'opacity': '1'}, 100);
@@ -229,7 +229,7 @@ Cryptodog.addToConversation = function(message, nickname, conversation, type) {
 		style: type == 'warning' ? 'italic' : 'normal'
 	});
 
-	conversationBuffers[conversation] += renderedMessage
+	Cryptodog.conversationBuffers[conversation] += renderedMessage
 	if (conversation === Cryptodog.me.currentBuddy) {
 		$('#conversationWindow').append(renderedMessage);
 		$('.line').last().animate({'top': '0', 'opacity': '1'}, 100);
@@ -287,118 +287,16 @@ Cryptodog.autoIgnore = true;
 Cryptodog.maxMessageCount = 5;
 Cryptodog.maxMessageInterval = 3000;
 
-// Buddy constructor
-var Buddy = function(nickname, id, status) {
-	this.id             = id
-	this.fingerprint    = null
-	this.authenticated  = false
-	this.fileKey        = null
-	this.mpPublicKey    = null
-	this.mpFingerprint  = null
-	this.mpSecretKey    = null
-	this.nickname       = nickname
-	this.genFingerState = null
-	this.status         = status
-	this.otr            = Cryptodog.otr.add(nickname)
-	this.color          = Cryptodog.color.pop();
-	
-	// Regularly reset at the interval defined by Cryptodog.maxMessageInterval
-	this.messageCount   = 0
-	this.ignored        = function() {
-		return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
-	};
-	
-	this.toggleIgnored = function() {
-		if (this.ignored()) {
-			Cryptodog.ignoredNicknames.splice(Cryptodog.ignoredNicknames.indexOf(this.nickname), 1);
-			$('#buddy-' + this.id).removeClass('ignored');
-		}
-		else {
-			Cryptodog.ignoredNicknames.push(this.nickname);
-			$('#buddy-' + this.id).addClass('ignored');
-		}
-	};
-
-	if (Cryptodog.isFiltered(this.nickname) && !this.ignored()) {
-		console.log("Filtering user '" + this.nickname + "', as isFiltered() returned true.");
-		this.toggleIgnored();
-	}
-}
-
-Buddy.prototype = {
-	constructor: Buddy,
-	updateMpKeys: function(publicKey) {
-		this.mpPublicKey = publicKey;
-		this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
-		this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
-	},
-	updateAuth: function(auth, dontTouchList) {
-		var nickname = this.nickname;
-		var bd = this;
-
-		if (Cryptodog.persist) {
-			if (!dontTouchList) {
-				if (auth) {
-					ensureOTRdialog(nickname, false, function() {
-						Cryptodog.authList[nickname] = {
-							mp:  bd.mpFingerprint,
-							otr: bd.fingerprint
-						}
-						Cryptodog.storeAuthList();
-					}, true);
-				} else {
-					delete Cryptodog.authList[this.nickname];
-					Cryptodog.storeAuthList();
-				}
-			}
-		}
-
-		this.authenticated = auth;
-		if (auth) {
-			$('#authenticated').attr('data-active', true);
-			$('#notAuthenticated').attr('data-active', false);
-		}
-		else {
-			$('#authenticated').attr('data-active', false);
-			$('#notAuthenticated').attr('data-active', true);
-		}
-
-		$.each($('span').filterByData('sender', nickname),
-			function(index, value) {
-				$(value).find('.authStatus').attr('data-auth', auth);
-			}
-		);
-		var authStatusBuffers = [
-			'groupChat',
-			Cryptodog.buddies[nickname].id
-		];
-
-		$.each(authStatusBuffers, function(i, thisBuffer) {
-			var buffer = $(conversationBuffers[thisBuffer])
-			$.each(buffer.find('span').filterByData('sender', nickname),
-				function(index, value) {
-					$(value).find('.authStatus').attr('data-auth', auth)
-				}
-			)
-			conversationBuffers[thisBuffer] = $('<div>').append(
-				buffer.clone()
-			).html()
-		});
-
-	}
-}
-
 // Build new buddy.
-Cryptodog.addBuddy = function(nickname, id, status) {
-	if (!id) { id = getUniqueBuddyID() }
-	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, id, status)
+Cryptodog.addBuddy = function(nickname, status) {
+	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, status);
 	$('#buddyList').queue(function() {
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
 			nickname: nickname,
 			status: status
 		})
-		var placement = determineBuddyPlacement(nickname, id, status)
+		var placement = buddy.determinePlacement(nickname, buddy.id, status)
 		$(buddyTemplate).insertAfter(placement).slideDown(100, function() {
 			$('#buddy-' + buddy.id).unbind().click(function() {
 					Cryptodog.onBuddyClick($(this))
@@ -469,22 +367,6 @@ Cryptodog.addBuddy = function(nickname, id, status) {
 	}
 }
 
-// Set a buddy's status to `online` or `away`.
-Cryptodog.buddyStatus = function(nickname, status) {
-	if (typeof Cryptodog.buddies[nickname] == 'undefined') {
-		return;
-	}
-	Cryptodog.buddies[nickname].status = status
-	var thisBuddy = $('#buddy-' + Cryptodog.buddies[nickname].id)
-	var placement = determineBuddyPlacement(
-		nickname, Cryptodog.buddies[nickname].id, status
-	)
-	if (thisBuddy.attr('status') !== status) {
-		thisBuddy.attr('status', status)
-		thisBuddy.insertAfter(placement).slideDown(200)
-	}
-}
-
 // Handle buddy going offline.
 Cryptodog.removeBuddy = function(nickname) {
 	if (!Cryptodog.buddies[nickname]) {
@@ -513,52 +395,6 @@ Cryptodog.removeBuddy = function(nickname) {
 	})
 }
 
-// Determine where to place a buddy in the buddy list
-// so the buddy list is in alphabetical order.
-var determineBuddyPlacement = function(nickname, id, status) {
-	var buddies = [{
-		nickname: nickname,
-		id: id
-	}]
-	for (var i in Cryptodog.buddies) {
-		if (Cryptodog.buddies.hasOwnProperty(i) && (Cryptodog.buddies[i].status === status)) {
-			buddies.push({
-				nickname: i,
-				id: Cryptodog.buddies[i].id
-			});
-		}
-	}
-	buddies.sort(function(a, b) {
-		var nameA = a.nickname.toLowerCase();
-		var nameB = b.nickname.toLowerCase();
-		if (nameA < nameB) {
-			return -1;
-		}
-		if (nameA > nameB) {
-			return 1;
-		}
-		return 0;
-	})
-	var rightBefore;
-	for (var o = 0; o < buddies.length; o++) {
-		if (buddies[o].id === id) {
-			if (o === 0) {
-				if (status === 'online') {
-					rightBefore = '#buddiesOnline';
-				}
-				if (status === 'away') {
-					rightBefore = '#buddiesAway';
-				}
-			}
-			else {
-				rightBefore = '[data-id=' + buddies[o - 1].id + ']';
-			}
-			break;
-		}
-	}
-	return rightBefore;
-}
-
 // Get a buddy's nickname from their ID.
 Cryptodog.getBuddyNicknameByID = function(id) {
 	for (var i in Cryptodog.buddies) {
@@ -582,7 +418,7 @@ Cryptodog.onBuddyClick = function(buddyElement) {
 	Cryptodog.me.currentBuddy = id;
 	initializeConversationBuffer(id);
 	// Switch currently active conversation.
-	$('#conversationWindow').html(conversationBuffers[id]);
+	$('#conversationWindow').html(Cryptodog.conversationBuffers[id]);
 	Cryptodog.UI.bindSenderElement();
 	Cryptodog.UI.scrollDownConversation(0, false);
 	$('#userInputText').focus();
@@ -734,7 +570,7 @@ Cryptodog.logout = function() {
 	}
 
 	Cryptodog.color.reset();
-	conversationBuffers = {};
+	Cryptodog.conversationBuffers = {};
 }
 
 Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
@@ -781,22 +617,9 @@ var currentTime = function(seconds) {
 
 // Initializes a conversation buffer. Internal use.
 var initializeConversationBuffer = function(id) {
-	if (!conversationBuffers.hasOwnProperty(id)) {
-		conversationBuffers[id] = '';
+	if (!Cryptodog.conversationBuffers.hasOwnProperty(id)) {
+		Cryptodog.conversationBuffers[id] = '';
 	}
-}
-
-// Get a unique buddy identifier.
-var getUniqueBuddyID = function() {
-	var buddyID = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
-	for (var b in Cryptodog.buddies) {
-		if (Cryptodog.buddies.hasOwnProperty(b)) {
-			if (Cryptodog.buddies[b].id === buddyID) {
-				return getUniqueBuddyID();
-			}
-		}
-	}
-	return buddyID;
 }
 
 // Get a fingerprint, formatted for readability.
@@ -955,7 +778,7 @@ var buddyNotification = function(nickname, join) {
 		});
 	}
 	initializeConversationBuffer('groupChat');
-	conversationBuffers['groupChat'] += status;
+	Cryptodog.conversationBuffers['groupChat'] += status;
 	if (Cryptodog.me.currentBuddy === 'groupChat') {
 		$('#conversationWindow').append(status);
 	}
