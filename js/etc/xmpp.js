@@ -34,7 +34,7 @@ $(window).ready(function() {
         Cryptodog.storage.getItem('persistenceEnabled', function(key) {
             var key = key || {};    
             if (key.enabled) {
-                Cryptodog.me.mpPrivateKey = BigInt.base642bigInt(key.mp);
+                Cryptodog.me.mpPrivateKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(key.mp));
                 Cryptodog.me.otrKey = DSA.parsePrivate(key.otr);
             } else {
                 Cryptodog.me.mpPrivateKey = Cryptodog.multiParty.genPrivateKey();

@@ -1,11 +1,38 @@
-Cryptodog.multiParty = function() {};
+Cryptodog.multiParty = function () { };
 
-(function() {
+(function () {
     'use strict';
+
+    /*  We need the following two conversion functions because Crypto-JS operates on the WordArray type,
+        but we use Uint8Array for compatibility with NaCl.
+        TODO: Remove these functions once we replace Crypto-JS with NaCl entirely.
+    */
+    Uint8Array.prototype.toWordArray = function () {
+        var wa = [], i;
+        for (i = 0; i < this.length; i++) {
+            wa[(i / 4) | 0] |= this[i] << (24 - 8 * i);
+        }
+        return CryptoJS.lib.WordArray.create(wa, this.length);
+    };
+
+    Uint8Array.fromWordArray = function (wordArray) {
+        var len = wordArray.words.length,
+            u8_array = new Uint8Array(len << 2),
+            offset = 0, word, i;
+
+        for (i = 0; i < len; i++) {
+            word = wordArray.words[i];
+            u8_array[offset++] = word >> 24;
+            u8_array[offset++] = (word >> 16) & 0xff;
+            u8_array[offset++] = (word >> 8) & 0xff;
+            u8_array[offset++] = word & 0xff;
+        }
+        return u8_array;
+    };
 
     var usedIVs = [];
 
-    var correctIvLength = function(iv) {
+    var correctIvLength = function (iv) {
         var ivAsWordArray = CryptoJS.enc.Base64.parse(iv);
         var ivAsArray = ivAsWordArray.words;
 
@@ -25,7 +52,7 @@ Cryptodog.multiParty = function() {};
     // No padding, starting IV of 0
     // Input: WordArray, Output: Base64
     // Key input: WordArray
-    var encryptAES = function(msg, c, iv) {
+    var encryptAES = function (msg, c, iv) {
         var opts = {
             mode: CryptoJS.mode.CTR,
             iv: correctIvLength(iv),
@@ -39,7 +66,7 @@ Cryptodog.multiParty = function() {};
     // No padding, starting IV of 0
     // Input: Base64, Output: WordArray
     // Key input: WordArray
-    var decryptAES = function(msg, c, iv) {
+    var decryptAES = function (msg, c, iv) {
         var opts = {
             mode: CryptoJS.mode.CTR,
             iv: correctIvLength(iv),
@@ -52,38 +79,27 @@ Cryptodog.multiParty = function() {};
     // HMAC-SHA512
     // Output: Base64
     // Key input: WordArray
-    var HMAC = function(msg, key) {
+    var HMAC = function (msg, key) {
         return CryptoJS.HmacSHA512(msg, key).toString(CryptoJS.enc.Base64);
     };
 
     Cryptodog.multiParty.maxMessageLength = 5000;
 
-    // Generate private key (32 random bytes)
-    // Represented as BigInt
-    Cryptodog.multiParty.genPrivateKey = function() {
-        return BigInt.randBigInt(256);
+    Cryptodog.multiParty.genPrivateKey = function () {
+        let privateKey = new Uint8Array(32);
+        return window.crypto.getRandomValues(privateKey);
     };
 
-    // Generate public key (Curve 25519 Diffie-Hellman with basePoint 9)
-    // Represented as BigInt
-    Cryptodog.multiParty.genPublicKey = function(privateKey) {
-        return Curve25519.ecDH(privateKey);
+    Cryptodog.multiParty.genPublicKey = function (privateKey) {
+        return nacl.scalarMult.base(privateKey);
     };
 
     // Generate shared secrets
     // First 256 bytes are for encryption, last 256 bytes are for HMAC.
     // Represented as WordArrays
-    Cryptodog.multiParty.genSharedSecret = function(nickname) {
-        // I need to convert the BigInt to WordArray here. I do it using the Base64 representation.
-        var sharedSecret = CryptoJS.SHA512(
-            CryptoJS.enc.Base64.parse(
-                BigInt.bigInt2base64(
-                    Curve25519.ecDH(Cryptodog.me.mpPrivateKey, Cryptodog.buddies[nickname].mpPublicKey),
-                    32
-                )
-            )
-        );
-
+    Cryptodog.multiParty.genSharedSecret = function (nickname) {
+        let sharedSecret = CryptoJS.SHA512(nacl.scalarMult(Cryptodog.me.mpPrivateKey,
+            Cryptodog.buddies[nickname].mpPublicKey).toWordArray());
         return {
             message: CryptoJS.lib.WordArray.create(sharedSecret.words.slice(0, 8)),
             hmac: CryptoJS.lib.WordArray.create(sharedSecret.words.slice(8, 16))
@@ -92,23 +108,20 @@ Cryptodog.multiParty = function() {};
 
     // Get fingerprint
     // If nickname is null, returns own fingerprint
-    Cryptodog.multiParty.genFingerprint = function(nickname) {
+    Cryptodog.multiParty.genFingerprint = function (nickname) {
         var key = Cryptodog.me.mpPublicKey;
         if (nickname) {
             key = Cryptodog.buddies[nickname].mpPublicKey;
         }
-        return CryptoJS.SHA512(CryptoJS.enc.Base64.parse(BigInt.bigInt2base64(key, 32)))
-            .toString()
-            .substring(0, 40)
-            .toUpperCase();
+        return CryptoJS.SHA512(key.toWordArray()).toString().substring(0, 40).toUpperCase();
     };
 
-    Cryptodog.multiParty.PublicKey = function(key) {
+    Cryptodog.multiParty.PublicKey = function (key) {
         this.type = 'public_key';
-        this.text = BigInt.bigInt2base64(key, 32);
+        this.text = CryptoJS.enc.Base64.stringify(key.toWordArray());
     };
 
-    Cryptodog.multiParty.PublicKeyRequest = function(name) {
+    Cryptodog.multiParty.PublicKeyRequest = function (name) {
         this.type = 'public_key_request';
         if (name) {
             this.text = name;
@@ -118,7 +131,7 @@ Cryptodog.multiParty = function() {};
     };
 
     // Issue a warning for decryption failure to the main conversation window
-    Cryptodog.multiParty.messageWarning = function(sender) {
+    Cryptodog.multiParty.messageWarning = function (sender) {
         var messageWarning = Cryptodog.locale['warnings']['messageWarning'].replace('(NICKNAME)', sender);
         Cryptodog.addToConversation(messageWarning, sender, 'groupChat', 'warning');
     };
@@ -126,7 +139,7 @@ Cryptodog.multiParty = function() {};
     // Generate message tag. 8 rounds of SHA512
     // Input: WordArray
     // Output: Base64
-    Cryptodog.multiParty.messageTag = function(message) {
+    Cryptodog.multiParty.messageTag = function (message) {
         for (var i = 0; i < 8; i++) {
             message = CryptoJS.SHA512(message);
         }
@@ -134,7 +147,7 @@ Cryptodog.multiParty = function() {};
         return message.toString(CryptoJS.enc.Base64);
     };
 
-    Cryptodog.multiParty.sendMessage = function(message) {
+    Cryptodog.multiParty.sendMessage = function (message) {
         // Convert from UTF8
         message = CryptoJS.enc.Utf8.parse(message);
 
@@ -202,7 +215,7 @@ Cryptodog.multiParty = function() {};
         return JSON.stringify(encrypted);
     };
 
-    Cryptodog.multiParty.receiveMessage = function(sender, myName, message) {
+    Cryptodog.multiParty.receiveMessage = function (sender, myName, message) {
         var buddy = Cryptodog.buddies[sender];
 
         try {
@@ -220,27 +233,18 @@ Cryptodog.multiParty = function() {};
                 return false;
             }
 
-            var publicKey = BigInt.base642bigInt(message.text);
-
-            if (buddy.mpPublicKey && BigInt.equals(buddy.mpPublicKey, publicKey)) {
-                // We already have this key.
-                return false;
-            } else if (buddy.mpPublicKey && !BigInt.equals(buddy.mpPublicKey, publicKey)) {
-                // If it's a different key than the one we have, warn user.
-                Cryptodog.UI.removeAuthAndWarn(sender);
-            } else if (!buddy.mpPublicKey && buddy.authenticated) {
-                // If we're missing their key and they're authenticated, warn user (prevents a possible active attack).
-                Cryptodog.UI.removeAuthAndWarn(sender);
+            var publicKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(message.text));
+            if (buddy.mpPublicKey) {
+                throw 'Already have public key for ' + sender;
             }
-
             buddy.updateMpKeys(publicKey);
-        } else if (type === 'public_key_request') {            
+        } else if (type === 'public_key_request') {
             if (!message.text || message.text === Cryptodog.me.nickname) {
                 Cryptodog.xmpp.sendPublicKey();
             }
         } else if (type === 'message') {
             var text = message['text'];
-            
+
             if (!text || typeof text !== 'object') {
                 return false;
             }
@@ -351,7 +355,7 @@ Cryptodog.multiParty = function() {};
                 } catch (e) {
                     return false;
                 }
-                
+
                 // Only show "missing recipients" warning if the message is readable
                 if (missingRecipients.length) {
                     Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
@@ -367,7 +371,7 @@ Cryptodog.multiParty = function() {};
     };
 
     // Reset everything except my own key pair
-    Cryptodog.multiParty.reset = function() {
+    Cryptodog.multiParty.reset = function () {
         usedIVs = [];
     };
 })();
