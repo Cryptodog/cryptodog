@@ -234,10 +234,9 @@ Cryptodog.multiParty = function () { };
             }
 
             var publicKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(message.text));
-            if (buddy.mpPublicKey) {
-                throw 'Already have public key for ' + sender;
+            if (!(buddy.mpPublicKey)) {
+                buddy.updateMpKeys(publicKey);
             }
-            buddy.updateMpKeys(publicKey);
         } else if (type === 'public_key_request') {
             if (!message.text || message.text === Cryptodog.me.nickname) {
                 Cryptodog.xmpp.sendPublicKey();
