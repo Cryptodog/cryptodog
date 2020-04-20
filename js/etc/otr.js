@@ -16,10 +16,7 @@
         } else {
             var otr = new OTR({
                 priv: Cryptodog.me.otrKey,
-                smw: {
-                    path: 'js/workers/smp.js',
-                    seed: Cryptodog.random.generateSeed
-                }
+                smw: { path: 'js/lib/otr/sm-webworker.js' }
             });
         }
 

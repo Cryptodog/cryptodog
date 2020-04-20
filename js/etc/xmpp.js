@@ -69,19 +69,14 @@ $(window).ready(function() {
         // file protocol doesn't support WebWorkers
         if (window.location.protocol === 'file:') {
             Cryptodog.me.otrKey = new DSA();
-
             if (callback) {
                 callback();
             }
         } else {
             DSA.createInWebWorker(
-                {
-                    path: 'js/workers/dsa.js',
-                    seed: Cryptodog.random.generateSeed
-                },
-                function(key) {
+                { path: './js/lib/otr/dsa-webworker.js' },
+                function (key) {
                     Cryptodog.me.otrKey = key;
-
                     if (callback) {
                         callback();
                     }
