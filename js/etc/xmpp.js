@@ -238,13 +238,13 @@ $(window).ready(function() {
             $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
 
             try {
-                body = Cryptodog.multiParty.receiveMessage(nickname, Cryptodog.me.nickname, body);
+                body = Cryptodog.multiParty.decryptMessage(nickname, Cryptodog.me.nickname, body);
             } catch (e) {
-                console.warn('xmpp: exception handling multiParty message from ' + nickname + ': ' + e);
+                console.log('multiParty exception (sender: ' + nickname + '): ' + e);
                 return true;
             }
 
-            if (typeof body === 'string') {
+            if (body) {
                 Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
             }
         } else if (type === 'chat') {

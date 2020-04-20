@@ -215,158 +215,138 @@ Cryptodog.multiParty = function () { };
         return JSON.stringify(encrypted);
     };
 
-    Cryptodog.multiParty.receiveMessage = function (sender, myName, message) {
-        var buddy = Cryptodog.buddies[sender];
-
-        try {
-            message = JSON.parse(message);
-        } catch (err) {
-            console.log('multiParty: failed to parse message object');
-            return false;
-        }
-
-        var type = message.type;
+    Cryptodog.multiParty.decryptMessage = function (sender, myName, message) {
+        let buddy = Cryptodog.buddies[sender];
+        message = JSON.parse(message);
+        let type = message.type;
 
         if (type === 'public_key') {
-            if (typeof message.text !== 'string') {
-                console.log('multiParty: invalid public key from ' + sender);
-                return false;
-            }
-
-            var publicKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(message.text));
             if (!(buddy.mpPublicKey)) {
+                let publicKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(message.text));
                 buddy.updateMpKeys(publicKey);
             }
-        } else if (type === 'public_key_request') {
-            if (!message.text || message.text === Cryptodog.me.nickname) {
+            return;
+        }
+
+        if (type === 'public_key_request') {
+            if (!message.text || message.text === myName) {
                 Cryptodog.xmpp.sendPublicKey();
             }
-        } else if (type === 'message') {
-            var text = message['text'];
+            return;
+        }
 
-            if (!text || typeof text !== 'object') {
-                return false;
-            }
+        if (type === 'message') {
+            let text = message['text'];
 
             if (!text[myName] || typeof text[myName] !== 'object') {
                 console.log('multiParty: invalid message from ' + sender);
                 Cryptodog.multiParty.messageWarning(sender);
-                return false;
-            } else {
-                if (!(buddy.mpSecretKey)) {
-                    // We don't have the sender's key - they're "borked".
-                    // Request their key and warn the user.
-                    console.log('Requesting public key from ' + sender);
-                    Cryptodog.xmpp.requestPublicKey(sender);
-                    Cryptodog.multiParty.messageWarning(sender);
-                    return false;
-                }
+                return;
+            }
 
-                var recipients = Object.keys(Cryptodog.buddies);
-                recipients.push(Cryptodog.me.nickname);
-                recipients.splice(recipients.indexOf(sender), 1);
+            if (!(buddy.mpSecretKey)) {
+                // We don't have the sender's key - they're "borked".
+                // Request their key and warn the user.
+                console.log('Requesting public key from ' + sender);
+                Cryptodog.xmpp.requestPublicKey(sender);
+                Cryptodog.multiParty.messageWarning(sender);
+                return;
+            }
 
-                // Find missing recipients: those for whom the message isn't encrypted
-                var missingRecipients = [];
+            var recipients = Object.keys(Cryptodog.buddies);
+            recipients.push(myName);
+            recipients.splice(recipients.indexOf(sender), 1);
 
-                for (var i = 0; i < recipients.length; i++) {
-                    try {
-                        if (typeof text[recipients[i]] === 'object') {
-                            var noMessage = typeof text[recipients[i]]['message'] !== 'string';
-                            var noIV = typeof text[recipients[i]]['iv'] !== 'string';
-                            var noHMAC = typeof text[recipients[i]]['hmac'] !== 'string';
+            // Find missing recipients: those for whom the message isn't encrypted
+            var missingRecipients = [];
 
-                            if (noMessage || noIV || noHMAC) {
-                                missingRecipients.push(recipients[i]);
-                            }
-                        } else {
+            for (var i = 0; i < recipients.length; i++) {
+                try {
+                    if (typeof text[recipients[i]] === 'object') {
+                        var noMessage = typeof text[recipients[i]]['message'] !== 'string';
+                        var noIV = typeof text[recipients[i]]['iv'] !== 'string';
+                        var noHMAC = typeof text[recipients[i]]['hmac'] !== 'string';
+
+                        if (noMessage || noIV || noHMAC) {
                             missingRecipients.push(recipients[i]);
                         }
-                    } catch (err) {
+                    } else {
                         missingRecipients.push(recipients[i]);
                     }
+                } catch (err) {
+                    missingRecipients.push(recipients[i]);
                 }
-
-                // Sort recipients
-                var sortedRecipients = Object.keys(text).sort();
-
-                // Check HMAC
-                var hmac = CryptoJS.lib.WordArray.create();
-
-                for (var i = 0; i < sortedRecipients.length; i++) {
-                    if (missingRecipients.indexOf(sortedRecipients[i]) < 0) {
-                        hmac.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['message']));
-                        hmac.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['iv']));
-                    }
-                }
-
-                if (!OTR.HLP.compare(text[myName]['hmac'], HMAC(hmac, buddy.mpSecretKey['hmac']))) {
-                    console.log('multiParty: HMAC failure');
-                    Cryptodog.multiParty.messageWarning(sender);
-                    return false;
-                }
-
-                // Check IV reuse
-                if (usedIVs.indexOf(text[myName]['iv']) >= 0) {
-                    console.log('multiParty: IV reuse detected, possible replay attack');
-                    Cryptodog.multiParty.messageWarning(sender);
-                    return false;
-                }
-
-                usedIVs.push(text[myName]['iv']);
-
-                if (text[myName]['message'].length > Cryptodog.multiParty.maxMessageLength) {
-                    Cryptodog.multiParty.messageWarning(sender);
-                    console.log('multiParty: refusing to decrypt large message (' + text[myName]['message'].length + ' bytes) from ' + sender);
-                    return false;
-                }
-
-                // Decrypt
-                var plaintext = decryptAES(
-                    text[myName]['message'],
-                    buddy.mpSecretKey['message'],
-                    text[myName]['iv']
-                );
-
-                // Check tag
-                var messageTag = plaintext.clone();
-                for (var i = 0; i < sortedRecipients.length; i++) {
-                    messageTag.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['hmac']));
-                }
-
-                if (Cryptodog.multiParty.messageTag(messageTag) !== message['tag']) {
-                    console.log('multiParty: message tag failure');
-                    Cryptodog.multiParty.messageWarning(sender);
-                    return false;
-                }
-
-                // Remove padding
-                if (plaintext.sigBytes < 64) {
-                    console.log('multiParty: invalid plaintext size');
-                    Cryptodog.multiParty.messageWarning(sender);
-                    return false;
-                }
-
-                plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
-
-                try {
-                    plaintext = plaintext.toString(CryptoJS.enc.Utf8);
-                } catch (e) {
-                    return false;
-                }
-
-                // Only show "missing recipients" warning if the message is readable
-                if (missingRecipients.length) {
-                    Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
-                }
-
-                return plaintext;
             }
-        } else {
-            console.log('multiParty: unknown message type "' + type + '" from ' + sender);
-        }
 
-        return false;
+            // Sort recipients
+            var sortedRecipients = Object.keys(text).sort();
+
+            // Check HMAC
+            var hmac = CryptoJS.lib.WordArray.create();
+
+            for (var i = 0; i < sortedRecipients.length; i++) {
+                if (missingRecipients.indexOf(sortedRecipients[i]) < 0) {
+                    hmac.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['message']));
+                    hmac.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['iv']));
+                }
+            }
+
+            if (!OTR.HLP.compare(text[myName]['hmac'], HMAC(hmac, buddy.mpSecretKey['hmac']))) {
+                console.log('multiParty: HMAC failure');
+                Cryptodog.multiParty.messageWarning(sender);
+                return;
+            }
+
+            // Check IV reuse
+            if (usedIVs.indexOf(text[myName]['iv']) >= 0) {
+                console.log('multiParty: IV reuse detected, possible replay attack');
+                Cryptodog.multiParty.messageWarning(sender);
+                return;
+            }
+
+            usedIVs.push(text[myName]['iv']);
+
+            if (text[myName]['message'].length > Cryptodog.multiParty.maxMessageLength) {
+                Cryptodog.multiParty.messageWarning(sender);
+                console.log('multiParty: refusing to decrypt large message (' + text[myName]['message'].length + ' bytes) from ' + sender);
+                return;
+            }
+
+            // Decrypt
+            var plaintext = decryptAES(
+                text[myName]['message'],
+                buddy.mpSecretKey['message'],
+                text[myName]['iv']
+            );
+
+            // Check tag
+            var messageTag = plaintext.clone();
+            for (var i = 0; i < sortedRecipients.length; i++) {
+                messageTag.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['hmac']));
+            }
+
+            if (Cryptodog.multiParty.messageTag(messageTag) !== message['tag']) {
+                console.log('multiParty: message tag failure');
+                Cryptodog.multiParty.messageWarning(sender);
+                return;
+            }
+
+            // Remove padding
+            if (plaintext.sigBytes < 64) {
+                console.log('multiParty: invalid plaintext size');
+                Cryptodog.multiParty.messageWarning(sender);
+                return;
+            }
+
+            plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
+            plaintext = plaintext.toString(CryptoJS.enc.Utf8);
+
+            // Only show "missing recipients" warning if the message is readable
+            if (missingRecipients.length) {
+                Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
+            }
+            return plaintext;
+        }
     };
 
     // Reset everything except my own key pair
