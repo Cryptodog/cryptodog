@@ -344,16 +344,6 @@ Cryptodog.UI = {
         }
     },
 
-    progressBarOTR: function() {
-        var progressDialog = '<div id="progressBar"><div id="fill"></div></div>';
-        this.dialogBox(progressDialog, {
-            height: 250,
-            closeable: true
-        });
-        $('#progressBar').css('margin', '70px auto 0 auto');
-        $('#fill').animate({ width: '100%', opacity: '1' }, 10000, 'linear');
-    },
-
     /*
 	-------------------
 	USER INTERFACE BINDINGS

@@ -356,14 +356,14 @@ Cryptodog.addBuddy = function(nickname, status) {
 	}
 
 	if (Cryptodog.persist && Cryptodog.authList[nickname]) {
-			ensureOTRdialog(nickname, false, function() {
-				if (Cryptodog.authList[nickname]) {
-					if (buddy.mpFingerprint == Cryptodog.authList[nickname].mp
-					 && buddy.fingerprint   == Cryptodog.authList[nickname].otr) {
-						buddy.updateAuth(true, true);
-					}
+		ensureOTRdialog(nickname, false, function() {
+			if (Cryptodog.authList[nickname]) {
+				if (buddy.mpFingerprint == Cryptodog.authList[nickname].mp
+					&& buddy.fingerprint   == Cryptodog.authList[nickname].otr) {
+					buddy.updateAuth(true, true);
 				}
-			}, true);
+			}
+		});
 	}
 }
 
@@ -833,24 +833,21 @@ var sendFile = function(nickname) {
 }
 
 // If OTR fingerprints have not been generated, show a progress bar and generate them.
-var ensureOTRdialog = function(nickname, close, cb, noAnimation) {
+var ensureOTRdialog = function(nickname, close, cb) {
 	var buddy = Cryptodog.buddies[nickname];
 	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
 		return cb();
 	}
-
-	noAnimation = noAnimation || false;
-
-	if (!noAnimation) {
-		Cryptodog.UI.progressBarOTR()
-
-		$('#progressBar').css('margin', '70px auto 0 auto')
-		$('#fill').animate({'width': '100%', 'opacity': '1'}, 10000, 'linear')
-	}
-
-	// add some state for status callback
-	buddy.genFingerState = { close: close, cb: cb, noAnimation: noAnimation}
-	buddy.otr.sendQueryMsg()
+	var progressDialog = '<div id="progressBar"><div id="fill"></div></div>';
+	Cryptodog.UI.dialogBox(progressDialog, {
+		height: 250,
+		closeable: true
+	});
+	$('#progressBar').css('margin', '70px auto 0 auto');
+	$('#fill').animate({ width: '100%', opacity: '1' }, {duration: 10000, easing: 'linear', start: function(){ 
+		buddy.genFingerState = { close: close, cb: cb };
+		buddy.otr.sendQueryMsg();
+	}});
 }
 
 // Check for nickname completion.
