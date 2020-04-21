@@ -248,15 +248,15 @@ Cryptodog.maxMessageCount = 5;
 Cryptodog.maxMessageInterval = 3000;
 
 // Build new buddy.
-Cryptodog.addBuddy = function(nickname, status) {
-	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname, status);
+Cryptodog.addBuddy = function(nickname) {
+	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname);
 	$('#buddyList').queue(function() {
 		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
 			buddyID: buddy.id,
 			nickname: nickname,
-			status: status
+			status: buddy.status
 		})
-		var placement = buddy.determinePlacement(nickname, buddy.id, status)
+		var placement = buddy.determinePlacement(nickname, buddy.id, buddy.status)
 		$(buddyTemplate).insertAfter(placement).slideDown(100, function() {
 			$('#buddy-' + buddy.id).unbind().click(function() {
 					Cryptodog.onBuddyClick($(this))
