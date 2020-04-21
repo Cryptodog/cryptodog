@@ -290,7 +290,7 @@ Cryptodog.UI = {
 
         // My info button.
         $('#myInfo').click(function() {
-            Cryptodog.displayInfo(Cryptodog.me.nickname);
+            dialog.showMyInfo(Cryptodog.me);
         });
 
         // Desktop notifications button.

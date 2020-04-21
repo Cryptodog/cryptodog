@@ -288,7 +288,9 @@ Cryptodog.addBuddy = function(nickname, status) {
 					// Register menu item events.
 					$menu.find('.option1').unbind().click(function(e) {
 						e.stopPropagation();
-						Cryptodog.displayInfo(nickname);
+						buddy.ensureOTR(false, function() {
+							dialog.showBuddyInfo(buddy);
+						});
 						$menu.hide();
 					});
 					$menu.find('.option2').unbind().click(function(e) {
@@ -397,18 +399,6 @@ Cryptodog.rebindDataURIs = function() {
 		link.parentNode.replaceChild(linkClone, link);
 		linkClone.addEventListener("click", handleDataUriClick.bind(link));
 	});
-}
-
-// Display buddy information, including fingerprints and authentication.
-Cryptodog.displayInfo = function(nickname) {
-	if (nickname === Cryptodog.me.nickname) {
-		dialog.showMyInfo(Cryptodog.me);
-	} else {
-		let buddy = Cryptodog.buddies[nickname];
-		buddy.ensureOTR(false, function() {
-			dialog.showBuddyInfo(buddy);
-		});
-	}
 }
 
 // Executes on user logout.
