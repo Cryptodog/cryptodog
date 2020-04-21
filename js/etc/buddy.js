@@ -1,15 +1,8 @@
 class Buddy {
     constructor(nickname) {
+        this.nickname = nickname;
         this.id = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
         this.status = 'online';
-        this.fingerprint = null;
-        this.authenticated = false;
-        this.fileKey = null;
-        this.mpPublicKey = null;
-        this.mpFingerprint = null;
-        this.mpSecretKey = null;
-        this.nickname = nickname;
-        this.genFingerState = null;
         this.otr = Cryptodog.otr.add(nickname);
         this.color = Cryptodog.color.pop();
         // Regularly reset at the interval defined by Cryptodog.maxMessageInterval.

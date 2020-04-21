@@ -63,11 +63,13 @@
         if (state === OTR.CONST.STATUS_AKE_SUCCESS) {
             var fingerprint = buddy.otr.their_priv_pk.fingerprint();
 
-            if (buddy.fingerprint === null) {
+            if (!(buddy.fingerprint)) {
                 buddy.fingerprint = fingerprint;
-
                 let state = buddy.genFingerState;
                 buddy.genFingerState = null;
+                if (!state) {
+                    return;
+                }
                 if (state.noAnimation) {
                     state.cb();
                 } else {

@@ -255,12 +255,7 @@ $(window).ready(function() {
                 console.log('xmpp: refusing to decrypt large OTR message (' + body.length + ' bytes) from ' + nickname);
                 return true;
             }
-
-            try {
-                Cryptodog.buddies[nickname].otr.receiveMsg(body);
-            } catch (e) {
-                console.warn('xmpp: exception handling OTR message from ' + nickname + ': ' + e);
-            }
+            Cryptodog.buddies[nickname].otr.receiveMsg(body);
         }
         return true;
     };
