@@ -10,15 +10,6 @@ noscript {
 	color: #bb7a20;
 }
 
-body {
-	height: 100%;
-	background: #DDD;
-	margin: 0;
-	padding: 0;
-	font-family: 'Helvetica Neue', Helvetica, Arial, Verdana;
-	line-height: 2em;
-}
-
 a {
 	color: #999;
 	text-decoration: none;
@@ -79,41 +70,15 @@ webview {
 	color: #434343;
 }
 
-/*
--------------------
-DARK MODE
--------------------
-*/
-
-body.darkMode {
+body {
+	height: 100%;
+	font-family: 'Helvetica Neue', Helvetica, Arial, Verdana;
+	line-height: 2em;
 	background: #111;
 }
 
-body.darkMode div#bubble {
-	background: #222;
-}
-
-body.darkMode div#bubble div#info {
-	border: 1px solid #999;
-	background-color: #323232;
-}
-
-body.darkMode div#bubble div#info h1 {
+body div#bubble div#info h1 {
 	color: #fff;
-}
-
-body.darkMode .line {
-	color: #fff;
-}
-
-body.darkMode .missingRecipients {
-	background: #444;
-	color: #DDD;
-}
-
-body.darkMode .userLeave {
-	background: #444;
-	color: #DDD;
 }
 
 /*
@@ -133,7 +98,7 @@ div#bubble {
 	z-index: 1;
 	width: 716px;
 	height: 540px;
-	background: #FFF;
+	background: #222;
 	border: 6px solid #444;
 	padding: 0 0 51px 0;
 	display: none;
@@ -299,7 +264,8 @@ div#loginInfo {
 }
 
 div#bubble div#info {
-	border: 1px solid #C0C0C0;
+	background-color: #323232;
+	border: 1px solid #999;
 	padding: 4px 10px;
 	border-radius: 4px 0 4px 4px;
 	margin: 30px auto;
@@ -1004,10 +970,10 @@ CONVERSATION WINDOW
 }
 
 .missingRecipients {
-	background: #DDD;
+	background: #444;
 	border-radius: 4px 0 0 0;
 	margin-bottom: 1px;
-	color: #444;
+	color: #DDD;
 	font-size: 0.8em;
 	padding: 0 10px;
 	opacity: 0;
@@ -1019,7 +985,7 @@ CONVERSATION WINDOW
 	border: 2px solid #999;
 	border-radius: 3px 0 3px 3px;
 	padding: 0 4px 0 4px;
-	color: #080812;
+	color: #fff;
 	word-wrap: break-word;
 	position: relative;
 	top: 20px;
@@ -1091,12 +1057,12 @@ CONVERSATION WINDOW
 }
 
 .userJoin, .userLeave {
-	background: #777;
+	background: #444;
 	width: 165px;
 	display: block;
 	margin: 0 0 8px 0;
 	padding: 0 5px;
-	color: #FFF;
+	color: #DDD;
 	border-radius: 3px 0 3px 3px;
 	font-size: 0.9em;
 	white-space: nowrap;

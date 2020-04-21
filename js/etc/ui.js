@@ -363,19 +363,6 @@ Cryptodog.UI = {
             Cryptodog.toggleBuddyWhitelist();
         });
 
-        // Dark mode button
-        $('#darkMode').click(function() {
-            if (document.body.classList.contains('darkMode')) {
-                document.body.classList.remove('darkMode');
-                $('#darkMode').attr('data-utip', 'Dark mode');
-            } else {
-                document.body.classList.add('darkMode');
-                $('#darkMode').attr('data-utip', 'Light mode');
-            }
-
-            $('#darkMode').mouseenter();
-        });
-
         // Audio notifications toggle button
         $('#audioToggle').click(function() {
             if (Cryptodog.allowSoundNotifications) {
