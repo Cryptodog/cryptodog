@@ -33,6 +33,17 @@ Buddy.prototype = {
         }
     },
 
+    ensureOTR: function (close, cb) {
+        if (this.fingerprint) {
+            return cb(this.fingerprint);
+        }
+        let buddy = this;
+        dialog.showOTRProgress(function () {
+            buddy.genFingerState = { close: close, cb: cb };
+            buddy.otr.sendQueryMsg();
+        });
+    },
+
     // Determine alphabetical placement of buddy.
     determinePlacement: function () {
         var buddies = [{
@@ -99,27 +110,7 @@ Buddy.prototype = {
         this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
     },
 
-    updateAuth: function (auth, dontTouchList) {
-        var nickname = this.nickname;
-        var bd = this;
-
-        if (Cryptodog.persist) {
-            if (!dontTouchList) {
-                if (auth) {
-                    ensureOTRdialog(nickname, false, function () {
-                        Cryptodog.authList[nickname] = {
-                            mp: bd.mpFingerprint,
-                            otr: bd.fingerprint
-                        };
-                        Cryptodog.storeAuthList();
-                    }, true);
-                } else {
-                    delete Cryptodog.authList[this.nickname];
-                    Cryptodog.storeAuthList();
-                }
-            }
-        }
-
+    updateAuth: function (auth) {
         this.authenticated = auth;
         if (auth) {
             $('#authenticated').attr('data-active', true);
@@ -130,19 +121,19 @@ Buddy.prototype = {
             $('#notAuthenticated').attr('data-active', true);
         }
 
-        $.each($('span').filterByData('sender', nickname),
+        $.each($('span').filterByData('sender', this.nickname),
             function (index, value) {
                 $(value).find('.authStatus').attr('data-auth', auth);
             }
         );
         var authStatusBuffers = [
             'groupChat',
-            Cryptodog.buddies[nickname].id
+            this.id
         ];
 
         $.each(authStatusBuffers, function (i, thisBuffer) {
             var buffer = $(Cryptodog.conversationBuffers[thisBuffer]);
-            $.each(buffer.find('span').filterByData('sender', nickname),
+            $.each(buffer.find('span').filterByData('sender', this.nickname),
                 function (index, value) {
                     $(value).find('.authStatus').attr('data-auth', auth);
                 }

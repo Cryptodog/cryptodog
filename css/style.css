@@ -694,30 +694,6 @@ DIALOG BOX
 	opacity: 1;
 }
 
-#authLearnMore {
-	width: 230px;
-	font-size: 0.9em;
-	border: 1px dashed #999;
-	padding: 0 4px;
-	margin: 13px 0 5px 0;
-	display: inline-block;
-	border-radius: 3px 0 3px 3px;
-}
-
-#authLearnMore:hover {
-	cursor: pointer;
-	background: #ECECEC;
-}
-
-#authLearnMore:active {
-	background: #DDD;
-}
-
-#authTutorial {
-	margin-top: 10px;
-	display: none;
-}
-
 .authInfo {
 	background: #ECECEC;
 	height: 130px;
@@ -816,7 +792,7 @@ DIALOG BOX
 }
 
 #progressBar {
-	margin-top: 10px;
+	margin: 70px auto 0 auto;
 	height: 18px;
 	width: 290px;
 	border: 1px solid #C0C0C0;

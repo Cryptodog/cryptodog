@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     // Cryptodog OTR functions and callbacks.
@@ -7,7 +7,7 @@
     Cryptodog.otr.maxMessageLength = 5000;
 
     // Construct a new OTR conversation
-    Cryptodog.otr.add = function(nickname) {
+    Cryptodog.otr.add = function (nickname) {
         // file protocol doesn't support WebWorkers
         if (window.location.protocol === 'file:') {
             var otr = new OTR({
@@ -30,7 +30,7 @@
     };
 
     // Handle incoming messages.
-    var onIncoming = function(nickname, msg, encrypted) {
+    var onIncoming = function (nickname, msg, encrypted) {
         // Drop unencrypted messages.
         if (!encrypted) {
             return;
@@ -44,7 +44,7 @@
     };
 
     // Handle outgoing messages depending on connection type.
-    var onOutgoing = function(nickname, message) {
+    var onOutgoing = function (nickname, message) {
         Cryptodog.xmpp.connection.muc.message(
             Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
             nickname,
@@ -56,7 +56,7 @@
     };
 
     // Handle otr state changes.
-    var onStatusChange = function(nickname, state) {
+    var onStatusChange = function (nickname, state) {
         /*jshint camelcase:false */
         var buddy = Cryptodog.buddies[nickname];
 
@@ -65,7 +65,14 @@
 
             if (buddy.fingerprint === null) {
                 buddy.fingerprint = fingerprint;
-                Cryptodog.UI.closeGenerateFingerprints(nickname);
+
+                let state = buddy.genFingerState;
+                buddy.genFingerState = null;
+                if (state.noAnimation) {
+                    state.cb();
+                } else {
+                    dialog.hideOTRProgress(state);
+                }
             } else if (buddy.fingerprint !== fingerprint) {
                 // re-aked with a different key
                 buddy.fingerprint = fingerprint;
@@ -75,7 +82,7 @@
     };
 
     // Store received filename.
-    var onFile = function(nickname, type, key, filename) {
+    var onFile = function (nickname, type, key, filename) {
         var buddy = Cryptodog.buddies[nickname];
 
         // filename is being relied on as diversifier
@@ -95,67 +102,17 @@
     };
 
     // Receive an SMP question
-    var onSMPQuestion = function(nickname, question) {
-        var buddy = Cryptodog.buddies[nickname];
-
-        Cryptodog.storage.getItem('smpAllowedList', function (v) {
-            let smpAllowedList = JSON.parse(v);
-            
-            let allowSMP = smpAllowedList[Cryptodog.me.nickname] && 
-                smpAllowedList[Cryptodog.me.nickname].indexOf(nickname) != -1;
-
-            // Silently answer question if buddy is ignored or not authorized to send us SMP questions.
-            if (!allowSMP || buddy.ignored()) {
-                var answer = Cryptodog.prepareAnswer(' ', false, buddy.mpFingerprint);
-                buddy.otr.smpSecret(answer);
-                if (!answer) {
-                    buddy.otr.smpSecret(CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16)));
-                }
-                return;
-            }
-
-            var chatWindow = Cryptodog.locale.chatWindow, answer = false;
-
-            var info = Mustache.render(Cryptodog.templates.authRequest, {
-                authenticate: chatWindow.authenticate,
-                authRequest: chatWindow.authRequest.replace('(NICKNAME)', nickname),
-                answerMustMatch: chatWindow.answerMustMatch.replace('(NICKNAME)', nickname),
-                question: question,
-                answer: chatWindow.answer
-            });
-
-            $('#dialogBoxClose').click();
-
-            window.setTimeout(function() {
-                Cryptodog.UI.dialogBox(info, {
-                    height: 240,
-                    closeable: true,
-
-                    onAppear: function() {
-                        $('#authReplySubmit')
-                            .unbind('click')
-                            .bind('click', function(e) {
-                                e.preventDefault();
-                                answer = $('#authReply').val();
-                                answer = Cryptodog.prepareAnswer(answer, false, buddy.mpFingerprint);
-                                buddy.otr.smpSecret(answer);
-                                $('#dialogBoxClose').click();
-                            });
-                    },
-
-                    onClose: function() {
-                        if (answer) {
-                            return;
-                        }
-                        buddy.otr.smpSecret(CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16)));
-                    }
-                });
-            }, 500);
-        });
+    var onSMPQuestion = function (nickname, question) {
+        let buddy = Cryptodog.buddies[nickname];
+        if (buddy.ignored()) {
+            buddy.otr.smpSecret(CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16)));
+            return;
+        }
+        dialog.showSMPQuestion(buddy, question);
     };
 
     // Handle SMP callback
-    var onSMPAnswer = function(nickname, type, data, act) {
+    var onSMPAnswer = function (nickname, type, data, act) {
         var chatWindow = Cryptodog.locale.chatWindow,
             buddy = Cryptodog.buddies[nickname];
 

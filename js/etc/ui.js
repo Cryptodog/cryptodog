@@ -32,118 +32,8 @@ Cryptodog.UI = {
     // Handle detected new keys.
     removeAuthAndWarn: function(nickname) {
         var buddy = Cryptodog.buddies[nickname];
-        var openAuth = false;
         buddy.updateAuth(false);
-
-        var errorAKE = Mustache.render(Cryptodog.templates.errorAKE, {
-            nickname: nickname,
-            errorText: Cryptodog.locale.auth.AKEWarning,
-            openAuth: Cryptodog.locale.chatWindow.authenticate
-        });
-
-        this.dialogBox(errorAKE, {
-            extraClasses: 'dialogBoxError',
-            closeable: true,
-            height: 250,
-
-            onAppear: function() {
-                $('#openAuth')
-                    .unbind()
-                    .bind('click', function() {
-                        openAuth = true;
-                        $('#dialogBoxClose').click();
-                    });
-            },
-
-            onClose: function() {
-                if (openAuth) {
-                    Cryptodog.displayInfo(nickname);
-                }
-            }
-        });
-    },
-
-    // Close generating fingerprints dialog.
-    closeGenerateFingerprints: function(nickname) {
-        var state = Cryptodog.buddies[nickname].genFingerState;
-
-        if (!state) {
-            return;
-        }
-
-        if (state.noAnimation) {
-            Cryptodog.buddies[nickname].genFingerState = null;
-            return state.cb();
-        }
-
-        Cryptodog.buddies[nickname].genFingerState = null;
-
-        $('#fill')
-            .stop()
-            .animate({ width: '100%', opacity: '1' }, 400, 'linear', function() {
-                $('#dialogBoxContent').fadeOut(function() {
-                    $(this)
-                        .empty()
-                        .show();
-                    if (state.close) {
-                        $('#dialogBoxClose').click();
-                    }
-                    state.cb();
-                });
-            });
-    },
-
-    // Displays a pretty dialog box with `data` as the content HTML.
-    dialogBox: function(data, options) {
-        if (options.closeable) {
-            $('#dialogBoxClose').css('width', 18);
-            $('#dialogBoxClose').css('font-size', 12);
-
-            $(document).keydown(function(e) {
-                if (e.keyCode === 27) {
-                    e.stopPropagation();
-                    $('#dialogBoxClose').click();
-                    $(document).unbind('keydown');
-                }
-            });
-        }
-
-        if (options.extraClasses) {
-            $('#dialogBox').addClass(options.extraClasses);
-        }
-
-        $('#dialogBoxContent').html(data);
-        $('#dialogBox').css('height', options.height);
-        $('#dialogBox').fadeIn(200, function() {
-            if (options.onAppear) {
-                options.onAppear();
-            }
-        });
-
-        $('#dialogBoxClose')
-            .unbind('click')
-            .click(function(e) {
-                e.stopPropagation();
-                $(this).unbind('click');
-
-                if ($(this).css('width') === 0) {
-                    return false;
-                }
-
-                $('#dialogBox').fadeOut(100, function() {
-                    if (options.extraClasses) {
-                        $('#dialogBox').removeClass(options.extraClasses);
-                    }
-                    $('#dialogBoxContent').empty();
-                    $('#dialogBoxClose').css('width', '0');
-                    $('#dialogBoxClose').css('font-size', '0');
-                    if (options.onClose) {
-                        options.onClose();
-                    }
-                });
-
-                $('#userInputText').focus();
-            });
+        dialog.showErrorAKE(nickname);
     },
 
     logout: function() {
@@ -210,19 +100,19 @@ Cryptodog.UI = {
     // Simple text formatting
     stylizeText: function(text) {
         // Disable text formatting in messages that contain links to avoid interference
-        linkPattern = /(https?|ftps?):\/\//gi;
+        let linkPattern = /(https?|ftps?):\/\//gi;
 
         if (text.match(linkPattern) === null) {
             // Swap ***.+*** for strong and italic text
-            strongItalicPattern = /\*\*\*((?!\s).+)\*\*\*/gi;
+            let strongItalicPattern = /\*\*\*((?!\s).+)\*\*\*/gi;
             text = text.replace(strongItalicPattern, "<strong><i>$1</i></strong>");
 
             // Swap **.+** for strong text
-            strongPattern = /\*\*((?!\s).+)\*\*/gi;
+            let strongPattern = /\*\*((?!\s).+)\*\*/gi;
             text = text.replace(strongPattern, "<strong>$1</strong>");
 
             // Swap *.+* for italics
-            italicPattern = /\*((?!\s).+)\*/gi;
+            let italicPattern = /\*((?!\s).+)\*/gi;
             text = text.replace(italicPattern, "<i>$1</i>");
         }
         return text;

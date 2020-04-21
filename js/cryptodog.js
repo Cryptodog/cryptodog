@@ -25,9 +25,6 @@ Cryptodog.me = {
 
 Cryptodog.buddies = {}
 
-// For persistent authentication.
-Cryptodog.authList = {}
-
 // For persistent ignores.
 Cryptodog.ignoredNicknames = []
 
@@ -79,43 +76,6 @@ GLOBAL INTERFACE FUNCTIONS
 Cryptodog.isFiltered = function(name) {
 	return false;
 }
-
-// Stores list of authenticated buddies with associated fingerprints.
-Cryptodog.storeAuthList = function() {
-	if (!Cryptodog.persist) {
-		return;
-	}
-
-	Cryptodog.storage.setItem("authList", Cryptodog.authList);
-}
-
-// Load persistence
-Cryptodog.storage.getItem('persistenceEnabled', function(e) {
-	if (e) {
-		Cryptodog.persist = true;
-
-		Cryptodog.storage.getItem('authList', function(al) {
-			var a = al || {};
-			Cryptodog.authList = a;
-		});
-
-	} else {
-		Cryptodog.persist = false;
-	}
-});
-
-/* This is a map of lists specifying who is allowed to send us SMP questions:
-{
-	'our nickname 1': ['buddy nickname 1', 'buddy nickname 2'],
-	'our nickname 2': ['buddy nickname 2'],
-	...
-}
-We segment the lists by Cryptodog.me.nickname to prevent correlating users who use multiple nicknames. */
-Cryptodog.storage.getItem('smpAllowedList', function(v) {
-	if (!v) {
-		Cryptodog.storage.setItem('smpAllowedList', '{}');
-	}
-});
 
 // Update a file transfer progress bar.
 Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
@@ -354,17 +314,6 @@ Cryptodog.addBuddy = function(nickname, status) {
 	if (!ascii.test(buddy.nickname) || buddy.nickname.trim() !== buddy.nickname) {
 		$('#buddy-' + buddy.id).addClass('warning');
 	}
-
-	if (Cryptodog.persist && Cryptodog.authList[nickname]) {
-		ensureOTRdialog(nickname, false, function() {
-			if (Cryptodog.authList[nickname]) {
-				if (buddy.mpFingerprint == Cryptodog.authList[nickname].mp
-					&& buddy.fingerprint   == Cryptodog.authList[nickname].otr) {
-					buddy.updateAuth(true, true);
-				}
-			}
-		});
-	}
 }
 
 // Handle buddy going offline.
@@ -452,104 +401,14 @@ Cryptodog.rebindDataURIs = function() {
 
 // Display buddy information, including fingerprints and authentication.
 Cryptodog.displayInfo = function(nickname) {
-	var isMe = nickname === Cryptodog.me.nickname,
-		infoDialog = isMe ? 'myInfo' : 'buddyInfo',
-		chatWindow = Cryptodog.locale.chatWindow
-	infoDialog = Mustache.render(Cryptodog.templates[infoDialog], {
-		nickname: nickname,
-		authenticated:      Cryptodog.locale.auth.authenticated + ':',
-		learnMoreAuth:      Cryptodog.locale.auth.learnMoreAuth,
-		otrFingerprint:     chatWindow.otrFingerprint,
-		groupFingerprint:   chatWindow.groupFingerprint,
-		authenticate:       chatWindow.authenticate,
-		verifyUserIdentity: chatWindow.verifyUserIdentity,
-		secretQuestion:     chatWindow.secretQuestion,
-		secretAnswer:       chatWindow.secretAnswer,
-		ask:                chatWindow.ask,
-		identityVerified:   chatWindow.identityVerified
-	})
-	ensureOTRdialog(nickname, false, function() {
-		if (isMe) {
-			Cryptodog.UI.dialogBox(infoDialog, {
-				height: 250,
-				closeable: true
-			});
-		}
-		else {
-			var authTutorial = Mustache.render(Cryptodog.templates.authTutorial, {
-				nickname: nickname,
-				phrase1: Cryptodog.locale.auth.authPhrase1,
-				phrase2: Cryptodog.locale.auth.authPhrase2,
-				phrase3: Cryptodog.locale.auth.authPhrase3,
-				phrase4: Cryptodog.locale.auth.authPhrase4,
-				phrase5: Cryptodog.locale.auth.authPhrase5
-			});
-			Cryptodog.UI.dialogBox(infoDialog, {
-				height: 430,
-				closeable: true,
-				onAppear: function() {
-					$('#authTutorial').html(authTutorial)
-				}
-			});
-			bindAuthDialog(nickname);
-		}
-		$('#otrFingerprint').text(getFingerprint(nickname, true));
-		$('#multiPartyFingerprint').text(getFingerprint(nickname, false));
-
-		Cryptodog.storage.getItem('persistenceEnabled', function(e) {
-			if (e) {
-				Cryptodog.persist = true;
-				$('#optIntoPersistence').prop('checked', true);
-			} else {
-				Cryptodog.persist = false;
-				$('#optIntoPersistence').prop('checked', false);
-			}
+	if (nickname === Cryptodog.me.nickname) {
+		dialog.showMyInfo(Cryptodog.me);
+	} else {
+		let buddy = Cryptodog.buddies[nickname];
+		buddy.ensureOTR(false, function() {
+			dialog.showBuddyInfo(buddy);
 		});
-
-		$('#optIntoPersistence').click(function() {
-			if (Cryptodog.persist) {
-				$('#optIntoPersistence').prop('checked', false);
-				Cryptodog.storage.removeItem('persistenceEnabled');
-				Cryptodog.storage.removeItem('authList');
-				Cryptodog.persist = false;
-			} else {
-				Cryptodog.persist = true;
-				$('#optIntoPersistence').prop('checked', true);
-				Cryptodog.storage.setItem('persistenceEnabled', {
-					'enabled': true,
-					'mp':      CryptoJS.enc.Base64.stringify(Cryptodog.me.mpPrivateKey.toWordArray()),
-					'otr':     Cryptodog.me.otrKey.packPrivate()
-				});
-			}
-		});
-
-		Cryptodog.storage.getItem('smpAllowedList', function(v) {
-			let smpAllowedList = JSON.parse(v);
-
-			if (!smpAllowedList[Cryptodog.me.nickname]) {
-				smpAllowedList[Cryptodog.me.nickname] = [];
-				Cryptodog.storage.setItem('smpAllowedList', JSON.stringify(smpAllowedList));
-			}
-
-			$('#allowSMP').prop('checked', smpAllowedList[Cryptodog.me.nickname].indexOf(nickname) != -1);
-		});
-
-		$('#allowSMP').click(function() {
-			Cryptodog.storage.getItem('smpAllowedList', function(v) {
-				let smpAllowedList = JSON.parse(v);
-
-				let index = smpAllowedList[Cryptodog.me.nickname].indexOf(nickname);
-				if (index != -1) {
-					$('#allowSMP').prop('checked', false);
-					smpAllowedList[Cryptodog.me.nickname].splice(index, 1);
-				} else {
-					$('#allowSMP').prop('checked', true);
-					smpAllowedList[Cryptodog.me.nickname].push(nickname);
-				}
-				Cryptodog.storage.setItem('smpAllowedList', JSON.stringify(smpAllowedList));
-			});
-		});
-	})
+	}
 }
 
 // Executes on user logout.
@@ -620,90 +479,6 @@ var initializeConversationBuffer = function(id) {
 	if (!Cryptodog.conversationBuffers.hasOwnProperty(id)) {
 		Cryptodog.conversationBuffers[id] = '';
 	}
-}
-
-// Get a fingerprint, formatted for readability.
-var getFingerprint = function(nickname, OTR) {
-	var buddy = Cryptodog.buddies[nickname],
-		isMe = nickname === Cryptodog.me.nickname,
-		fingerprint;
-
-	if (OTR) {
-		fingerprint = isMe
-			? Cryptodog.me.otrKey.fingerprint()
-			: fingerprint = buddy.fingerprint;
-	} else {
-		fingerprint = isMe
-			? Cryptodog.me.mpFingerprint
-			: buddy.mpFingerprint;
-	}
-
-	var formatted = '';
-	for (var i in fingerprint) {
-		if (fingerprint.hasOwnProperty(i)) {
-			if ((i !== 0) && (i % 8) === 0) {
-				formatted += ' ';
-			}
-			formatted += fingerprint[i];
-		}
-	}
-	return formatted.toUpperCase();
-}
-
-// Bind `nickname`'s authentication dialog buttons and options.
-var bindAuthDialog = function(nickname) {
-	var buddy = Cryptodog.buddies[nickname]
-	if (Cryptodog.buddies[nickname].authenticated) {
-		buddy.updateAuth(true);
-	}
-	else {
-		buddy.updateAuth(false);
-	}
-	$('#authenticated').unbind('click').bind('click', function() {
-		buddy.updateAuth(true);
-	})
-	$('#notAuthenticated').unbind('click').bind('click', function() {
-		buddy.updateAuth(false);
-	})
-	// If the current locale doesn't have the translation
-	// for the auth slides yet, then don't display the option
-	// for opening the auth tutorial.
-	// This is temporary until all translations are ready.
-	// — Nadim, March 29 2014
-	if (Cryptodog.locale.language !== 'en' && Cryptodog.locale.auth.learnMoreAuth === 'Learn more about authentication') {
-		$('#authLearnMore').hide();
-	}
-	$('#authLearnMore').unbind('click').bind('click', function() {
-		if ($(this).attr('data-active') === 'true') {
-			$('#authTutorial').fadeOut(function() {
-				$('#authLearnMore').attr('data-active', 'false')
-					.text(Cryptodog.locale.auth.learnMoreAuth);
-				$('.authInfo').fadeIn();
-			})
-		}
-		else {
-			$('.authInfo').fadeOut(function() {
-				$('#authLearnMore').attr('data-active', 'true')
-					.text(Cryptodog.locale.chatWindow.cont);
-				$('#authTutorial').fadeIn();
-			});
-		}
-	})
-	$('#authSubmit').unbind('click').bind('click', function(e) {
-		e.preventDefault();
-		var question = $('#authQuestion').val();
-		var answer = $('#authAnswer').val();
-		if (answer.length === 0) {
-			return;
-		}
-		$('#authSubmit').val(Cryptodog.locale.chatWindow.asking);
-		$('#authSubmit').unbind('click').bind('click', function(e) {
-			e.preventDefault();
-		})
-		buddy.updateAuth(false);
-		answer = Cryptodog.prepareAnswer(answer, true, buddy.mpFingerprint);
-		buddy.otr.smpSecret(answer, question);
-	})
 }
 
 var currentNotifications = [];
@@ -800,54 +575,10 @@ var buddyNotification = function(nickname, join) {
 
 // Send encrypted file.
 var sendFile = function(nickname) {
-	var sendFileDialog = Mustache.render(Cryptodog.templates.sendFile, {
-		sendEncryptedFile: Cryptodog.locale['chatWindow']['sendEncryptedFile'],
-		fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo'].replace('(SIZE)', Cryptodog.otr.maximumFileSize / 1024)
+	let buddy = Cryptodog.buddies[nickname];
+	buddy.ensureOTR(false, function() {
+		dialog.showSendFile(buddy);
 	});
-	ensureOTRdialog(nickname, false, function() {
-		Cryptodog.UI.dialogBox(sendFileDialog, {
-			height: 250,
-			closeable: true
-		});
-		$('#fileSelector').change(function(e) {
-			e.stopPropagation()
-			if (this.files) {
-				var file = this.files[0]
-				var filename = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
-				filename += file.name.match(/\.(\w)+$/)[0]
-				Cryptodog.buddies[nickname].otr.sendFile(filename)
-				var key = Cryptodog.buddies[nickname].fileKey[filename]
-				Cryptodog.otr.beginSendFile({
-					file: file,
-					filename: filename,
-					to: nickname,
-					key: key
-				});
-				delete Cryptodog.buddies[nickname].fileKey[filename];
-			}
-		})
-		$('#fileSelectButton').click(function() {
-			$('#fileSelector').click();
-		});
-	})
-}
-
-// If OTR fingerprints have not been generated, show a progress bar and generate them.
-var ensureOTRdialog = function(nickname, close, cb) {
-	var buddy = Cryptodog.buddies[nickname];
-	if (nickname === Cryptodog.me.nickname || buddy.fingerprint) {
-		return cb();
-	}
-	var progressDialog = '<div id="progressBar"><div id="fill"></div></div>';
-	Cryptodog.UI.dialogBox(progressDialog, {
-		height: 250,
-		closeable: true
-	});
-	$('#progressBar').css('margin', '70px auto 0 auto');
-	$('#fill').animate({ width: '100%', opacity: '1' }, {duration: 10000, easing: 'linear', start: function(){ 
-		buddy.genFingerState = { close: close, cb: cb };
-		buddy.otr.sendQueryMsg();
-	}});
 }
 
 // Check for nickname completion.
