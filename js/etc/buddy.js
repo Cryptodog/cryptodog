@@ -1,29 +1,26 @@
-var Buddy = function (nickname, status) {
-    this.id = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
-    this.fingerprint = null;
-    this.authenticated = false;
-    this.fileKey = null;
-    this.mpPublicKey = null;
-    this.mpFingerprint = null;
-    this.mpSecretKey = null;
-    this.nickname = nickname;
-    this.genFingerState = null;
-    this.status = status;
-    this.otr = Cryptodog.otr.add(nickname);
-    this.color = Cryptodog.color.pop();
-
-    // Regularly reset at the interval defined by Cryptodog.maxMessageInterval.
-    this.messageCount = 0;
-
-    if (Cryptodog.isFiltered(this.nickname) && !this.ignored()) {
-        console.log("Filtering user '" + this.nickname + "', as isFiltered() returned true.");
-        this.toggleIgnored();
+class Buddy {
+    constructor(nickname, status) {
+        this.id = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
+        this.fingerprint = null;
+        this.authenticated = false;
+        this.fileKey = null;
+        this.mpPublicKey = null;
+        this.mpFingerprint = null;
+        this.mpSecretKey = null;
+        this.nickname = nickname;
+        this.genFingerState = null;
+        this.status = status;
+        this.otr = Cryptodog.otr.add(nickname);
+        this.color = Cryptodog.color.pop();
+        // Regularly reset at the interval defined by Cryptodog.maxMessageInterval.
+        this.messageCount = 0;
+        if (Cryptodog.isFiltered(this.nickname) && !this.ignored()) {
+            console.log("Filtering user '" + this.nickname + "', as isFiltered() returned true.");
+            this.toggleIgnored();
+        }
     }
-};
 
-Buddy.prototype = {
-    constructor: Buddy,
-    setStatus: function (status) {
+    setStatus(status) {
         this.status = status;
         let buddyElement = $('#buddy-' + this.id);
         var placement = this.determinePlacement(nickname, this.id, status);
@@ -31,9 +28,9 @@ Buddy.prototype = {
             buddyElement.attr('status', status);
             buddyElement.insertAfter(placement).slideDown(200);
         }
-    },
+    }
 
-    ensureOTR: function (close, cb) {
+    ensureOTR(close, cb) {
         if (this.fingerprint) {
             return cb(this.fingerprint);
         }
@@ -42,10 +39,10 @@ Buddy.prototype = {
             buddy.genFingerState = { close: close, cb: cb };
             buddy.otr.sendQueryMsg();
         });
-    },
+    }
 
     // Determine alphabetical placement of buddy.
-    determinePlacement: function () {
+    determinePlacement() {
         var buddies = [{
             nickname: this.nickname,
             id: this.id
@@ -87,13 +84,13 @@ Buddy.prototype = {
             }
         }
         return rightBefore;
-    },
+    }
 
-    ignored: function () {
+    ignored() {
         return Cryptodog.ignoredNicknames.indexOf(this.nickname) !== -1;
-    },
+    }
 
-    toggleIgnored: function () {
+    toggleIgnored() {
         if (this.ignored()) {
             Cryptodog.ignoredNicknames.splice(Cryptodog.ignoredNicknames.indexOf(this.nickname), 1);
             $('#buddy-' + this.id).removeClass('ignored');
@@ -102,15 +99,15 @@ Buddy.prototype = {
             Cryptodog.ignoredNicknames.push(this.nickname);
             $('#buddy-' + this.id).addClass('ignored');
         }
-    },
+    }
 
-    updateMpKeys: function (publicKey) {
+    updateMpKeys(publicKey) {
         this.mpPublicKey = publicKey;
         this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
         this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
-    },
+    }
 
-    updateAuth: function (auth) {
+    updateAuth(auth) {
         this.authenticated = auth;
         if (auth) {
             $('#authenticated').attr('data-active', true);
@@ -143,4 +140,4 @@ Buddy.prototype = {
             ).html();
         });
     }
-};
+}
