@@ -249,73 +249,10 @@ Cryptodog.maxMessageInterval = 3000;
 
 // Build new buddy.
 Cryptodog.addBuddy = function(nickname) {
-	var buddy = Cryptodog.buddies[nickname] = new Buddy(nickname);
-	$('#buddyList').queue(function() {
-		var buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
-			buddyID: buddy.id,
-			nickname: nickname,
-			status: buddy.status
-		})
-		var placement = buddy.determinePlacement(nickname, buddy.id, buddy.status)
-		$(buddyTemplate).insertAfter(placement).slideDown(100, function() {
-			$('#buddy-' + buddy.id).unbind().click(function() {
-					Cryptodog.onBuddyClick($(this))
-				}
-			)
-			$('#buddy-' + buddy.id).unbind('contextmenu').contextmenu(function(e) {
-					e.preventDefault();
-					$(this).toggleClass('active');
-					let buddy = Cryptodog.buddies[nickname];
-
-					// Create buddy menu element if it doesn't exist.
-					if ($('#' + buddy.id + '-menu').length === 0) {
-						$('body').append(Mustache.render(Cryptodog.templates.buddyMenu, {
-							buddyID: buddy.id,
-							sendEncryptedFile: Cryptodog.locale.chatWindow.sendEncryptedFile,
-							displayInfo: Cryptodog.locale.chatWindow.displayInfo,
-							ignore: Cryptodog.locale.chatWindow[buddy.ignored() ? 'unignore' : 'ignore']
-						}));
-					}
-					let $menu = $('#' + buddy.id + '-menu');
-					
-					// Insert buddy menu at location of right-click.
-					$menu.css({
-						display: "block",
-						top: e.pageY + "px",
-						left: e.pageX + "px"
-					});
-					
-					// Register menu item events.
-					$menu.find('.option1').unbind().click(function(e) {
-						e.stopPropagation();
-						buddy.ensureOTR(false, function() {
-							dialog.showBuddyInfo(buddy);
-						});
-						$menu.hide();
-					});
-					$menu.find('.option2').unbind().click(function(e) {
-						e.stopPropagation();
-						sendFile(nickname);
-						$menu.hide();
-					});
-					$menu.find('.option3').unbind().click(function(e) {
-						e.stopPropagation();
-						buddy.toggleIgnored();
-						$menu.hide();
-					});
-				})
-			buddyNotification(nickname, true)
-		})
-	})
-	$('#buddyList').dequeue()
-	if (buddy.ignored()){
-		$('#buddy-' + buddy.id).addClass('ignored')
-	}
-
-	// Display a warning icon if the nickname has Unicode characters or leading/trailing whitespace
-	if (!ascii.test(buddy.nickname) || buddy.nickname.trim() !== buddy.nickname) {
-		$('#buddy-' + buddy.id).addClass('warning');
-	}
+	const buddy = new Buddy(nickname);
+	Cryptodog.buddies[nickname] = buddy;
+	buddyList.add(buddy);
+	buddyNotification(nickname, true);
 }
 
 // Handle buddy going offline.

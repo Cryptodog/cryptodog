@@ -15,12 +15,7 @@ class Buddy {
 
     setStatus(status) {
         this.status = status;
-        let buddyElement = $('#buddy-' + this.id);
-        var placement = this.determinePlacement(nickname, this.id, status);
-        if (buddyElement.attr('status') !== status) {
-            buddyElement.attr('status', status);
-            buddyElement.insertAfter(placement).slideDown(200);
-        }
+        $('#buddy-' + this.id).attr('status', status);
     }
 
     ensureOTR(close, cb) {
@@ -32,51 +27,6 @@ class Buddy {
             buddy.genFingerState = { close: close, cb: cb };
             buddy.otr.sendQueryMsg();
         });
-    }
-
-    // Determine alphabetical placement of buddy.
-    determinePlacement() {
-        var buddies = [{
-            nickname: this.nickname,
-            id: this.id
-        }];
-        for (var i in Cryptodog.buddies) {
-            if (Cryptodog.buddies[i].status === this.status) {
-                buddies.push({
-                    nickname: i,
-                    id: Cryptodog.buddies[i].id
-                });
-            }
-        }
-        buddies.sort(function (a, b) {
-            var nameA = a.nickname.toLowerCase();
-            var nameB = b.nickname.toLowerCase();
-            if (nameA < nameB) {
-                return -1;
-            }
-            if (nameA > nameB) {
-                return 1;
-            }
-            return 0;
-        });
-        var rightBefore;
-        for (var o = 0; o < buddies.length; o++) {
-            if (buddies[o].id === this.id) {
-                if (o === 0) {
-                    if (this.status === 'online') {
-                        rightBefore = '#buddiesOnline';
-                    }
-                    if (this.status === 'away') {
-                        rightBefore = '#buddiesAway';
-                    }
-                }
-                else {
-                    rightBefore = '[data-id=' + buddies[o - 1].id + ']';
-                }
-                break;
-            }
-        }
-        return rightBefore;
     }
 
     ignored() {
