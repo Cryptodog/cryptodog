@@ -385,9 +385,6 @@ $(window).ready(function() {
             return true;
         });
 
-        Cryptodog.xmpp.connection.ibb.addIBBHandler(Cryptodog.otr.ibbHandler);
-        Cryptodog.xmpp.connection.si_filetransfer.addFileHandler(Cryptodog.otr.fileHandler);
-
         $('.conversationName').animate({ 'background-color': '#0087AF' });
 
         Cryptodog.xmpp.sendStatus();

@@ -8,18 +8,6 @@ Cryptodog.UI = {
         $('#version').text(Cryptodog.version);
     },
 
-    // Signal a file transfer error in the UI.
-    fileTransferError: function(sid, nickname) {
-        $('.fileProgressBar')
-            .filterByData('file', sid)
-            .filterByData('id', Cryptodog.buddies[nickname].id)
-            .animate({ borderColor: '#F00' });
-        $('.fileProgressBarFill')
-            .filterByData('file', sid)
-            .filterByData('id', Cryptodog.buddies[nickname].id)
-            .animate({ 'background-color': '#F00' });
-    },
-
     // Handles login failures.
     loginFail: function(message) {
         $('#loginInfo').text(message);

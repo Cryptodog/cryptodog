@@ -25,7 +25,6 @@
         otr.on('io', onOutgoing.bind(null, nickname));
         otr.on('smp', onSMPAnswer.bind(null, nickname));
         otr.on('status', onStatusChange.bind(null, nickname));
-        otr.on('file', onFile.bind(null, nickname));
         return otr;
     };
 
@@ -78,26 +77,6 @@
                 Cryptodog.UI.removeAuthAndWarn(nickname);
             }
         }
-    };
-
-    // Store received filename.
-    var onFile = function (nickname, type, key, filename) {
-        var buddy = Cryptodog.buddies[nickname];
-
-        // filename is being relied on as diversifier
-        // and should continue to be generated uniquely
-        // as in sendFile()
-        var derivedKey = CryptoJS.PBKDF2(key, filename, { keySize: 16 });
-        derivedKey = derivedKey.toString(CryptoJS.enc.Latin1);
-
-        if (!buddy.fileKey) {
-            buddy.fileKey = {};
-        }
-
-        buddy.fileKey[filename] = {
-            encryptKey: derivedKey.substring(0, 32),
-            macKey: derivedKey.substring(32)
-        };
     };
 
     // Receive an SMP question

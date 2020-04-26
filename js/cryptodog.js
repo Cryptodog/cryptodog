@@ -15,7 +15,6 @@ Cryptodog.me = {
 	conversation:  null,
 	nickname:      null,
 	otrKey:        null,
-	fileKey:       null,
 	mpPrivateKey:  null,
 	mpPublicKey:   null,
 	mpFingerprint: null,
@@ -75,43 +74,6 @@ GLOBAL INTERFACE FUNCTIONS
 // Can be used to filter out types of names
 Cryptodog.isFiltered = function(name) {
 	return false;
-}
-
-// Update a file transfer progress bar.
-Cryptodog.updateFileProgressBar = function(file, chunk, size, recipient) {
-	var conversationBuffer = $(Cryptodog.conversationBuffers[Cryptodog.buddies[recipient].id]);
-	var progress = (chunk * 100) / (Math.ceil(size / Cryptodog.otr.chunkSize));
-	if (progress > 100) { progress = 100 }
-	$('.fileProgressBarFill')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[recipient].id)
-		.animate({'width': progress + '%'});
-	conversationBuffer.find('.fileProgressBarFill')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[recipient].id)
-		.width(progress + '%');
-	Cryptodog.conversationBuffers[Cryptodog.buddies[recipient].id] = $('<div>').append($(conversationBuffer).clone()).html();
-}
-
-// Convert Data blob/url to downloadable file, replacing the progress bar.
-Cryptodog.addFile = function(url, file, conversation, filename) {
-	var conversationBuffer = $(Cryptodog.conversationBuffers[Cryptodog.buddies[conversation].id]);
-	
-	var fileLink = Mustache.render(Cryptodog.templates.fileLink, {
-		url: url,
-		filename: filename,
-		downloadFile: Cryptodog.locale['chatWindow']['downloadFile']
-	});
-	
-	$('.fileProgressBar')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[conversation].id)
-		.replaceWith(fileLink)
-	conversationBuffer.find('.fileProgressBar')
-		.filterByData('file', file)
-		.filterByData('id', Cryptodog.buddies[conversation].id)
-		.replaceWith(fileLink);
-	Cryptodog.conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html();
 }
 
 Cryptodog.buddyWhitelistEnabled = false;
@@ -294,14 +256,6 @@ var desktopNotification = function(image, title, body, timeout) {
 		// request permission
 		Notification.requestPermission();
 	}
-}
-
-// Send encrypted file.
-var sendFile = function(nickname) {
-	let buddy = Cryptodog.buddies[nickname];
-	buddy.ensureOTR(false, function() {
-		dialog.showSendFile(buddy);
-	});
 }
 
 // Get color by nickname

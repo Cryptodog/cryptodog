@@ -11,8 +11,7 @@ Cryptodog.templates = {
     buddyMenu:
         '<div class="buddyMenu" id="{{buddyID}}-menu">' +
         '<li class="option1">{{displayInfo}}</li>' +
-        '<li class="option2">{{sendEncryptedFile}}</li>' +
-        '<li class="option3">{{ignore}}</li>' +
+        '<li class="option2">{{ignore}}</li>' +
         '</div>',
 
     myInfo:
@@ -42,18 +41,6 @@ Cryptodog.templates = {
         '<form id="authReplyForm"><input id="authReply" type="password" placeholder="{{secretAnswer}}" maxlength="64" />' +
         '<input id="authReplySubmit" type="submit" value="{{answer}}" /></form></p>' +
         '<p>{{answerMustMatch}}</p>',
-
-    sendFile:
-        '<div class="title">{{sendEncryptedFile}}</div>' +
-        '<input type="file" id="fileSelector" name="file[]" />' +
-        '<input type="button" id="fileSelectButton" value="{{sendEncryptedFile}}" />' +
-        '<div id="fileInfoField">{{fileTransferInfo}}</div>',
-
-    file:
-        '<div class="fileProgressBar" data-file="{{file}}" data-id="{{id}}">' +
-        '<div class="fileProgressBarFill" data-file="{{file}}" data-id="{{id}}"></div></div>',
-
-    fileLink: '<a href="{{url}}" class="fileView" target="_blank" download="{{filename}}">{{downloadFile}}</a>',
 
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 

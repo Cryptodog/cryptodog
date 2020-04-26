@@ -56,7 +56,6 @@ const buddyList = function () {
         if ($('#' + buddy.id + '-menu').length === 0) {
             $('body').append(Mustache.render(Cryptodog.templates.buddyMenu, {
                 buddyID: buddy.id,
-                sendEncryptedFile: Cryptodog.locale.chatWindow.sendEncryptedFile,
                 displayInfo: Cryptodog.locale.chatWindow.displayInfo,
                 ignore: Cryptodog.locale.chatWindow[buddy.ignored() ? 'unignore' : 'ignore']
             }));
@@ -79,11 +78,6 @@ const buddyList = function () {
             $menu.hide();
         });
         $menu.find('.option2').unbind().click(function (e) {
-            e.stopPropagation();
-            sendFile(buddy.nickname);
-            $menu.hide();
-        });
-        $menu.find('.option3').unbind().click(function (e) {
             e.stopPropagation();
             buddy.toggleIgnored();
             $menu.hide();

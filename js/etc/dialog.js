@@ -93,40 +93,6 @@ const dialog = (function () {
         });
     }
 
-    function showSendFile(buddy) {
-        let sendFile = Mustache.render(Cryptodog.templates.sendFile, {
-            sendEncryptedFile: Cryptodog.locale['chatWindow']['sendEncryptedFile'],
-            fileTransferInfo: Cryptodog.locale['chatWindow']['fileTransferInfo']
-                .replace('(SIZE)', Cryptodog.otr.maximumFileSize / 1024)
-        });
-
-        showBox(sendFile, {
-            height: 250,
-            closeable: true
-        });
-
-        $('#fileSelector').change(function (e) {
-            e.stopPropagation();
-            if (this.files) {
-                let file = this.files[0];
-                let filename = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
-                filename += file.name.match(/\.(\w)+$/)[0];
-                buddy.otr.sendFile(filename);
-                let key = buddy.fileKey[filename];
-                Cryptodog.otr.beginSendFile({
-                    file: file,
-                    filename: filename,
-                    to: nickname,
-                    key: key
-                });
-                delete buddy.fileKey[filename];
-            }
-        });
-        $('#fileSelectButton').click(function () {
-            $('#fileSelector').click();
-        });
-    }
-
     function showSMPQuestion(buddy, question) {
         let smpQuestion = Mustache.render(Cryptodog.templates.authRequest, {
             authenticate: Cryptodog.locale.chatWindow.authenticate,
@@ -230,7 +196,6 @@ const dialog = (function () {
         showBuddyInfo,
         showOTRProgress,
         hideOTRProgress,
-        showSendFile,
         showSMPQuestion
     };
 })();
