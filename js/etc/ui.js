@@ -197,43 +197,6 @@ Cryptodog.UI = {
         });
     },
 
-    bindSenderElement: function(senderElement) {
-        if (!senderElement) {
-            senderElement = $('.sender');
-        }
-
-        senderElement.unbind('mouseenter,mouseleave,click');
-
-        // Show timestamp when mouse enters sender element.
-        senderElement.mouseenter(function() {
-            $(this).find('.nickname').text($(this).attr('data-timestamp'));
-        });
-
-        senderElement.mouseleave(function() {
-            $(this).find('.nickname').text($(this).attr('data-sender'));
-        });
-    },
-
-    // Scrolls down the chat window to the bottom in a smooth animation.
-    // 'speed' is animation speed in milliseconds.
-    // If `threshold` is true, we won't scroll down if the user
-    // appears to be scrolling up to read messages.
-    scrollDownConversation: function(speed, threshold) {
-        var scrollPosition = $('#conversationWindow')[0].scrollHeight;
-        scrollPosition -= $('#conversationWindow').scrollTop();
-
-        if (scrollPosition < 700 || !threshold) {
-            $('#conversationWindow')
-                .stop()
-                .animate(
-                    {
-                        scrollTop: $('#conversationWindow')[0].scrollHeight + 20
-                    },
-                    speed
-                );
-        }
-    },
-
     /*
 	-------------------
 	USER INTERFACE BINDINGS
@@ -342,17 +305,6 @@ Cryptodog.UI = {
         // Logout button.
         $('#logout').click(function() {
             Cryptodog.logout();
-        });
-
-        $('#userInputText').keyup(function(e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-            }
-        });
-
-        $('#userInputSubmit').click(function() {
-            $('#userInput').submit();
-            $('#userInputText').select();
         });
 
         // Language selector.

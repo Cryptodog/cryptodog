@@ -30,21 +30,9 @@ const buddyList = function () {
 
     function bindBuddyClick(buddyElement) {
         buddyElement.removeClass('newMessage');
-        if (buddyElement.prev().attr('id') === 'currentConversation') {
-            $('#userInputText').focus();
-            return;
-        }
-
         const id = buddyElement.attr('data-id');
-        Cryptodog.me.currentBuddy = id;
-        initializeConversationBuffer(id);
-
-        // Switch currently active conversation.
-        $('#conversationWindow').html(Cryptodog.conversationBuffers[id]);
-        Cryptodog.UI.bindSenderElement();
-        Cryptodog.UI.scrollDownConversation(0, false);
-        $('#userInputText').focus();
         $('#buddy-' + id).addClass('currentConversation');
+        chat.switchTo(id);
 
         // Clean up finished conversations.
         $('#buddyList div').each(function () {
@@ -57,7 +45,6 @@ const buddyList = function () {
                 }
             }
         });
-        $('#conversationWindow').children().addClass('visibleLine');
         Cryptodog.rebindDataURIs();
     }
 
@@ -129,6 +116,12 @@ const buddyList = function () {
             }
         }
     }
+
+    $(document).ready(function () {
+        $('#buddy-groupChat').unbind().click(function () {
+            bindBuddyClick($(this));
+        });
+    });
 
     return {
         add

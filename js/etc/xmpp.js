@@ -152,11 +152,6 @@ $(window).ready(function() {
 
             $('#login').fadeOut(200, function() {
                 $('#conversationInfo').fadeIn();
-
-                $('#buddy-groupChat').click(function() {
-                    Cryptodog.onBuddyClick($(this));
-                });
-
                 $('#buddy-groupChat').click();
                 $('#conversationWrapper').fadeIn();
                 $('#optionButtons').fadeIn();
@@ -206,7 +201,8 @@ $(window).ready(function() {
 
     // Handle incoming messages from the XMPP server.
     Cryptodog.xmpp.onMessage = function(message) {
-        var nickname = extractNickname($(message).attr('from'));
+        const timestamp = new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
+        const nickname = extractNickname($(message).attr('from'));
 
         var body = $(message)
             .find('body')
@@ -223,19 +219,23 @@ $(window).ready(function() {
         if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             return true;
         }
+        const buddy = Cryptodog.buddies[nickname];
+        if (buddy.ignored()) {
+            return true;
+        }
 
         // Check if message has a 'composing' notification.
         if ($(message).attr('id') === 'composing' && !body.length) {
-            $('#buddy-' + Cryptodog.buddies[nickname].id).addClass('composing');
+            $('#buddy-' + buddy.id).addClass('composing');
             return true;
         }
 
         // Check if message has a 'paused' (stopped writing) notification.
         if ($(message).attr('id') === 'paused') {
-            $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
+            $('#buddy-' + buddy.id).removeClass('composing');
         } else if (type === 'groupchat' && body.length) {
             // Check if message is a group chat message.
-            $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
+            $('#buddy-' + buddy.id).removeClass('composing');
 
             try {
                 body = Cryptodog.multiParty.decryptMessage(nickname, Cryptodog.me.nickname, body);
@@ -243,27 +243,27 @@ $(window).ready(function() {
                 console.log('multiParty exception (sender: ' + nickname + '): ' + e);
                 return true;
             }
-
             if (body) {
-                Cryptodog.addToConversation(body, nickname, 'groupChat', 'message');
+                chat.addGroupMessage(buddy, timestamp, body);
             }
         } else if (type === 'chat') {
             // Check if this is a private OTR message.
-            $('#buddy-' + Cryptodog.buddies[nickname].id).removeClass('composing');
+            $('#buddy-' + buddy.id).removeClass('composing');
 
             if (body.length > Cryptodog.otr.maxMessageLength) {
                 console.log('xmpp: refusing to decrypt large OTR message (' + body.length + ' bytes) from ' + nickname);
                 return true;
             }
-            Cryptodog.buddies[nickname].otr.receiveMsg(body);
+            buddy.otr.receiveMsg(body);
         }
         return true;
     };
 
     // Handle incoming presence updates from the XMPP server.
     Cryptodog.xmpp.onPresence = function(presence) {
+        const timestamp = new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
         var status;
-        var nickname = extractNickname($(presence).attr('from'));
+        const nickname = extractNickname($(presence).attr('from'));
 
         // If invalid nickname, do not process.
         if ($(presence).attr('type') === 'error') {
@@ -305,11 +305,16 @@ $(window).ready(function() {
 
         // Detect buddy going offline.
         if ($(presence).attr('type') === 'unavailable') {
+            const buddy = Cryptodog.buddies[nickname];
+            if (buddy) {
+                chat.addLeave(buddy, timestamp);
+            }
             Cryptodog.removeBuddy(nickname);
             return true;
         } else if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Create buddy element if buddy is new
             Cryptodog.addBuddy(nickname);
+            chat.addJoin(Cryptodog.buddies[nickname], timestamp);
             
             // Propagate away status to newcomers.
             Cryptodog.xmpp.sendStatus();

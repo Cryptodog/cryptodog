@@ -558,7 +558,6 @@ BUDDY LIST
 	-moz-animation: pulse 2s infinite;
 	-o-animation: pulse 2s infinite;
 	animation: pulse 2s infinite;
-	background-image: url("../img/icons/bubbles2.svg");
 }
 
 /*
@@ -966,8 +965,6 @@ CONVERSATION WINDOW
 	color: #fff;
 	word-wrap: break-word;
 	position: relative;
-	top: 20px;
-	opacity: 0;
 	margin-bottom: 8px;
 	font-size: 1em;
 	max-width: 92%;
@@ -977,11 +974,6 @@ CONVERSATION WINDOW
 .line .sender {
 	background: #999;
 	color: #fff;
-}
-
-.visibleLine {
-	opacity: 1;
-	top: 0;
 }
 
 #userInput {

@@ -35,12 +35,9 @@
         if (!encrypted) {
             return;
         }
-
-        Cryptodog.addToConversation(msg, nickname, Cryptodog.buddies[nickname].id, 'message');
-
-        if (Cryptodog.me.currentBuddy !== Cryptodog.buddies[nickname].id && !Cryptodog.buddies[nickname].ignored()) {
-            Cryptodog.messagePreview(msg, nickname);
-        }
+        const timestamp = new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
+        const buddy = Cryptodog.buddies[nickname];
+        chat.addPrivateMessage(buddy, buddy, timestamp, msg);
     };
 
     // Handle outgoing messages depending on connection type.

@@ -114,113 +114,6 @@ Cryptodog.addFile = function(url, file, conversation, filename) {
 	Cryptodog.conversationBuffers[Cryptodog.buddies[conversation].id] = $('<div>').append($(conversationBuffer).clone()).html();
 }
 
-// Add a `message` from `nickname` to the `conversation` display and log.
-// `type` can be 'file', 'message', 'warning' or 'missingRecipients'.
-// In case `type` === 'missingRecipients', `message` becomes array of missing recipients.
-Cryptodog.addToConversation = function(message, nickname, conversation, type) {
-	if (nickname === Cryptodog.me.nickname) {}
-	else if (Cryptodog.buddies[nickname].ignored()) {
-		return false;
-	}
-	initializeConversationBuffer(conversation)
-	if (type === 'file') {
-		if (!message.length) { return false; }
-		var id = conversation;
-		if (nickname !== Cryptodog.me.nickname) {
-			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-			id = Cryptodog.buddies[nickname].id;
-		}
-		message = Mustache.render(
-			Cryptodog.templates.file, {
-				file: message,
-				id: id
-			}
-		);
-	}
-	if (type === 'message') {
-		if (!message.length) { return false }
-		if (nickname !== Cryptodog.me.nickname) {
-			Cryptodog.buddies[nickname].messageCount++;
-
-			Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-			if (Cryptodog.allowSoundNotifications) {
-				Cryptodog.audio.newMessage.play();
-			}
-			desktopNotification(notifImg, Cryptodog.me.nickname + "@" + Cryptodog.me.conversation, nickname + ": " + message, 7);
-		}
-		message = Strophe.xmlescape(message);
-		message = Cryptodog.UI.addLinks(message);
-		message = Cryptodog.UI.stylizeText(message);
-		message = Cryptodog.UI.addEmoticons(message);
-	}
-	if (type === 'warning') {
-		if (!message.length) { return false }
-		message = Strophe.xmlescape(message);
-		Cryptodog.buddies[nickname].messageCount++;
-	}
-	if (type === 'missingRecipients') {
-		if (!message.length) { return false }
-		message = message.join(', ');
-		message = Mustache.render(Cryptodog.templates.missingRecipients, {
-			text: Cryptodog.locale.warnings.missingRecipientWarning
-				.replace('(NICKNAME)', message),
-			dir: Cryptodog.locale.direction
-		})
-		Cryptodog.conversationBuffers[conversation] += message;
-		if (conversation === Cryptodog.me.currentBuddy) {
-			$('#conversationWindow').append(message);
-			$('.missingRecipients').last().animate({'top': '0', 'opacity': '1'}, 100);
-			Cryptodog.UI.scrollDownConversation(400, true);
-		}
-		return true;
-	}
-	var authStatus = false;
-	if ((nickname === Cryptodog.me.nickname) || Cryptodog.buddies[nickname].authenticated) {
-		authStatus = true;
-	}
-	message = message.replace(/:/g, '&#58;');
-
-	var renderedMessage = Mustache.render(Cryptodog.templates.message, {
-		nickname: nickname,
-		currentTime: currentTime(true),
-		authStatus: authStatus,
-		message: message,
-		color: Cryptodog.getUserColor(nickname),
-		style: type == 'warning' ? 'italic' : 'normal'
-	});
-
-	Cryptodog.conversationBuffers[conversation] += renderedMessage
-	if (conversation === Cryptodog.me.currentBuddy) {
-		$('#conversationWindow').append(renderedMessage);
-		$('.line').last().animate({'top': '0', 'opacity': '1'}, 100);
-		Cryptodog.UI.bindSenderElement($('.line').last().find('.sender'));
-		Cryptodog.UI.scrollDownConversation(400, true);
-	}
-	else {
-		$('#buddy-' + conversation).addClass('newMessage');
-	}
-	Cryptodog.rebindDataURIs();
-}
-
-// Show a preview for a received message from a buddy.
-// Message previews will not overlap and are removed after 5 seconds.
-Cryptodog.messagePreview = function(message, nickname) {
-	var buddyElement = $('#buddy-' + Cryptodog.buddies[nickname].id);
-	if (!buddyElement.attr('data-utip')) {
-		if (message.length > 15) {
-			message = message.substring(0, 15) + '…';
-		}
-		buddyElement.attr({
-			'data-utip-gravity': 'sw',
-			'data-utip': Strophe.xmlescape(message)
-		}).mouseenter();
-		window.setTimeout(function() {
-			buddyElement.mouseleave()
-			buddyElement.removeAttr('data-utip')
-		}, 0x1337);
-	}
-}
-
 Cryptodog.buddyWhitelistEnabled = false;
 
 // Automatically ignore newcomers who aren't in the current buddies list
@@ -252,7 +145,6 @@ Cryptodog.addBuddy = function(nickname) {
 	const buddy = new Buddy(nickname);
 	Cryptodog.buddies[nickname] = buddy;
 	buddyList.add(buddy);
-	buddyNotification(nickname, true);
 }
 
 // Handle buddy going offline.
@@ -271,7 +163,6 @@ Cryptodog.removeBuddy = function(nickname) {
 	}
 	buddyElement.each(function() {
 		$(this).attr('status', 'offline');
-		buddyNotification(nickname, false);
 		if (Cryptodog.me.currentBuddy === buddyID) {
 			return;
 		}
@@ -292,36 +183,6 @@ Cryptodog.getBuddyNicknameByID = function(id) {
 			}
 		}
 	}
-}
-
-// Bind buddy click actions.
-Cryptodog.onBuddyClick = function(buddyElement) {
-	var nickname = Cryptodog.getBuddyNicknameByID(buddyElement.attr('data-id'));
-	buddyElement.removeClass('newMessage');
-	if (buddyElement.prev().attr('id') === 'currentConversation') {
-		$('#userInputText').focus();
-		return true;
-	}
-	var id = buddyElement.attr('data-id');
-	Cryptodog.me.currentBuddy = id;
-	initializeConversationBuffer(id);
-	// Switch currently active conversation.
-	$('#conversationWindow').html(Cryptodog.conversationBuffers[id]);
-	Cryptodog.UI.bindSenderElement();
-	Cryptodog.UI.scrollDownConversation(0, false);
-	$('#userInputText').focus();
-	$('#buddy-' + id).addClass('currentConversation');
-	// Clean up finished conversations.
-	$('#buddyList div').each(function() {
-		if ($(this).attr('data-id') !== id) {
-			$(this).removeClass('currentConversation');
-			if (!$(this).hasClass('newMessage') && ($(this).attr('status') === 'offline')) {
-				$(this).slideUp(500, function() { $(this).remove() });
-			}
-		}
-	})
-	$('#conversationWindow').children().addClass('visibleLine');
-	Cryptodog.rebindDataURIs();
 }
 
 // Handle click event on all embedded data URI messages
@@ -383,31 +244,6 @@ PRIVATE INTERFACE FUNCTIONS
 -------------------
 */
 
-// Outputs the current hh:mm.
-// If `seconds = true`, outputs hh:mm:ss.
-var currentTime = function(seconds) {
-	var date = new Date();
-	var time = [];
-	time.push(date.getHours().toString());
-	time.push(date.getMinutes().toString());
-	if (seconds) { 
-	   time.push(date.getSeconds().toString());
-	}
-	for (var just in time) {
-		if (time[just].length === 1) {
-			time[just] = '0' + time[just];
-		}
-	}
-	return time.join(':');
-}
-
-// Initializes a conversation buffer. Internal use.
-var initializeConversationBuffer = function(id) {
-	if (!Cryptodog.conversationBuffers.hasOwnProperty(id)) {
-		Cryptodog.conversationBuffers[id] = '';
-	}
-}
-
 var currentNotifications = [];
 
 var handleNotificationTimeout = function() {
@@ -458,46 +294,6 @@ var desktopNotification = function(image, title, body, timeout) {
 		// request permission
 		Notification.requestPermission();
 	}
-}
-
-// Add a join/part notification to the conversation window.
-// If 'join === true', shows join notification, otherwise shows part.
-var buddyNotification = function(nickname, join) {
-	// Otherwise, go ahead
-	var status
-	if (join) {
-		Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
-		status = Mustache.render(Cryptodog.templates.userJoin, {
-			nickname: nickname,
-			currentTime: currentTime(false),
-			color: Cryptodog.getUserColor(nickname)
-		});
-	}
-	else {
-		status = Mustache.render(Cryptodog.templates.userLeave, {
-			nickname: nickname,
-			currentTime: currentTime(false)
-		});
-	}
-	initializeConversationBuffer('groupChat');
-	Cryptodog.conversationBuffers['groupChat'] += status;
-	if (Cryptodog.me.currentBuddy === 'groupChat') {
-		$('#conversationWindow').append(status);
-	}
-	Cryptodog.UI.scrollDownConversation(400, true);
-
-	if (Cryptodog.allowSoundNotifications) {
-		if (join) {
-			Cryptodog.audio.userJoin.play();
-		}
-		else {
-			Cryptodog.audio.userLeave.play();
-		}
-	}	
-
-	desktopNotification(notifImg,
-		nickname + ' has ' + (join ? 'joined ' : 'left ')
-		+ Cryptodog.me.conversation, '', 7);
 }
 
 // Send encrypted file.
@@ -580,48 +376,6 @@ Cryptodog.newMessageCount = function(count){
 	}
 }
 
-/*
--------------------
-USER INTERFACE BINDINGS
--------------------
-*/
-
-// Submit user input.
-$('#userInput').submit(function() {
-	var message = $.trim($('#userInputText').val())
-	$('#userInputText').val('')
-	if (!message.length) { return false }
-	if (Cryptodog.me.currentBuddy !== 'groupChat') {
-		Cryptodog.buddies[
-			Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy)
-		].otr.sendMsg(message);
-	}
-	else if (Object.keys(Cryptodog.buddies).length) {
-		var ciphertext = JSON.parse(Cryptodog.multiParty.sendMessage(message));
-		var missingRecipients = [];
-		for (var i in Cryptodog.buddies) {
-			if (typeof(ciphertext['text'][i]) !== 'object') {
-				missingRecipients.push(i);
-			}
-		}
-		if (missingRecipients.length) {
-			Cryptodog.addToConversation(
-				missingRecipients, Cryptodog.me.nickname,
-				'groupChat', 'missingRecipients'
-			);
-		}
-		Cryptodog.xmpp.connection.muc.message(
-			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-			null, JSON.stringify(ciphertext), null, 'groupchat', 'active'
-		);
-	}
-	Cryptodog.addToConversation(
-		message, Cryptodog.me.nickname,
-		Cryptodog.me.currentBuddy, 'message'
-	);
-	return false;
-})
-
 function isCharacterKeyPress(e) {
 	if (typeof e.which == "number" && e.which > 0) {
 		return !e.ctrlKey && !e.metaKey && !e.altKey && e.which != 8 && e.which != 16;
@@ -669,17 +423,6 @@ $('#userInputText').keydown(function(e) {
 			Cryptodog.me.composing = false;
 		}, 7000, destination, type);
 	}
-})
-
-$('#userInputText').keyup(function(e) {
-	if (e.keyCode === 13) {
-		e.preventDefault();
-	}
-})
-
-$('#userInputSubmit').click(function() {
-	$('#userInput').submit();
-	$('#userInputText').select();
 })
 
 // Language selector.
