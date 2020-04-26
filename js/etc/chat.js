@@ -147,6 +147,57 @@ const chat = function () {
             $('#userInput').submit();
         });
 
+        let composing = false;
+        $('#userInputText').keydown(function (e) {
+            if (e.key === 'Tab') {
+                if (!$(this).val()) {
+                    return;
+                }
+                const nickComplete = tabComplete($(this).val());
+                if (nickComplete) {
+                    $(this).val(nickComplete);
+                }
+                return;
+            }
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                $('#userInput').submit();
+                composing = false;
+                return;
+            }
+
+            // XXX: potentially hacky way to determine if key is a printable character
+            if (e.key.length !== 1) {
+                return;
+            }
+
+            if (!composing) {
+                composing = true;
+
+                let destination, type;
+                if (current === groupChat) {
+                    destination = null;
+                    type = 'groupchat';
+                } else {
+                    destination = Cryptodog.getBuddyNicknameByID(current);
+                    type = 'chat';
+                }
+
+                Cryptodog.xmpp.connection.muc.message(
+                    Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
+                    destination, '', null, type, 'composing'
+                );
+
+                window.setTimeout(function (destination, type) {
+                    Cryptodog.xmpp.connection.muc.message(
+                        Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
+                        destination, '', null, type, 'paused'
+                    );
+                    composing = false;
+                }, 7000, destination, type);
+            }
+        });
+
         $('#userInput').submit(function (e) {
             e.preventDefault();
             const timestamp = new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
@@ -181,6 +232,38 @@ const chat = function () {
                 addGroupMessage(Cryptodog.me, timestamp, message);
             }
         });
+
+        function tabComplete(input) {
+            let nickname, suffix;
+            const potentials = [];
+            for (nickname in Cryptodog.buddies) {
+                if (Cryptodog.buddies.hasOwnProperty(nickname)) {
+                    potentials.push({
+                        score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
+                        value: nickname
+                    });
+                }
+            }
+            var largest = potentials[0];
+
+            // find item with largest score
+            potentials.forEach(function (item) {
+                if (item.score > largest.score) {
+                    largest = item;
+                }
+            }, this);
+
+            if (input.match(/\s/)) {
+                suffix = ' ';
+            } else {
+                suffix = ': ';
+            }
+            if (largest.score < 0.1) {
+                // cut-off matching attempt if all scores are low
+                return input;
+            }
+            return input.replace(/(\S)+$/, largest.value + suffix);
+        };
     });
 
     return {

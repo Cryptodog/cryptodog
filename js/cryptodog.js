@@ -304,44 +304,6 @@ var sendFile = function(nickname) {
 	});
 }
 
-// Check for nickname completion.
-// Called when pressing tab in user input.
-var nicknameCompletion = function(input) {
-	var nickname, suffix;
-	var potentials = [];
-	for (nickname in Cryptodog.buddies) {
-		if (Cryptodog.buddies.hasOwnProperty(nickname)) {
-			try {
-				potentials.push({
-					score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
-					value: nickname
-				});
-			}
-			catch (err) {
-				console.log(err);
-			}
-		}
-	}
-	var largest = potentials[0];
-
-	// find item with largest score
-	potentials.forEach(function(item) {
-		if (item.score > largest.score) {
-			largest = item;
-		}
-	}, this);
-
-	if (input.match(/\s/)) {
-		suffix = ' ';
-	}
-	else {
-		 suffix = ': ';
-	}
-	if (largest.score < 0.1)    // cut-off matching attempt if all scores are low
-		return input;
-	return input.replace(/(\S)+$/, largest.value + suffix);
-}
-
 // Get color by nickname
 Cryptodog.getUserColor = function(nickname){
 	return nickname === Cryptodog.me.nickname ? Cryptodog.me.color : Cryptodog.buddies[nickname].color;
@@ -375,55 +337,6 @@ Cryptodog.newMessageCount = function(count){
 		}
 	}
 }
-
-function isCharacterKeyPress(e) {
-	if (typeof e.which == "number" && e.which > 0) {
-		return !e.ctrlKey && !e.metaKey && !e.altKey && e.which != 8 && e.which != 16;
- 	}
-	return false;
-}
-
-// User input key event detection.
-// (Message submission, nick completion...)
-$('#userInputText').keydown(function(e) {
-	if (e.keyCode === 9) {
-		e.preventDefault()
-		var nickComplete = nicknameCompletion($(this).val())
-		if (nickComplete) {
-			$(this).val(nickComplete)
-		}
-	}
-	else if (e.keyCode === 13) {
-		e.preventDefault();
-		$('#userInput').submit();
-		Cryptodog.me.composing = false;
-		return true;
-	}
-	if (!isCharacterKeyPress(e)) return;
-	var destination, type;
-	if (Cryptodog.me.currentBuddy === 'groupChat') {
-		destination = null;
-		type = 'groupchat';
-	}
-	else {
-		destination = Cryptodog.getBuddyNicknameByID(Cryptodog.me.currentBuddy);
-		type = 'chat';
-	}
-	if (!Cryptodog.me.composing) {
-		Cryptodog.me.composing = true;
-		Cryptodog.xmpp.connection.muc.message(
-			Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-			destination, '', null, type, 'composing'
-		);
-		window.setTimeout(function(d, t) {
-			Cryptodog.xmpp.connection.muc.message(
-				Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-				d, '', null, t, 'paused'
-			);
-			Cryptodog.me.composing = false;
-		}, 7000, destination, type);
-	}
-})
 
 // Language selector.
 $('#languageSelect').click(function() {
