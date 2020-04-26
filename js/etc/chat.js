@@ -38,7 +38,7 @@ const chat = function () {
 
         if (chat === current) {
             loadRecentEntries(1);
-            $('.line').last().css({ 'opacity': '0', 'top': '20px' }).animate({ 'opacity': 1, 'top': 0 }, 100);
+            $('.line').last().animate({ 'opacity': 1, 'top': 0 }, 100);
         } else {
             $('#buddy-' + chat).addClass('newMessage');
         }
