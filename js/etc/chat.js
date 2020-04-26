@@ -2,7 +2,7 @@ const chat = function () {
     'use strict';
     const buffers = {};
     const recentEntriesCutoff = 100;
-    const groupChat = 'groupChat';
+    const groupChat = 'group';
     let current = groupChat;
 
     function addJoin(buddy, timestamp) {
@@ -26,6 +26,7 @@ const chat = function () {
         // TODO: implement
         throw "Not implemented";
     }
+
     function addEntry(chat, entry) {
         // TODO: text formatting
         if (!(chat in buffers)) {
@@ -38,7 +39,14 @@ const chat = function () {
 
         if (chat === current) {
             loadRecentEntries(1);
-            $('.line').last().animate({ 'opacity': 1, 'top': 0 }, 100);
+
+            // Add entry to chat window with an animation.
+            $('#conversationWindow .line').last().animate({ 'top': 0 }, 100);
+
+            // TODO: don't scroll if the user is reading old messages
+            // Possibly: if the prior message is not in view?
+            const chatWindow = $('#conversationWindow');
+            chatWindow.stop().animate({ scrollTop: chatWindow[0].scrollHeight });
         } else {
             $('#buddy-' + chat).addClass('newMessage');
         }
@@ -60,6 +68,11 @@ const chat = function () {
         }
         $('#conversationWindow').empty();
         loadRecentEntries();
+        $('#conversationWindow .line').addClass('no-animate');
+        const last = $('#conversationWindow').children().last();
+        if (last.length > 0) {
+            last.get(0).scrollIntoView();
+        }
     }
 
     // Render the `recentEntriesCutoff` messages prior to those already displayed.
@@ -69,6 +82,7 @@ const chat = function () {
         for (let i = prev.length - 1; i >= 0; i--) {
             $('#conversationWindow').prepend(prev[i].render());
         }
+        $('#conversationWindow .line').addClass('no-animate');
     }
 
     // Render the `numEntries` most recent entries, or the `recentEntriesCutoff` most recent if `numEntries` is undefined.
@@ -76,16 +90,6 @@ const chat = function () {
         buffers[current].slice(-(numEntries || recentEntriesCutoff)).forEach(entry => {
             $('#conversationWindow').append(entry.render());
         });
-        scrollToLastMessage();
-    }
-
-    // TODO: don't scroll if the user is reading old messages
-    // Possibly: if the last message is not in view?
-    function scrollToLastMessage() {
-        const lastLine = $('.line').last();
-        if (lastLine.length) {
-            lastLine.get(0).scrollIntoView();
-        }
     }
 
     class Entry {

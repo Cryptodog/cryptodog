@@ -969,8 +969,11 @@ CONVERSATION WINDOW
 	font-size: 1em;
 	max-width: 92%;
 	white-space: pre-wrap;
-	opacity: 0;
-	top: 20px;
+	top: 10px;
+}
+
+.line.no-animate {
+	top: 0;
 }
 
 .line .sender {
