@@ -522,7 +522,7 @@ BUDDY LIST
 	background: rgba(255, 255, 255, 0.2);
 }
 
-#buddy-groupChat {
+#buddy-group {
 	display: block;
 	background-image: url("../img/icons/users.svg");
 	background-position: 96% 4px;

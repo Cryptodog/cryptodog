@@ -127,8 +127,6 @@ $(window).ready(function() {
 
         $('#loginInfo').text('✓');
         $('#status').attr('src', 'img/icons/checkmark.svg');
-        $('#buddy-groupChat,#status').show();
-        $('#buddy-groupChat').insertBefore('#buddiesOnline');
         $('#fill')
             .stop()
             .animate(
@@ -152,7 +150,6 @@ $(window).ready(function() {
 
             $('#login').fadeOut(200, function() {
                 $('#conversationInfo').fadeIn();
-                $('#buddy-groupChat').click();
                 $('#conversationWrapper').fadeIn();
                 $('#optionButtons').fadeIn();
 
@@ -163,8 +160,8 @@ $(window).ready(function() {
                             $('#userInputText').focus();
                         });
                     });
-
-                $('#buddyWrapper').slideDown();
+                
+                buddyList.initialize();
             });
         }, 800);
 

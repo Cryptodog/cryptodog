@@ -31,11 +31,8 @@ Cryptodog.UI = {
         $('#conversationInfo,#optionButtons').fadeOut();
         $('#header').animate({ 'background-color': 'transparent' });
         $('.logo').animate({ margin: '-5px 5px 0 5px' });
-        $('#buddyWrapper').slideUp();
-        $('.buddy').unbind('click');
-        $('.buddyMenu').unbind('click');
-        $('#buddy-groupChat').insertAfter('#buddiesOnline');
-
+        buddyList.cleanUp();
+        
         $('#userInput').fadeOut(function() {
             $('#logoText').fadeIn();
             $('#footer').animate({ height: 14 });
@@ -51,13 +48,6 @@ Cryptodog.UI = {
                 });
 
                 $('#dialogBoxClose').click();
-
-                $('#buddyList div').each(function() {
-                    if ($(this).attr('id') !== 'buddy-groupChat') {
-                        $(this).remove();
-                    }
-                });
-
                 $('#conversationWindow').html('');
             });
         });

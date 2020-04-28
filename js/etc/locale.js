@@ -62,11 +62,6 @@
         $('#notifications').attr('data-utip', languageObject['chatWindow']['desktopNotificationsOff']);
         $('#myInfo').attr('data-utip', languageObject['chatWindow']['myInfo']);
         $('#status').attr('data-utip', languageObject['chatWindow']['statusAvailable']);
-        
-        $('#buddy-groupChat')
-            .find('span')
-            .text(languageObject['chatWindow']['conversation']);
-        
         $('#languageSelect').text($('[data-locale=' + languageObject['language'] + ']').text());
         $('[data-login=cryptocat]').text(languageObject.login.groupChat);
         $('[data-utip]').utip();

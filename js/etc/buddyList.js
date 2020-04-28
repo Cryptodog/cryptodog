@@ -1,6 +1,28 @@
 const buddyList = function () {
     'use strict';
 
+    const buddyGroupId = 'buddy-group';
+
+    function initialize() {
+        const buddyGroup = $('#' + buddyGroupId);
+        buddyGroup.show();
+        buddyGroup.unbind().click(function () {
+            bindBuddyClick($(this));
+        });
+        buddyGroup.click();
+        $('#buddyWrapper').slideDown();
+    }
+
+    function cleanUp() {
+        $('#buddyWrapper').slideUp(function () {
+            $('#buddyList div').each(function () {
+                if ($(this).attr('id') !== buddyGroupId) {
+                    $(this).remove();
+                }
+            });
+        });
+    }
+
     function add(buddy) {
         $('#buddyList').queue(function () {
             const buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
@@ -111,13 +133,9 @@ const buddyList = function () {
         }
     }
 
-    $(document).ready(function () {
-        $('#buddy-groupChat').unbind().click(function () {
-            bindBuddyClick($(this));
-        });
-    });
-
     return {
+        initialize,
+        cleanUp,
         add
     };
 }();
