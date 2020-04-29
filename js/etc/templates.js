@@ -48,7 +48,7 @@ Cryptodog.templates = {
         '<div class="line" style="border-color:{{color}};">' +
         '<span class="sender" title="{{nickname}}" data-sender="{{nickname}}"' +
         ' data-timestamp="{{timestamp}}" style="background-color:{{color}};"><span class="nickname">{{nickname}}</span></span>' +
-        '<span class="message" style="font-style:{{style}};">{{body}}</span></div>',
+        '<span class="message" style="font-style:{{style}};">{{{body}}}</span></div>',
 
     userJoin:
         '<div class="userJoin" title="{{nickname}}" style="background-color:{{color}};"><span class="timestamp">{{timestamp}}</span>' +

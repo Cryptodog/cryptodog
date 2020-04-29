@@ -28,7 +28,6 @@ const chat = function () {
     }
 
     function addEntry(chat, entry) {
-        // TODO: text formatting
         if (!(chat in buffers)) {
             buffers[chat] = [];
         }
@@ -104,11 +103,21 @@ const chat = function () {
             this.body = body;
         }
 
+        autolink() {
+            const pattern = /(\s*)(https?:\/\/\S+)/gi;
+            return this.escapedBody.replace(pattern, '$1<a target="_blank" rel="noopener" href="$2">$2</a>');
+        }
+
         render() {
+            /* HTML-encode the message body before auto-linking.
+               Mustache.js also encodes forward slashes, so we unescape them at the end to allow links. */
+            this.escapedBody = Mustache.render('{{body}}', this).replace(/&#x2F;/g, '/');
+
             return Mustache.render(Cryptodog.templates.message, {
                 nickname: this.buddy.nickname,
                 timestamp: this.timestamp,
-                body: this.body,
+                // body is not HTML-encoded in the message template.
+                body: this.autolink(),
                 color: this.buddy.color
             });
         }
