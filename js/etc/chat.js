@@ -251,9 +251,8 @@ const chat = function () {
                 Cryptodog.xmpp.connection.muc.message(
                     Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
                     null, JSON.stringify(ciphertext), null, 'groupchat', 'active');
-
-                addGroupMessage(Cryptodog.me, timestamp, message);
             }
+            addGroupMessage(Cryptodog.me, timestamp, message);
         });
 
         function tabComplete(input) {
