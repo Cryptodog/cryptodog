@@ -38,14 +38,17 @@ const chat = function () {
 
         if (chat === current) {
             loadRecentEntries(1);
-
-            // Add entry to chat window with an animation.
             $('#conversationWindow .line').last().animate({ 'top': 0 }, 100);
 
             // TODO: don't scroll if the user is reading old messages
             // Possibly: if the prior message is not in view?
             const chatWindow = $('#conversationWindow');
             chatWindow.stop().animate({ scrollTop: chatWindow[0].scrollHeight });
+
+            const chatEntries = chatWindow.children();
+            if (chatEntries.length > recentEntriesCutoff) {
+                chatEntries.first().remove();
+            }
         } else {
             $('#buddy-' + chat).addClass('newMessage');
         }
