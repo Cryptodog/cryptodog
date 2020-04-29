@@ -37,18 +37,23 @@ const chat = function () {
         buffers[chat].push(entry);
 
         if (chat === current) {
+            const chatWindow = $('#conversationWindow');
+            const wasScrolledDown = (Math.ceil(chatWindow[0].scrollHeight - chatWindow[0].scrollTop) === chatWindow[0].clientHeight);
+
             loadRecentEntries(1);
             $('#conversationWindow .line').last().animate({ 'top': 0 }, 100);
 
-            // TODO: don't scroll if the user is reading old messages
-            // Possibly: if the prior message is not in view?
-            const chatWindow = $('#conversationWindow');
-            chatWindow.stop().animate({ scrollTop: chatWindow[0].scrollHeight });
+            if (wasScrolledDown) {
+                // Scroll the chat window down.
+                chatWindow.stop().animate({ scrollTop: chatWindow[0].scrollHeight });
 
-            const chatEntries = chatWindow.children();
-            if (chatEntries.length > recentEntriesCutoff) {
-                chatEntries.first().remove();
+                const chatEntries = chatWindow.children();
+                if (chatEntries.length > recentEntriesCutoff) {
+                    // Keep the chat window trimmed to `recentEntriesCutoff`.
+                    chatEntries.slice(0, chatEntries.length - recentEntriesCutoff).remove();
+                }
             }
+            // TODO: show indicator for new messages if the user was scrolled up
         } else {
             $('#buddy-' + chat).addClass('newMessage');
         }
