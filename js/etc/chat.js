@@ -147,6 +147,8 @@ const chat = function () {
         'use strict';
         $('#conversationWindow').scroll(function () {
             if ($('#conversationWindow').scrollTop() === 0) {
+                // Prevent auto-scrolling to the top when we prepend the entries.
+                $('#conversationWindow').scrollTop(1);
                 loadPreviousEntries();
             }
         });
