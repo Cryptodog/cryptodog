@@ -119,7 +119,7 @@ const chat = function () {
         render() {
             /* HTML-encode the message body before auto-linking.
                Mustache.js also encodes forward slashes, so we unescape them at the end to allow links. */
-            this.escapedBody = Mustache.render('{{body}}', this).replace(/&#x2F;/g, '/');
+            this.escapedBody = Mustache.escape(this.body).replace(/&#x2F;/g, '/');
 
             return Mustache.render(Cryptodog.templates.message, {
                 nickname: this.buddy.nickname,
