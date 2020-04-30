@@ -173,6 +173,7 @@ const chat = function () {
         let composing = false;
         $('#userInputText').keydown(function (e) {
             if (e.key === 'Tab') {
+                e.preventDefault();
                 if (!$(this).val()) {
                     return;
                 }
