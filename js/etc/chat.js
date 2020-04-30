@@ -38,7 +38,7 @@ const chat = function () {
 
         if (chat === current) {
             const chatWindow = $('#conversationWindow');
-            const wasScrolledDown = (Math.ceil(chatWindow[0].scrollHeight - chatWindow[0].scrollTop) === chatWindow[0].clientHeight);
+            const wasScrolledDown = (Math.ceil(chatWindow.scrollTop() + chatWindow.innerHeight()) >= chatWindow[0].scrollHeight);
 
             loadRecentEntries(1);
             $('#conversationWindow .line').last().animate({ 'top': 0 }, 100);
