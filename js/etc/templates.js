@@ -56,5 +56,10 @@ Cryptodog.templates = {
 
     userLeave:
         '<div class="userLeave" title="{{nickname}}"><span class="timestamp">{{timestamp}}</span>' +
-        '<strong>-</strong>{{nickname}}</div>'
+        '<strong>-</strong>{{nickname}}</div>',
+
+    decryptError:
+        `<div class="decrypt-error">
+            <span class="content" title="Could not decrypt message from {{nickname}}">Could not decrypt message from {{nickname}}</span>
+        </div>`
 };

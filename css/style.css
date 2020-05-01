@@ -1069,3 +1069,20 @@ CONVERSATION WINDOW
 	position: relative;
 	top: 1px;
 }
+
+.decrypt-error {
+	width: 45%;
+	background: url('../img/icons/warning.svg') no-repeat center left;
+	background-size: 16px 16px;
+	color: white;
+	font-size: 0.95em;
+	margin-bottom: 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+
+.decrypt-error .content {
+	margin-left: 25px;
+}

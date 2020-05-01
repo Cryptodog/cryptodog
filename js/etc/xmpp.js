@@ -237,7 +237,8 @@ $(window).ready(function() {
             try {
                 body = Cryptodog.multiParty.decryptMessage(nickname, Cryptodog.me.nickname, body);
             } catch (e) {
-                console.log('multiParty exception (sender: ' + nickname + '): ' + e);
+                console.log(e);
+                chat.addDecryptError(buddy, timestamp);
                 return true;
             }
             if (body) {

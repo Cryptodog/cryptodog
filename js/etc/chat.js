@@ -18,9 +18,8 @@ const chat = function () {
     function addPrivateMessage(buddy, sender, timestamp, body) {
         addEntry(buddy.id, new Message(sender, timestamp, body));
     }
-    function addWarning(buddy, timestamp) {
-        // TODO: implement
-        throw "Not implemented";
+    function addDecryptError(buddy, timestamp) {
+        addEntry(groupChat, new DecryptError(buddy, timestamp));
     }
     function addMissingRecipients(buddies) {
         // TODO: implement
@@ -144,6 +143,13 @@ const chat = function () {
             return Mustache.render(Cryptodog.templates.userLeave, {
                 nickname: this.buddy.nickname,
                 timestamp: this.timestamp,
+            });
+        }
+    }
+    class DecryptError extends Entry {
+        render() {
+            return Mustache.render(Cryptodog.templates.decryptError, {
+                nickname: this.buddy.nickname,
             });
         }
     }
@@ -295,6 +301,6 @@ const chat = function () {
         addLeave,
         addGroupMessage,
         addPrivateMessage,
-        addWarning
+        addDecryptError
     };
 }();
