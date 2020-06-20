@@ -210,18 +210,29 @@ $(window).ready(function () {
             return true;
         }
 
-        // Check if message is a group chat message.
-        $('#buddy-' + buddy.id).removeClass('composing');
-
         try {
-            var decrypted = Cryptodog.multiParty.decryptMessage(from, Cryptodog.me.nickname, message.text);
+            var groupMessage = JSON.parse(message.text);
         } catch (e) {
             console.log(e);
-            chat.addDecryptError(buddy, timestamp);
             return true;
         }
-        if (decrypted) {
-            chat.addGroupMessage(buddy, timestamp, decrypted);
+
+        if (groupMessage.type === 'composing') {
+            $('#buddy-' + buddy.id).addClass('composing');
+        } else if (groupMessage.type === 'paused') {
+            $('#buddy-' + buddy.id).removeClass('composing');
+        } else {
+            try {
+                var decrypted = Cryptodog.multiParty.decryptMessage(from, Cryptodog.me.nickname, groupMessage);
+            } catch (e) {
+                console.log(e);
+                chat.addDecryptError(buddy, timestamp);
+                return true;
+            }
+            if (decrypted) {
+                chat.addGroupMessage(buddy, timestamp, decrypted);
+            }
+            $('#buddy-' + buddy.id).removeClass('composing');
         }
         return true;
     };
@@ -306,11 +317,27 @@ $(window).ready(function () {
     // TODO: implement
     Cryptodog.net.sendStatus = function () { };
 
-    // TODO: implement
-    Cryptodog.net.sendComposing = function (nickname) { };
+    Cryptodog.net.sendComposing = function (nickname) {
+        let composing = JSON.stringify({
+            type: 'composing'
+        });
+        if (nickname) {
+            Cryptodog.net.sendPrivateMessage(nickname, composing);
+        } else {
+            Cryptodog.net.sendGroupMessage(composing);
+        }
+    };
 
-    // TODO: implement
-    Cryptodog.net.sendPaused = function (nickname) { };
+    Cryptodog.net.sendPaused = function (nickname) {
+        let paused = JSON.stringify({
+            type: 'paused'
+        });
+        if (nickname) {
+            Cryptodog.net.sendPrivateMessage(nickname, paused);
+        } else {
+            Cryptodog.net.sendGroupMessage(paused);
+        }
+    };
 
     Cryptodog.net.disconnect = function () {
         if (connection) {

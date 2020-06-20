@@ -217,7 +217,6 @@ Cryptodog.multiParty = function () { };
 
     Cryptodog.multiParty.decryptMessage = function (sender, myName, message) {
         let buddy = Cryptodog.buddies[sender];
-        message = JSON.parse(message);
         let type = message.type;
 
         if (type === 'public_key') {

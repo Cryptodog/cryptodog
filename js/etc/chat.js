@@ -247,7 +247,7 @@ const chat = function () {
                     }
                 }
                 if (missingRecipients.length) {
-                    addMissingRecipients(buddies);
+                    addMissingRecipients(missingRecipients);
                 }
                 Cryptodog.net.sendGroupMessage(JSON.stringify(ciphertext));
             }
