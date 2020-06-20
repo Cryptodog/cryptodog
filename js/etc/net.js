@@ -239,10 +239,8 @@ $(window).ready(function () {
     };
 
     Cryptodog.net.onRoster = function (message) {
-        const timestamp = chat.timestamp();
         for (let i = 0; i < message.users.length; i++) {
-            let buddy = Cryptodog.addBuddy(message.users[i]);
-            chat.addJoin(buddy, timestamp);
+            Cryptodog.addBuddy(message.users[i]);
         }
     };
 
