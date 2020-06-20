@@ -5,6 +5,10 @@ const chat = function () {
     const groupChat = 'group';
     let current = groupChat;
 
+    function timestampString() {
+        return new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
+    }
+
     function addJoin(buddy, timestamp) {
         addEntry(groupChat, new Join(buddy, timestamp));
     }
@@ -204,27 +208,17 @@ const chat = function () {
             if (!composing) {
                 composing = true;
 
-                let destination, type;
-                if (current === groupChat) {
-                    destination = null;
-                    type = 'groupchat';
-                } else {
+                let destination;
+                if (current !== groupChat) {
                     destination = Cryptodog.getBuddyNicknameByID(current);
-                    type = 'chat';
                 }
 
-                Cryptodog.xmpp.connection.muc.message(
-                    Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-                    destination, '', null, type, 'composing'
-                );
+                Cryptodog.net.sendComposing(destination);
 
-                window.setTimeout(function (destination, type) {
-                    Cryptodog.xmpp.connection.muc.message(
-                        Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-                        destination, '', null, type, 'paused'
-                    );
+                window.setTimeout(function (destination) {
+                    Cryptodog.net.sendPaused(destination);
                     composing = false;
-                }, 7000, destination, type);
+                }, 7000, destination);
             }
         });
 
@@ -296,6 +290,7 @@ const chat = function () {
     });
 
     return {
+        timestampString,
         switchTo,
         addJoin,
         addLeave,

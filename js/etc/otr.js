@@ -34,21 +34,16 @@
         if (!encrypted) {
             return;
         }
-        const timestamp = new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
+        const timestamp = chat.timestampString();
         const buddy = Cryptodog.buddies[nickname];
         chat.addPrivateMessage(buddy, buddy, timestamp, msg);
     };
 
     // Handle outgoing messages depending on connection type.
     var onOutgoing = function (nickname, message) {
-        Cryptodog.xmpp.connection.muc.message(
-            Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-            nickname,
-            message,
-            null,
-            'chat',
-            'active'
-        );
+        Cryptodog.net.connection.send(Connection.Event.PrivateMessage, {
+            text: message
+        });
     };
 
     // Handle otr state changes.

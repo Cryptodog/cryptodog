@@ -165,12 +165,7 @@ Cryptodog.rebindDataURIs = function() {
 Cryptodog.logout = function() {
 	Cryptodog.UI.logout();
 	Cryptodog.loginError = false;
-	Cryptodog.xmpp.connection.muc.leave(
-		Cryptodog.me.conversation + '@'
-		+ Cryptodog.xmpp.currentServer.conference
-	);
-	Cryptodog.xmpp.connection.disconnect();
-	Cryptodog.xmpp.connection = null;
+	Cryptodog.net.connection.leave();
 
 	for (var b in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(b)) {
@@ -195,8 +190,8 @@ Cryptodog.prepareAnswer = function(answer, ask, buddyMpFingerprint) {
 
 Cryptodog.changeStatus = function(status) {
 	if (status === 'away' || status === 'online'){
-		Cryptodog.xmpp.currentStatus = status;
-		Cryptodog.xmpp.sendStatus();
+		Cryptodog.net.currentStatus = status;
+		Cryptodog.net.sendStatus();
 	}
 }
 
@@ -348,9 +343,9 @@ $('#CryptodogLogin').submit(function() {
 		Cryptodog.me.conversation = $('#conversationName').val();
 		Cryptodog.me.nickname = $('#nickname').val();
 		
-		Cryptodog.xmpp.showKeyPreparationDialog(function () {
+		Cryptodog.net.showKeyPreparationDialog(function () {
 			Cryptodog.me.color = Cryptodog.color.pop();
-			Cryptodog.xmpp.connect();
+			Cryptodog.net.connect();
 		});
 	}
 	return false;

@@ -412,8 +412,8 @@ Cryptodog.UI = {
 
         // Logout on browser close.
         window.onunload = function() {
-            if (Cryptodog.xmpp.connection !== null) {
-                Cryptodog.xmpp.connection.disconnect();
+            if (Cryptodog.net.connection !== null) {
+                Cryptodog.net.connection.disconnect();
             }
         };
 
