@@ -107,6 +107,7 @@ Cryptodog.addBuddy = function(nickname) {
 	const buddy = new Buddy(nickname);
 	Cryptodog.buddies[nickname] = buddy;
 	buddyList.add(buddy);
+	return buddy;
 }
 
 // Handle buddy going offline.
@@ -165,7 +166,7 @@ Cryptodog.rebindDataURIs = function() {
 Cryptodog.logout = function() {
 	Cryptodog.UI.logout();
 	Cryptodog.loginError = false;
-	Cryptodog.net.connection.leave();
+	Cryptodog.net.leave();
 
 	for (var b in Cryptodog.buddies) {
 		if (Cryptodog.buddies.hasOwnProperty(b)) {

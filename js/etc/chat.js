@@ -5,9 +5,9 @@ const chat = function () {
     const groupChat = 'group';
     let current = groupChat;
 
-    function timestampString() {
+    function timestamp() {
         return new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
-    }
+    };
 
     function addJoin(buddy, timestamp) {
         addEntry(groupChat, new Join(buddy, timestamp));
@@ -249,9 +249,7 @@ const chat = function () {
                 if (missingRecipients.length) {
                     addMissingRecipients(buddies);
                 }
-                Cryptodog.xmpp.connection.muc.message(
-                    Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-                    null, JSON.stringify(ciphertext), null, 'groupchat', 'active');
+                Cryptodog.net.sendGroupMessage(JSON.stringify(ciphertext));
             }
             addGroupMessage(Cryptodog.me, timestamp, message);
         });
@@ -290,7 +288,7 @@ const chat = function () {
     });
 
     return {
-        timestampString,
+        timestamp,
         switchTo,
         addJoin,
         addLeave,

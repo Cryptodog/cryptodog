@@ -34,16 +34,14 @@
         if (!encrypted) {
             return;
         }
-        const timestamp = chat.timestampString();
+        const timestamp = chat.timestamp();
         const buddy = Cryptodog.buddies[nickname];
         chat.addPrivateMessage(buddy, buddy, timestamp, msg);
     };
 
     // Handle outgoing messages depending on connection type.
     var onOutgoing = function (nickname, message) {
-        Cryptodog.net.connection.send(Connection.Event.PrivateMessage, {
-            text: message
-        });
+        Cryptodog.net.sendPrivateMessage(nickname, message);
     };
 
     // Handle otr state changes.

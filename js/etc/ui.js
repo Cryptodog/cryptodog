@@ -412,9 +412,7 @@ Cryptodog.UI = {
 
         // Logout on browser close.
         window.onunload = function() {
-            if (Cryptodog.net.connection !== null) {
-                Cryptodog.net.connection.disconnect();
-            }
+            Cryptodog.net.disconnect();
         };
 
         // Determine whether we are showing a top margin
