@@ -18,36 +18,14 @@ $(window).ready(function() {
             $('#customServerSelector').append(
                 Mustache.render(Cryptodog.templates['customServer'], {
                     name: 'Cryptodog',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'wss://crypto.dog/websocket'
-                })
-            );
-
-            $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptodog (BOSH)',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'https://crypto.dog/http-bind'
+                    relay: 'wss://crypto.dog/ws'
                 })
             );
 
             $('#customServerSelector').append(
                 Mustache.render(Cryptodog.templates['customServer'], {
                     name: 'Cryptodog (Tor Hidden Service)',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'ws://doggyfipznipbaia.onion/websocket'
-                })
-            );
-
-            $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptodog (Tor Hidden Service) (BOSH)',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'http://doggyfipznipbaia.onion/http-bind'
+                    relay: 'ws://doggyfipznipbaia.onion/ws'
                 })
             );
         }
@@ -55,18 +33,14 @@ $(window).ready(function() {
         $('#languages').hide();
         $('#footer').animate({ height: 220 }, function() {
             $('#customServerDialog').fadeIn();
-            $('#customName').val(Cryptodog.xmpp.currentServer.name);
-            $('#customDomain').val(Cryptodog.xmpp.currentServer.domain);
-            $('#customConferenceServer').val(Cryptodog.xmpp.currentServer.conference);
-            $('#customRelay').val(Cryptodog.xmpp.currentServer.relay);
+            $('#customName').val(Cryptodog.net.currentServer.name);
+            $('#customRelay').val(Cryptodog.net.currentServer.relay);
 
             $('#customServerReset')
                 .val(Cryptodog.locale['loginWindow']['reset'])
                 .click(function() {
                     $('#customName').val('Cryptodog');
-                    $('#customDomain').val(Cryptodog.xmpp.defaultServer.domain);
-                    $('#customConferenceServer').val(Cryptodog.xmpp.defaultServer.conference);
-                    $('#customRelay').val(Cryptodog.xmpp.defaultServer.relay);
+                    $('#customRelay').val(Cryptodog.net.defaultServer.relay);
 
                     Cryptodog.storage.removeItem('serverName');
                     Cryptodog.storage.removeItem('domain');
@@ -81,14 +55,10 @@ $(window).ready(function() {
                         $('#footer').animate({ height: 14 });
                     });
 
-                    Cryptodog.xmpp.currentServer.name = $('#customName').val();
-                    Cryptodog.xmpp.currentServer.domain = $('#customDomain').val();
-                    Cryptodog.xmpp.currentServer.conference = $('#customConferenceServer').val();
-                    Cryptodog.xmpp.currentServer.relay = $('#customRelay').val();
-                    Cryptodog.storage.setItem('serverName', Cryptodog.xmpp.currentServer.name);
-                    Cryptodog.storage.setItem('domain', Cryptodog.xmpp.currentServer.domain);
-                    Cryptodog.storage.setItem('conferenceServer', Cryptodog.xmpp.currentServer.conference);
-                    Cryptodog.storage.setItem('relay', Cryptodog.xmpp.currentServer.relay);
+                    Cryptodog.net.currentServer.name = $('#customName').val();
+                    Cryptodog.net.currentServer.relay = $('#customRelay').val();
+                    Cryptodog.storage.setItem('serverName', Cryptodog.net.currentServer.name);
+                    Cryptodog.storage.setItem('relay', Cryptodog.net.currentServer.relay);
                 });
             $('#customDomain').select();
         });
@@ -100,7 +70,7 @@ $(window).ready(function() {
             .attr('data-deleteconfirm', '0')
             .removeClass('confirm');
 
-        if ($('#customDomain').val() === Cryptodog.xmpp.defaultServer.domain) {
+        if ($('#customDomain').val() === Cryptodog.net.defaultServer.domain) {
             return; // Cannot overwrite the default domain
         }
 
@@ -186,7 +156,7 @@ $(window).ready(function() {
             .removeClass('confirm');
 
         var selectedOption = $(this).find(':selected');
-        if ($(selectedOption).attr('data-domain') === Cryptodog.xmpp.defaultServer.domain) {
+        if ($(selectedOption).attr('data-domain') === Cryptodog.net.defaultServer.domain) {
             $('#customServerDelete')
                 .attr('disabled', 'disabled')
                 .addClass('disabled');

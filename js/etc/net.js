@@ -1,11 +1,15 @@
 Cryptodog.net = {};
 Cryptodog.net.currentStatus = 'online';
+Cryptodog.net.defaultServer = {
+    name: 'Cryptodog',
+    relay: 'ws://staging.crypto.dog:8009/ws',
+};
+
+Cryptodog.net.currentServer = Object.assign({}, Cryptodog.net.defaultServer);
 
 $(window).ready(function () {
-    let defaultServer = {
-        name: 'Cryptodog',
-        relay: 'ws://staging.crypto.dog:8009/ws',
-    };
+    let defaultServer = Cryptodog.net.defaultServer;
+
     let currentServer = {};
     let connection = null;
 
