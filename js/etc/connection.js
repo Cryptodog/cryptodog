@@ -61,7 +61,12 @@ class Connection {
     }
 
     send(event, data) {
-        var text = event + JSON.stringify(data);
+        let body = "";
+        if (data) {
+            body = JSON.stringify(data);
+        }
+
+        let text = event + body;
         this.websocket.send(text);
     }
 
