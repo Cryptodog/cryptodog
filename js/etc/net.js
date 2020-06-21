@@ -254,8 +254,23 @@ $(window).ready(function () {
     };
 
     Cryptodog.net.onRoster = function (message) {
-        for (let i = 0; i < message.users.length; i++) {
-            Cryptodog.addBuddy(message.users[i]);
+        // Add buddies in the roster
+        for (let buddyNickname of message.users) {
+            if (!Cryptodog.buddies[buddyNickname]) {
+                let buddy = Cryptodog.addBuddy(buddyNickname);
+                chat.addJoin(buddy, chat.timestamp());
+            }
+        }
+
+        // Remove buddies if their names do not appear in the roster
+        for (let buddyNickname in Cryptodog.buddies) {
+            if (!message.users.includes(buddyNickname)) {
+                let buddy = Cryptodog.buddies[buddyNickname];
+                if (buddy) {
+                    chat.addLeave(buddy, chat.timestamp());
+                }
+                Cryptodog.removeBuddy(buddyNickname);
+            }
         }
     };
 
