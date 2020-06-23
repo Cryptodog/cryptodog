@@ -9,9 +9,11 @@ Cryptodog.net.currentServer = Object.assign({}, Cryptodog.net.defaultServer);
 
 $(window).ready(function () {
     let defaultServer = Cryptodog.net.defaultServer;
-
     let currentServer = {};
     let connection = null;
+
+    // Track whether we're currently in a room (or trying to enter it) to handle disconnections appropriately.
+    let inRoom = true;
 
     // Load custom server settings
     Cryptodog.storage.getItem('serverName', function (key) {
@@ -80,6 +82,7 @@ $(window).ready(function () {
 
     // Connect anonymously and join conversation.
     Cryptodog.net.connect = function () {
+        inRoom = true;
         if (connection && connection.isOpen()) {
             // Connection is already open
             connection.send(Connection.Event.Join, {
@@ -91,12 +94,19 @@ $(window).ready(function () {
             connection = new Connection(currentServer.relay);
 
             connection.on(Connection.Event.Connected, function () {
-                connection.send(Connection.Event.Join, {
-                    name: Cryptodog.me.nickname,
-                    room: Cryptodog.me.conversation
-                });
-                Cryptodog.net.onConnected();
+                if (inRoom) {
+                    connection.send(Connection.Event.Join, {
+                        name: Cryptodog.me.nickname,
+                        room: Cryptodog.me.conversation
+                    });
+                    Cryptodog.net.onConnected();
+                }
             });
+
+            connection.on(Connection.Event.Reconnecting, function () {
+                $('.conversationName').animate({ 'background-color': '#F00' });
+            });
+
             connection.on(Connection.Event.Join, Cryptodog.net.onJoin);
             connection.on(Connection.Event.Roster, Cryptodog.net.onRoster);
             connection.on(Connection.Event.GroupMessage, Cryptodog.net.onGroupMessage);
@@ -151,8 +161,6 @@ $(window).ready(function () {
                 buddyList.initialize();
             });
         }, 800);
-
-        Cryptodog.loginError = true;
 
         document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
         $('.conversationName').text(document.title);
@@ -278,6 +286,7 @@ $(window).ready(function () {
         const timestamp = chat.timestamp();
         const nickname = message.name;
         if (nickname == Cryptodog.me.nickname) {
+            inRoom = true;
             return;
         }
 
@@ -331,6 +340,7 @@ $(window).ready(function () {
 
     Cryptodog.net.leave = function () {
         connection.send(Connection.Event.Leave);
+        inRoom = false;
     };
 
     // TODO: implement

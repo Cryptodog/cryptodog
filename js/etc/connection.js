@@ -10,7 +10,7 @@ class Connection {
 
         // Internal events
         Connected: 'connected',
-        Disconnected: 'disconnected'
+        Reconnecting: 'reconnecting'
     };
 
     constructor(websocketURL) {
@@ -23,7 +23,7 @@ class Connection {
     }
 
     emit(event, data) {
-        var handler = this.handlers[event];
+        const handler = this.handlers[event];
         if (handler) {
             handler(data);
         }
@@ -42,7 +42,11 @@ class Connection {
         this.websocket = new WebSocket(this.websocketURL);
         this.websocket.addEventListener('open', this.onOpen.bind(this));
         this.websocket.addEventListener('message', this.onMessage.bind(this));
-        this.websocket.addEventListener('error', this.onSocketError.bind(this));
+
+        this.websocket.onclose = (() => {
+            this.emit(Connection.Event.Reconnecting);
+            this.connect();
+        }).bind(this);
     }
 
     onOpen() {
@@ -61,21 +65,15 @@ class Connection {
     }
 
     send(event, data) {
-        let body = "";
-        if (data) {
-            body = JSON.stringify(data);
+        if (!this.isOpen()) {
+            return;
         }
 
-        let text = event + body;
-        this.websocket.send(text);
+        const body = data ? JSON.stringify(data) : '';
+        this.websocket.send(event + body);
     }
 
     disconnect() {
         this.websocket.close();
-    }
-
-    // The WebSocket unexpectedly closed.
-    onSocketError(event) {
-        this.emit(Connection.Event.Disconnected);
     }
 }

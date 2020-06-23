@@ -165,7 +165,6 @@ Cryptodog.rebindDataURIs = function() {
 // Executes on user logout.
 Cryptodog.logout = function() {
 	Cryptodog.UI.logout();
-	Cryptodog.loginError = false;
 	Cryptodog.net.leave();
 
 	for (var b in Cryptodog.buddies) {
@@ -346,6 +345,7 @@ $('#CryptodogLogin').submit(function() {
 		
 		Cryptodog.net.showKeyPreparationDialog(function () {
 			Cryptodog.me.color = Cryptodog.color.pop();
+			$('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting']);
 			Cryptodog.net.connect();
 		});
 	}
