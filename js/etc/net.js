@@ -2,7 +2,7 @@ Cryptodog.net = {};
 Cryptodog.net.currentStatus = 'online';
 Cryptodog.net.defaultServer = {
     name: 'Cryptodog',
-    relay: 'ws://staging.crypto.dog:8009/ws',
+    relay: 'wss://staging.crypto.dog/ws',
 };
 
 Cryptodog.net.currentServer = Object.assign({}, Cryptodog.net.defaultServer);
