@@ -52,10 +52,13 @@ class Buddy {
         }
     }
 
-    updateMpKeys(publicKey) {
+    setPublicKey(publicKey) {
         this.mpPublicKey = publicKey;
-        this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
-        this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
+        this.mpFingerprint = multiparty.fingerprint(this.mpPublicKey);
+    }
+
+    setSharedSecret(sharedSecret) {
+        this.mpSecretKey = sharedSecret;
     }
 
     updateAuth(auth) {

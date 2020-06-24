@@ -290,11 +290,11 @@ if (typeof (window) !== 'undefined') {
 					Cryptodog.me.mpPrivateKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(key.mp));
 					Cryptodog.me.otrKey = DSA.parsePrivate(key.otr);
 				} else {
-					Cryptodog.me.mpPrivateKey = Cryptodog.multiParty.genPrivateKey();
+					Cryptodog.me.mpPrivateKey = multiparty.newPrivateKey();
 				}
 
-				Cryptodog.me.mpPublicKey = Cryptodog.multiParty.genPublicKey(Cryptodog.me.mpPrivateKey);
-				Cryptodog.me.mpFingerprint = Cryptodog.multiParty.genFingerprint();
+				Cryptodog.me.mpPublicKey = multiparty.publicKeyFromPrivate(Cryptodog.me.mpPrivateKey);
+				Cryptodog.me.mpFingerprint = multiparty.fingerprint(Cryptodog.me.mpPublicKey.raw);
 
 				// If we already have keys, just skip to the callback.
 				if (Cryptodog.me.otrKey) {
@@ -401,7 +401,7 @@ if (typeof (window) !== 'undefined') {
 					net.join(function () {
 						$('.conversationName').animate({ 'background-color': '#0087AF' });
 
-						meta.sendPublicKey();
+						meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
 						meta.requestPublicKey();
 
 						clearInterval(autoIgnore);

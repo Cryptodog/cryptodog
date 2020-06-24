@@ -238,7 +238,7 @@ const chat = function () {
             }
 
             if (Object.keys(Cryptodog.buddies).length) {
-                const ciphertext = Cryptodog.multiParty.encrypt(message, Object.values(Cryptodog.buddies));
+                const ciphertext = multiparty.encrypt(message, Object.values(Cryptodog.buddies));
                 let missingRecipients = [];
                 for (let b in Cryptodog.buddies) {
                     if (typeof (ciphertext['text'][b]) !== 'object') {

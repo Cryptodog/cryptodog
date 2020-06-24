@@ -45,7 +45,7 @@ const meta = function () {
             case 'message':
                 const timestamp = chat.timestamp();
                 try {
-                    var decrypted = Cryptodog.multiParty.decryptMessage(message.from, Cryptodog.me.nickname, groupMessage);
+                    var decrypted = multiparty.decryptMessage(message.from, Cryptodog.me.nickname, groupMessage);
                 } catch (e) {
                     console.log(e);
                     chat.addDecryptError(buddy, timestamp);
@@ -61,13 +61,21 @@ const meta = function () {
         }
     }
 
-    function sendPublicKey() {
-        net.sendGroupMessage(JSON.stringify(new Cryptodog.multiParty.PublicKey(Cryptodog.me.mpPublicKey)));
+    function sendPublicKey(encodedPublicKey) {
+        net.sendGroupMessage(JSON.stringify({
+            type: 'public_key',
+            text: encodedPublicKey
+        }));
     };
 
-    // If nickname is omitted, request from all room occupants
     function requestPublicKey(nickname) {
-        net.sendGroupMessage(JSON.stringify(new Cryptodog.multiParty.PublicKeyRequest(nickname)));
+        const publicKeyRequest = {
+            type: 'public_key_request'
+        };
+        if (nickname) {
+            publicKeyRequest.text = nickname;
+        }
+        net.sendGroupMessage(JSON.stringify(publicKeyRequest));
     };
 
     function sendComposing(nickname) {

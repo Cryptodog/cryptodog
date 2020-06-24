@@ -1,153 +1,26 @@
-Cryptodog.multiParty = function () { };
-
-(function () {
+const multiparty = function () {
     'use strict';
 
-    /*  We need the following two conversion functions because Crypto-JS operates on the WordArray type,
-        but we use Uint8Array for compatibility with NaCl.
-        TODO: Remove these functions once we replace Crypto-JS with NaCl entirely.
-    */
-    Uint8Array.prototype.toWordArray = function () {
-        var wa = [], i;
-        for (i = 0; i < this.length; i++) {
-            wa[(i / 4) | 0] |= this[i] << (24 - 8 * i);
-        }
-        return CryptoJS.lib.WordArray.create(wa, this.length);
-    };
+    const usedIVs = [];
 
-    Uint8Array.fromWordArray = function (wordArray) {
-        var len = wordArray.words.length,
-            u8_array = new Uint8Array(len << 2),
-            offset = 0, word, i;
-
-        for (i = 0; i < len; i++) {
-            word = wordArray.words[i];
-            u8_array[offset++] = word >> 24;
-            u8_array[offset++] = (word >> 16) & 0xff;
-            u8_array[offset++] = (word >> 8) & 0xff;
-            u8_array[offset++] = word & 0xff;
-        }
-        return u8_array;
-    };
-
-    var usedIVs = [];
-
-    var correctIvLength = function (iv) {
-        var ivAsWordArray = CryptoJS.enc.Base64.parse(iv);
-        var ivAsArray = ivAsWordArray.words;
-
-        // Adds 0 as the 4th element, causing the equivalent
-        // bytestring to have a length of 16 bytes, with
-        // \x00\x00\x00\x00 at the end.
-        // Without this, crypto-js will take in a counter of
-        // 12 bytes, and the first 2 counter iterations will
-        // use 0, instead of 0 and then 1.
-        // See https://github.com/cryptocat/cryptocat/issues/258
-        ivAsArray.push(0);
-
-        return CryptoJS.lib.WordArray.create(ivAsArray);
-    };
-
-    // AES-CTR-256 encryption
-    // No padding, starting IV of 0
-    // Input: WordArray, Output: Base64
-    // Key input: WordArray
-    var encryptAES = function (msg, c, iv) {
-        var opts = {
-            mode: CryptoJS.mode.CTR,
-            iv: correctIvLength(iv),
-            padding: CryptoJS.pad.NoPadding
-        };
-        var aesctr = CryptoJS.AES.encrypt(msg, c, opts);
-        return aesctr.toString();
-    };
-
-    // AES-CTR-256 decryption
-    // No padding, starting IV of 0
-    // Input: Base64, Output: WordArray
-    // Key input: WordArray
-    var decryptAES = function (msg, c, iv) {
-        var opts = {
-            mode: CryptoJS.mode.CTR,
-            iv: correctIvLength(iv),
-            padding: CryptoJS.pad.NoPadding
-        };
-        var aesctr = CryptoJS.AES.decrypt(msg, c, opts);
-        return aesctr;
-    };
-
-    // HMAC-SHA512
-    // Output: Base64
-    // Key input: WordArray
-    var HMAC = function (msg, key) {
-        return CryptoJS.HmacSHA512(msg, key).toString(CryptoJS.enc.Base64);
-    };
-
-    Cryptodog.multiParty.maxMessageLength = 5000;
-
-    Cryptodog.multiParty.genPrivateKey = function () {
-        let privateKey = new Uint8Array(32);
+    function newPrivateKey() {
+        const privateKey = new Uint8Array(32);
         return window.crypto.getRandomValues(privateKey);
     };
 
-    Cryptodog.multiParty.genPublicKey = function (privateKey) {
-        return nacl.scalarMult.base(privateKey);
-    };
-
-    // Generate shared secrets
-    // First 256 bytes are for encryption, last 256 bytes are for HMAC.
-    // Represented as WordArrays
-    Cryptodog.multiParty.genSharedSecret = function (nickname) {
-        let sharedSecret = CryptoJS.SHA512(nacl.scalarMult(Cryptodog.me.mpPrivateKey,
-            Cryptodog.buddies[nickname].mpPublicKey).toWordArray());
+    function publicKeyFromPrivate(privateKey) {
+        const publicKey = nacl.scalarMult.base(privateKey);
         return {
-            message: CryptoJS.lib.WordArray.create(sharedSecret.words.slice(0, 8)),
-            hmac: CryptoJS.lib.WordArray.create(sharedSecret.words.slice(8, 16))
+            raw: publicKey,
+            encoded: CryptoJS.enc.Base64.stringify(publicKey.toWordArray())
         };
-    };
+    }
 
-    // Get fingerprint
-    // If nickname is null, returns own fingerprint
-    Cryptodog.multiParty.genFingerprint = function (nickname) {
-        var key = Cryptodog.me.mpPublicKey;
-        if (nickname) {
-            key = Cryptodog.buddies[nickname].mpPublicKey;
-        }
-        return CryptoJS.SHA512(key.toWordArray()).toString().substring(0, 40).toUpperCase();
-    };
+    function fingerprint(publicKey) {
+        return CryptoJS.SHA512(publicKey.toWordArray()).toString().substring(0, 40).toUpperCase();
+    }
 
-    Cryptodog.multiParty.PublicKey = function (key) {
-        this.type = 'public_key';
-        this.text = CryptoJS.enc.Base64.stringify(key.toWordArray());
-    };
-
-    Cryptodog.multiParty.PublicKeyRequest = function (name) {
-        this.type = 'public_key_request';
-        if (name) {
-            this.text = name;
-        } else {
-            this.text = '';
-        }
-    };
-
-    // Issue a warning for decryption failure to the main conversation window
-    Cryptodog.multiParty.messageWarning = function (sender) {
-        var messageWarning = Cryptodog.locale['warnings']['messageWarning'].replace('(NICKNAME)', sender);
-        Cryptodog.addToConversation(messageWarning, sender, 'groupChat', 'warning');
-    };
-
-    // Generate message tag. 8 rounds of SHA512
-    // Input: WordArray
-    // Output: Base64
-    Cryptodog.multiParty.messageTag = function (message) {
-        for (var i = 0; i < 8; i++) {
-            message = CryptoJS.SHA512(message);
-        }
-
-        return message.toString(CryptoJS.enc.Base64);
-    };
-
-    Cryptodog.multiParty.encrypt = function (plaintext, recipients) {
+    function encrypt(plaintext, recipients) {
         // Convert from UTF-8
         plaintext = CryptoJS.enc.Utf8.parse(plaintext);
 
@@ -205,26 +78,26 @@ Cryptodog.multiParty = function () { };
             tag.concat(CryptoJS.enc.Base64.parse(encrypted.text[name].hmac));
         }
 
-        // Compute tag
-        encrypted.tag = Cryptodog.multiParty.messageTag(tag);
+        encrypted.tag = createMessageTag(tag);
         return encrypted;
     };
 
-    Cryptodog.multiParty.decryptMessage = function (sender, myName, message) {
+    function decryptMessage(sender, myName, message) {
         let buddy = Cryptodog.buddies[sender];
         let type = message.type;
 
         if (type === 'public_key') {
             if (!(buddy.mpPublicKey)) {
                 let publicKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(message.text));
-                buddy.updateMpKeys(publicKey);
+                buddy.setPublicKey(publicKey);
+                buddy.setSharedSecret(sharedSecret(Cryptodog.me.mpPrivateKey, publicKey));
             }
             return;
         }
 
         if (type === 'public_key_request') {
             if (!message.text || message.text === myName) {
-                meta.sendPublicKey();
+                meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
             }
             return;
         }
@@ -291,10 +164,6 @@ Cryptodog.multiParty = function () { };
 
             usedIVs.push(text[myName]['iv']);
 
-            if (text[myName]['message'].length > Cryptodog.multiParty.maxMessageLength) {
-                throw sender + ' sent too big a message';
-            }
-
             // Decrypt
             var plaintext = decryptAES(
                 text[myName]['message'],
@@ -308,7 +177,7 @@ Cryptodog.multiParty = function () { };
                 messageTag.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['hmac']));
             }
 
-            if (Cryptodog.multiParty.messageTag(messageTag) !== message['tag']) {
+            if (createMessageTag(messageTag) !== message['tag']) {
                 throw 'Tag failure for message from ' + sender;
             }
 
@@ -332,8 +201,111 @@ Cryptodog.multiParty = function () { };
         }
     };
 
-    // Reset everything except my own key pair
-    Cryptodog.multiParty.reset = function () {
-        usedIVs = [];
+    // First 256 bits are for encryption, last 256 bits are for HMAC.
+    // Represented as WordArrays.
+    function sharedSecret(myPrivateKey, theirPublicKey) {
+        let secret = CryptoJS.SHA512(nacl.scalarMult(
+            myPrivateKey, theirPublicKey).toWordArray());
+
+        return {
+            message: CryptoJS.lib.WordArray.create(secret.words.slice(0, 8)),
+            hmac: CryptoJS.lib.WordArray.create(secret.words.slice(8, 16))
+        };
     };
-})();
+
+    function correctIvLength(iv) {
+        var ivAsWordArray = CryptoJS.enc.Base64.parse(iv);
+        var ivAsArray = ivAsWordArray.words;
+
+        // Adds 0 as the 4th element, causing the equivalent
+        // bytestring to have a length of 16 bytes, with
+        // \x00\x00\x00\x00 at the end.
+        // Without this, crypto-js will take in a counter of
+        // 12 bytes, and the first 2 counter iterations will
+        // use 0, instead of 0 and then 1.
+        // See https://github.com/cryptocat/cryptocat/issues/258
+        ivAsArray.push(0);
+
+        return CryptoJS.lib.WordArray.create(ivAsArray);
+    };
+
+    // AES-CTR-256 encryption
+    // No padding, starting IV of 0
+    // Input: WordArray, Output: Base64
+    // Key input: WordArray
+    function encryptAES(msg, c, iv) {
+        var opts = {
+            mode: CryptoJS.mode.CTR,
+            iv: correctIvLength(iv),
+            padding: CryptoJS.pad.NoPadding
+        };
+        var aesctr = CryptoJS.AES.encrypt(msg, c, opts);
+        return aesctr.toString();
+    };
+
+    // AES-CTR-256 decryption
+    // No padding, starting IV of 0
+    // Input: Base64, Output: WordArray
+    // Key input: WordArray
+    function decryptAES(msg, c, iv) {
+        var opts = {
+            mode: CryptoJS.mode.CTR,
+            iv: correctIvLength(iv),
+            padding: CryptoJS.pad.NoPadding
+        };
+        var aesctr = CryptoJS.AES.decrypt(msg, c, opts);
+        return aesctr;
+    };
+
+    // HMAC-SHA512
+    // Output: Base64
+    // Key input: WordArray
+    function HMAC(msg, key) {
+        return CryptoJS.HmacSHA512(msg, key).toString(CryptoJS.enc.Base64);
+    };
+
+    // Generate message tag. 8 rounds of SHA512
+    // Input: WordArray
+    // Output: Base64
+    function createMessageTag(message) {
+        // The 8 rounds of SHA-512 aren't doing a lot of work here.
+        for (var i = 0; i < 8; i++) {
+            message = CryptoJS.SHA512(message);
+        }
+        return message.toString(CryptoJS.enc.Base64);
+    };
+
+    /*  We need the following two conversion functions because Crypto-JS operates on the WordArray type,
+    but we use Uint8Array for compatibility with NaCl.
+    TODO: Remove these functions once we replace Crypto-JS with NaCl entirely. */
+    Uint8Array.prototype.toWordArray = function () {
+        var wa = [], i;
+        for (i = 0; i < this.length; i++) {
+            wa[(i / 4) | 0] |= this[i] << (24 - 8 * i);
+        }
+        return CryptoJS.lib.WordArray.create(wa, this.length);
+    };
+
+    Uint8Array.fromWordArray = function (wordArray) {
+        var len = wordArray.words.length,
+            u8_array = new Uint8Array(len << 2),
+            offset = 0, word, i;
+
+        for (i = 0; i < len; i++) {
+            word = wordArray.words[i];
+            u8_array[offset++] = word >> 24;
+            u8_array[offset++] = (word >> 16) & 0xff;
+            u8_array[offset++] = (word >> 8) & 0xff;
+            u8_array[offset++] = word & 0xff;
+        }
+        return u8_array;
+    };
+
+    return {
+        newPrivateKey,
+        publicKeyFromPrivate,
+        fingerprint,
+        encrypt,
+        decryptMessage,
+    };
+}();
