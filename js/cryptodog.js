@@ -9,6 +9,7 @@ GLOBAL VARIABLES
 Cryptodog.version = '2.5.8';
 
 Cryptodog.me = {
+	status: 'online',
 	newMessages: 0,
 	windowFocus: true,
 	composing: false,
@@ -187,13 +188,6 @@ if (typeof (window) !== 'undefined') {
 				answer += ';' + first + ';' + second;
 			}
 			return answer;
-		};
-
-		Cryptodog.changeStatus = function (status) {
-			if (status === 'away' || status === 'online') {
-				net.currentStatus = status;
-				net.sendStatus();
-			}
 		};
 
 		// Get color by nickname

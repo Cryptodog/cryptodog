@@ -86,6 +86,9 @@ const net = function () {
             // Create buddy element if buddy is new
             let buddy = Cryptodog.addBuddy(nickname);
             chat.addJoin(buddy, timestamp);
+
+            // Propagate away status to newcomers
+            meta.sendStatus(Cryptodog.me.status);
         }
     }
 

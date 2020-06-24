@@ -1,4 +1,5 @@
-// Temporary helpers for sending and receiving client-to-client protocol metadata.
+/* Temporary helpers for sending and receiving client-to-client protocol metadata.
+   To be eventually superseded by BEX protocol. */
 
 const meta = function () {
     'use strict';
@@ -27,6 +28,12 @@ const meta = function () {
         }
 
         switch (groupMessage.type) {
+            case 'away':
+                buddy.setStatus('away');
+                break;
+            case 'online':
+                buddy.setStatus('online');
+                break;
             case 'composing':
                 buddy.setComposing();
                 break;
@@ -87,8 +94,11 @@ const meta = function () {
         }
     }
 
-    // TODO: implement
-    function sendStatus() { }
+    function sendStatus(status) {
+        net.sendGroupMessage(JSON.stringify({
+            type: status
+        }));
+    }
 
     return {
         handleGroupMessage,
