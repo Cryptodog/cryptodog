@@ -111,48 +111,7 @@ const net = function () {
     }
 
     function onGroupMessage(message) {
-        const timestamp = chat.timestamp();
-        const from = message.from;
-
-        // If message is from me, ignore
-        if (from === Cryptodog.me.nickname) {
-            return;
-        }
-
-        // If message is from someone not on buddy list, ignore
-        if (!Cryptodog.buddies.hasOwnProperty(from)) {
-            return;
-        }
-
-        const buddy = Cryptodog.buddies[from];
-        if (buddy.ignored()) {
-            return;
-        }
-
-        try {
-            var groupMessage = JSON.parse(message.text);
-        } catch (e) {
-            console.log(e);
-            return;
-        }
-
-        if (groupMessage.type === 'composing') {
-            buddy.setComposing();
-        } else if (groupMessage.type === 'paused') {
-            buddy.setPaused();
-        } else {
-            try {
-                var decrypted = Cryptodog.multiParty.decryptMessage(from, Cryptodog.me.nickname, groupMessage);
-            } catch (e) {
-                console.log(e);
-                chat.addDecryptError(buddy, timestamp);
-                return;
-            }
-            if (decrypted) {
-                chat.addGroupMessage(buddy, timestamp, decrypted);
-            }
-            buddy.setPaused();
-        }
+        meta.handleGroupMessage(message);
     }
 
     function onPrivateMessage(message) {
