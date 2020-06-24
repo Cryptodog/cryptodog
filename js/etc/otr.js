@@ -41,7 +41,7 @@
 
     // Handle outgoing messages depending on connection type.
     var onOutgoing = function (nickname, message) {
-        Cryptodog.net.sendPrivateMessage(nickname, message);
+        net.sendPrivateMessage(nickname, message);
     };
 
     // Handle otr state changes.

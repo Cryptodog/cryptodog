@@ -212,11 +212,10 @@ const chat = function () {
                 if (current !== groupChat) {
                     destination = Cryptodog.getBuddyNicknameByID(current);
                 }
-
-                Cryptodog.net.sendComposing(destination);
+                meta.sendComposing(destination);
 
                 window.setTimeout(function (destination) {
-                    Cryptodog.net.sendPaused(destination);
+                    meta.sendPaused(destination);
                     composing = false;
                 }, 7000, destination);
             }
@@ -249,7 +248,7 @@ const chat = function () {
                 if (missingRecipients.length) {
                     addMissingRecipients(missingRecipients);
                 }
-                Cryptodog.net.sendGroupMessage(JSON.stringify(ciphertext));
+                net.sendGroupMessage(JSON.stringify(ciphertext));
             }
             addGroupMessage(Cryptodog.me, timestamp, message);
         });

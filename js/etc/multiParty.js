@@ -229,7 +229,7 @@ Cryptodog.multiParty = function () { };
 
         if (type === 'public_key_request') {
             if (!message.text || message.text === myName) {
-                Cryptodog.net.sendPublicKey();
+                meta.sendPublicKey();
             }
             return;
         }
@@ -243,7 +243,7 @@ Cryptodog.multiParty = function () { };
             if (!(buddy.mpSecretKey)) {
                 // We don't have the sender's key - they're "borked".
                 // Request their key and warn the user.
-                Cryptodog.net.requestPublicKey(sender);
+                meta.requestPublicKey(sender);
                 throw 'Missing public key for ' + sender;
             }
 
