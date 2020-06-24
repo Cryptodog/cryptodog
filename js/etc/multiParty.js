@@ -147,72 +147,67 @@ Cryptodog.multiParty = function () { };
         return message.toString(CryptoJS.enc.Base64);
     };
 
-    Cryptodog.multiParty.sendMessage = function (message) {
-        // Convert from UTF8
-        message = CryptoJS.enc.Utf8.parse(message);
+    Cryptodog.multiParty.encrypt = function (plaintext, recipients) {
+        // Convert from UTF-8
+        plaintext = CryptoJS.enc.Utf8.parse(plaintext);
 
         // Add 64 bytes of padding
-        message.concat(CryptoJS.lib.WordArray.random(64));
+        plaintext.concat(CryptoJS.lib.WordArray.random(64));
 
-        var encrypted = {
-            text: {},
-            type: 'message'
+        const encrypted = {
+            type: 'message',
+            text: {}
         };
 
-        var sortedRecipients = [];
-        for (var b in Cryptodog.buddies) {
-            if (Cryptodog.buddies[b].mpSecretKey) {
-                sortedRecipients.push(b);
+        const sortedRecipients = [];
+        for (let r of recipients) {
+            if (r.mpSecretKey) {
+                sortedRecipients.push(r);
             }
         }
+        sortedRecipients.sort((a, b) => a.nickname.localeCompare(b.nickname));
 
-        sortedRecipients.sort();
+        const hmacInput = CryptoJS.lib.WordArray.create();
 
-        var hmac = CryptoJS.lib.WordArray.create();
+        for (let r of sortedRecipients) {
+            const name = r.nickname;
 
-        for (var i = 0; i < sortedRecipients.length; i++) {
-            // Generate a random IV
-            var iv = CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(12));
-
-            // Do not reuse IVs
+            // Generate a random IV and do not reuse IVs
+            let iv = CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(12));
             while (usedIVs.indexOf(iv) >= 0) {
                 iv = CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(12));
             }
-
             usedIVs.push(iv);
 
-            // Encrypt the message
-            encrypted['text'][sortedRecipients[i]] = {};
+            encrypted.text[name] = {
+                message: encryptAES(
+                    plaintext,
+                    r.mpSecretKey.message,
+                    iv
+                ),
+                iv: iv
+            };
 
-            encrypted['text'][sortedRecipients[i]]['message'] = encryptAES(
-                message,
-                Cryptodog.buddies[sortedRecipients[i]].mpSecretKey['message'],
-                iv
-            );
-
-            encrypted['text'][sortedRecipients[i]]['iv'] = iv;
-
-            // Append to HMAC
-            hmac.concat(CryptoJS.enc.Base64.parse(encrypted['text'][sortedRecipients[i]]['message']));
-            hmac.concat(CryptoJS.enc.Base64.parse(encrypted['text'][sortedRecipients[i]]['iv']));
+            // Build HMAC input
+            hmacInput.concat(CryptoJS.enc.Base64.parse(encrypted.text[name].message));
+            hmacInput.concat(CryptoJS.enc.Base64.parse(encrypted.text[name].iv));
         }
+        const tag = plaintext.clone();
 
-        encrypted['tag'] = message.clone();
+        for (let r of sortedRecipients) {
+            const name = r.nickname;
 
-        for (var i = 0; i < sortedRecipients.length; i++) {
             // Compute the HMAC
-            encrypted['text'][sortedRecipients[i]]['hmac'] = HMAC(
-                hmac,
-                Cryptodog.buddies[sortedRecipients[i]].mpSecretKey['hmac']
+            encrypted.text[name].hmac = HMAC(
+                hmacInput,
+                r.mpSecretKey.hmac
             );
-
-            // Append to tag
-            encrypted['tag'].concat(CryptoJS.enc.Base64.parse(encrypted['text'][sortedRecipients[i]]['hmac']));
+            tag.concat(CryptoJS.enc.Base64.parse(encrypted.text[name].hmac));
         }
 
         // Compute tag
-        encrypted['tag'] = Cryptodog.multiParty.messageTag(encrypted['tag']);
-        return JSON.stringify(encrypted);
+        encrypted.tag = Cryptodog.multiParty.messageTag(tag);
+        return encrypted;
     };
 
     Cryptodog.multiParty.decryptMessage = function (sender, myName, message) {
