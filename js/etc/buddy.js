@@ -18,6 +18,14 @@ class Buddy {
         $('#buddy-' + this.id).attr('status', status);
     }
 
+    setComposing() {
+        $('#buddy-' + this.id).addClass('composing');
+    }
+
+    setPaused() {
+        $('#buddy-' + this.id).removeClass('composing');
+    }
+
     ensureOTR(close, cb) {
         if (this.fingerprint) {
             return cb(this.fingerprint);

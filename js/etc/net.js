@@ -137,9 +137,9 @@ const net = function () {
         }
 
         if (groupMessage.type === 'composing') {
-            $('#buddy-' + buddy.id).addClass('composing');
+            buddy.setComposing();
         } else if (groupMessage.type === 'paused') {
-            $('#buddy-' + buddy.id).removeClass('composing');
+            buddy.setPaused();
         } else {
             try {
                 var decrypted = Cryptodog.multiParty.decryptMessage(from, Cryptodog.me.nickname, groupMessage);
@@ -151,7 +151,7 @@ const net = function () {
             if (decrypted) {
                 chat.addGroupMessage(buddy, timestamp, decrypted);
             }
-            $('#buddy-' + buddy.id).removeClass('composing');
+            buddy.setPaused();
         }
     }
 
@@ -171,7 +171,7 @@ const net = function () {
             return true;
         }
 
-        $('#buddy-' + buddy.id).removeClass('composing');
+        buddy.setPaused();
         buddy.otr.receiveMsg(message.text);
     }
 
