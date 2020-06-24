@@ -17,13 +17,6 @@ Cryptodog.UI = {
             .animate({ left: '+=5px' }, 130);
     },
 
-    // Handle detected new keys.
-    removeAuthAndWarn: function (nickname) {
-        var buddy = Cryptodog.buddies[nickname];
-        buddy.updateAuth(false);
-        dialog.showErrorAKE(nickname);
-    },
-
     logout: function () {
         document.title = 'Cryptodog';
 
