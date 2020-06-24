@@ -178,17 +178,6 @@ if (typeof (window) !== 'undefined') {
 			Cryptodog.conversationBuffers = {};
 		};
 
-		Cryptodog.prepareAnswer = function (answer, ask, buddyMpFingerprint) {
-			var first, second;
-			answer = answer.toLowerCase().replace(/(\s|\.|\,|\'|\"|\;|\?|\!)/, '');
-			if (buddyMpFingerprint) {
-				first = ask ? Cryptodog.me.mpFingerprint : buddyMpFingerprint;
-				second = ask ? buddyMpFingerprint : Cryptodog.me.mpFingerprint;
-				answer += ';' + first + ';' + second;
-			}
-			return answer;
-		};
-
 		// Get color by nickname
 		Cryptodog.getUserColor = function (nickname) {
 			return nickname === Cryptodog.me.nickname ? Cryptodog.me.color : Cryptodog.buddies[nickname].color;
