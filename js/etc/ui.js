@@ -407,7 +407,7 @@ Cryptodog.UI = {
 
         // Prevent accidental window close.
         $(window).bind('beforeunload', function () {
-            if (Object.keys(Cryptodog.buddies).length > 1) {
+            if (Object.keys(Cryptodog.buddies).length) {
                 return Cryptodog.locale['loginMessage']['thankYouUsing'];
             }
         });
