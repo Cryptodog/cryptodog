@@ -41,19 +41,37 @@ const meta = function () {
                 buddy.setPaused();
                 break;
             case 'public_key':
+                if (!buddy.mpPublicKey) {
+                    try {
+                        const publicKey = multiparty.parsePublicKey(groupMessage.text);
+                        buddy.setKeys(publicKey, multiparty.sharedSecret(Cryptodog.me.mpPrivateKey, publicKey));
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+                break;
             case 'public_key_request':
+                if (!groupMessage.text || groupMessage.text === Cryptodog.me.nickname) {
+                    sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
+                }
+                break;
             case 'message':
                 const timestamp = chat.timestamp();
                 try {
-                    var decrypted = multiparty.decryptMessage(message.from, Cryptodog.me.nickname, groupMessage);
+                    var decrypted = multiparty.decrypt(groupMessage, buddy);
                 } catch (e) {
                     console.log(e);
                     chat.addDecryptError(buddy, timestamp);
                     return;
                 }
-                if (decrypted) {
-                    chat.addGroupMessage(buddy, timestamp, decrypted);
+
+                if (decrypted.missingRecipients.length) {
+                    chat.addMissingRecipients(decrypted.missingRecipients);
                 }
+                if (decrypted.plaintext) {
+                    chat.addGroupMessage(buddy, timestamp, decrypted.plaintext);
+                }
+
                 buddy.setPaused();
                 break;
             default:

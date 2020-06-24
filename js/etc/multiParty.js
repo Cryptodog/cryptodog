@@ -6,7 +6,7 @@ const multiparty = function () {
     function newPrivateKey() {
         const privateKey = new Uint8Array(32);
         return window.crypto.getRandomValues(privateKey);
-    };
+    }
 
     function publicKeyFromPrivate(privateKey) {
         const publicKey = nacl.scalarMult.base(privateKey);
@@ -18,6 +18,22 @@ const multiparty = function () {
 
     function fingerprint(publicKey) {
         return CryptoJS.SHA512(publicKey.toWordArray()).toString().substring(0, 40).toUpperCase();
+    }
+
+    function parsePublicKey(encodedPublicKey) {
+        return Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(encodedPublicKey));
+    }
+
+    // First 256 bits are for encryption, last 256 bits are for HMAC.
+    // Represented as WordArrays.
+    function sharedSecret(myPrivateKey, theirPublicKey) {
+        let secret = CryptoJS.SHA512(nacl.scalarMult(
+            myPrivateKey, theirPublicKey).toWordArray());
+
+        return {
+            message: CryptoJS.lib.WordArray.create(secret.words.slice(0, 8)),
+            hmac: CryptoJS.lib.WordArray.create(secret.words.slice(8, 16))
+        };
     }
 
     function encrypt(plaintext, recipients) {
@@ -80,138 +96,70 @@ const multiparty = function () {
 
         encrypted.tag = createMessageTag(tag);
         return encrypted;
-    };
+    }
 
-    function decryptMessage(sender, myName, message) {
-        let buddy = Cryptodog.buddies[sender];
-        let type = message.type;
+    function decrypt(message, sender) {
+        const myName = Cryptodog.me.nickname;
+        const encrypted = message.text;
 
-        if (type === 'public_key') {
-            if (!(buddy.mpPublicKey)) {
-                let publicKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(message.text));
-                buddy.setPublicKey(publicKey);
-                buddy.setSharedSecret(sharedSecret(Cryptodog.me.mpPrivateKey, publicKey));
-            }
-            return;
+        if (!encrypted[myName]) {
+            throw 'Message from ' + sender.nickname + ' is not encrypted for me';
+        }
+        if (!(sender.mpSecretKey)) {
+            throw 'Missing public key for ' + sender.nickname;
         }
 
-        if (type === 'public_key_request') {
-            if (!message.text || message.text === myName) {
-                meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
-            }
-            return;
+        const possibleRecipients = Object.keys(Cryptodog.buddies);
+        const missingRecipients = possibleRecipients.filter(r => (r !== sender.nickname && !(r in encrypted)));
+
+        const sortedRecipients = Object.keys(encrypted).sort();
+
+        // Verify HMAC
+        const hmacInput = CryptoJS.lib.WordArray.create();
+        for (let r of sortedRecipients) {
+            hmacInput.concat(CryptoJS.enc.Base64.parse(encrypted[r].message));
+            hmacInput.concat(CryptoJS.enc.Base64.parse(encrypted[r].iv));
+        }
+        if (!OTR.HLP.compare(encrypted[myName].hmac, HMAC(hmacInput, sender.mpSecretKey.hmac))) {
+            throw 'HMAC failure for message from ' + sender.nickname;
         }
 
-        if (type === 'message') {
-            let text = message['text'];
-            if (!text[myName] || typeof text[myName] !== 'object') {
-                throw 'Message from ' + sender + ' is not encrypted for me';
-            }
-
-            if (!(buddy.mpSecretKey)) {
-                // We don't have the sender's key - they're "borked".
-                // Request their key and warn the user.
-                meta.requestPublicKey(sender);
-                throw 'Missing public key for ' + sender;
-            }
-
-            var recipients = Object.keys(Cryptodog.buddies);
-            recipients.push(myName);
-            recipients.splice(recipients.indexOf(sender), 1);
-
-            // Find missing recipients: those for whom the message isn't encrypted
-            var missingRecipients = [];
-
-            for (var i = 0; i < recipients.length; i++) {
-                try {
-                    if (typeof text[recipients[i]] === 'object') {
-                        var noMessage = typeof text[recipients[i]]['message'] !== 'string';
-                        var noIV = typeof text[recipients[i]]['iv'] !== 'string';
-                        var noHMAC = typeof text[recipients[i]]['hmac'] !== 'string';
-
-                        if (noMessage || noIV || noHMAC) {
-                            missingRecipients.push(recipients[i]);
-                        }
-                    } else {
-                        missingRecipients.push(recipients[i]);
-                    }
-                } catch (err) {
-                    missingRecipients.push(recipients[i]);
-                }
-            }
-
-            // Sort recipients
-            var sortedRecipients = Object.keys(text).sort();
-
-            // Check HMAC
-            var hmac = CryptoJS.lib.WordArray.create();
-
-            for (var i = 0; i < sortedRecipients.length; i++) {
-                if (missingRecipients.indexOf(sortedRecipients[i]) < 0) {
-                    hmac.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['message']));
-                    hmac.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['iv']));
-                }
-            }
-
-            if (!OTR.HLP.compare(text[myName]['hmac'], HMAC(hmac, buddy.mpSecretKey['hmac']))) {
-                throw 'HMAC failure for message from ' + sender;
-            }
-
-            // Check IV reuse
-            if (usedIVs.indexOf(text[myName]['iv']) >= 0) {
-                throw 'IV reuse in message from ' + sender + '; possible replay attack';
-            }
-
-            usedIVs.push(text[myName]['iv']);
-
-            // Decrypt
-            var plaintext = decryptAES(
-                text[myName]['message'],
-                buddy.mpSecretKey['message'],
-                text[myName]['iv']
-            );
-
-            // Check tag
-            var messageTag = plaintext.clone();
-            for (var i = 0; i < sortedRecipients.length; i++) {
-                messageTag.concat(CryptoJS.enc.Base64.parse(text[sortedRecipients[i]]['hmac']));
-            }
-
-            if (createMessageTag(messageTag) !== message['tag']) {
-                throw 'Tag failure for message from ' + sender;
-            }
-
-            // Remove padding
-            if (plaintext.sigBytes < 64) {
-                throw 'Invalid plaintext size for message from ' + sender;
-            }
-
-            plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
-            try {
-                plaintext = plaintext.toString(CryptoJS.enc.Utf8);
-            } catch (e) {
-                return '';
-            }
-
-            // Only show "missing recipients" warning if the message is readable
-            if (missingRecipients.length) {
-                Cryptodog.addToConversation(missingRecipients, sender, 'groupChat', 'missingRecipients');
-            }
-            return plaintext;
+        // Check IV reuse
+        if (usedIVs.includes(encrypted[myName].iv)) {
+            throw 'IV reuse in message from ' + sender.nickname + '; possible replay attack';
         }
-    };
+        usedIVs.push(encrypted[myName]['iv']);
 
-    // First 256 bits are for encryption, last 256 bits are for HMAC.
-    // Represented as WordArrays.
-    function sharedSecret(myPrivateKey, theirPublicKey) {
-        let secret = CryptoJS.SHA512(nacl.scalarMult(
-            myPrivateKey, theirPublicKey).toWordArray());
+        // Decrypt
+        let plaintext = decryptAES(
+            encrypted[myName].message,
+            sender.mpSecretKey.message,
+            encrypted[myName].iv
+        );
 
-        return {
-            message: CryptoJS.lib.WordArray.create(secret.words.slice(0, 8)),
-            hmac: CryptoJS.lib.WordArray.create(secret.words.slice(8, 16))
-        };
-    };
+        // Remove padding
+        if (plaintext.sigBytes < 64) {
+            throw 'Invalid plaintext size for message from ' + sender.nickname;
+        }
+
+        // Check tag
+        const messageTag = plaintext.clone();
+        for (let r of sortedRecipients) {
+            messageTag.concat(CryptoJS.enc.Base64.parse(encrypted[r].hmac));
+        }
+        if (createMessageTag(messageTag) !== message.tag) {
+            throw 'Tag failure for message from ' + sender.nickname;
+        }
+
+        plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
+        try {
+            plaintext = plaintext.toString(CryptoJS.enc.Utf8);
+        } catch (e) {
+            return '';
+        }
+
+        return { plaintext, missingRecipients };
+    }
 
     function correctIvLength(iv) {
         var ivAsWordArray = CryptoJS.enc.Base64.parse(iv);
@@ -227,7 +175,7 @@ const multiparty = function () {
         ivAsArray.push(0);
 
         return CryptoJS.lib.WordArray.create(ivAsArray);
-    };
+    }
 
     // AES-CTR-256 encryption
     // No padding, starting IV of 0
@@ -241,7 +189,7 @@ const multiparty = function () {
         };
         var aesctr = CryptoJS.AES.encrypt(msg, c, opts);
         return aesctr.toString();
-    };
+    }
 
     // AES-CTR-256 decryption
     // No padding, starting IV of 0
@@ -255,14 +203,14 @@ const multiparty = function () {
         };
         var aesctr = CryptoJS.AES.decrypt(msg, c, opts);
         return aesctr;
-    };
+    }
 
     // HMAC-SHA512
     // Output: Base64
     // Key input: WordArray
     function HMAC(msg, key) {
         return CryptoJS.HmacSHA512(msg, key).toString(CryptoJS.enc.Base64);
-    };
+    }
 
     // Generate message tag. 8 rounds of SHA512
     // Input: WordArray
@@ -273,7 +221,7 @@ const multiparty = function () {
             message = CryptoJS.SHA512(message);
         }
         return message.toString(CryptoJS.enc.Base64);
-    };
+    }
 
     /*  We need the following two conversion functions because Crypto-JS operates on the WordArray type,
     but we use Uint8Array for compatibility with NaCl.
@@ -305,7 +253,9 @@ const multiparty = function () {
         newPrivateKey,
         publicKeyFromPrivate,
         fingerprint,
+        parsePublicKey,
+        sharedSecret,
         encrypt,
-        decryptMessage,
+        decrypt,
     };
 }();

@@ -52,13 +52,10 @@ class Buddy {
         }
     }
 
-    setPublicKey(publicKey) {
+    setKeys(publicKey, secretKey) {
         this.mpPublicKey = publicKey;
+        this.mpSecretKey = secretKey;
         this.mpFingerprint = multiparty.fingerprint(this.mpPublicKey);
-    }
-
-    setSharedSecret(sharedSecret) {
-        this.mpSecretKey = sharedSecret;
     }
 
     updateAuth(auth) {

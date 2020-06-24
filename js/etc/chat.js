@@ -27,7 +27,7 @@ const chat = function () {
     }
     function addMissingRecipients(buddies) {
         // TODO: implement
-        throw "Not implemented";
+        return;
     }
 
     function addEntry(chat, entry) {
@@ -293,6 +293,7 @@ const chat = function () {
         addLeave,
         addGroupMessage,
         addPrivateMessage,
-        addDecryptError
+        addDecryptError,
+        addMissingRecipients
     };
 }();
