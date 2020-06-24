@@ -226,7 +226,6 @@ Cryptodog.UI = {
                 $this.attr('data-utip', Cryptodog.locale['chatWindow']['statusAvailable']);
                 $this.mouseenter();
                 Cryptodog.me.status = 'online';
-
             }
             meta.sendStatus(Cryptodog.me.status);
         });
