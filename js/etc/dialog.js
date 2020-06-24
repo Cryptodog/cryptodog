@@ -18,12 +18,6 @@ const dialog = (function () {
             nickname: buddy.nickname,
             authenticated: Cryptodog.locale.auth.authenticated + ':',
             groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint,
-            authenticate: Cryptodog.locale.chatWindow.authenticate,
-            verifyUserIdentity: Cryptodog.locale.chatWindow.verifyUserIdentity,
-            secretQuestion: Cryptodog.locale.chatWindow.secretQuestion,
-            secretAnswer: Cryptodog.locale.chatWindow.secretAnswer,
-            ask: Cryptodog.locale.chatWindow.ask,
-            identityVerified: Cryptodog.locale.chatWindow.identityVerified
         });
 
         showBox(buddyInfo, {
