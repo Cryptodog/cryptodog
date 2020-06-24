@@ -17,8 +17,7 @@ Cryptodog.templates = {
     myInfo:
         '<div class="title">{{nickname}}</div>' +
         '<div id="displayInfo">' +
-        '{{groupFingerprint}}<br /><span id="multiPartyFingerprint"></span><br />' +
-        '{{otrFingerprint}}<br /><span id="otrFingerprint"></span></div>',
+        '{{groupFingerprint}}<br /><span id="multiPartyFingerprint"></span></div>',
 
     buddyInfo:
         '<div class="title">{{nickname}}</div>' +
@@ -26,21 +25,7 @@ Cryptodog.templates = {
         '<h2>{{authenticated}}</h2>' +
         '<span id="authenticated">&#x2713</span><span id="notAuthenticated">X</span><br /><br />' +
         '<div class="authInfo" style="height:95px">{{groupFingerprint}}<br />' +
-        '<span id="multiPartyFingerprint"></span><br />' +
-        '{{otrFingerprint}}<br /><span id="otrFingerprint"></span></div>' +
-        '<div class="authInfo authSMP"><span>{{verifyUserIdentity}}</span><br /><br />' +
-        '<form><input type="text" id="authQuestion" placeholder="{{secretQuestion}}" maxlength="64" />' +
-        '<input type="password" id="authAnswer" placeholder="{{secretAnswer}}" maxlength="64" />' +
-        '<input id="authSubmit" type="submit" value="{{ask}}" /></form>' +
-        '<p id="authVerified">{{identityVerified}}</p></div><br/></div>',
-
-    authRequest:
-        '<div class="title">{{authenticate}}</div>' +
-        '<p>{{authRequest}}<br/>' +
-        '<span id="authReplyQuestion"><strong>{{question}}</strong></span><br/>' +
-        '<form id="authReplyForm"><input id="authReply" type="password" placeholder="{{secretAnswer}}" maxlength="64" />' +
-        '<input id="authReplySubmit" type="submit" value="{{answer}}" /></form></p>' +
-        '<p>{{answerMustMatch}}</p>',
+        '<span id="multiPartyFingerprint"></span></div></div>',
 
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 

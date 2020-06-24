@@ -232,7 +232,8 @@ const chat = function () {
 
             if (current !== groupChat) {
                 const buddy = Cryptodog.buddies[Cryptodog.getBuddyNicknameByID(current)];
-                buddy.otr.sendMsg(message);
+                const ciphertext = multiparty.encrypt(message, [buddy]);
+                net.sendPrivateMessage(buddy.nickname, JSON.stringify(ciphertext));
                 addPrivateMessage(buddy, Cryptodog.me, timestamp, message);
                 return true;
             }

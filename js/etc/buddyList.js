@@ -94,9 +94,7 @@ const buddyList = function () {
         // Register menu item events.
         $menu.find('.option1').unbind().click(function (e) {
             e.stopPropagation();
-            buddy.ensureOTR(false, function () {
-                dialog.showBuddyInfo(buddy);
-            });
+            dialog.showBuddyInfo(buddy);
             $menu.hide();
         });
         $menu.find('.option2').unbind().click(function (e) {

@@ -79,6 +79,52 @@ const meta = function () {
         }
     }
 
+    function handlePrivateMessage(message) {
+        // If message is from someone not on buddy list, ignore
+        if (!(message.from in Cryptodog.buddies)) {
+            return;
+        }
+
+        const buddy = Cryptodog.buddies[message.from];
+        if (buddy.ignored()) {
+            return;
+        }
+
+        try {
+            var privateMessage = JSON.parse(message.text);
+        } catch (e) {
+            console.log(e);
+            return;
+        }
+
+        switch (privateMessage.type) {
+            case 'composing':
+                buddy.setComposing();
+                break;
+            case 'paused':
+                buddy.setPaused();
+                break;
+            case 'message':
+                const timestamp = chat.timestamp();
+                try {
+                    var decrypted = multiparty.decrypt(privateMessage, buddy);
+                } catch (e) {
+                    console.log(e);
+                    chat.addDecryptError(buddy, timestamp);
+                    return;
+                }
+
+                if (decrypted.plaintext) {
+                    chat.addPrivateMessage(buddy, buddy, timestamp, decrypted.plaintext);
+                }
+
+                buddy.setPaused();
+                break;
+            default:
+                console.log('Unknown private message type: ' + privateMessage.type);
+        }
+    }
+
     function sendPublicKey(encodedPublicKey) {
         net.sendGroupMessage(JSON.stringify({
             type: 'public_key',
@@ -128,6 +174,7 @@ const meta = function () {
 
     return {
         handleGroupMessage,
+        handlePrivateMessage,
         sendPublicKey,
         requestPublicKey,
         sendComposing,

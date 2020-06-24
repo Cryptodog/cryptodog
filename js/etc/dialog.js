@@ -4,14 +4,12 @@ const dialog = (function () {
     function showMyInfo(me) {
         let myInfo = Mustache.render(Cryptodog.templates['myInfo'], {
             nickname: me.nickname,
-            otrFingerprint: Cryptodog.locale.chatWindow.otrFingerprint,
             groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint
         });
         showBox(myInfo, {
             height: 250,
             closeable: true
         });
-        $('#otrFingerprint').text(formatFingerprint(me.otrKey.fingerprint()));
         $('#multiPartyFingerprint').text(formatFingerprint(me.mpFingerprint));
     }
 
@@ -19,7 +17,6 @@ const dialog = (function () {
         let buddyInfo = Mustache.render(Cryptodog.templates['buddyInfo'], {
             nickname: buddy.nickname,
             authenticated: Cryptodog.locale.auth.authenticated + ':',
-            otrFingerprint: Cryptodog.locale.chatWindow.otrFingerprint,
             groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint,
             authenticate: Cryptodog.locale.chatWindow.authenticate,
             verifyUserIdentity: Cryptodog.locale.chatWindow.verifyUserIdentity,
@@ -34,7 +31,6 @@ const dialog = (function () {
             closeable: true,
         });
 
-        $('#otrFingerprint').text(formatFingerprint(buddy.fingerprint));
         $('#multiPartyFingerprint').text(formatFingerprint(buddy.mpFingerprint));
 
         if (buddy.authenticated) {
@@ -48,81 +44,6 @@ const dialog = (function () {
         });
         $('#notAuthenticated').unbind('click').bind('click', function () {
             buddy.updateAuth(false);
-        });
-        $('#authSubmit').unbind('click').bind('click', function (e) {
-            e.preventDefault();
-            let question = $('#authQuestion').val();
-            let answer = $('#authAnswer').val();
-            if (answer.length === 0) {
-                return;
-            }
-            $('#authSubmit').val(Cryptodog.locale.chatWindow.asking);
-            $('#authSubmit').unbind('click').bind('click', function (e) {
-                e.preventDefault();
-            });
-            buddy.updateAuth(false);
-            answer = Cryptodog.prepareAnswer(answer, true, buddy.mpFingerprint);
-            buddy.otr.smpSecret(answer, question);
-        });
-    }
-
-    function showOTRProgress(start) {
-        let progressBar = '<div id="progressBar"><div id="fill"></div></div>';
-        showBox(progressBar, {
-            height: 250,
-            closeable: true,
-            onAppear: function () {
-                $('#fill').animate({ width: '100%', opacity: '1' }, {
-                    duration: 10000, easing: 'linear', start: start
-                });
-            }
-        });
-    }
-
-    function hideOTRProgress(state) {
-        $('#fill').stop().animate({ width: '100%', opacity: '1' }, 100, 'linear', function () {
-            $('#dialogBoxContent').fadeOut(function () {
-                $(this)
-                    .empty()
-                    .show();
-                if (state.close) {
-                    $('#dialogBoxClose').click();
-                }
-                state.cb();
-            });
-        });
-    }
-
-    function showSMPQuestion(buddy, question) {
-        let smpQuestion = Mustache.render(Cryptodog.templates.authRequest, {
-            authenticate: Cryptodog.locale.chatWindow.authenticate,
-            authRequest: Cryptodog.locale.chatWindow.authRequest.replace('(NICKNAME)', buddy.nickname),
-            answerMustMatch: Cryptodog.locale.chatWindow.answerMustMatch.replace('(NICKNAME)', buddy.nickname),
-            question: question,
-            answer: Cryptodog.locale.chatWindow.answer
-        });
-
-        $('#dialogBoxClose').click();
-
-        showBox(smpQuestion, {
-            height: 240,
-            closeable: true,
-
-            onAppear: function () {
-                $('#authReplySubmit')
-                    .unbind('click')
-                    .bind('click', function (e) {
-                        e.preventDefault();
-                        let answer = $('#authReply').val();
-                        answer = Cryptodog.prepareAnswer(answer, false, buddy.mpFingerprint);
-                        buddy.otr.smpSecret(answer);
-                        $('#dialogBox').hide();
-                    });
-            },
-
-            onClose: function () {
-                buddy.otr.smpSecret(CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16)));
-            }
         });
     }
 
@@ -194,8 +115,5 @@ const dialog = (function () {
     return {
         showMyInfo,
         showBuddyInfo,
-        showOTRProgress,
-        hideOTRProgress,
-        showSMPQuestion
     };
 })();

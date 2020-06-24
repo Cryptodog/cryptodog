@@ -15,7 +15,6 @@ Cryptodog.me = {
 	composing: false,
 	conversation: null,
 	nickname: null,
-	otrKey: null,
 	mpPrivateKey: null,
 	mpPublicKey: null,
 	mpFingerprint: null,
@@ -281,63 +280,6 @@ if (typeof (window) !== 'undefined') {
 			}
 		};
 
-		// Prepares necessary encryption key operations before WebSocket connection.
-		// Shows a progress bar while doing so.
-		var showKeyPreparationDialog = function (callback) {
-			Cryptodog.storage.getItem('persistenceEnabled', function (key) {
-				var key = key || {};
-				if (key.enabled) {
-					Cryptodog.me.mpPrivateKey = Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(key.mp));
-					Cryptodog.me.otrKey = DSA.parsePrivate(key.otr);
-				} else {
-					Cryptodog.me.mpPrivateKey = multiparty.newPrivateKey();
-				}
-
-				Cryptodog.me.mpPublicKey = multiparty.publicKeyFromPrivate(Cryptodog.me.mpPrivateKey);
-				Cryptodog.me.mpFingerprint = multiparty.fingerprint(Cryptodog.me.mpPublicKey.raw);
-
-				// If we already have keys, just skip to the callback.
-				if (Cryptodog.me.otrKey) {
-					callback();
-					return;
-				}
-
-				$('#loginInfo').text(Cryptodog.locale['loginMessage']['generatingKeys']);
-
-				// Add delay to key generation when on the file protocol
-				// Since the UI freezes when generating keys without WebWorkers
-				if (window.location.protocol === 'file:') {
-					setTimeout(function () {
-						prepareKeys(callback);
-					}, 100);
-				} else {
-					prepareKeys(callback);
-				}
-			});
-		};
-
-		// See above.
-		var prepareKeys = function (callback) {
-			// Create DSA key for OTR.
-			// file protocol doesn't support WebWorkers
-			if (window.location.protocol === 'file:') {
-				Cryptodog.me.otrKey = new DSA();
-				if (callback) {
-					callback();
-				}
-			} else {
-				DSA.createInWebWorker(
-					{ path: './js/lib/otr/dsa-webworker.js' },
-					function (key) {
-						Cryptodog.me.otrKey = key;
-						if (callback) {
-							callback();
-						}
-					}
-				);
-			}
-		};
-
 		// Language selector.
 		$('#languageSelect').click(function () {
 			$('#customServerDialog').hide();
@@ -395,75 +337,78 @@ if (typeof (window) !== 'undefined') {
 				Cryptodog.me.nickname = $('#nickname').val();
 				var autoIgnore;
 
-				showKeyPreparationDialog(function () {
-					Cryptodog.me.color = Cryptodog.color.pop();
-					$('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting']);
-					net.join(function () {
-						$('.conversationName').animate({ 'background-color': '#0087AF' });
+				Cryptodog.me.mpPrivateKey = multiparty.newPrivateKey();
+				Cryptodog.me.mpPublicKey = multiparty.publicKeyFromPrivate(Cryptodog.me.mpPrivateKey);
+				Cryptodog.me.mpFingerprint = multiparty.fingerprint(Cryptodog.me.mpPublicKey.raw);
 
-						meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
-						meta.requestPublicKey();
+				Cryptodog.me.color = Cryptodog.color.pop();
+				$('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting']);
 
-						clearInterval(autoIgnore);
+				net.join(function () {
+					$('.conversationName').animate({ 'background-color': '#0087AF' });
 
-						autoIgnore = setInterval(function () {
-							for (var nickname in Cryptodog.buddies) {
-								var buddy = Cryptodog.buddies[nickname];
+					meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
+					meta.requestPublicKey();
 
-								if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
-									buddy.toggleIgnored();
-									console.log('Automatically ignored ' + nickname);
-								}
+					clearInterval(autoIgnore);
 
-								buddy.messageCount = 0;
+					autoIgnore = setInterval(function () {
+						for (var nickname in Cryptodog.buddies) {
+							var buddy = Cryptodog.buddies[nickname];
+
+							if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
+								buddy.toggleIgnored();
+								console.log('Automatically ignored ' + nickname);
 							}
-						}, Cryptodog.maxMessageInterval);
 
-						$('#loginInfo').text('✓');
-						$('#status').attr('src', 'img/icons/checkmark.svg');
-						$('#fill')
-							.stop()
-							.animate(
-								{
-									width: '100%',
-									opacity: '1'
-								},
-								250,
-								'linear'
-							);
+							buddy.messageCount = 0;
+						}
+					}, Cryptodog.maxMessageInterval);
 
-						window.setTimeout(function () {
-							$('#dialogBoxClose').click();
-						}, 400);
+					$('#loginInfo').text('✓');
+					$('#status').attr('src', 'img/icons/checkmark.svg');
+					$('#fill')
+						.stop()
+						.animate(
+							{
+								width: '100%',
+								opacity: '1'
+							},
+							250,
+							'linear'
+						);
 
-						window.setTimeout(function () {
-							$('#loginOptions,#languages,#customServerDialog').fadeOut(200);
-							$('#version,#logoText,#loginInfo,#info').fadeOut(200);
-							$('#header').animate({ 'background-color': '#444' });
-							$('.logo').animate({ margin: '-11px 5px 0 0' });
+					window.setTimeout(function () {
+						$('#dialogBoxClose').click();
+					}, 400);
 
-							$('#login').fadeOut(200, function () {
-								$('#conversationInfo').fadeIn();
-								$('#conversationWrapper').fadeIn();
-								$('#optionButtons').fadeIn();
+					window.setTimeout(function () {
+						$('#loginOptions,#languages,#customServerDialog').fadeOut(200);
+						$('#version,#logoText,#loginInfo,#info').fadeOut(200);
+						$('#header').animate({ 'background-color': '#444' });
+						$('.logo').animate({ margin: '-11px 5px 0 0' });
 
-								$('#footer')
-									.delay(200)
-									.animate({ height: 60 }, function () {
-										$('#userInput').fadeIn(200, function () {
-											$('#userInputText').focus();
-										});
+						$('#login').fadeOut(200, function () {
+							$('#conversationInfo').fadeIn();
+							$('#conversationWrapper').fadeIn();
+							$('#optionButtons').fadeIn();
+
+							$('#footer')
+								.delay(200)
+								.animate({ height: 60 }, function () {
+									$('#userInput').fadeIn(200, function () {
+										$('#userInputText').focus();
 									});
+								});
 
-								buddyList.initialize();
-							});
-						}, 800);
+							buddyList.initialize();
+						});
+					}, 800);
 
-						document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
-						$('.conversationName').text(document.title);
+					document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
+					$('.conversationName').text(document.title);
 
-						Cryptodog.storage.setItem('nickname', Cryptodog.me.nickname);
-					});
+					Cryptodog.storage.setItem('nickname', Cryptodog.me.nickname);
 				});
 			}
 			return false;

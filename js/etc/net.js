@@ -118,23 +118,7 @@ const net = function () {
     }
 
     function onPrivateMessage(message) {
-        // If message is from me, ignore
-        if (message.from === Cryptodog.me.nickname) {
-            return true;
-        }
-
-        // If message is from someone not on buddy list, ignore
-        if (!Cryptodog.buddies.hasOwnProperty(message.from)) {
-            return true;
-        }
-
-        const buddy = Cryptodog.buddies[message.from];
-        if (buddy.ignored()) {
-            return true;
-        }
-
-        buddy.setPaused();
-        buddy.otr.receiveMsg(message.text);
+        meta.handlePrivateMessage(message);
     }
 
     function onLeave(message) {

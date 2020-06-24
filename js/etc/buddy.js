@@ -3,7 +3,6 @@ class Buddy {
         this.nickname = nickname;
         this.id = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
         this.status = 'online';
-        this.otr = Cryptodog.otr.add(nickname);
         this.color = Cryptodog.color.pop();
         // Regularly reset at the interval defined by Cryptodog.maxMessageInterval.
         this.messageCount = 0;
@@ -24,17 +23,6 @@ class Buddy {
 
     setPaused() {
         $('#buddy-' + this.id).removeClass('composing');
-    }
-
-    ensureOTR(close, cb) {
-        if (this.fingerprint) {
-            return cb(this.fingerprint);
-        }
-        let buddy = this;
-        dialog.showOTRProgress(function () {
-            buddy.genFingerState = { close: close, cb: cb };
-            buddy.otr.sendQueryMsg();
-        });
     }
 
     ignored() {

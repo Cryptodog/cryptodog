@@ -120,7 +120,9 @@ const multiparty = function () {
             hmacInput.concat(CryptoJS.enc.Base64.parse(encrypted[r].message));
             hmacInput.concat(CryptoJS.enc.Base64.parse(encrypted[r].iv));
         }
-        if (!OTR.HLP.compare(encrypted[myName].hmac, HMAC(hmacInput, sender.mpSecretKey.hmac))) {
+
+        // XXX: HMAC compare should be constant time
+        if (encrypted[myName].hmac !== HMAC(hmacInput, sender.mpSecretKey.hmac)) {
             throw 'HMAC failure for message from ' + sender.nickname;
         }
 
@@ -128,7 +130,7 @@ const multiparty = function () {
         if (usedIVs.includes(encrypted[myName].iv)) {
             throw 'IV reuse in message from ' + sender.nickname + '; possible replay attack';
         }
-        usedIVs.push(encrypted[myName]['iv']);
+        usedIVs.push(encrypted[myName].iv);
 
         // Decrypt
         let plaintext = decryptAES(
