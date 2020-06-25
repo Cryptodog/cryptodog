@@ -1,36 +1,40 @@
-'use strict';
-localforage.config({ name: 'Cryptodog' });
+const storage = function () {
+    'use strict';
 
-// Functions for interfacing with localforage
-Cryptodog.storage = {
-    setItem: function(key, value) {
-        localforage.setItem(key, value, function(err, value) {
+    localforage.config({
+        name: 'Cryptodog'
+    });
+
+    function setItem(key, value) {
+        localforage.setItem(key, value, function (err) {
             if (err) {
                 console.error(err);
-            } else {
-                console.log('Set (' + key + ', ' + value + ') in storage');
-            }
-        });
-    },
-    
-    getItem: function(key, callback) {
-        localforage.getItem(key, function(err, value) {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log('Read (' + key + ', ' + value + ') from storage');
-            }
-            callback(value);
-        });
-    },
-    
-    removeItem: function(key) {
-        localforage.removeItem(key, function(key, err) {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log('Removed ' + key + ' from storage');
             }
         });
     }
-};
+
+    function getItem(key, successCallback) {
+        localforage.getItem(key, function (err, value) {
+            if (err) {
+                console.error(err);
+            } else {
+                successCallback(value);
+            }
+        });
+    }
+
+    function removeItem(key) {
+        localforage.removeItem(key, function (err) {
+            if (err) {
+                console.error(err);
+            }
+        });
+    }
+
+    return {
+        setItem,
+        getItem,
+        removeItem,
+    };
+}();
+

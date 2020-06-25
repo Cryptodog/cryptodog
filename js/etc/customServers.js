@@ -1,19 +1,19 @@
-$(window).ready(function() {
+$(window).ready(function () {
     'use strict';
 
-    var updateCustomServers = function() {
+    var updateCustomServers = function () {
         var customServers = {};
-        $('#customServerSelector option').each(function() {
+        $('#customServerSelector option').each(function () {
             var name = $(this).val();
             customServers[name] = {};
             customServers[name].domain = $(this).attr('data-domain');
             customServers[name].xmpp = $(this).attr('data-xmpp');
             customServers[name].relay = $(this).attr('data-relay');
         });
-        Cryptodog.storage.setItem('customServers', JSON.stringify(customServers));
+        storage.setItem('customServers', customServers);
     };
 
-    $('#customServer').click(function() {
+    $('#customServer').click(function () {
         if (!document.getElementById('customServerSelector').firstChild) {
             $('#customServerSelector').append(
                 Mustache.render(Cryptodog.templates['customServer'], {
@@ -31,40 +31,40 @@ $(window).ready(function() {
         }
 
         $('#languages').hide();
-        $('#footer').animate({ height: 220 }, function() {
+        $('#footer').animate({ height: 220 }, function () {
             $('#customServerDialog').fadeIn();
             $('#customName').val(Cryptodog.net.currentServer.name);
             $('#customRelay').val(Cryptodog.net.currentServer.relay);
 
             $('#customServerReset')
                 .val(Cryptodog.locale['loginWindow']['reset'])
-                .click(function() {
+                .click(function () {
                     $('#customName').val('Cryptodog');
                     $('#customRelay').val(Cryptodog.net.defaultServer.relay);
 
-                    Cryptodog.storage.removeItem('serverName');
-                    Cryptodog.storage.removeItem('domain');
-                    Cryptodog.storage.removeItem('conferenceServer');
-                    Cryptodog.storage.removeItem('relay');
+                    storage.removeItem('serverName');
+                    storage.removeItem('domain');
+                    storage.removeItem('conferenceServer');
+                    storage.removeItem('relay');
                 });
 
             $('#customServerSubmit')
                 .val(Cryptodog.locale['chatWindow']['cont'])
-                .click(function() {
-                    $('#customServerDialog').fadeOut(200, function() {
+                .click(function () {
+                    $('#customServerDialog').fadeOut(200, function () {
                         $('#footer').animate({ height: 14 });
                     });
 
                     Cryptodog.net.currentServer.name = $('#customName').val();
                     Cryptodog.net.currentServer.relay = $('#customRelay').val();
-                    Cryptodog.storage.setItem('serverName', Cryptodog.net.currentServer.name);
-                    Cryptodog.storage.setItem('relay', Cryptodog.net.currentServer.relay);
+                    storage.setItem('serverName', Cryptodog.net.currentServer.name);
+                    storage.setItem('relay', Cryptodog.net.currentServer.relay);
                 });
             $('#customDomain').select();
         });
     });
 
-    $('#customServerSave').click(function() {
+    $('#customServerSave').click(function () {
         $('#customServerDelete')
             .val('Delete')
             .attr('data-deleteconfirm', '0')
@@ -77,7 +77,7 @@ $(window).ready(function() {
         var serverIsInList = false;
         $('#customServerSelector')
             .children()
-            .each(function() {
+            .each(function () {
                 if ($('#customName').val() === $(this).val()) {
                     serverIsInList = true;
 
@@ -106,7 +106,7 @@ $(window).ready(function() {
                 })
             );
         } else {
-            $.each($('#customServerSelector option'), function(index, value) {
+            $.each($('#customServerSelector option'), function (index, value) {
                 if ($(value).val() === $('#customName').val()) {
                     $(value).attr('data-domain', $('#customDomain').val());
                     $(value).attr('data-relay', $('#customRelay').val());
@@ -117,14 +117,14 @@ $(window).ready(function() {
         updateCustomServers();
     });
 
-    $('#customServerDelete').click(function() {
+    $('#customServerDelete').click(function () {
         $('#customServerSave')
             .val('Save')
             .attr('data-saveconfirm', '0')
             .removeClass('confirm');
 
         if ($('#customServerDelete').attr('data-deleteconfirm') === '1') {
-            $.each($('#customServerSelector option'), function(index, value) {
+            $.each($('#customServerSelector option'), function (index, value) {
                 if ($(value).val() === $('#customName').val()) {
                     $(value).remove();
                 }
@@ -142,7 +142,7 @@ $(window).ready(function() {
         }
     });
 
-    $('#customServerSelector').change(function() {
+    $('#customServerSelector').change(function () {
         $('#customServerDelete')
             .val('Delete')
             .attr('data-deleteconfirm', '0')

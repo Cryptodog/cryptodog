@@ -191,12 +191,12 @@ Cryptodog.UI = {
         $('#audioToggle').click(function () {
             if (Cryptodog.allowSoundNotifications) {
                 Cryptodog.allowSoundNotifications = false;
-                Cryptodog.storage.setItem('audioNotifications', 'false');
+                storage.setItem('audioNotifications', false);
                 $('#audioToggle').attr('data-utip', 'Audio notifications: off');
                 $('#audioToggle').attr('src', 'img/icons/volume-mute.svg');
             } else {
                 Cryptodog.allowSoundNotifications = true;
-                Cryptodog.storage.setItem('audioNotifications', 'true');
+                storage.setItem('audioNotifications', true);
                 $('#audioToggle').attr('data-utip', 'Audio notifications: on');
                 $('#audioToggle').attr('src', 'img/icons/volume-medium.svg');
             }
@@ -239,7 +239,7 @@ Cryptodog.UI = {
                 $this.mouseenter();
 
                 Cryptodog.desktopNotifications = true;
-                Cryptodog.storage.setItem('desktopNotifications', 'true');
+                storage.setItem('desktopNotifications', true);
 
                 var notifStatus = Notification.permission;
                 if (notifStatus == 'denied') {
@@ -249,7 +249,7 @@ Cryptodog.UI = {
                     // check if user actually accepted
                     if (Notification.permission == 'denied') {
                         Cryptodog.desktopNotifications = false;
-                        Cryptodog.storage.setItem('desktopNotifications', 'false');
+                        storage.setItem('desktopNotifications', false);
                     }
                 } else if (notifStatus == 'unknown') {
                     // browser doesn't support desktop notifications
@@ -261,7 +261,7 @@ Cryptodog.UI = {
                     $this.mouseenter();
 
                     Cryptodog.desktopNotifications = false;
-                    Cryptodog.storage.setItem('desktopNotifications', 'false');
+                    storage.setItem('desktopNotifications', false);
                 }
             } else {
                 $this.attr('src', 'img/icons/bubble2.svg');
@@ -270,7 +270,7 @@ Cryptodog.UI = {
                 $this.mouseenter();
 
                 Cryptodog.desktopNotifications = false;
-                Cryptodog.storage.setItem('desktopNotifications', 'false');
+                storage.setItem('desktopNotifications', false);
             }
         });
 
@@ -297,7 +297,6 @@ Cryptodog.UI = {
                 var lang = $(this).attr('data-locale');
                 $('#languages').fadeOut(200, function () {
                     Cryptodog.locale.set(lang, true);
-                    Cryptodog.storage.setItem('language', lang);
                     $('#footer').animate({ height: 14 });
                 });
             });
@@ -326,20 +325,10 @@ Cryptodog.UI = {
     */
     windowEventBindings: function () {
         $(window).ready(function () {
-            // Initialize language settings.
-            Cryptodog.storage.getItem('language', function (key) {
-                if (key) {
-                    Cryptodog.locale.set(key, true);
-                } else {
-                    Cryptodog.locale.set(window.navigator.language.toLowerCase());
-                }
-            });
-
             // Load custom servers.
-            Cryptodog.storage.getItem('customServers', function (key) {
-                if (key) {
+            storage.getItem('customServers', function (servers) {
+                if (servers) {
                     $('#customServerSelector').empty();
-                    var servers = $.parseJSON(key);
 
                     $.each(servers, function (name) {
                         $('#customServerSelector').append(
@@ -355,10 +344,10 @@ Cryptodog.UI = {
             });
 
             // Load nickname settings.
-            Cryptodog.storage.getItem('nickname', function (key) {
-                if (key) {
+            storage.getItem('nickname', function (value) {
+                if (value) {
                     $('#nickname').animate({ color: 'transparent' }, function () {
-                        $(this).val(key);
+                        $(this).val(value);
                         $(this).animate({ color: '#FFF' });
                     });
                 }
@@ -366,14 +355,14 @@ Cryptodog.UI = {
 
             // Load notification settings.
             window.setTimeout(function () {
-                Cryptodog.storage.getItem('desktopNotifications', function (key) {
-                    if (key === 'true') {
+                storage.getItem('desktopNotifications', function (value) {
+                    if (value) {
                         $('#notifications').click();
                         $('#utip').hide();
                     }
                 });
-                Cryptodog.storage.getItem('audioNotifications', function (key) {
-                    if (key === 'true') {
+                storage.getItem('audioNotifications', function (value) {
+                    if (value) {
                         $('#audioToggle').click();
                     }
                 });

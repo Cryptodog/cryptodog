@@ -284,7 +284,6 @@ if (typeof (window) !== 'undefined') {
 				var lang = $(this).attr('data-locale');
 				$('#languages').fadeOut(200, function () {
 					Cryptodog.locale.set(lang, true);
-					Cryptodog.storage.setItem('language', lang);
 					$('#footer').animate({ 'height': 14 });
 				});
 			});
@@ -397,7 +396,7 @@ if (typeof (window) !== 'undefined') {
 					document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
 					$('.conversationName').text(document.title);
 
-					Cryptodog.storage.setItem('nickname', Cryptodog.me.nickname);
+					storage.setItem('nickname', Cryptodog.me.nickname);
 				});
 			}
 			return false;
