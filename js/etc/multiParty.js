@@ -151,8 +151,8 @@ const multiparty = function () {
         if (createMessageTag(messageTag) !== message.tag) {
             throw 'Tag failure for message from ' + sender.nickname;
         }
-        
-        plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes-64);
+
+        plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
         plaintext = Uint8Array.fromWordArray(plaintext);
 
         return { plaintext, missingRecipients };
@@ -241,7 +241,7 @@ const multiparty = function () {
         while (bytePos < bytes.length) {
             bytes[bytePos] = (wordArray.words[wordPos] >> shift) & 0xFF;
             shift -= 8;
-            
+
             bytePos++;
             if (shift == -8) {
                 wordPos++;

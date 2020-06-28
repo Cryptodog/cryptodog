@@ -84,16 +84,14 @@ const meta = function () {
                             if (decrypted.plaintext) {
                                 chat.addGroupMessage(buddy, timestamp, frame.text);
                             }
-            
+
                             buddy.setPaused();
                             break;
                         default:
-                            console.log(`unhandled frame:`, frame.constructor);
+                            console.log('unhandled frame:', frame.constructor);
                             break;
                     }
                 }
-
-    
                 break;
             default:
                 console.log('Unknown group message type: ' + groupMessage.type);
