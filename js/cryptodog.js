@@ -42,9 +42,6 @@ var notifImg = "img/logo-128.png";
 
 Notification.requestPermission();
 
-// checks if a string is composed of displayable ASCII chars
-var ascii = /^[ -~]+$/;
-
 /*
 -------------------
 END GLOBAL SCOPE
