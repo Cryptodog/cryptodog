@@ -287,7 +287,7 @@ Cryptodog.UI = {
 
                     $.each(servers, function (name) {
                         $('#customServerSelector').append(
-                            Mustache.render(Cryptodog.templates['customServer'], {
+                            Mustache.render(template['customServer'], {
                                 name: name,
                                 domain: servers[name]['domain'],
                                 xmpp: servers[name]['xmpp'],

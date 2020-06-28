@@ -124,7 +124,7 @@ const chat = function () {
                Mustache.js also encodes forward slashes, so we unescape them at the end to allow links. */
             this.escapedBody = Mustache.escape(this.body).replace(/&#x2F;/g, '/');
 
-            return Mustache.render(Cryptodog.templates.message, {
+            return Mustache.render(template.message, {
                 nickname: this.buddy.nickname,
                 timestamp: this.timestamp,
                 // body is not HTML-encoded in the message template.
@@ -135,7 +135,7 @@ const chat = function () {
     };
     class Join extends Entry {
         render() {
-            return Mustache.render(Cryptodog.templates.userJoin, {
+            return Mustache.render(template.userJoin, {
                 nickname: this.buddy.nickname,
                 timestamp: this.timestamp,
                 color: this.buddy.color
@@ -144,7 +144,7 @@ const chat = function () {
     }
     class Leave extends Entry {
         render() {
-            return Mustache.render(Cryptodog.templates.userLeave, {
+            return Mustache.render(template.userLeave, {
                 nickname: this.buddy.nickname,
                 timestamp: this.timestamp,
             });
@@ -152,7 +152,7 @@ const chat = function () {
     }
     class DecryptError extends Entry {
         render() {
-            return Mustache.render(Cryptodog.templates.decryptError, {
+            return Mustache.render(template.decryptError, {
                 nickname: this.buddy.nickname,
             });
         }

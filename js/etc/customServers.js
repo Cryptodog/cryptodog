@@ -16,14 +16,14 @@ $(window).ready(function () {
     $('#customServer').click(function () {
         if (!document.getElementById('customServerSelector').firstChild) {
             $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
+                Mustache.render(template['customServer'], {
                     name: 'Cryptodog',
                     relay: 'wss://crypto.dog/ws'
                 })
             );
 
             $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
+                Mustache.render(template['customServer'], {
                     name: 'Cryptodog (Tor Hidden Service)',
                     relay: 'ws://doggyfipznipbaia.onion/ws'
                 })
@@ -98,7 +98,7 @@ $(window).ready(function () {
 
         if (!serverIsInList) {
             $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
+                Mustache.render(template['customServer'], {
                     name: $('#customName').val(),
                     domain: $('#customDomain').val(),
                     xmpp: $('#customConferenceServer').val(),

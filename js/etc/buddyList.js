@@ -25,7 +25,7 @@ const buddyList = function () {
 
     function add(buddy) {
         $('#buddyList').queue(function () {
-            const buddyTemplate = Mustache.render(Cryptodog.templates.buddy, {
+            const buddyTemplate = Mustache.render(template.buddy, {
                 buddyID: buddy.id,
                 nickname: buddy.nickname,
                 status: buddy.status
@@ -67,7 +67,6 @@ const buddyList = function () {
                 }
             }
         });
-        Cryptodog.rebindDataURIs();
     }
 
     function bindBuddyContextMenu(e, buddy) {
@@ -76,7 +75,7 @@ const buddyList = function () {
 
         // Create buddy menu element if it doesn't exist.
         if ($('#' + buddy.id + '-menu').length === 0) {
-            $('body').append(Mustache.render(Cryptodog.templates.buddyMenu, {
+            $('body').append(Mustache.render(template.buddyMenu, {
                 buddyID: buddy.id,
                 displayInfo: Cryptodog.locale.chatWindow.displayInfo,
                 ignore: Cryptodog.locale.chatWindow[buddy.ignored() ? 'unignore' : 'ignore']

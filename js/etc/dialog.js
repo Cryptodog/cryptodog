@@ -2,7 +2,7 @@ const dialog = (function () {
     'use strict';
 
     function showMyInfo(me) {
-        let myInfo = Mustache.render(Cryptodog.templates['myInfo'], {
+        let myInfo = Mustache.render(template.myInfo, {
             nickname: me.nickname,
             groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint
         });
@@ -14,7 +14,7 @@ const dialog = (function () {
     }
 
     function showBuddyInfo(buddy) {
-        let buddyInfo = Mustache.render(Cryptodog.templates['buddyInfo'], {
+        let buddyInfo = Mustache.render(template.buddyInfo, {
             nickname: buddy.nickname,
             authenticated: Cryptodog.locale.auth.authenticated + ':',
             groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint,

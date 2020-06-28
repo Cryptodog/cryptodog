@@ -1,7 +1,5 @@
-// Cryptodog templates for use with mustache.js.
 'use strict';
-
-Cryptodog.templates = {
+const template = {
     customServer: '<option data-relay="{{relay}}">' + '{{name}}</option>',
 
     buddy:
