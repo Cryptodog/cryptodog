@@ -26,12 +26,7 @@ const dialog = (function () {
         });
 
         $('#multiPartyFingerprint').text(formatFingerprint(buddy.mpFingerprint));
-
-        if (buddy.authenticated) {
-            buddy.updateAuth(true);
-        } else {
-            buddy.updateAuth(false);
-        }
+        buddy.updateAuth(buddy.authenticated);
 
         $('#authenticated').unbind('click').bind('click', function () {
             buddy.updateAuth(true);
