@@ -147,20 +147,6 @@ if (typeof (window) !== 'undefined') {
 			}
 		};
 
-		// Handle click event on all embedded data URI messages
-		Cryptodog.rebindDataURIs = function () {
-			function handleDataUriClick() {
-				Cryptodog.UI.openDataInNewWindow(this.getAttribute("data-uri-data"));
-			}
-
-			var clickables = document.querySelectorAll(".data-uri-clickable");
-			clickables.forEach(function (link, i) {
-				var linkClone = link.cloneNode(true);
-				link.parentNode.replaceChild(linkClone, link);
-				linkClone.addEventListener("click", handleDataUriClick.bind(link));
-			});
-		};
-
 		// Executes on user logout.
 		Cryptodog.logout = function () {
 			Cryptodog.UI.logout();
