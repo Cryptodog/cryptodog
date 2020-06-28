@@ -257,29 +257,6 @@ Cryptodog.UI = {
             Cryptodog.logout();
         });
 
-        // Language selector.
-        $('#languageSelect').click(function () {
-            $('#customServerDialog').hide();
-            $('#languages li').css({ color: '#FFF', 'font-weight': 'normal' });
-
-            $('[data-locale=' + Cryptodog.locale['language'] + ']').css({
-                color: '#CCC',
-                'font-weight': 'bold'
-            });
-
-            $('#footer').animate({ height: 190 }, function () {
-                $('#languages').fadeIn();
-            });
-
-            $('#languages li').click(function () {
-                var lang = $(this).attr('data-locale');
-                $('#languages').fadeOut(200, function () {
-                    Cryptodog.locale.set(lang, true);
-                    $('#footer').animate({ height: 14 });
-                });
-            });
-        });
-
         // Login form.
         $('#conversationName').click(function () {
             $(this).select();
