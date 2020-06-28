@@ -43,12 +43,12 @@ class Connection {
         this.messageHandlers[type] = handler;
     }
 
-    send(event, data) {
+    send(type, data) {
         if (!this.isOpen()) {
             return;
         }
         const message = data ? JSON.stringify(data) : '';
-        this.websocket.send(event + message);
+        this.websocket.send(type + message);
     }
 
     disconnect() {
