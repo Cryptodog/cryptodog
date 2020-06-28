@@ -161,11 +161,6 @@ if (typeof (window) !== 'undefined') {
 			Cryptodog.color.reset();
 		};
 
-		// Get color by nickname
-		Cryptodog.getUserColor = function (nickname) {
-			return nickname === Cryptodog.me.nickname ? Cryptodog.me.color : Cryptodog.buddies[nickname].color;
-		};
-
 		// Handle new message count
 		Cryptodog.newMessageCount = function (count) {
 			if (Cryptodog.me.windowFocus) {
