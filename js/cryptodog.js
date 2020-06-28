@@ -63,8 +63,6 @@ if (typeof (window) !== 'undefined') {
 
 		Cryptodog.UI.setVersion(Cryptodog.version);
 
-		Cryptodog.conversationBuffers = {};
-
 		/*
 		-------------------
 		GLOBAL INTERFACE FUNCTIONS
@@ -175,7 +173,6 @@ if (typeof (window) !== 'undefined') {
 			}
 
 			Cryptodog.color.reset();
-			Cryptodog.conversationBuffers = {};
 		};
 
 		// Get color by nickname
