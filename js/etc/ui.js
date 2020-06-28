@@ -46,28 +46,6 @@ Cryptodog.UI = {
         });
     },
 
-    // Open base64 Data URI in new window.
-    openDataInNewWindow: function (url) {
-        var win = window.open();
-        var image = new Image();
-        image.src = url;
-        win.document.write(image.outerHTML);
-        win.focus();
-    },
-
-    addDataLinks: function (message) {
-        // Make sure the string is a legitimate data URI, and is of an accepted image format.
-        var re = /data:image\/(png|jpeg|gif);(charset=[\w-]+|base64)?,\S+/gi;
-        return message.replace(re, '<a data-uri-data="$&" class="data-uri-clickable" href="#">[Embedded image]</a>');
-    },
-
-    // Convert message URLs to links. Used internally.
-    addLinks: function (message) {
-        // Handle image data URIs gracefully:
-        message = Cryptodog.UI.addDataLinks(message);
-        return message.autoLink();
-    },
-
     // Simple text formatting
     stylizeText: function (text) {
         // Disable text formatting in messages that contain links to avoid interference
