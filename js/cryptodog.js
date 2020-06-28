@@ -263,12 +263,7 @@ if (typeof (window) !== 'undefined') {
 			if ($('#conversationName').val() === '') {
 				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
 				$('#conversationName').select();
-			}
-			else if (!$('#conversationName').val().match(/^\w{1,1023}$/)) {
-				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['conversationAlphanumeric']);
-				$('#conversationName').select();
-			}
-			else if ($('#nickname').val() === '') {
+			} else if ($('#nickname').val() === '') {
 				Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname']);
 				$('#nickname').select();
 			}
