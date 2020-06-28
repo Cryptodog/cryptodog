@@ -158,6 +158,17 @@ const chat = function () {
         }
     }
 
+    function sendGroupWrap(envelope) {
+        const ciphertext = multiparty.encrypt(envelope.encode(), Object.values(Cryptodog.buddies));
+        net.sendGroupMessage(JSON.stringify(ciphertext));
+    }
+
+    function sendPrivateWrap(buddyName, envelope) {
+        const buddy = Cryptodog.buddies[buddyName];
+        const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
+        net.sendGroupMessage(JSON.stringify(ciphertext));
+    }
+
     $(document).ready(function () {
         'use strict';
         $('#conversationWindow').scroll(function () {
@@ -230,16 +241,19 @@ const chat = function () {
                 return true;
             }
 
+            let envelope = new wrap.Envelope();
+            envelope.add(new wrap.TextMessage(message));
+
             if (current !== groupChat) {
                 const buddy = Cryptodog.buddies[Cryptodog.getBuddyNicknameByID(current)];
-                const ciphertext = multiparty.encrypt(message, [buddy]);
+                const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
                 net.sendPrivateMessage(buddy.nickname, JSON.stringify(ciphertext));
                 addPrivateMessage(buddy, Cryptodog.me, timestamp, message);
                 return true;
             }
 
             if (Object.keys(Cryptodog.buddies).length) {
-                const ciphertext = multiparty.encrypt(message, Object.values(Cryptodog.buddies));
+                const ciphertext = multiparty.encrypt(envelope.encode(), Object.values(Cryptodog.buddies));
                 let missingRecipients = [];
                 for (let b in Cryptodog.buddies) {
                     if (typeof (ciphertext['text'][b]) !== 'object') {
@@ -295,6 +309,8 @@ const chat = function () {
         addGroupMessage,
         addPrivateMessage,
         addDecryptError,
-        addMissingRecipients
+        addMissingRecipients,
+        sendGroupWrap,
+        sendPrivateWrap
     };
 }();

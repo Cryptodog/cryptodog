@@ -37,8 +37,8 @@ const multiparty = function () {
     }
 
     function encrypt(plaintext, recipients) {
-        // Convert from UTF-8
-        plaintext = CryptoJS.enc.Utf8.parse(plaintext);
+        // Convert from Uint8Array
+        plaintext = plaintext.toWordArray();
 
         // Add 64 bytes of padding
         plaintext.concat(CryptoJS.lib.WordArray.random(64));
@@ -139,7 +139,6 @@ const multiparty = function () {
             encrypted[myName].iv
         );
 
-        // Remove padding
         if (plaintext.sigBytes < 64) {
             throw 'Invalid plaintext size for message from ' + sender.nickname;
         }
@@ -152,13 +151,9 @@ const multiparty = function () {
         if (createMessageTag(messageTag) !== message.tag) {
             throw 'Tag failure for message from ' + sender.nickname;
         }
-
-        plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes - 64);
-        try {
-            plaintext = plaintext.toString(CryptoJS.enc.Utf8);
-        } catch (e) {
-            return '';
-        }
+        
+        plaintext = CryptoJS.lib.WordArray.create(plaintext.words, plaintext.sigBytes-64);
+        plaintext = Uint8Array.fromWordArray(plaintext);
 
         return { plaintext, missingRecipients };
     }
@@ -237,18 +232,24 @@ const multiparty = function () {
     };
 
     Uint8Array.fromWordArray = function (wordArray) {
-        var len = wordArray.words.length,
-            u8_array = new Uint8Array(len << 2),
-            offset = 0, word, i;
+        // temporary workaround, the previous implementation was awful
+        var bytes = new Uint8Array(wordArray.sigBytes);
+        var bytePos = 0;
+        var shift = 24;
+        var wordPos = 0;
 
-        for (i = 0; i < len; i++) {
-            word = wordArray.words[i];
-            u8_array[offset++] = word >> 24;
-            u8_array[offset++] = (word >> 16) & 0xff;
-            u8_array[offset++] = (word >> 8) & 0xff;
-            u8_array[offset++] = word & 0xff;
+        while (bytePos < bytes.length) {
+            bytes[bytePos] = (wordArray.words[wordPos] >> shift) & 0xFF;
+            shift -= 8;
+            
+            bytePos++;
+            if (shift == -8) {
+                wordPos++;
+                shift = 24;
+            }
         }
-        return u8_array;
+
+        return bytes;
     };
 
     return {

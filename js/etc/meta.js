@@ -28,18 +28,6 @@ const meta = function () {
         }
 
         switch (groupMessage.type) {
-            case 'away':
-                buddy.setStatus('away');
-                break;
-            case 'online':
-                buddy.setStatus('online');
-                break;
-            case 'composing':
-                buddy.setComposing();
-                break;
-            case 'paused':
-                buddy.setPaused();
-                break;
             case 'public_key':
                 if (!buddy.mpPublicKey) {
                     try {
@@ -65,14 +53,47 @@ const meta = function () {
                     return;
                 }
 
-                if (decrypted.missingRecipients.length) {
-                    chat.addMissingRecipients(decrypted.missingRecipients);
-                }
-                if (decrypted.plaintext) {
-                    chat.addGroupMessage(buddy, timestamp, decrypted.plaintext);
+                // Parse Wrap frames in group message.
+                try {
+                    var envelope = wrap.Envelope.parse(decrypted.plaintext);
+                } catch (e) {
+                    console.log(e);
+                    return;
                 }
 
-                buddy.setPaused();
+                console.log(envelope);
+
+                for (let frame of envelope.frames) {
+                    switch (frame.constructor) {
+                        case wrap.Composing:
+                            buddy.setComposing();
+                            break;
+                        case wrap.Paused:
+                            buddy.setPaused();
+                            break;
+                        case wrap.Online:
+                            buddy.setStatus('online');
+                            break;
+                        case wrap.Away:
+                            buddy.setStatus('away');
+                            break;
+                        case wrap.TextMessage:
+                            if (decrypted.missingRecipients.length) {
+                                chat.addMissingRecipients(decrypted.missingRecipients);
+                            }
+                            if (decrypted.plaintext) {
+                                chat.addGroupMessage(buddy, timestamp, frame.text);
+                            }
+            
+                            buddy.setPaused();
+                            break;
+                        default:
+                            console.log(`unhandled frame:`, frame.constructor);
+                            break;
+                    }
+                }
+
+    
                 break;
             default:
                 console.log('Unknown group message type: ' + groupMessage.type);
@@ -98,12 +119,6 @@ const meta = function () {
         }
 
         switch (privateMessage.type) {
-            case 'composing':
-                buddy.setComposing();
-                break;
-            case 'paused':
-                buddy.setPaused();
-                break;
             case 'message':
                 const timestamp = chat.timestamp();
                 try {
@@ -115,7 +130,26 @@ const meta = function () {
                 }
 
                 if (decrypted.plaintext) {
-                    chat.addPrivateMessage(buddy, buddy, timestamp, decrypted.plaintext);
+                    try {
+                        var envelope = wrap.Envelope.parse(decrypted.plaintext);
+                    } catch (e) {
+                        console.log(e);
+                        return;
+                    }
+
+                    for (let frame of envelope.frames) {
+                        switch (frame.constructor) {
+                            case wrap.TextMessage:
+                                chat.addPrivateMessage(buddy, buddy, timestamp, frame.text);
+                                break;
+                            case wrap.Composing:
+                                buddy.setComposing();
+                                break;
+                            case wrap.Paused:
+                                buddy.setPaused();
+                                break;
+                        }
+                    }
                 }
 
                 buddy.setPaused();
@@ -143,33 +177,35 @@ const meta = function () {
     };
 
     function sendComposing(nickname) {
-        const composing = JSON.stringify({
-            type: 'composing'
-        });
+        const composing = new wrap.Envelope();
+        composing.add(new wrap.Composing());
 
         if (nickname) {
-            net.sendPrivateMessage(nickname, composing);
+            chat.sendPrivateWrap(nickname, composing);
         } else {
-            net.sendGroupMessage(composing);
+            chat.sendGroupWrap(composing);
         }
     };
 
     function sendPaused(nickname) {
-        const paused = JSON.stringify({
-            type: 'paused'
-        });
+        const paused = new wrap.Envelope();
+        paused.add(new wrap.Paused());
 
         if (nickname) {
-            net.sendPrivateMessage(nickname, paused);
+            chat.sendPrivateWrap(nickname, paused);
         } else {
-            net.sendGroupMessage(paused);
+            chat.sendGroupWrap(paused);
         }
     }
 
     function sendStatus(status) {
-        net.sendGroupMessage(JSON.stringify({
-            type: status
-        }));
+        const envelope = new wrap.Envelope();
+        if (status === 'away') {
+            envelope.add(new wrap.Away());
+        } else if (status === 'online') {
+            envelope.add(new wrap.Online());
+        }
+        chat.sendGroupWrap(envelope);
     }
 
     return {
