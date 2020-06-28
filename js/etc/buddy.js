@@ -48,35 +48,7 @@ class Buddy {
 
     updateAuth(auth) {
         this.authenticated = auth;
-        if (auth) {
-            $('#authenticated').attr('data-active', true);
-            $('#notAuthenticated').attr('data-active', false);
-        }
-        else {
-            $('#authenticated').attr('data-active', false);
-            $('#notAuthenticated').attr('data-active', true);
-        }
-
-        $.each($('span').filterByData('sender', this.nickname),
-            function (index, value) {
-                $(value).find('.authStatus').attr('data-auth', auth);
-            }
-        );
-        var authStatusBuffers = [
-            'groupChat',
-            this.id
-        ];
-
-        $.each(authStatusBuffers, function (i, thisBuffer) {
-            var buffer = $(Cryptodog.conversationBuffers[thisBuffer]);
-            $.each(buffer.find('span').filterByData('sender', this.nickname),
-                function (index, value) {
-                    $(value).find('.authStatus').attr('data-auth', auth);
-                }
-            );
-            Cryptodog.conversationBuffers[thisBuffer] = $('<div>').append(
-                buffer.clone()
-            ).html();
-        });
+        $('#authenticated').attr('data-active', this.authenticated);
+        $('#notAuthenticated').attr('data-active', !this.authenticated);
     }
 }
