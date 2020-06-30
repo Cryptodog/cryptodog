@@ -262,13 +262,14 @@ Cryptodog.UI = {
         });
 
         // Prevent accidental window close.
-        $(window).bind('beforeunload', function () {
+        window.addEventListener('beforeunload', (event) => {
             if (Object.keys(Cryptodog.buddies).length) {
-                return Cryptodog.locale['loginMessage']['thankYouUsing'];
+                event.preventDefault();
+                event.returnValue = '';
             }
         });
 
-        // Logout on browser close.
+        // Log out on browser close.
         window.onunload = function () {
             net.disconnect();
         };
