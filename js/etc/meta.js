@@ -214,7 +214,7 @@ const meta = function () {
     function sendPrivateWrap(nickname, envelope) {
         const buddy = Cryptodog.buddies[nickname];
         const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
-        net.sendGroupMessage(JSON.stringify(ciphertext));
+        net.sendPrivateMessage(nickname, JSON.stringify(ciphertext));
     }
 
     return {
