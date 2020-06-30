@@ -50,6 +50,16 @@ const buddyList = function () {
         }
     }
 
+    function remove(buddy) {
+        buddy.setStatus('offline');
+        const buddyElement = $('#buddy-' + buddy.id);
+        if (!buddyElement.hasClass('currentConversation') && !buddyElement.hasClass('newMessage')) {
+            buddyElement.slideUp(500, function () {
+                buddyElement.remove();
+            });
+        }
+    }
+
     function bindBuddyClick(buddyElement) {
         buddyElement.removeClass('newMessage');
         const id = buddyElement.attr('data-id');
@@ -133,6 +143,7 @@ const buddyList = function () {
     return {
         initialize,
         cleanUp,
-        add
+        add,
+        remove
     };
 }();

@@ -108,29 +108,13 @@ if (typeof (window) !== 'undefined') {
 
 		// Handle buddy going offline.
 		Cryptodog.removeBuddy = function (nickname) {
-			if (!Cryptodog.buddies[nickname]) {
+			const buddy = Cryptodog.buddies[nickname];
+			if (!buddy) {
 				return;
 			}
-			var buddyID = Cryptodog.buddies[nickname].id;
-			var buddyElement = $('.buddy').filterByData('id', buddyID);
-
-			Cryptodog.color.push(Cryptodog.buddies[nickname].color);
-
+			buddyList.remove(buddy);
+			Cryptodog.color.push(buddy.color);
 			delete Cryptodog.buddies[nickname];
-			if (!buddyElement.length) {
-				return;
-			}
-			buddyElement.each(function () {
-				$(this).attr('status', 'offline');
-				if (Cryptodog.me.currentBuddy === buddyID) {
-					return;
-				}
-				if (!$(this).hasClass('newMessage')) {
-					$(this).slideUp(500, function () {
-						$(this).remove();
-					});
-				}
-			});
 		};
 
 		// Get a buddy's nickname from their ID.
