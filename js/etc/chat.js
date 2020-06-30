@@ -158,17 +158,6 @@ const chat = function () {
         }
     }
 
-    function sendGroupWrap(envelope) {
-        const ciphertext = multiparty.encrypt(envelope.encode(), Object.values(Cryptodog.buddies));
-        net.sendGroupMessage(JSON.stringify(ciphertext));
-    }
-
-    function sendPrivateWrap(buddyName, envelope) {
-        const buddy = Cryptodog.buddies[buddyName];
-        const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
-        net.sendGroupMessage(JSON.stringify(ciphertext));
-    }
-
     $(document).ready(function () {
         'use strict';
         $('#conversationWindow').scroll(function () {
@@ -309,8 +298,6 @@ const chat = function () {
         addGroupMessage,
         addPrivateMessage,
         addDecryptError,
-        addMissingRecipients,
-        sendGroupWrap,
-        sendPrivateWrap
+        addMissingRecipients
     };
 }();

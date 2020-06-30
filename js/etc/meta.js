@@ -179,9 +179,9 @@ const meta = function () {
         composing.add(new wrap.Composing());
 
         if (nickname) {
-            chat.sendPrivateWrap(nickname, composing);
+            sendPrivateWrap(nickname, composing);
         } else {
-            chat.sendGroupWrap(composing);
+            sendGroupWrap(composing);
         }
     };
 
@@ -190,9 +190,9 @@ const meta = function () {
         paused.add(new wrap.Paused());
 
         if (nickname) {
-            chat.sendPrivateWrap(nickname, paused);
+            sendPrivateWrap(nickname, paused);
         } else {
-            chat.sendGroupWrap(paused);
+            sendGroupWrap(paused);
         }
     }
 
@@ -203,7 +203,18 @@ const meta = function () {
         } else if (status === 'online') {
             envelope.add(new wrap.Online());
         }
-        chat.sendGroupWrap(envelope);
+        sendGroupWrap(envelope);
+    }
+
+    function sendGroupWrap(envelope) {
+        const ciphertext = multiparty.encrypt(envelope.encode(), Object.values(Cryptodog.buddies));
+        net.sendGroupMessage(JSON.stringify(ciphertext));
+    }
+
+    function sendPrivateWrap(nickname, envelope) {
+        const buddy = Cryptodog.buddies[nickname];
+        const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
+        net.sendGroupMessage(JSON.stringify(ciphertext));
     }
 
     return {
