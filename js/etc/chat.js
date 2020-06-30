@@ -242,9 +242,8 @@ const chat = function () {
         });
 
         function tabComplete(input) {
-            let nickname, suffix;
             const potentials = [];
-            for (nickname in Cryptodog.buddies) {
+            for (let nickname in Cryptodog.buddies) {
                 if (Cryptodog.buddies.hasOwnProperty(nickname)) {
                     potentials.push({
                         score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
@@ -261,6 +260,7 @@ const chat = function () {
                 }
             }, this);
 
+            let suffix;
             if (input.match(/\s/)) {
                 suffix = ' ';
             } else {
