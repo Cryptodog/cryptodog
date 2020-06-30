@@ -230,31 +230,15 @@ const chat = function () {
                 return true;
             }
 
-            let envelope = new wrap.Envelope();
-            envelope.add(new wrap.TextMessage(message));
-
             if (current !== groupChat) {
-                const buddy = Cryptodog.buddies[Cryptodog.getBuddyNicknameByID(current)];
-                const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
-                net.sendPrivateMessage(buddy.nickname, JSON.stringify(ciphertext));
-                addPrivateMessage(buddy, Cryptodog.me, timestamp, message);
-                return true;
+                const to = Cryptodog.getBuddyNicknameByID(current);
+                meta.sendPrivateTextMessage(to, message);
+                addPrivateMessage(Cryptodog.buddies[to], Cryptodog.me, timestamp, message);
+            } else {
+                meta.sendGroupTextMessage(message);
+                // TODO: handle missing recipients
+                addGroupMessage(Cryptodog.me, timestamp, message);
             }
-
-            if (Object.keys(Cryptodog.buddies).length) {
-                const ciphertext = multiparty.encrypt(envelope.encode(), Object.values(Cryptodog.buddies));
-                let missingRecipients = [];
-                for (let b in Cryptodog.buddies) {
-                    if (typeof (ciphertext['text'][b]) !== 'object') {
-                        missingRecipients.push(b);
-                    }
-                }
-                if (missingRecipients.length) {
-                    addMissingRecipients(missingRecipients);
-                }
-                net.sendGroupMessage(JSON.stringify(ciphertext));
-            }
-            addGroupMessage(Cryptodog.me, timestamp, message);
         });
 
         function tabComplete(input) {

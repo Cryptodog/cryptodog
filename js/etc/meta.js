@@ -174,6 +174,18 @@ const meta = function () {
         net.sendGroupMessage(JSON.stringify(publicKeyRequest));
     };
 
+    function sendGroupTextMessage(message) {
+        const envelope = new wrap.Envelope();
+        envelope.add(new wrap.TextMessage(message));
+        sendGroupWrap(envelope);
+    }
+
+    function sendPrivateTextMessage(to, message) {
+        const envelope = new wrap.Envelope();
+        envelope.add(new wrap.TextMessage(message));
+        sendPrivateWrap(to, envelope);
+    }
+
     function sendComposing(nickname) {
         const composing = new wrap.Envelope();
         composing.add(new wrap.Composing());
@@ -211,10 +223,10 @@ const meta = function () {
         net.sendGroupMessage(JSON.stringify(ciphertext));
     }
 
-    function sendPrivateWrap(nickname, envelope) {
-        const buddy = Cryptodog.buddies[nickname];
+    function sendPrivateWrap(to, envelope) {
+        const buddy = Cryptodog.buddies[to];
         const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
-        net.sendPrivateMessage(nickname, JSON.stringify(ciphertext));
+        net.sendPrivateMessage(to, JSON.stringify(ciphertext));
     }
 
     return {
@@ -222,6 +234,8 @@ const meta = function () {
         handlePrivateMessage,
         sendPublicKey,
         requestPublicKey,
+        sendGroupTextMessage,
+        sendPrivateTextMessage,
         sendComposing,
         sendPaused,
         sendStatus,
