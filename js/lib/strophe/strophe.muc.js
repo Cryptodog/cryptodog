@@ -944,7 +944,7 @@ XmppRoom = (function() {
         delete this.roster[nick];
         break;
       default:
-        if (this.roster[nick]) {
+        if (this.roster.hasOwnProperty(nick)) {
           this.roster[nick].update(data);
         } else {
           this._addOccupant(data);
