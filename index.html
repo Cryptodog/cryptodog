@@ -4,8 +4,9 @@
 <head>
     <title>Cryptodog</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src *;">
-    
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; connect-src *;">
+
     <meta name="referrer" content="no-referrer" />
     <link rel="stylesheet" media="screen" href="css/style.css" type="text/css" />
     <link rel="stylesheet" href="css/jquery.utip.css" type="text/css" />
@@ -28,7 +29,7 @@
     <script src="js/etc/net.js"></script>
     <script src="js/etc/meta.js"></script>
     <script src="js/etc/storage.js"></script>
-    <script src="js/etc/templates.js"></script>
+    <script src="js/etc/template.js"></script>
     <script src="js/etc/wrap.js"></script>
     <script src="js/etc/multiParty.js"></script>
     <script src="js/etc/customServers.js"></script>
@@ -43,7 +44,8 @@
     <noscript>
         <div>
             <p>
-                Cryptodog requires JavaScript for encryption and messaging.<br/> If you would like to read the source before
+                Cryptodog requires JavaScript for encryption and messaging.<br /> If you would like to read the source
+                before
                 running, it is publicly available on <a href="https://github.com/Cryptodog/cryptodog/">GitHub</a>.
             </p>
             <p>
@@ -64,12 +66,13 @@
                     <span class="conversationName"></span>
                 </span>
                 <div id="optionButtons" dir="ltr">
-                    <img class="button" id="buddyWhitelist" src="img/icons/users.svg" alt="" data-utip-gravity="sw" data-utip="Buddy whitelist: off" />
+                    <img class="button" id="buddyWhitelist" src="img/icons/users.svg" alt="" data-utip-gravity="sw"
+                        data-utip="Buddy whitelist: off" />
                     <img class="button" id="status" src="img/icons/checkmark.svg" alt="" data-utip-gravity="sw" />
                     <img class="button" id="myInfo" src="img/icons/key.svg" alt="" data-utip-gravity="sw" />
                     <img class="button" id="notifications" src="img/icons/bubble2.svg" alt="" data-utip-gravity="sw" />
-                    <img class="button" id="audioToggle" src="img/icons/volume-mute.svg" alt="" data-utip-gravity="sw" data-utip="Audio notifications: off"
-                    />
+                    <img class="button" id="audioToggle" src="img/icons/volume-mute.svg" alt="" data-utip-gravity="sw"
+                        data-utip="Audio notifications: off" />
                     <img class="button" id="logout" src="img/icons/switch.svg" alt="" data-utip-gravity="sw" />
                 </div>
             </div>
@@ -78,7 +81,8 @@
                     <!-- "Each allowable portion of a JID (localpart, domainpart, and resourcepart) MUST NOT be zero bytes in length and MUST NOT be more than 1023 bytes in length..." -->
                     <!-- https://xmpp.org/rfcs/rfc6122.html#addressing-fundamentals -->
 
-                    <input type="text" id="conversationName" maxlength="1023" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
+                    <input type="text" id="conversationName" maxlength="1023" autocomplete="off" dir="ltr"
+                        data-utip-gravity="ne" />
                     <input type="text" id="nickname" maxlength="1023" autocomplete="off" dir="ltr" />
                     <input type="submit" id="loginSubmit" dir="ltr" />
                     <div id="loginInfo"></div>
@@ -137,8 +141,10 @@
                         <input type="button" id="customServerDelete" value="Delete" />
                     </div>
                     <div id="customServerFields">
-                        <input type="text" class="customServer" id="customName" data-utip="Name" data-utip-gravity="e" />
-                        <input type="text" class="customServer" id="customRelay" data-utip="WebSocket Relay" data-utip-gravity="e" />
+                        <input type="text" class="customServer" id="customName" data-utip="Name"
+                            data-utip-gravity="e" />
+                        <input type="text" class="customServer" id="customRelay" data-utip="WebSocket Relay"
+                            data-utip-gravity="e" />
                         <input type="button" id="customServerSubmit" value="Continue" />
                     </div>
                 </div>
@@ -163,4 +169,5 @@
         </div>
     </div>
 </body>
+
 </html>
