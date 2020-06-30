@@ -11,7 +11,6 @@ Cryptodog.version = '2.5.8';
 Cryptodog.me = {
 	status: 'online',
 	newMessages: 0,
-	windowFocus: true,
 	composing: false,
 	conversation: null,
 	nickname: null,
@@ -36,11 +35,6 @@ Cryptodog.audio = {
 	userJoin: new Audio("snd/userJoin.mp3"),
 	userLeave: new Audio("snd/userLeave.mp3")
 };
-
-// image used for notifications
-var notifImg = "img/logo-128.png";
-
-Notification.requestPermission();
 
 /*
 -------------------
@@ -144,14 +138,6 @@ if (typeof (window) !== 'undefined') {
 
 		// Handle new message count
 		Cryptodog.newMessageCount = function (count) {
-			if (Cryptodog.me.windowFocus) {
-				Cryptodog.me.newMessages = 0;
-				// clear notifications
-				currentNotifications.forEach(function (element) {
-					element.notification.close();
-				}, this);
-				currentNotifications = [];
-			}
 			count = Cryptodog.me.newMessages;
 			var prevCount = document.title.match(/^\([0-9]+\)\s+/);
 			// TODO: Clean this up a bit
@@ -168,63 +154,6 @@ if (typeof (window) !== 'undefined') {
 				else if (count >= 1) {
 					document.title = '(' + count + ') ' + document.title;
 				}
-			}
-		};
-
-		/*
-		-------------------
-		PRIVATE INTERFACE FUNCTIONS
-		-------------------
-		*/
-
-		var currentNotifications = [];
-
-		var handleNotificationTimeout = function () {
-			var removalIndexes = [];
-			currentNotifications.forEach(function (element) {
-				element.timeout -= 1;
-				if (element.timeout <= 0) {
-					element.notification.close();
-					removalIndexes.push(currentNotifications.indexOf(element));
-				}
-			}, this);
-			removalIndexes.forEach(function (index) {
-				currentNotifications.splice(index, 1);
-			}, this);
-		};
-
-		window.setInterval(handleNotificationTimeout, 1000);
-
-		function notificationTruncate(msg) {
-			// Chrome truncates its notifications on its own, but firefox doesn't for some reason
-			var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-			if (msg.length > 50 && is_firefox) {
-				return msg.substring(0, 50) + "…";
-			}
-			return msg;
-		}
-
-		var desktopNotification = function (image, title, body, timeout) {
-			if (Cryptodog.me.windowFocus) {
-				return false;
-			}
-			if (!Cryptodog.desktopNotifications) {
-				return false;
-			}
-			var notificationStatus = Notification.permission;
-			if (notificationStatus == 'granted') {
-				var n = new Notification(title, {
-					body: notificationTruncate(body),
-					icon: image
-				});
-				currentNotifications.push({
-					notification: n,
-					timeout: timeout
-				});
-			}
-			else if (notificationStatus == "default" || notificationStatus == null || notificationStatus == "") {
-				// request permission
-				Notification.requestPermission();
 			}
 		};
 

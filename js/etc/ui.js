@@ -207,50 +207,7 @@ Cryptodog.UI = {
         });
 
         // Desktop notifications button.
-        $('#notifications').click(function () {
-            var $this = $(this);
-
-            if ($this.attr('src') === 'img/icons/bubble2.svg') {
-                $this.attr('src', 'img/icons/bubble.svg');
-                $this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOn']);
-                $this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOn']);
-                $this.mouseenter();
-
-                Cryptodog.desktopNotifications = true;
-                storage.setItem('desktopNotifications', true);
-
-                var notifStatus = Notification.permission;
-                if (notifStatus == 'denied') {
-                    // notifications supported but not enabled
-                    Notification.requestPermission();
-
-                    // check if user actually accepted
-                    if (Notification.permission == 'denied') {
-                        Cryptodog.desktopNotifications = false;
-                        storage.setItem('desktopNotifications', false);
-                    }
-                } else if (notifStatus == 'unknown') {
-                    // browser doesn't support desktop notifications
-                    alert("It looks like your browser doesn't support desktop notifications.");
-
-                    $this.attr('src', 'img/icons/bubble2.svg');
-                    $this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOff']);
-                    $this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOff']);
-                    $this.mouseenter();
-
-                    Cryptodog.desktopNotifications = false;
-                    storage.setItem('desktopNotifications', false);
-                }
-            } else {
-                $this.attr('src', 'img/icons/bubble2.svg');
-                $this.attr('title', Cryptodog.locale['chatWindow']['desktopNotificationsOff']);
-                $this.attr('data-utip', Cryptodog.locale['chatWindow']['desktopNotificationsOff']);
-                $this.mouseenter();
-
-                Cryptodog.desktopNotifications = false;
-                storage.setItem('desktopNotifications', false);
-            }
-        });
+        $('#notifications').click(function () { });
 
         // Logout button.
         $('#logout').click(function () {
@@ -310,12 +267,6 @@ Cryptodog.UI = {
 
             // Load notification settings.
             window.setTimeout(function () {
-                storage.getItem('desktopNotifications', function (value) {
-                    if (value) {
-                        $('#notifications').click();
-                        $('#utip').hide();
-                    }
-                });
                 storage.getItem('audioNotifications', function (value) {
                     if (value) {
                         $('#audioToggle').click();
@@ -324,16 +275,8 @@ Cryptodog.UI = {
             }, 800);
         });
 
-        // When the window/tab is not selected, set `windowFocus` to false.
-        // `windowFocus` is used to know when to show desktop notifications.
-        $(window).blur(function () {
-            Cryptodog.me.windowFocus = false;
-        });
-
         // On window focus, select text input field automatically if we are chatting.
-        // Also set `windowFocus` to true.
         $(window).focus(function () {
-            Cryptodog.me.windowFocus = true;
             Cryptodog.newMessageCount();
 
             if (Cryptodog.me.currentBuddy) {
