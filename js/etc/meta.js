@@ -11,7 +11,7 @@ const meta = function () {
         }
 
         // If message is from someone not on buddy list, ignore
-        if (!(message.from in Cryptodog.buddies)) {
+        if (!Cryptodog.buddies.hasOwnProperty(message.from)) {
             return;
         }
 
@@ -100,7 +100,7 @@ const meta = function () {
 
     function handlePrivateMessage(message) {
         // If message is from someone not on buddy list, ignore
-        if (!(message.from in Cryptodog.buddies)) {
+        if (!Cryptodog.buddies.hasOwnProperty(message.from)) {
             return;
         }
 

@@ -82,7 +82,7 @@ const net = function () {
             return;
         }
 
-        if (!(nickname in Cryptodog.buddies)) {
+        if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
             // Create buddy element if buddy is new
             let buddy = Cryptodog.addBuddy(nickname);
             chat.addJoin(buddy, timestamp);
@@ -97,7 +97,7 @@ const net = function () {
 
         // Add buddies in the roster
         for (let nickname of message.users) {
-            if (!Cryptodog.buddies[nickname]) {
+            if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
                 const buddy = Cryptodog.addBuddy(nickname);
                 chat.addJoin(buddy, timestamp);
             }
