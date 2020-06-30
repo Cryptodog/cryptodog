@@ -26,16 +26,6 @@ Cryptodog.buddies = {};
 // For persistent ignores.
 Cryptodog.ignoredNicknames = [];
 
-// Toggle for audio notifications
-Cryptodog.allowSoundNotifications = false;
-
-// Sounds
-Cryptodog.audio = {
-	newMessage: new Audio("snd/msgGet.mp3"),
-	userJoin: new Audio("snd/userJoin.mp3"),
-	userLeave: new Audio("snd/userLeave.mp3")
-};
-
 /*
 -------------------
 END GLOBAL SCOPE

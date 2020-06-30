@@ -166,21 +166,7 @@ Cryptodog.UI = {
         });
 
         // Audio notifications toggle button
-        $('#audioToggle').click(function () {
-            if (Cryptodog.allowSoundNotifications) {
-                Cryptodog.allowSoundNotifications = false;
-                storage.setItem('audioNotifications', false);
-                $('#audioToggle').attr('data-utip', 'Audio notifications: off');
-                $('#audioToggle').attr('src', 'img/icons/volume-mute.svg');
-            } else {
-                Cryptodog.allowSoundNotifications = true;
-                storage.setItem('audioNotifications', true);
-                $('#audioToggle').attr('data-utip', 'Audio notifications: on');
-                $('#audioToggle').attr('src', 'img/icons/volume-medium.svg');
-            }
-
-            $('#audioToggle').mouseenter();
-        });
+        $('#audioToggle').click(function () { });
 
         // Status button.
         $('#status').click(function () {
@@ -264,15 +250,6 @@ Cryptodog.UI = {
                     });
                 }
             });
-
-            // Load notification settings.
-            window.setTimeout(function () {
-                storage.getItem('audioNotifications', function (value) {
-                    if (value) {
-                        $('#audioToggle').click();
-                    }
-                });
-            }, 800);
         });
 
         // On window focus, select text input field automatically if we are chatting.
