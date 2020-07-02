@@ -109,26 +109,42 @@ const chat = function () {
         }
     }
     class Message extends Entry {
+        static linkPattern = /(\s*)(https?:\/\/\S+)/gi;
+
         constructor(buddy, timestamp, body) {
             super(buddy, timestamp);
             this.body = body;
         }
 
         autolink() {
-            const pattern = /(\s*)(https?:\/\/\S+)/gi;
-            return this.escapedBody.replace(pattern, '$1<a target="_blank" rel="noopener" href="$2">$2</a>');
+            this.escapedBody = this.escapedBody.replace(Message.linkPattern, '$1<a target="_blank" rel="noopener" href="$2">$2</a>');
+        }
+
+        markup() {
+            // For now, don't allow formatting and links in the same message.
+            if (!this.escapedBody.match(Message.linkPattern)) {
+                const strongItalicPattern = /\*\*\*((?!\s).+)\*\*\*/gi;
+                const strongPattern = /\*\*((?!\s).+)\*\*/gi;
+                const italicPattern = /\*((?!\s).+)\*/gi;
+
+                this.escapedBody = this.escapedBody.replace(strongItalicPattern, '<strong><i>$1</i></strong>')
+                    .replace(strongPattern, '<strong>$1</strong>')
+                    .replace(italicPattern, '<i>$1</i>');
+            }
         }
 
         render() {
             /* HTML-encode the message body before auto-linking.
                Mustache.js also encodes forward slashes, so we unescape them at the end to allow links. */
             this.escapedBody = Mustache.escape(this.body).replace(/&#x2F;/g, '/');
+            this.markup();
+            this.autolink();
 
             return Mustache.render(template.message, {
                 nickname: this.buddy.nickname,
                 timestamp: this.timestamp,
                 // body is not HTML-encoded in the message template.
-                body: this.autolink(),
+                body: this.escapedBody,
                 color: this.buddy.color
             });
         }
