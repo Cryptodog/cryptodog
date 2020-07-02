@@ -4,6 +4,7 @@ const chat = function () {
     const recentEntriesCutoff = 100;
     const groupChat = 'group';
     let current = groupChat;
+    let newMessageCount = 0;
 
     function timestamp() {
         return new Date(Date.now()).toLocaleTimeString('en-US', { hour12: false });
@@ -62,7 +63,10 @@ const chat = function () {
         }
 
         if (entry instanceof Message || entry instanceof Join) {
-            Cryptodog.newMessageCount(++Cryptodog.me.newMessages);
+            newMessageCount++;
+            if (!document.hasFocus()) {
+                document.title = '(' + newMessageCount + ') ' + Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
+            }
         }
         // TODO: Handle audio and desktop notifications
     }
@@ -176,6 +180,17 @@ const chat = function () {
 
     $(document).ready(function () {
         'use strict';
+
+        $(window).focus(function () {
+            newMessageCount = 0;
+            document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
+
+            // On window focus, select text input field automatically if we are chatting.
+            if (Cryptodog.me.currentBuddy) {
+                $('#userInputText').focus();
+            }
+        });
+
         $('#conversationWindow').scroll(function () {
             if ($('#conversationWindow').scrollTop() === 0) {
                 // Prevent auto-scrolling to the top when we prepend the entries.

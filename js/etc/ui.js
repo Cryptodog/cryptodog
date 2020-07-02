@@ -82,15 +82,6 @@ Cryptodog.UI = {
             });
         });
 
-        // On window focus, select text input field automatically if we are chatting.
-        $(window).focus(function () {
-            Cryptodog.newMessageCount();
-
-            if (Cryptodog.me.currentBuddy) {
-                $('#userInputText').focus();
-            }
-        });
-
         // Prevent accidental window close.
         window.addEventListener('beforeunload', (event) => {
             if (Object.keys(Cryptodog.buddies).length) {

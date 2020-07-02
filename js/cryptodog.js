@@ -126,27 +126,6 @@ if (typeof (window) !== 'undefined') {
 			Cryptodog.color.reset();
 		};
 
-		// Handle new message count
-		Cryptodog.newMessageCount = function (count) {
-			count = Cryptodog.me.newMessages;
-			var prevCount = document.title.match(/^\([0-9]+\)\s+/);
-			// TODO: Clean this up a bit
-			if (prevCount) {
-				if (count <= 0) {
-					document.title = document.title.replace(prevCount[0], '');
-				}
-				else if (count >= 1) {
-					document.title = document.title.replace(prevCount[0], '(' + count + ') ');
-				}
-			}
-			else {
-				if (count <= 0) { return; }
-				else if (count >= 1) {
-					document.title = '(' + count + ') ' + document.title;
-				}
-			}
-		};
-
 		Cryptodog.UI.windowEventBindings();
 
 		Cryptodog.UI.show();
