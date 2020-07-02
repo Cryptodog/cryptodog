@@ -17,35 +17,6 @@ Cryptodog.UI = {
             .animate({ left: '+=5px' }, 130);
     },
 
-    logout: function () {
-        document.title = 'Cryptodog';
-
-        $('#loginInfo').text(Cryptodog.locale['loginMessage']['thankYouUsing']);
-        $('#conversationInfo,#optionButtons').fadeOut();
-        $('#header').animate({ 'background-color': 'transparent' });
-        $('.logo').animate({ margin: '-5px 5px 0 5px' });
-        buddyList.cleanUp();
-
-        $('#userInput').fadeOut(function () {
-            $('#logoText').fadeIn();
-            $('#footer').animate({ height: 14 });
-
-            $('#conversationWrapper').fadeOut(function () {
-                $('#info,#loginOptions,#version,#loginInfo').fadeIn();
-
-                $('#login').fadeIn(200, function () {
-                    $('#login').css({ opacity: 1 });
-                    $('#conversationName').select();
-                    $('#conversationName,#nickname').removeAttr('readonly');
-                    $('#loginSubmit').removeAttr('readonly');
-                });
-
-                $('#dialogBoxClose').click();
-                $('#conversationWindow').html('');
-            });
-        });
-    },
-
     /*
 	-------------------
 	WINDOW EVENT BINDINGS

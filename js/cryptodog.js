@@ -114,8 +114,8 @@ if (typeof (window) !== 'undefined') {
 
 		// Executes on user logout.
 		Cryptodog.logout = function () {
-			Cryptodog.UI.logout();
 			net.leave();
+			buddyList.cleanUp();
 
 			for (var b in Cryptodog.buddies) {
 				if (Cryptodog.buddies.hasOwnProperty(b)) {
