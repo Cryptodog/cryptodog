@@ -3,24 +3,7 @@
 }
 
 Cryptodog.UI = {
-    /*
-	-------------------
-	WINDOW EVENT BINDINGS
-	-------------------
-    */
     windowEventBindings: function () {
-        $(window).ready(function () {
-            // Load nickname settings.
-            storage.getItem('nickname', function (value) {
-                if (value) {
-                    $('#nickname').animate({ color: 'transparent' }, function () {
-                        $(this).val(value);
-                        $(this).animate({ color: '#FFF' });
-                    });
-                }
-            });
-        });
-
         // Prevent accidental window close.
         window.addEventListener('beforeunload', (event) => {
             if (Object.keys(Cryptodog.buddies).length) {

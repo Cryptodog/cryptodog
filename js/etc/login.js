@@ -1,4 +1,14 @@
 window.addEventListener('load', () => {
+    // Load nickname settings.
+    storage.getItem('nickname', function (value) {
+        if (value) {
+            $('#nickname').animate({ color: 'transparent' }, function () {
+                $(this).val(value);
+                $(this).animate({ color: '#FFF' });
+            });
+        }
+    });
+
     // Login form.
     $('#conversationName').click(function () {
         $(this).select();
