@@ -255,8 +255,6 @@ if (typeof (window) !== 'undefined') {
 			return false;
 		});
 
-		Cryptodog.UI.userInterfaceBindings();
-
 		Cryptodog.UI.windowEventBindings();
 
 		Cryptodog.UI.show();
