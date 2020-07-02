@@ -1,129 +1,98 @@
-﻿if (typeof Cryptodog === 'undefined') { Cryptodog = function () { }; }
-
-/*
--------------------
-GLOBAL VARIABLES
--------------------
-*/
-
-Cryptodog.version = '2.5.8';
-
-Cryptodog.me = {
-	status: 'online',
-	newMessages: 0,
-	composing: false,
-	conversation: null,
-	nickname: null,
-	mpPrivateKey: null,
-	mpPublicKey: null,
-	mpFingerprint: null,
-	currentBuddy: null,
-	color: "#FFF" // overwritten on connect
-};
-
-Cryptodog.buddies = {};
-
-// For persistent ignores.
-Cryptodog.ignoredNicknames = [];
-
-$(window).ready(function () {
+﻿const Cryptodog = function () {
 	'use strict';
+	const version = '2.5.8';
 
-	// If returns true for a name, name is automatically ignored
-	// Can be used to filter out types of names
-	Cryptodog.isFiltered = function (name) {
-		return false;
+	const me = {
+		status: 'online',
+		newMessages: 0,
+		composing: false,
+		conversation: null,
+		nickname: null,
+		mpPrivateKey: null,
+		mpPublicKey: null,
+		mpFingerprint: null,
+		currentBuddy: null,
+		color: "#FFF" // overwritten on connect
 	};
 
-	Cryptodog.buddyWhitelistEnabled = false;
-
-	// Automatically ignore newcomers who aren't in the current buddies list
-	Cryptodog.toggleBuddyWhitelist = function () {
-		if (Cryptodog.buddyWhitelistEnabled) {
-			Cryptodog.isFiltered = function (nickname) {
-				return false;
-			};
-
-			Cryptodog.buddyWhitelistEnabled = false;
-		} else {
-			var whitelist = Object.keys(Cryptodog.buddies);
-			Cryptodog.isFiltered = function (nickname) {
-				return !whitelist.includes(nickname);
-			};
-
-			Cryptodog.buddyWhitelistEnabled = true;
-		}
-	};
-
-	Cryptodog.autoIgnore = true;
-
-	// Buddies who exceed this message rate will be automatically ignored
-	Cryptodog.maxMessageCount = 5;
-	Cryptodog.maxMessageInterval = 3000;
+	const buddies = {};
+	const ignoredNicknames = [];
 
 	// Build new buddy.
-	Cryptodog.addBuddy = function (nickname) {
+	function addBuddy(nickname) {
 		const buddy = new Buddy(nickname);
-		Cryptodog.buddies[nickname] = buddy;
+		buddies[nickname] = buddy;
 		buddyList.add(buddy);
 		return buddy;
 	};
 
 	// Handle buddy going offline.
-	Cryptodog.removeBuddy = function (nickname) {
-		const buddy = Cryptodog.buddies[nickname];
+	function removeBuddy(nickname) {
+		const buddy = buddies[nickname];
 		if (!buddy) {
 			return;
 		}
 		buddyList.remove(buddy);
 		Cryptodog.color.push(buddy.color);
-		delete Cryptodog.buddies[nickname];
+		delete buddies[nickname];
 	};
 
 	// Get a buddy's nickname from their ID.
-	Cryptodog.getBuddyNicknameByID = function (id) {
-		for (var i in Cryptodog.buddies) {
-			if (Cryptodog.buddies.hasOwnProperty(i)) {
-				if (Cryptodog.buddies[i].id === id) {
+	function getBuddyNicknameByID(id) {
+		for (var i in buddies) {
+			if (buddies.hasOwnProperty(i)) {
+				if (buddies[i].id === id) {
 					return i;
 				}
 			}
 		}
 	};
 
-	// Executes on user logout.
-	Cryptodog.logout = function () {
+	function logout() {
 		net.leave();
 		buddyList.cleanUp();
 
-		for (var b in Cryptodog.buddies) {
-			if (Cryptodog.buddies.hasOwnProperty(b)) {
-				delete Cryptodog.buddies[b];
+		for (var b in buddies) {
+			if (buddies.hasOwnProperty(b)) {
+				delete buddies[b];
 			}
 		}
-
 		Cryptodog.color.reset();
 	};
 
-	// Prevent accidental window close.
-	window.addEventListener('beforeunload', (event) => {
-		if (Object.keys(Cryptodog.buddies).length) {
-			event.preventDefault();
-			event.returnValue = '';
-		}
+	$(window).ready(function () {
+		'use strict';
+
+		// Prevent accidental window close.
+		window.addEventListener('beforeunload', (event) => {
+			if (Object.keys(buddies).length) {
+				event.preventDefault();
+				event.returnValue = '';
+			}
+		});
+
+		// Determine whether we are showing a top margin
+		// Depending on window size
+		$(window).resize(function () {
+			if ($(window).height() < 650) {
+				$('#bubble').css('margin-top', '0');
+			} else {
+				$('#bubble').css('margin-top', '2%');
+			}
+		});
+		$(window).resize();
+
+		$('#version').text(version);
+		$('#bubble').show();
 	});
 
-	// Determine whether we are showing a top margin
-	// Depending on window size
-	$(window).resize(function () {
-		if ($(window).height() < 650) {
-			$('#bubble').css('margin-top', '0');
-		} else {
-			$('#bubble').css('margin-top', '2%');
-		}
-	});
-	$(window).resize();
-
-	$('#version').text(Cryptodog.version);
-	$('#bubble').show();
-});
+	return {
+		me,
+		buddies,
+		ignoredNicknames,
+		addBuddy,
+		removeBuddy,
+		getBuddyNicknameByID,
+		logout,
+	};
+}();

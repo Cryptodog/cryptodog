@@ -6,10 +6,6 @@ class Buddy {
         this.color = Cryptodog.color.pop();
         // Regularly reset at the interval defined by Cryptodog.maxMessageInterval.
         this.messageCount = 0;
-        if (Cryptodog.isFiltered(this.nickname) && !this.ignored()) {
-            console.log("Filtering user '" + this.nickname + "', as isFiltered() returned true.");
-            this.toggleIgnored();
-        }
     }
 
     setStatus(status) {

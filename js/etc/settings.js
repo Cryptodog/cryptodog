@@ -1,16 +1,5 @@
 window.addEventListener('load', () => {
-    $('#buddyWhitelist').click(function () {
-        if (Cryptodog.buddyWhitelistEnabled) {
-            $(this).attr('src', 'img/icons/users.svg');
-            $(this).attr('data-utip', 'Buddy whitelist: off');
-        } else {
-            $(this).attr('src', 'img/icons/lock.svg');
-            $(this).attr('data-utip', 'Buddy whitelist: on');
-        }
-
-        $(this).mouseenter();
-        Cryptodog.toggleBuddyWhitelist();
-    });
+    $('#buddyWhitelist').click(function () { });
 
     // Audio notifications toggle button
     $('#audioToggle').click(function () { });
