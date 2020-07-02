@@ -3,11 +3,6 @@
 }
 
 Cryptodog.UI = {
-    // Set version number in UI.
-    setVersion: function () {
-        $('#version').text(Cryptodog.version);
-    },
-
     // Handles login failures.
     loginFail: function (message) {
         $('#loginInfo').text(message);

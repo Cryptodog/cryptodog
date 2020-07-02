@@ -26,29 +26,9 @@ Cryptodog.buddies = {};
 // For persistent ignores.
 Cryptodog.ignoredNicknames = [];
 
-/*
--------------------
-END GLOBAL SCOPE
--------------------
-*/
-
 if (typeof (window) !== 'undefined') {
 	$(window).ready(function () {
 		'use strict';
-
-		/*
-		-------------------
-		INTIALIZATION
-		-------------------
-		*/
-
-		Cryptodog.UI.setVersion(Cryptodog.version);
-
-		/*
-		-------------------
-		GLOBAL INTERFACE FUNCTIONS
-		-------------------
-		*/
 
 		// If returns true for a name, name is automatically ignored
 		// Can be used to filter out types of names
@@ -128,6 +108,7 @@ if (typeof (window) !== 'undefined') {
 
 		Cryptodog.UI.windowEventBindings();
 
+		$('#version').text(Cryptodog.version);
 		$('#bubble').show();
 	});
 }
