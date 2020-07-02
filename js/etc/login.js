@@ -116,6 +116,9 @@ window.addEventListener('load', () => {
             }, function (errorMessage) {
                 // Failure callback.
                 Cryptodog.logout();
+                $('#nickname').select();
+                $('#conversationName,#nickname').removeAttr('readonly');
+                $('#loginSubmit').removeAttr('readonly');
                 loginFail(errorMessage);
             });
         }
