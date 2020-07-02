@@ -68,10 +68,6 @@ const net = function () {
         inRoom = false;
     }
 
-    function disconnect() {
-        connection.disconnect();
-    }
-
     function onJoin(message) {
         const timestamp = chat.timestamp();
         const nickname = message.name;
@@ -137,11 +133,12 @@ const net = function () {
         }
     }
 
+    window.addEventListener('unload', () => connection.disconnect());
+
     return {
         join,
         sendGroupMessage,
         sendPrivateMessage,
         leave,
-        disconnect
     };
 }();

@@ -12,11 +12,6 @@ Cryptodog.UI = {
             }
         });
 
-        // Log out on browser close.
-        window.onunload = function () {
-            net.disconnect();
-        };
-
         // Determine whether we are showing a top margin
         // Depending on window size
         $(window).resize(function () {
