@@ -59,9 +59,4 @@ Cryptodog.UI = {
         });
         $(window).resize();
     },
-
-    show: function () {
-        // Show main window.
-        $('#bubble').show();
-    }
 };

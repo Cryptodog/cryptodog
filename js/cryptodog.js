@@ -128,7 +128,6 @@ if (typeof (window) !== 'undefined') {
 
 		Cryptodog.UI.windowEventBindings();
 
-		Cryptodog.UI.show();
-
+		$('#bubble').show();
 	});
 }
