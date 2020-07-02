@@ -53,24 +53,6 @@ Cryptodog.UI = {
     */
     windowEventBindings: function () {
         $(window).ready(function () {
-            // Load custom servers.
-            storage.getItem('customServers', function (servers) {
-                if (servers) {
-                    $('#customServerSelector').empty();
-
-                    $.each(servers, function (name) {
-                        $('#customServerSelector').append(
-                            Mustache.render(template['customServer'], {
-                                name: name,
-                                domain: servers[name]['domain'],
-                                xmpp: servers[name]['xmpp'],
-                                relay: servers[name]['relay']
-                            })
-                        );
-                    });
-                }
-            });
-
             // Load nickname settings.
             storage.getItem('nickname', function (value) {
                 if (value) {
