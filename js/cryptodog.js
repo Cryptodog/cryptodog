@@ -1,4 +1,4 @@
-﻿const Cryptodog = function () {
+﻿const App = function () {
 	'use strict';
 	const version = '2.5.8';
 
@@ -50,7 +50,7 @@
 
 	function logout() {
 		net.leave();
-		buddyList.cleanUp();
+		buddyList.destroy();
 
 		for (var b in buddies) {
 			if (buddies.hasOwnProperty(b)) {

@@ -13,7 +13,7 @@ const buddyList = function () {
         $('#buddyWrapper').slideDown();
     }
 
-    function cleanUp() {
+    function destroy() {
         $('#buddyWrapper').slideUp(function () {
             $('#buddyList div').each(function () {
                 if ($(this).attr('id') !== buddyGroupId) {
@@ -142,7 +142,7 @@ const buddyList = function () {
 
     return {
         initialize,
-        cleanUp,
+        destroy,
         add,
         remove
     };
