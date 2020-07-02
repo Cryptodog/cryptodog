@@ -4,7 +4,6 @@
 
 	const me = {
 		status: 'online',
-		newMessages: 0,
 		composing: false,
 		conversation: null,
 		nickname: null,
