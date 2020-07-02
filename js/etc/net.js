@@ -19,7 +19,7 @@ const net = function () {
     };
 
     let inRoom = false;
-    let joinCallback;
+    let joinSuccessCallback, joinFailCallback;
 
     const connection = new Connection(defaultServer.relay);
     connection.onEvent(Connection.Event.Connected, function () {
@@ -41,12 +41,13 @@ const net = function () {
 
     connection.connect();
 
-    function join(cb) {
+    function join(successCallback, failCallback) {
         connection.send(MessageType.Join, {
             name: Cryptodog.me.nickname,
             room: Cryptodog.me.conversation
         });
-        joinCallback = cb;
+        joinSuccessCallback = successCallback;
+        joinFailCallback = failCallback;
     }
 
     function sendGroupMessage(text) {
@@ -78,7 +79,7 @@ const net = function () {
         if (nickname == Cryptodog.me.nickname) {
             // We joined the room
             inRoom = true;
-            joinCallback();
+            joinSuccessCallback();
             return;
         }
 
@@ -132,8 +133,7 @@ const net = function () {
     function onError(message) {
         console.error('Server error: ' + message.error);
         if (message.error === 'Nickname in use.') {
-            Cryptodog.logout();
-            Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['nicknameInUse']);
+            joinFailCallback(message.error);
         }
     }
 

@@ -3,15 +3,6 @@
 }
 
 Cryptodog.UI = {
-    // Handles login failures.
-    loginFail: function (message) {
-        $('#loginInfo').text(message);
-        $('#bubble')
-            .animate({ left: '+=5px' }, 130)
-            .animate({ left: '-=10px' }, 130)
-            .animate({ left: '+=5px' }, 130);
-    },
-
     /*
 	-------------------
 	WINDOW EVENT BINDINGS

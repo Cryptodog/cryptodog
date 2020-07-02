@@ -16,10 +16,10 @@ window.addEventListener('load', () => {
         $('#nickname').val($.trim($('#nickname').val()));
 
         if ($('#conversationName').val() === '') {
-            Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
+            loginFail(Cryptodog.locale['loginMessage']['enterConversation']);
             $('#conversationName').select();
         } else if ($('#nickname').val() === '') {
-            Cryptodog.UI.loginFail(Cryptodog.locale['loginMessage']['enterNickname']);
+            loginFail(Cryptodog.locale['loginMessage']['enterNickname']);
             $('#nickname').select();
         }
 
@@ -38,6 +38,7 @@ window.addEventListener('load', () => {
             $('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting']);
 
             net.join(function () {
+                // Success callback.
                 $('.conversationName').animate({ 'background-color': '#0087AF' });
 
                 meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
@@ -102,8 +103,20 @@ window.addEventListener('load', () => {
                 $('.conversationName').text(document.title);
 
                 storage.setItem('nickname', Cryptodog.me.nickname);
+            }, function (errorMessage) {
+                // Failure callback.
+                Cryptodog.logout();
+                loginFail(errorMessage);
             });
         }
         return false;
     });
+
+    function loginFail(message) {
+        $('#loginInfo').text(message);
+        $('#bubble')
+            .animate({ left: '+=5px' }, 130)
+            .animate({ left: '-=10px' }, 130)
+            .animate({ left: '+=5px' }, 130);
+    }
 });
