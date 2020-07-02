@@ -1,4 +1,4 @@
-﻿const App = function () {
+﻿const Cryptodog = function () {
 	'use strict';
 	const version = '2.5.8';
 
