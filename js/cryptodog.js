@@ -10,7 +10,6 @@
 		mpPrivateKey: null,
 		mpPublicKey: null,
 		mpFingerprint: null,
-		currentBuddy: null,
 		color: "#FFF" // overwritten on connect
 	};
 

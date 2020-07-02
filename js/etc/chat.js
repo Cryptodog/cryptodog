@@ -184,11 +184,7 @@ const chat = function () {
         $(window).focus(function () {
             newMessageCount = 0;
             document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
-
-            // On window focus, select text input field automatically if we are chatting.
-            if (Cryptodog.me.currentBuddy) {
-                $('#userInputText').focus();
-            }
+            $('#userInputText').focus();
         });
 
         $('#conversationWindow').scroll(function () {
