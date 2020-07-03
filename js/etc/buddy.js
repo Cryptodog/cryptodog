@@ -4,8 +4,6 @@ class Buddy {
         this.id = CryptoJS.enc.Hex.stringify(CryptoJS.lib.WordArray.random(16));
         this.status = 'online';
         this.color = Cryptodog.color.pop();
-        // Regularly reset at the interval defined by Cryptodog.maxMessageInterval.
-        this.messageCount = 0;
     }
 
     setStatus(status) {
