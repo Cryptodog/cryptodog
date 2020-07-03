@@ -38,7 +38,6 @@ window.addEventListener('load', () => {
             $('#loginSubmit,#conversationName,#nickname').attr('readonly', 'readonly');
             Cryptodog.me.conversation = $('#conversationName').val();
             Cryptodog.me.nickname = $('#nickname').val();
-            var autoIgnore;
 
             Cryptodog.me.mpPrivateKey = multiparty.newPrivateKey();
             Cryptodog.me.mpPublicKey = multiparty.publicKeyFromPrivate(Cryptodog.me.mpPrivateKey);
@@ -53,21 +52,6 @@ window.addEventListener('load', () => {
 
                 meta.sendPublicKey(Cryptodog.me.mpPublicKey.encoded);
                 meta.requestPublicKey();
-
-                clearInterval(autoIgnore);
-
-                autoIgnore = setInterval(function () {
-                    for (var nickname in Cryptodog.buddies) {
-                        var buddy = Cryptodog.buddies[nickname];
-
-                        if (Cryptodog.autoIgnore && buddy.messageCount > Cryptodog.maxMessageCount) {
-                            buddy.toggleIgnored();
-                            console.log('Automatically ignored ' + nickname);
-                        }
-
-                        buddy.messageCount = 0;
-                    }
-                }, Cryptodog.maxMessageInterval);
 
                 $('#loginInfo').text('✓');
                 $('#status').attr('src', 'img/icons/checkmark.svg');

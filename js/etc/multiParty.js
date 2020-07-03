@@ -109,8 +109,8 @@ const multiparty = function () {
             throw 'Missing public key for ' + sender.nickname;
         }
 
-        const possibleRecipients = Object.keys(Cryptodog.buddies);
-        const missingRecipients = possibleRecipients.filter(r => (r !== sender.nickname && !(r in encrypted)));
+        const possibleRecipients = [...Cryptodog.allUsers()];
+        const missingRecipients = possibleRecipients.filter(r => (r.nickname !== sender.nickname && !(r.nickname in encrypted)));
 
         const sortedRecipients = Object.keys(encrypted).sort();
 

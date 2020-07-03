@@ -11,11 +11,11 @@ const meta = function () {
         }
 
         // If message is from someone not on buddy list, ignore
-        if (!Cryptodog.buddies.hasOwnProperty(message.from)) {
+        if (!Cryptodog.hasUser(message.from)) {
             return;
         }
 
-        const buddy = Cryptodog.buddies[message.from];
+        const buddy = Cryptodog.getUser(message.from);
         if (buddy.ignored()) {
             return;
         }
@@ -84,12 +84,10 @@ const meta = function () {
                             if (decrypted.plaintext) {
                                 chat.addGroupMessage(buddy, timestamp, frame.text);
                             }
-
                             buddy.setPaused();
                             break;
                         default:
                             console.log('unhandled frame:', frame.constructor);
-                            break;
                     }
                 }
                 break;
@@ -100,11 +98,11 @@ const meta = function () {
 
     function handlePrivateMessage(message) {
         // If message is from someone not on buddy list, ignore
-        if (!Cryptodog.buddies.hasOwnProperty(message.from)) {
+        if (!Cryptodog.hasUser(message.from)) {
             return;
         }
 
-        const buddy = Cryptodog.buddies[message.from];
+        const buddy = Cryptodog.getUser(message.from);
         if (buddy.ignored()) {
             return;
         }
@@ -139,6 +137,7 @@ const meta = function () {
                         switch (frame.constructor) {
                             case wrap.TextMessage:
                                 chat.addPrivateMessage(buddy, buddy, timestamp, frame.text);
+                                buddy.setPaused();
                                 break;
                             case wrap.Composing:
                                 buddy.setComposing();
@@ -146,11 +145,11 @@ const meta = function () {
                             case wrap.Paused:
                                 buddy.setPaused();
                                 break;
+                            default:
+                                console.log('unhandled frame:', frame.constructor);
                         }
                     }
                 }
-
-                buddy.setPaused();
                 break;
             default:
                 console.log('Unknown private message type: ' + privateMessage.type);
@@ -219,14 +218,13 @@ const meta = function () {
     }
 
     function sendGroupWrap(envelope) {
-        const ciphertext = multiparty.encrypt(envelope.encode(), Object.values(Cryptodog.buddies));
+        const ciphertext = multiparty.encrypt(envelope.encode(), Cryptodog.allUsers());
         net.sendGroupMessage(JSON.stringify(ciphertext));
     }
 
-    function sendPrivateWrap(to, envelope) {
-        const buddy = Cryptodog.buddies[to];
-        const ciphertext = multiparty.encrypt(envelope.encode(), [buddy]);
-        net.sendPrivateMessage(to, JSON.stringify(ciphertext));
+    function sendPrivateWrap(recipient, envelope) {
+        const ciphertext = multiparty.encrypt(envelope.encode(), [recipient]);
+        net.sendPrivateMessage(recipient.nickname, JSON.stringify(ciphertext));
     }
 
     return {

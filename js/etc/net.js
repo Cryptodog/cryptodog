@@ -79,9 +79,9 @@ const net = function () {
             return;
         }
 
-        if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
+        if (!Cryptodog.hasUser(nickname)) {
             // Create buddy element if buddy is new
-            let buddy = Cryptodog.addBuddy(nickname);
+            let buddy = Cryptodog.addUser(nickname);
             chat.addJoin(buddy, timestamp);
 
             // Propagate away status to newcomers
@@ -93,19 +93,18 @@ const net = function () {
         const timestamp = chat.timestamp();
 
         // Add buddies in the roster
-        for (let nickname of message.users) {
-            if (!Cryptodog.buddies.hasOwnProperty(nickname)) {
-                const buddy = Cryptodog.addBuddy(nickname);
+        for (const nickname of message.users) {
+            if (!Cryptodog.hasUser(nickname)) {
+                const buddy = Cryptodog.addUser(nickname);
                 chat.addJoin(buddy, timestamp);
             }
         }
 
         // Remove buddies if their names do not appear in the roster
-        for (let nickname in Cryptodog.buddies) {
-            if (!message.users.includes(nickname)) {
-                const buddy = Cryptodog.buddies[nickname];
-                Cryptodog.removeBuddy(nickname);
-                chat.addLeave(buddy, timestamp);
+        for (const user of Cryptodog.allUsers()) {
+            if (!message.users.includes(user.nickname)) {
+                Cryptodog.removeUser(user.nickname);
+                chat.addLeave(user, timestamp);
             }
         }
     }
@@ -121,8 +120,8 @@ const net = function () {
     function onLeave(message) {
         const timestamp = chat.timestamp();
         const nickname = message.name;
-        const buddy = Cryptodog.buddies[nickname];
-        Cryptodog.removeBuddy(nickname);
+        const buddy = Cryptodog.getUser(nickname);
+        Cryptodog.removeUser(nickname);
         chat.addLeave(buddy, timestamp);
     }
 

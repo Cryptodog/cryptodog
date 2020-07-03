@@ -241,10 +241,10 @@ const chat = function () {
                 }
                 meta.sendComposing(destination);
 
-                window.setTimeout(function (destination) {
+                window.setTimeout(function () {
                     meta.sendPaused(destination);
                     composing = false;
-                }, 7000, destination);
+                }, 7000);
             }
         });
 
@@ -258,9 +258,9 @@ const chat = function () {
             }
 
             if (current !== groupChat) {
-                const to = Cryptodog.getBuddyNicknameByID(current);
-                meta.sendPrivateTextMessage(to, message);
-                addPrivateMessage(Cryptodog.buddies[to], Cryptodog.me, timestamp, message);
+                const recipient = Cryptodog.getBuddyNicknameByID(current);
+                meta.sendPrivateTextMessage(recipient, message);
+                addPrivateMessage(recipient, Cryptodog.me, timestamp, message);
             } else {
                 meta.sendGroupTextMessage(message);
                 // TODO: handle missing recipients
@@ -270,13 +270,11 @@ const chat = function () {
 
         function tabComplete(input) {
             const potentials = [];
-            for (let nickname in Cryptodog.buddies) {
-                if (Cryptodog.buddies.hasOwnProperty(nickname)) {
-                    potentials.push({
-                        score: nickname.score(input.match(/(\S)+$/)[0], 0.01),
-                        value: nickname
-                    });
-                }
+            for (const user of Cryptodog.allUsers()) {
+                potentials.push({
+                    score: user.nickname.score(input.match(/(\S)+$/)[0], 0.01),
+                    value: user.nickname
+                });
             }
             var largest = potentials[0];
 

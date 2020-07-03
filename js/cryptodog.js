@@ -12,50 +12,50 @@
 		mpFingerprint: null,
 		color: "#FFF" // overwritten on connect
 	};
-
-	const buddies = {};
 	const ignoredNicknames = [];
 
-	// Build new buddy.
-	function addBuddy(nickname) {
-		const buddy = new Buddy(nickname);
-		buddies[nickname] = buddy;
-		buddyList.add(buddy);
-		return buddy;
-	};
+	const users = new Map();
 
-	// Handle buddy going offline.
-	function removeBuddy(nickname) {
-		const buddy = buddies[nickname];
-		if (!buddy) {
-			return;
-		}
-		buddyList.remove(buddy);
-		Cryptodog.color.push(buddy.color);
-		delete buddies[nickname];
-	};
+	function getUser(nickname) {
+		return users.get(nickname);
+	}
+
+	function hasUser(nickname) {
+		return users.has(nickname);
+	}
+
+	function allUsers() {
+		return users.values();
+	}
+
+	function addUser(nickname) {
+		const user = new Buddy(nickname);
+		users.set(nickname, user);
+		buddyList.add(user);
+		return user;
+	}
+
+	function removeUser(nickname) {
+		const user = users.get(nickname);
+		buddyList.remove(user);
+		Cryptodog.color.push(user.color);
+		return users.delete(nickname);
+	}
+
+	function clearUsers() {
+		users.clear();
+		buddyList.destroy();
+		Cryptodog.color.reset();
+	}
 
 	// Get a buddy's nickname from their ID.
 	function getBuddyNicknameByID(id) {
-		for (var i in buddies) {
-			if (buddies.hasOwnProperty(i)) {
-				if (buddies[i].id === id) {
-					return i;
-				}
-			}
-		}
+		return [...allUsers()].filter(user => user.id === id)[0];
 	};
 
 	function logout() {
 		net.leave();
-		buddyList.destroy();
-
-		for (var b in buddies) {
-			if (buddies.hasOwnProperty(b)) {
-				delete buddies[b];
-			}
-		}
-		Cryptodog.color.reset();
+		clearUsers();
 	};
 
 	$(window).ready(function () {
@@ -63,7 +63,7 @@
 
 		// Prevent accidental window close.
 		window.addEventListener('beforeunload', (event) => {
-			if (Object.keys(buddies).length) {
+			if (users.size) {
 				event.preventDefault();
 				event.returnValue = '';
 			}
@@ -86,10 +86,13 @@
 
 	return {
 		me,
-		buddies,
 		ignoredNicknames,
-		addBuddy,
-		removeBuddy,
+		getUser,
+		hasUser,
+		allUsers,
+		addUser,
+		removeUser,
+		clearUsers,
 		getBuddyNicknameByID,
 		logout,
 	};

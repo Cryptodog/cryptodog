@@ -114,12 +114,7 @@ const buddyList = function () {
     }
 
     function place(buddy) {
-        const sorted = Object.keys(Cryptodog.buddies).map(
-            nickname => ({
-                nickname: nickname,
-                id: Cryptodog.buddies[nickname].id
-            })
-        );
+        const sorted = [...Cryptodog.allUsers()];
 
         sorted.sort(function (a, b) {
             const nameA = a.nickname.toLowerCase();
