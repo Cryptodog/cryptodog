@@ -48,8 +48,7 @@
 		Cryptodog.color.reset();
 	}
 
-	// Get a buddy's nickname from their ID.
-	function getBuddyNicknameByID(id) {
+	function userFromId(id) {
 		return [...allUsers()].filter(user => user.id === id)[0];
 	};
 
@@ -93,7 +92,7 @@
 		addUser,
 		removeUser,
 		clearUsers,
-		getBuddyNicknameByID,
+		userFromId,
 		logout,
 	};
 }();

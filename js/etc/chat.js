@@ -237,7 +237,7 @@ const chat = function () {
 
                 let destination;
                 if (current !== groupChat) {
-                    destination = Cryptodog.getBuddyNicknameByID(current);
+                    destination = Cryptodog.userFromId(current);
                 }
                 meta.sendComposing(destination);
 
@@ -258,7 +258,7 @@ const chat = function () {
             }
 
             if (current !== groupChat) {
-                const recipient = Cryptodog.getBuddyNicknameByID(current);
+                const recipient = Cryptodog.userFromId(current);
                 meta.sendPrivateTextMessage(recipient, message);
                 addPrivateMessage(recipient, Cryptodog.me, timestamp, message);
             } else {
