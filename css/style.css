@@ -172,31 +172,6 @@ div#bubble #login {
 	margin: 70px auto 0 auto;
 }
 
-div#bubble #loginTabs {
-	margin: 0 0 0 132px;
-	font-weight: bold;
-	width: 300px;
-	z-index: 0;
-	position: relative;
-}
-
-div#bubble #loginTabs span {
-	background: #BBB;
-	color: #FFF;
-	padding: 5px 10px;
-	font-size: 1.2em;
-	border-radius: 5px 0 0 0;
-	cursor: default;
-}
-
-div#bubble #loginTabs [data-selected=false]:hover {
-	background: #C0C0C0;
-}
-
-div#bubble #loginTabs [data-selected=true] {
-	background: #999;
-}
-
 div#bubble .loginForm {
 	width: 466px;
 	height: 172px;
