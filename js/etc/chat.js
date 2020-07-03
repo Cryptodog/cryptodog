@@ -182,9 +182,11 @@ const chat = function () {
         'use strict';
 
         $(window).focus(function () {
-            newMessageCount = 0;
-            document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
-            $('#userInputText').focus();
+            if (Cryptodog.me.nickname && Cryptodog.me.conversation) {
+                newMessageCount = 0;
+                document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
+                $('#userInputText').focus();
+            }
         });
 
         $('#conversationWindow').scroll(function () {
