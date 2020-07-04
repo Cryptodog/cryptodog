@@ -24,7 +24,7 @@ const net = function () {
     const connection = new Connection(defaultServer.relay);
     connection.onEvent(Connection.Event.Connected, function () {
         if (inRoom) {
-            join(joinCallback);
+            join(joinSuccessCallback, joinFailCallback);
         }
     });
 
