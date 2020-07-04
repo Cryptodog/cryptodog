@@ -48,12 +48,10 @@ img {
 }
 
 body {
-	height: 100%;
 	font-family: 'Helvetica Neue', Helvetica, Arial, Verdana;
 	line-height: 2em;
 	background: #111;
 	margin: 0;
-	padding: 0;
 }
 
 body div#bubble div#info h1 {
