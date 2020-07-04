@@ -56,7 +56,7 @@ window.addEventListener('load', () => {
                 });
 
                 $('#dialogBoxClose').click();
-                $('#conversationWindow').html('');
+                chat.reset();
             });
         });
     });

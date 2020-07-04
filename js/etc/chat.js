@@ -1,6 +1,6 @@
 const chat = function () {
     'use strict';
-    const buffers = {};
+    let buffers = {};
     const recentEntriesCutoff = 100;
     const groupChat = 'group';
     let current = groupChat;
@@ -29,6 +29,12 @@ const chat = function () {
     function addMissingRecipients(buddies) {
         // TODO: implement
         return;
+    }
+
+    function reset() {
+        buffers = {};
+        current = groupChat;
+        $('#conversationWindow').empty();
     }
 
     function addEntry(chat, entry) {
@@ -309,6 +315,7 @@ const chat = function () {
         addGroupMessage,
         addPrivateMessage,
         addDecryptError,
-        addMissingRecipients
+        addMissingRecipients,
+        reset
     };
 }();
