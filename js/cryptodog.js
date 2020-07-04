@@ -67,17 +67,6 @@
 			}
 		});
 
-		// Determine whether we are showing a top margin
-		// Depending on window size
-		$(window).resize(function () {
-			if ($(window).height() < 650) {
-				$('#bubble').css('margin-top', '0');
-			} else {
-				$('#bubble').css('margin-top', '2%');
-			}
-		});
-		$(window).resize();
-
 		$('#version').text(version);
 		$('#bubble').show();
 	});

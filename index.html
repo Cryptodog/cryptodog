@@ -56,110 +56,107 @@
         <div id="dialogBoxClose">x</div>
         <div id="dialogBoxContent"></div>
     </div>
-    <div id="bubbleWrapper">
-        <div id="bubble">
-            <div id="header">
-                <img src="img/logo.svg" alt="Cryptodog" class="logo" />
-                <span id="logoText" dir="ltr">Cryptodog</span>
-                <span id="conversationInfo">
-                    <span class="conversationName"></span>
-                </span>
-                <div id="optionButtons" dir="ltr">
-                    <img class="button" id="buddyWhitelist" src="img/icons/users.svg" alt="" data-utip-gravity="sw"
-                        data-utip="Buddy whitelist: off" />
-                    <img class="button" id="status" src="img/icons/checkmark.svg" alt="" data-utip-gravity="sw" />
-                    <img class="button" id="myInfo" src="img/icons/key.svg" alt="" data-utip-gravity="sw" />
-                    <img class="button" id="notifications" src="img/icons/bubble2.svg" alt="" data-utip-gravity="sw" />
-                    <img class="button" id="audioToggle" src="img/icons/volume-mute.svg" alt="" data-utip-gravity="sw"
-                        data-utip="Audio notifications: off" />
-                    <img class="button" id="logout" src="img/icons/switch.svg" alt="" data-utip-gravity="sw" />
+    <div id="bubble">
+        <div id="header">
+            <img src="img/logo.svg" alt="Cryptodog" class="logo" />
+            <span id="logoText" dir="ltr">Cryptodog</span>
+            <span id="conversationInfo">
+                <span class="conversationName"></span>
+            </span>
+            <div id="optionButtons" dir="ltr">
+                <img class="button" id="buddyWhitelist" src="img/icons/users.svg" alt="" data-utip-gravity="sw"
+                    data-utip="Buddy whitelist: off" />
+                <img class="button" id="status" src="img/icons/checkmark.svg" alt="" data-utip-gravity="sw" />
+                <img class="button" id="myInfo" src="img/icons/key.svg" alt="" data-utip-gravity="sw" />
+                <img class="button" id="notifications" src="img/icons/bubble2.svg" alt="" data-utip-gravity="sw" />
+                <img class="button" id="audioToggle" src="img/icons/volume-mute.svg" alt="" data-utip-gravity="sw"
+                    data-utip="Audio notifications: off" />
+                <img class="button" id="logout" src="img/icons/switch.svg" alt="" data-utip-gravity="sw" />
+            </div>
+        </div>
+        <div id="login" dir="ltr">
+            <form id="CryptodogLogin" class="loginForm" dir="ltr">
+                <input type="text" id="conversationName" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
+                <input type="text" id="nickname" autocomplete="off" dir="ltr" />
+                <input type="submit" id="loginSubmit" dir="ltr" />
+                <div id="loginInfo"></div>
+            </form>
+        </div>
+        <div id="info">
+            <h1 id="introHeader"></h1>
+            <p id="introParagraph"></p>
+        </div>
+        <div id="footer">
+            <div id="version"></div>
+            <div id="loginOptions">
+                <a href="#" id="languageSelect"></a>
+                <a href="#" id="customServer"></a>
+            </div>
+            <ul id="languages">
+                <li data-locale="en-us">English</li>
+                <li data-locale="ca">Català</li>
+                <li data-locale="ar">عربي</li>
+                <li data-locale="zh-cn">简体</li>
+                <li data-locale="zh-hk">繁體</li>
+                <li data-locale="bo">བོད་སྐད།</li>
+                <li data-locale="bg">Български</li>
+                <li data-locale="et">Eesty</li>
+                <li data-locale="cs">Česky</li>
+                <li data-locale="da">Dansk</li>
+                <li data-locale="de">Deutsch</li>
+                <li data-locale="es">Español</li>
+                <li data-locale="eu">Euskara</li>
+                <li data-locale="el">Ελληνικά</li>
+                <li data-locale="fa">فارسی</li>
+                <li data-locale="fr">Français</li>
+                <li data-locale="ja">日本語</li>
+                <li data-locale="he">עִבְרִית</li>
+                <li data-locale="in">বাংলা</li>
+                <li data-locale="it">Italiano</li>
+                <li data-locale="km">ភាសាខ្មែរ</li>
+                <li data-locale="kn">ಕನ್ನಡ</li>
+                <li data-locale="ko">한국어</li>
+                <li data-locale="lv">Latviešu</li>
+                <li data-locale="nl">Nederlands</li>
+                <li data-locale="no">Norsk</li>
+                <li data-locale="pl">Polski</li>
+                <li data-locale="pt">Português</li>
+                <li data-locale="ru">Русский</li>
+                <li data-locale="sk">Slovenčina</li>
+                <li data-locale="sv">Svenska</li>
+                <li data-locale="tr">Türkçe</li>
+                <li data-locale="uk">Україна</li>
+                <li data-locale="vi">Tiếng Việt</li>
+            </ul>
+            <div id="customServerDialog">
+                <div id="customServerList">
+                    <select id="customServerSelector" size="4"></select>
+                    <input type="button" id="customServerSave" value="Save" />
+                    <input type="button" id="customServerDelete" value="Delete" />
+                </div>
+                <div id="customServerFields">
+                    <input type="text" class="customServer" id="customName" data-utip="Name" data-utip-gravity="e" />
+                    <input type="text" class="customServer" id="customRelay" data-utip="WebSocket Relay"
+                        data-utip-gravity="e" />
+                    <input type="button" id="customServerSubmit" value="Continue" />
                 </div>
             </div>
-            <div id="login" dir="ltr">
-                <form id="CryptodogLogin" class="loginForm" dir="ltr">
-                    <input type="text" id="conversationName" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
-                    <input type="text" id="nickname" autocomplete="off" dir="ltr" />
-                    <input type="submit" id="loginSubmit" dir="ltr" />
-                    <div id="loginInfo"></div>
-                </form>
+            <form id="userInput">
+                <textarea id="userInputText" maxlength="3072"></textarea>
+                <input type="submit" value="►" id="userInputSend" />
+            </form>
+        </div>
+        <div id="conversationWrapper">
+            <div id="conversationWindow">
             </div>
-            <div id="info">
-                <h1 id="introHeader"></h1>
-                <p id="introParagraph"></p>
-            </div>
-            <div id="footer">
-                <div id="version"></div>
-                <div id="loginOptions">
-                    <a href="#" id="languageSelect"></a>
-                    <a href="#" id="customServer"></a>
+        </div>
+        <div id="buddyWrapper" dir="ltr">
+            <div id="buddyList">
+                <div class="buddy" id="buddy-group" data-id="group">
+                    <span>Group</span>
                 </div>
-                <ul id="languages">
-                    <li data-locale="en-us">English</li>
-                    <li data-locale="ca">Català</li>
-                    <li data-locale="ar">عربي</li>
-                    <li data-locale="zh-cn">简体</li>
-                    <li data-locale="zh-hk">繁體</li>
-                    <li data-locale="bo">བོད་སྐད།</li>
-                    <li data-locale="bg">Български</li>
-                    <li data-locale="et">Eesty</li>
-                    <li data-locale="cs">Česky</li>
-                    <li data-locale="da">Dansk</li>
-                    <li data-locale="de">Deutsch</li>
-                    <li data-locale="es">Español</li>
-                    <li data-locale="eu">Euskara</li>
-                    <li data-locale="el">Ελληνικά</li>
-                    <li data-locale="fa">فارسی</li>
-                    <li data-locale="fr">Français</li>
-                    <li data-locale="ja">日本語</li>
-                    <li data-locale="he">עִבְרִית</li>
-                    <li data-locale="in">বাংলা</li>
-                    <li data-locale="it">Italiano</li>
-                    <li data-locale="km">ភាសាខ្មែរ</li>
-                    <li data-locale="kn">ಕನ್ನಡ</li>
-                    <li data-locale="ko">한국어</li>
-                    <li data-locale="lv">Latviešu</li>
-                    <li data-locale="nl">Nederlands</li>
-                    <li data-locale="no">Norsk</li>
-                    <li data-locale="pl">Polski</li>
-                    <li data-locale="pt">Português</li>
-                    <li data-locale="ru">Русский</li>
-                    <li data-locale="sk">Slovenčina</li>
-                    <li data-locale="sv">Svenska</li>
-                    <li data-locale="tr">Türkçe</li>
-                    <li data-locale="uk">Україна</li>
-                    <li data-locale="vi">Tiếng Việt</li>
-                </ul>
-                <div id="customServerDialog">
-                    <div id="customServerList">
-                        <select id="customServerSelector" size="4"></select>
-                        <input type="button" id="customServerSave" value="Save" />
-                        <input type="button" id="customServerDelete" value="Delete" />
-                    </div>
-                    <div id="customServerFields">
-                        <input type="text" class="customServer" id="customName" data-utip="Name"
-                            data-utip-gravity="e" />
-                        <input type="text" class="customServer" id="customRelay" data-utip="WebSocket Relay"
-                            data-utip-gravity="e" />
-                        <input type="button" id="customServerSubmit" value="Continue" />
-                    </div>
-                </div>
-                <form id="userInput">
-                    <textarea id="userInputText" maxlength="3072"></textarea>
-                    <input type="submit" value="►" id="userInputSend" />
-                </form>
-            </div>
-            <div id="conversationWrapper">
-                <div id="conversationWindow">
-                </div>
-            </div>
-            <div id="buddyWrapper" dir="ltr">
-                <div id="buddyList">
-                    <div class="buddy" id="buddy-group" data-id="group">
-                        <span>Group</span>
-                    </div>
-                    <span id="buddiesOnline"></span>
-                    <span id="buddiesAway"></span>
-                </div>
+                <span id="buddiesOnline"></span>
+                <span id="buddiesAway"></span>
             </div>
         </div>
     </div>

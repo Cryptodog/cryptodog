@@ -89,23 +89,14 @@ MAIN WINDOW (BUBBLE)
 -------------------
 */
 
-div#bubbleWrapper {
-	margin: 0 auto;
-	width: 732px;
-	position: relative;
-}
-
 div#bubble {
 	position: relative;
 	z-index: 1;
 	width: 716px;
-	height: 540px;
+	height: 95vh;
 	background: #222;
 	border: 6px solid #444;
-	padding: 0 0 51px 0;
-	display: none;
-	float: left;
-	transition: ease-in 100ms;
+	margin: auto;
 }
 
 div#av {
