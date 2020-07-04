@@ -23,15 +23,6 @@ img {
 	user-select: none;
 }
 
-webview {
-	border-radius: 8px 0 8px 8px;
-	width: 450px;
-	height: 350px;
-	overflow: hidden;
-	margin: 10px auto 0 auto;
-	display: block;
-}
-
 [type=text], [type=password], [type=button], [type=submit], textarea {
 	display: block;
 	background: #444;
