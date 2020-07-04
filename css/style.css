@@ -343,23 +343,11 @@ BUDDY LIST
 -------------------
 */
 
-#buddyWrapper {
-	overflow: hidden;
-	width: 117px;
-	height: 480px;
+#userMenu {
 	display: none;
-	position: absolute;
-	right: 0;
-	z-index: 1000;
-}
-
-#buddyList {
-	height: 479px;
-	width: 150px;
-	overflow-y: scroll;
-	overflow-x: hidden;
+	overflow: hidden;
+	float: right;
 	line-height: 13px;
-	z-index: 1000;
 }
 
 .buddy {

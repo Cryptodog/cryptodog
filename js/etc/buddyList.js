@@ -10,12 +10,12 @@ const buddyList = function () {
             bindBuddyClick($(this));
         });
         buddyGroup.click();
-        $('#buddyWrapper').slideDown();
+        $('#userMenu').slideDown();
     }
 
     function destroy() {
-        $('#buddyWrapper').slideUp(function () {
-            $('#buddyList div').each(function () {
+        $('#userMenu').slideUp(function () {
+            $('#userMenu div').each(function () {
                 if ($(this).attr('id') !== buddyGroupId) {
                     $(this).remove();
                 }
@@ -24,7 +24,7 @@ const buddyList = function () {
     }
 
     function add(buddy) {
-        $('#buddyList').queue(function () {
+        $('#userMenu').queue(function () {
             const buddyTemplate = Mustache.render(template.buddy, {
                 buddyID: buddy.id,
                 nickname: buddy.nickname,
@@ -44,7 +44,7 @@ const buddyList = function () {
             });
         });
 
-        $('#buddyList').dequeue();
+        $('#userMenu').dequeue();
         if (buddy.ignored()) {
             $('#buddy-' + buddy.id).addClass('ignored');
         }
@@ -67,7 +67,7 @@ const buddyList = function () {
         chat.switchTo(id);
 
         // Clean up finished conversations.
-        $('#buddyList div').each(function () {
+        $('#userMenu div').each(function () {
             if ($(this).attr('data-id') !== id) {
                 $(this).removeClass('currentConversation');
                 if (!$(this).hasClass('newMessage') && ($(this).attr('status') === 'offline')) {
