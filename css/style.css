@@ -714,65 +714,6 @@ DIALOG BOX
 	padding: 20px;
 }
 
-#progressForm {
-	font-size: 0.9em;
-}
-
-#progressInfo span {
-	font-size: 1.2em;
-	font-weight: bold;
-}
-
-#progressForm img {
-	float: left;
-	margin: 8px 20px 0 0;
-}
-
-#progressInfo {
-	font-size: 1em;
-	position: relative;
-	bottom: 70px;
-}
-
-#progressInfo #interestingFact {
-	font-size: 1em;
-	height: 55px;
-	line-height: 1.6em;
-	margin-top: 10px;
-	color: #444;
-}
-
-#progressBar {
-	margin: 70px auto 0 auto;
-	height: 18px;
-	width: 290px;
-	border: 1px solid #C0C0C0;
-	padding: 1px;
-}
-
-#progressBar #fill {
-	height: 100%;
-	width: 0;
-	background: #C0C0C0;
-	opacity: 0.3;
-}
-
-.fileProgressBar {
-	height: 14px;
-	width: 72%;
-	display: inline-block;
-	vertical-align: -5px;
-	margin-left: 10px;
-	border: 1px solid #C0C0C0;
-	padding: 1px;
-}
-
-.fileProgressBarFill {
-	height: 100%;
-	width: 0;
-	background: #C0C0C0;
-}
-
 #dialogBox .title {
 	padding: 5px 20px 5px 10px;
 	border-left: none;
