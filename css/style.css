@@ -43,13 +43,7 @@ img {
 	border-radius: 4px 0 4px 4px;
 }
 
-::-webkit-input-placeholder {
-	color: rgba(255, 255, 255, 0.85);
-	color: #434343;
-}
-
-::-moz-placeholder {
-	color: rgba(255, 255, 255, 0.85);
+::placeholder {
 	color: #434343;
 }
 
