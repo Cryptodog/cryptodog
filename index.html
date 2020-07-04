@@ -77,12 +77,8 @@
             </div>
             <div id="login" dir="ltr">
                 <form id="CryptodogLogin" class="loginForm" dir="ltr">
-                    <!-- "Each allowable portion of a JID (localpart, domainpart, and resourcepart) MUST NOT be zero bytes in length and MUST NOT be more than 1023 bytes in length..." -->
-                    <!-- https://xmpp.org/rfcs/rfc6122.html#addressing-fundamentals -->
-
-                    <input type="text" id="conversationName" maxlength="1023" autocomplete="off" dir="ltr"
-                        data-utip-gravity="ne" />
-                    <input type="text" id="nickname" maxlength="1023" autocomplete="off" dir="ltr" />
+                    <input type="text" id="conversationName" autocomplete="off" dir="ltr" data-utip-gravity="ne" />
+                    <input type="text" id="nickname" autocomplete="off" dir="ltr" />
                     <input type="submit" id="loginSubmit" dir="ltr" />
                     <div id="loginInfo"></div>
                 </form>
