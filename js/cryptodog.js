@@ -4,7 +4,6 @@
 
 	const me = {
 		status: 'online',
-		composing: false,
 		conversation: null,
 		nickname: null,
 		mpPrivateKey: null,
