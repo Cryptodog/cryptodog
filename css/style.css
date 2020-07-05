@@ -776,7 +776,7 @@ CONVERSATION WINDOW
 	display: none;
 	position: absolute;
 	width: 80%;
-	height: 80%;
+	height: calc(100% - 120px);
 	padding: 0 8px;
 	margin-top: 8px;
 	font-size: 1.15em;
