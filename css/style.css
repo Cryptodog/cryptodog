@@ -756,9 +756,24 @@ CONVERSATION WINDOW
 	margin-left: -5px;
 }
 
-#conversationWrapper {
-	width: 597px;
-	overflow: hidden;
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #747474 transparent;
+}
+
+*::-webkit-scrollbar {
+	width: .3em;
+}
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+	background-color: #747474;
+	border-radius: 20px;
+}
+
+#chatWindowWrapper {
+	width: 81%;
 	height: 80%;
 	margin-top: -5px;
 	display: none;
@@ -768,10 +783,9 @@ CONVERSATION WINDOW
 	left: 0;
 }
 
-#conversationWindow {
+#chatWindow {
 	z-index: 3;
 	height: 100%;
-	width: 622px;
 	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 	color: transparent;
 	position: relative;
@@ -780,7 +794,7 @@ CONVERSATION WINDOW
 	overflow-y: scroll;
 }
 
-#conversationWindow .sender {
+#chatWindow .sender {
 	font-size: 0.95em;
 	margin: 0 10px 0 -4px;
 	border-radius: 0 0 3px 0;
@@ -793,11 +807,11 @@ CONVERSATION WINDOW
 	vertical-align: middle;
 }
 
-#conversationWindow .message {
+#chatWindow .message {
 	vertical-align: middle;
 }
 
-#conversationWindow .nickHighlight {
+#chatWindow .nickHighlight {
 	color: #999;
 }
 
@@ -822,7 +836,7 @@ CONVERSATION WINDOW
 	position: relative;
 	margin-bottom: 8px;
 	font-size: 1em;
-	max-width: 92%;
+	max-width: 96%;
 	white-space: pre-wrap;
 	top: 10px;
 }

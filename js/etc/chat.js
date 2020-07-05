@@ -34,7 +34,7 @@ const chat = function () {
     function reset() {
         buffers = {};
         current = groupChat;
-        $('#conversationWindow').empty();
+        $('#chatWindow').empty();
     }
 
     function addEntry(chat, entry) {
@@ -47,11 +47,11 @@ const chat = function () {
         buffers[chat].push(entry);
 
         if (chat === current) {
-            const chatWindow = $('#conversationWindow');
+            const chatWindow = $('#chatWindow');
             const wasScrolledDown = (Math.ceil(chatWindow.scrollTop() + chatWindow.innerHeight()) >= chatWindow[0].scrollHeight);
 
             loadRecentEntries(1);
-            $('#conversationWindow .line').last().animate({ 'top': 0 }, 100);
+            $('#chatWindow .line').last().animate({ 'top': 0 }, 100);
 
             if (wasScrolledDown) {
                 // Scroll the chat window down.
@@ -86,10 +86,10 @@ const chat = function () {
         if (!(current in buffers)) {
             buffers[current] = [];
         }
-        $('#conversationWindow').empty();
+        $('#chatWindow').empty();
         loadRecentEntries();
-        $('#conversationWindow .line').addClass('no-animate');
-        const last = $('#conversationWindow').children().last();
+        $('#chatWindow .line').addClass('no-animate');
+        const last = $('#chatWindow').children().last();
         if (last.length > 0) {
             last.get(0).scrollIntoView();
         }
@@ -97,18 +97,18 @@ const chat = function () {
 
     // Render the `recentEntriesCutoff` messages prior to those already displayed.
     function loadPreviousEntries() {
-        const numDisplayed = $('#conversationWindow').children().length;
+        const numDisplayed = $('#chatWindow').children().length;
         const prev = buffers[current].slice(0, buffers[current].length - numDisplayed).slice(-recentEntriesCutoff);
         for (let i = prev.length - 1; i >= 0; i--) {
-            $('#conversationWindow').prepend(prev[i].render());
+            $('#chatWindow').prepend(prev[i].render());
         }
-        $('#conversationWindow .line').addClass('no-animate');
+        $('#chatWindow .line').addClass('no-animate');
     }
 
     // Render the `numEntries` most recent entries, or the `recentEntriesCutoff` most recent if `numEntries` is undefined.
     function loadRecentEntries(numEntries) {
         buffers[current].slice(-(numEntries || recentEntriesCutoff)).forEach(entry => {
-            $('#conversationWindow').append(entry.render());
+            $('#chatWindow').append(entry.render());
         });
     }
 
@@ -195,19 +195,19 @@ const chat = function () {
             }
         });
 
-        $('#conversationWindow').scroll(function () {
-            if ($('#conversationWindow').scrollTop() === 0) {
+        $('#chatWindow').scroll(function () {
+            if ($('#chatWindow').scrollTop() === 0) {
                 // Prevent auto-scrolling to the top when we prepend the entries.
-                $('#conversationWindow').scrollTop(1);
+                $('#chatWindow').scrollTop(1);
                 loadPreviousEntries();
             }
         });
 
         // Show and hide timestamp when hovering over a message's sender element.
-        $('#conversationWindow').on('mouseenter', '.sender', function () {
+        $('#chatWindow').on('mouseenter', '.sender', function () {
             $(this).find('.nickname').text($(this).attr('data-timestamp'));
         });
-        $('#conversationWindow').on('mouseleave', '.sender', function () {
+        $('#chatWindow').on('mouseleave', '.sender', function () {
             $(this).find('.nickname').text($(this).attr('data-sender'));
         });
 

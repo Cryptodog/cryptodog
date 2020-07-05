@@ -45,7 +45,7 @@ window.addEventListener('load', () => {
             $('#logoText').fadeIn();
             $('#footer').animate({ height: 14 });
 
-            $('#conversationWrapper').fadeOut(function () {
+            $('#chatWindowWrapper').fadeOut(function () {
                 $('#info,#loginOptions,#version,#loginInfo').fadeIn();
 
                 $('#login').fadeIn(200, function () {

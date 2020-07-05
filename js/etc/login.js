@@ -78,7 +78,7 @@ window.addEventListener('load', () => {
 
                     $('#login').fadeOut(200, function () {
                         $('#conversationInfo').fadeIn();
-                        $('#conversationWrapper').fadeIn();
+                        $('#chatWindowWrapper').fadeIn();
                         $('#optionButtons').fadeIn();
 
                         $('#footer')
