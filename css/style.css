@@ -772,23 +772,13 @@ CONVERSATION WINDOW
 	border-radius: 20px;
 }
 
-#chatWindowWrapper {
-	width: 81%;
-	height: 80%;
-	margin-top: -5px;
-	display: none;
-	padding: 10px 8px 0 8px;
-	direction: ltr;
-	position: absolute;
-	left: 0;
-}
-
 #chatWindow {
-	z-index: 3;
-	height: 100%;
-	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
-	color: transparent;
-	position: relative;
+	display: none;
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	padding: 0 8px;
+	margin-top: 8px;
 	font-size: 1.15em;
 	overflow-x: hidden;
 	overflow-y: scroll;
