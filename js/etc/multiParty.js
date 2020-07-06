@@ -54,7 +54,8 @@ const multiparty = function () {
                 sortedRecipients.push(r);
             }
         }
-        sortedRecipients.sort();
+
+        sortedRecipients.sort((a, b) => a.nickname > b.nickname ? 1 : -1);
 
         const hmacInput = CryptoJS.lib.WordArray.create();
 
