@@ -122,18 +122,14 @@ div#bubble .button {
 
 div#bubble #login {
 	margin: 70px auto 0 auto;
-}
-
-div#bubble .loginForm {
 	width: 466px;
 	height: 172px;
-	margin: 0 auto;
 	display: block;
 	z-index: 1;
 	position: relative;
 }
 
-div#bubble .loginForm [type=text] {
+div#bubble #login [type=text] {
 	margin: 9px 0;
 	border: none;
 	display: block;
@@ -143,7 +139,7 @@ div#bubble .loginForm [type=text] {
 	background: #999;
 }
 
-div#bubble .loginForm #conversationName {
+div#bubble #login #conversationName {
 	border-radius: 4px 0 0 0;
 	width: 450px;
 	font-size: 2.8em;
@@ -155,7 +151,7 @@ div#bubble .loginForm #conversationName {
 	border-bottom: 2px solid #0087AF;
 }
 
-div#bubble .loginForm #nickname {
+div#bubble #login #nickname {
 	width: 300px;
 	font-size: 2em;
 	margin: 0;

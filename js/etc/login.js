@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
     $('#nickname').click(function () {
         $(this).select();
     });
-    $('#CryptodogLogin').submit(function () {
+    $('#login').submit(function () {
         // Don't submit if form is already being processed.
         if (($('#loginSubmit').attr('readonly') === 'readonly')) {
             return false;
