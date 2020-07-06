@@ -54,7 +54,7 @@ const multiparty = function () {
                 sortedRecipients.push(r);
             }
         }
-        sortedRecipients.sort((a, b) => a.nickname.localeCompare(b.nickname));
+        sortedRecipients.sort();
 
         const hmacInput = CryptoJS.lib.WordArray.create();
 
