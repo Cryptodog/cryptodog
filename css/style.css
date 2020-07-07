@@ -105,14 +105,13 @@ div#bubble #login {
 	position: relative;
 	margin: 70px auto 0 auto;
 	width: 60%;
-	height: 80px;
-	margin-bottom: 10px;
+	height: 115px;
 }
 
 div#bubble #login [type=text] {
 	position: absolute;
 	left: 0;
-	padding: 2px 0;
+	padding: 5px 0;
 	outline: none;
 	border: none;
 	background: transparent;
@@ -129,15 +128,15 @@ div#bubble #login #conversationName {
 div#bubble #login #nickname {
 	position: absolute;
 	width: 65%;
-	bottom: 0;
+	bottom: 30px;
 }
 
 div#bubble #login input[type="submit"] {
 	position: absolute;
-	bottom: 0;
+	bottom: 30px;
 	right: 0;
 	width: 30%;
-	height: 45%;
+	height: 30%;
 	border: none;
 	border-radius: 4px 0 4px;
 	background: #0087AF;
@@ -149,10 +148,22 @@ div#bubble #login input[type="submit"]:hover {
 }
 
 div#loginInfo {
-	margin: auto;
+	position: absolute;
+	bottom: 0;
+	width: 65%;
 	text-align: center;
 	color: white;
-	font-size: 1.3em;
+	font-size: 1.1em;
+}
+
+div#advanced {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 30%;
+	text-align: center;
+	color: white;
+	font-size: .9em;
 }
 
 div#bubble h1 {
