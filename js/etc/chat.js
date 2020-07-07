@@ -69,9 +69,11 @@ const chat = function () {
         }
 
         if (entry instanceof Message || entry instanceof Join) {
-            newMessageCount++;
-            if (!document.hasFocus()) {
-                document.title = '(' + newMessageCount + ') ' + Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
+            if (!entry.buddy.ignored()) {
+                newMessageCount++;
+                if (!document.hasFocus()) {
+                    document.title = '(' + newMessageCount + ') ' + Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
+                }
             }
         }
         // TODO: Handle audio and desktop notifications
