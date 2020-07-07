@@ -24,15 +24,9 @@ img {
 }
 
 [type=text], [type=password], [type=button], [type=submit], textarea {
-	display: block;
-	background: #444;
-	font-size: 1em;
-	padding: 3px;
-	color: #FFF;
-	border: none;
 	border: 1px solid #222;
-	width: 205px;
 	outline: none;
+	color: white;
 }
 
 [type=button], [type=submit] {
@@ -121,71 +115,56 @@ div#bubble .button {
 }
 
 div#bubble #login {
-	margin: 70px auto 0 auto;
-	width: 466px;
-	height: 172px;
-	display: block;
-	z-index: 1;
 	position: relative;
+	margin: 70px auto 0 auto;
+	width: 60%;
+	height: 80px;
+	margin-bottom: 10px;
 }
 
 div#bubble #login [type=text] {
-	margin: 9px 0;
+	position: absolute;
+	left: 0;
+	padding: 2px 0;
+	outline: none;
 	border: none;
-	display: block;
-	padding: 7px;
+	background: transparent;
+	border-bottom: 2px solid #0087AF;
+	font-size: 2.2em;
+	color: white;
 	text-align: center;
-	resize: none;
-	background: #999;
 }
 
 div#bubble #login #conversationName {
-	border-radius: 4px 0 0 0;
-	width: 450px;
-	font-size: 2.8em;
-	margin: 0 auto 10px auto;
-	display: block;
-	border: 0;
-	outline: 0;
-	background: transparent;
-	border-bottom: 2px solid #0087AF;
+	width: 100%;
 }
 
 div#bubble #login #nickname {
-	width: 300px;
-	font-size: 2em;
-	margin: 0;
-	display: inline;
-	border: 0;
-	outline: 0;
-	background: transparent;
-	border-bottom: 2px solid #0087AF; 
+	position: absolute;
+	width: 65%;
+	bottom: 0;
 }
 
-div#bubble #loginSubmit {
-	width: 136px;
-	display: inline;
-	height: 41px;
-	margin-left: 10px;
-	position: relative;
-	bottom: 2px;
-	font-size: 1.6em;
+div#bubble #login input[type="submit"] {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 30%;
+	height: 45%;
+	border-radius: 4px 0 4px;
 	background: #0087AF;
+	font-size: 1.6em;
 }
 
-div#bubble #loginSubmit:hover {
+div#bubble #login input[type="submit"]:hover {
 	background: #c99536;
 }
 
 div#loginInfo {
+	margin: auto;
 	text-align: center;
+	color: white;
 	font-size: 1.3em;
-	background: transparent;
-	padding: 3px;
-	color: #FFF;
-	border-radius: 0 0 4px 4px;
-	width: 458px;
-	margin: 9px 0;
 }
 
 div#bubble div#info {
