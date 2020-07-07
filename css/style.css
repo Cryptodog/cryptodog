@@ -30,11 +30,7 @@ img {
 }
 
 [type=button], [type=submit] {
-	color: #FFF;
-	background: #C0C0C0;
-	border: none;
 	cursor: pointer;
-	border-radius: 4px 0 4px 4px;
 }
 
 ::placeholder {
@@ -151,6 +147,7 @@ div#bubble #login input[type="submit"] {
 	right: 0;
 	width: 30%;
 	height: 45%;
+	border: none;
 	border-radius: 4px 0 4px;
 	background: #0087AF;
 	font-size: 1.6em;
@@ -835,6 +832,8 @@ CONVERSATION WINDOW
 }
 
 #userInputSend {
+	border: none;
+	cursor: pointer;
 	width: 105px;
 	height: 48px;
 	float: right;
