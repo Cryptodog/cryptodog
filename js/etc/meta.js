@@ -61,8 +61,6 @@ const meta = function () {
                     return;
                 }
 
-                console.log(envelope);
-
                 for (let frame of envelope.frames) {
                     switch (frame.constructor) {
                         case wrap.Composing:
