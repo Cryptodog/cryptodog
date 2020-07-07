@@ -55,43 +55,24 @@ window.addEventListener('load', () => {
 
                 $('#loginInfo').text('✓');
                 $('#status').attr('src', 'img/icons/checkmark.svg');
-                $('#fill')
-                    .stop()
-                    .animate(
-                        {
-                            width: '100%',
-                            opacity: '1'
-                        },
-                        250,
-                        'linear'
-                    );
 
-                window.setTimeout(function () {
-                    $('#dialogBoxClose').click();
-                }, 400);
-
-                window.setTimeout(function () {
-                    $('#loginOptions,#customServerDialog').fadeOut(200);
-                    $('#version,#logoText,#loginInfo,#info').fadeOut(200);
+                $('#login, #version, #logoText').fadeOut(200, function () {
                     $('#header').animate({ 'background-color': '#444' });
                     $('.logo').animate({ margin: '-11px 5px 0 0' });
+                    $('#conversationInfo').fadeIn();
+                    $('#chatWindow').fadeIn();
+                    $('#optionButtons').fadeIn();
 
-                    $('#login').fadeOut(200, function () {
-                        $('#conversationInfo').fadeIn();
-                        $('#chatWindow').fadeIn();
-                        $('#optionButtons').fadeIn();
-
-                        $('#footer')
-                            .delay(200)
-                            .animate({ height: 60 }, function () {
-                                $('#userInput').fadeIn(200, function () {
-                                    $('#userInputText').focus();
-                                });
+                    $('#footer')
+                        .delay(200)
+                        .animate({ height: 60 }, function () {
+                            $('#userInput').fadeIn(200, function () {
+                                $('#userInputText').focus();
                             });
+                        });
 
-                        buddyList.initialize();
-                    });
-                }, 800);
+                    buddyList.initialize();
+                });
 
                 document.title = Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
                 $('.conversationName').text(document.title);
