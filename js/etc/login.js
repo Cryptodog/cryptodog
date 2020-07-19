@@ -59,9 +59,7 @@ window.addEventListener('load', () => {
                 $('#login, #version, #logoText').fadeOut(200, function () {
                     $('#header').animate({ 'background-color': '#444' });
                     $('.logo').animate({ margin: '-11px 5px 0 0' });
-                    $('#conversationInfo').fadeIn();
-                    $('#chatWindow').fadeIn();
-                    $('#optionButtons').fadeIn();
+                    $('#conversationInfo, #chatWindow, #optionButtons').fadeIn();
 
                     $('#footer')
                         .delay(200)
