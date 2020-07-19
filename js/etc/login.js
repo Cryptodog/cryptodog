@@ -62,7 +62,6 @@ window.addEventListener('load', () => {
                     $('#conversationInfo, #chatWindow, #optionButtons').fadeIn();
 
                     $('#footer')
-                        .delay(200)
                         .animate({ height: 60 }, function () {
                             $('#userInput').fadeIn(200, function () {
                                 $('#userInputText').focus();
