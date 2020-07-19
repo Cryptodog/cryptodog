@@ -41,9 +41,9 @@ window.addEventListener('load', () => {
         $('#header').animate({ 'background-color': 'transparent' });
         $('.logo').animate({ margin: '-5px 5px 0 5px' });
 
-        $('#userInput').fadeOut(function () {
+        $('#userInput').slideToggle(function () {
             $('#logoText').fadeIn();
-            $('#footer').animate({ height: 14 });
+            $('#footer').slideToggle();
 
             $('#chatWindow').fadeOut(function () {
                 $('#info,#loginOptions,#version,#loginInfo').fadeIn();

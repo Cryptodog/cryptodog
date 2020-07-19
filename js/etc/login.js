@@ -54,20 +54,15 @@ window.addEventListener('load', () => {
                 meta.requestPublicKey();
 
                 $('#loginInfo').text('✓');
-                $('#status').attr('src', 'img/icons/checkmark.svg');
 
-                $('#login, #version, #logoText').fadeOut(200, function () {
+                $('#login, #version, #logoText').fadeOut(200).promise().then(function () {
                     $('#header').animate({ 'background-color': '#444' });
                     $('.logo').animate({ margin: '-11px 5px 0 0' });
                     $('#conversationInfo, #chatWindow, #optionButtons').fadeIn();
 
-                    $('#footer')
-                        .animate({ height: 60 }, function () {
-                            $('#userInput').fadeIn(200, function () {
-                                $('#userInputText').focus();
-                            });
-                        });
-
+                    $('#footer').slideToggle().promise().then(function () {
+                        $('#userInput').slideToggle();
+                    });
                     buddyList.initialize();
                 });
 
