@@ -4,11 +4,6 @@
 
 Cryptodog is a community-developed fork of the original Cryptocat browser extension, which was [discontinued in February 2016](https://web.archive.org/web/20160225040533/https://crypto.cat/).
 
-We offer two things:
-
-* A modified Cryptocat client, tweaked for security, performance, aesthetics, and usability
-* A public, anonymous-login XMPP server (crypto.dog)
-
 ## Disclaimer
 Cryptodog is experimental software. **Do not use Cryptodog if you have a critical need for secure communications.**
 
