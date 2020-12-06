@@ -69,7 +69,8 @@ const chat = function () {
         }
 
         if (entry instanceof Message || entry instanceof Join) {
-            if (!entry.buddy.ignored()) {
+            // TODO: move this check somewhere more sensible
+            if ((entry.buddy !== Cryptodog.me) && !entry.buddy.ignored()) {
                 newMessageCount++;
                 if (!document.hasFocus()) {
                     document.title = '(' + newMessageCount + ') ' + Cryptodog.me.nickname + '@' + Cryptodog.me.conversation;
