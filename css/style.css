@@ -535,10 +535,6 @@ DIALOG BOX
 	border-radius: 5px 0 5px 5px;
 }
 
-#dialogBox #fileInfoField {
-	padding: 20px;
-}
-
 #dialogBox .title {
 	padding: 5px 20px 5px 10px;
 	border-left: none;
@@ -551,17 +547,6 @@ DIALOG BOX
 
 #dialogBox .errorTitle {
 	background: #F00 !important;
-}
-
-#dialogBox #fileSelectButton {
-	margin: 30px auto 10px auto;
-	padding: 10px;
-	border-radius: 4px 0 4px 4px;
-	font-size: 1.2em;
-}
-
-#dialogBox #fileInfoField {
-	color: #444;
 }
 
 #dialogBox #resetKeysOK {
@@ -577,16 +562,6 @@ DIALOG BOX
 #dialogBox [type=checkbox] {
 	width: 10px;
 	height: 10px;
-}
-
-#fileSelector {
-	display: none;
-}
-
-#fileErrorField {
-	color: #F00;
-	margin: 20px 0;
-	font-weight: bold;
 }
 
 /*
@@ -719,19 +694,6 @@ CONVERSATION WINDOW
 	resize: none;
 }
 
-.fileView {
-	background: #C0C0C0;
-	color: #FFF;
-	padding: 0 5px 0 21px;
-	font-size: 0.9em;
-	border-radius: 3px 0 3px 3px;
-	background-image: url("../img/icons/text-file2.svg");
-	background-size: 16px auto;
-	background-position: center left;
-	background-repeat: no-repeat;
-	display: inline-block;
-}
-
 .userJoin, .userLeave {
 	width: 165px;
 	display: block;
@@ -759,10 +721,6 @@ CONVERSATION WINDOW
 	margin: 0 5px 0 7px;
 	font-size: 1.4em;
 	vertical-align: -1px;
-}
-
-.fileView:hover {
-	text-decoration: none;
 }
 
 .monospace {
