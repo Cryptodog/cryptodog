@@ -344,9 +344,10 @@ DIALOG BOX
 	position: absolute;
 	width: 320px;
 	border-radius: 8px;
-	margin: 50px auto 0 -240px;
-	z-index: 4;
+	z-index: 2;
+	top: 40%;
 	left: 50%;
+	transform: translate(-50%, -50%);
 	background: #2F2F2F;
 	box-shadow: 10px 10px 40px 5px rgba(0,0,0,0.75);
 	display: none;

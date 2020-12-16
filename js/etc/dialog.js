@@ -28,13 +28,13 @@ const dialog = (function () {
             }
         });
 
-        $('#dialogBoxContent').html(content);
+        $('#dialogBox').html(content);
         $('#dialogBox').fadeIn(100);
     }
 
     function closeBox() {
         $('#dialogBox').fadeOut(100, function () {
-            $('#dialogBoxContent').empty();
+            $('#dialogBox').empty();
         });
         $('#userInputText').focus();
     }
