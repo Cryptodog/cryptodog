@@ -473,6 +473,9 @@ DIALOG BOX
 	padding: 5px 8px;
 	margin: 5px auto 0 auto;
 	border-radius: 8px 0 8px 8px;
+	font-weight: 600;
+	font-size: 14px;
+	font-family: monospace;
 }
 
 .authInfo h2 {
@@ -574,12 +577,6 @@ DIALOG BOX
 #dialogBox [type=checkbox] {
 	width: 10px;
 	height: 10px;
-}
-
-#otrFingerprint, #multiPartyFingerprint {
-	font-weight: 600;
-	font-size: 14px;
-	font-family: monospace;
 }
 
 #fileSelector {

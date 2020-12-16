@@ -23,11 +23,6 @@ window.addEventListener('load', () => {
         meta.sendStatus(Cryptodog.me.status);
     });
 
-    // My info button.
-    $('#myInfo').click(function () {
-        dialog.showMyInfo(Cryptodog.me);
-    });
-
     // Desktop notifications button.
     $('#notifications').click(function () { });
 

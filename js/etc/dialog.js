@@ -1,23 +1,11 @@
 const dialog = (function () {
     'use strict';
 
-    function showMyInfo(me) {
-        let myInfo = Mustache.render(template.myInfo, {
-            nickname: me.nickname,
-            groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint
-        });
-        showBox(myInfo, {
-            height: 250,
-            closeable: true
-        });
-        $('#multiPartyFingerprint').text(formatFingerprint(me.mpFingerprint));
-    }
-
     function showBuddyInfo(buddy) {
         let buddyInfo = Mustache.render(template.buddyInfo, {
             nickname: buddy.nickname,
             authenticated: Cryptodog.locale.auth.authenticated + ':',
-            groupFingerprint: Cryptodog.locale.chatWindow.groupFingerprint,
+            safetyNumber: buddy.safetyNumber,
         });
 
         showBox(buddyInfo, {
@@ -25,7 +13,6 @@ const dialog = (function () {
             closeable: true,
         });
 
-        $('#multiPartyFingerprint').text(formatFingerprint(buddy.mpFingerprint));
         buddy.updateAuth(buddy.authenticated);
 
         $('#authenticated').unbind('click').bind('click', function () {
@@ -88,21 +75,7 @@ const dialog = (function () {
             });
     }
 
-    function formatFingerprint(fingerprint) {
-        let formatted = '';
-        for (let i in fingerprint) {
-            if (fingerprint.hasOwnProperty(i)) {
-                if ((i !== 0) && (i % 8) === 0) {
-                    formatted += ' ';
-                }
-                formatted += fingerprint[i];
-            }
-        }
-        return formatted.toUpperCase();
-    }
-
     return {
-        showMyInfo,
         showBuddyInfo,
     };
 })();

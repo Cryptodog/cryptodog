@@ -12,18 +12,14 @@ const template = {
         '<li class="option2">{{ignore}}</li>' +
         '</div>',
 
-    myInfo:
-        '<div class="title">{{nickname}}</div>' +
-        '<div id="displayInfo">' +
-        '{{groupFingerprint}}<br /><span id="multiPartyFingerprint"></span></div>',
-
     buddyInfo:
-        '<div class="title">{{nickname}}</div>' +
-        '<div id="displayInfo">' +
-        '<h2>{{authenticated}}</h2>' +
-        '<span id="authenticated">&#x2713</span><span id="notAuthenticated">X</span><br /><br />' +
-        '<div class="authInfo" style="height:95px">{{groupFingerprint}}<br />' +
-        '<span id="multiPartyFingerprint"></span></div></div>',
+        `<div class="title">{{nickname}}</div>
+        <div id="displayInfo">
+            <h2>{{authenticated}}</h2>
+            <span id="authenticated">&#x2713</span><span id="notAuthenticated">X</span><br /><br />
+            <div class="authInfo" style="height:95px">{{#safetyNumber}}{{#.}}{{.}} {{/.}}<br>{{/safetyNumber}}<br />
+            </div>
+        </div>`,
 
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',
 

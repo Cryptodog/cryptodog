@@ -16,12 +16,57 @@ const multiparty = function () {
         };
     }
 
-    function fingerprint(publicKey) {
-        return CryptoJS.SHA512(publicKey.toWordArray()).toString().substring(0, 40).toUpperCase();
-    }
-
     function parsePublicKey(encodedPublicKey) {
         return Uint8Array.fromWordArray(CryptoJS.enc.Base64.parse(encodedPublicKey));
+    }
+
+    // Calculate the numeric fingerprint of a user (one half of a Signal-style safety number)
+    async function fingerprint(userId, publicKey) {
+        const version = 0;
+        const iterations = 5200;
+
+        // See Signal fingerprint generation:
+        // https://github.com/signalapp/libsignal-protocol-java/blob/fde96d22004f32a391554e4991e4e1f0a14c2d50/java/src/main/java/org/whispersystems/libsignal/fingerprint/NumericFingerprintGenerator.java#L104
+        let hash = new Uint8Array([
+            ...[version],
+            ...publicKey,
+            ...new TextEncoder().encode(userId)
+        ]);
+
+        for (let i = 0; i < iterations; i++) {
+            hash = await crypto.subtle.digest('SHA-512', hash);
+        }
+        const fp = new Uint8Array(hash).slice(0, 30);
+
+        const groups = [];
+        for (let i = 0; i < fp.length; i += 5) {
+            // Interpret every 5 bytes of the hash as an unsigned int modulo 100000
+            const g = new Uint8Array([...[0, 0, 0], ...fp.slice(i, i + 5)]);
+            const dv = new DataView(g.buffer);
+            groups.push(String(Number(dv.getBigUint64()) % 100000).padStart(5, '0'));
+        }
+        return groups;
+    }
+
+    // Generate a Signal-style safety number for a chat partner
+    // https://signal.org/blog/safety-number-updates/
+    async function genSafetyNumber(theirName, theirPublicKey) {
+        const myFp = await fingerprint(Cryptodog.me.nickname, Cryptodog.me.mpPublicKey.raw);
+        const theirFp = await fingerprint(theirName, theirPublicKey);
+        let safetyNumber;
+
+        // Sort numeric fingerprints before concatenating
+        if (myFp < theirFp) {
+            safetyNumber = myFp.concat(theirFp);
+        } else {
+            safetyNumber = theirFp.concat(myFp);
+        }
+        return [
+            // Split number into three subarrays of four five-digit numbers for display
+            safetyNumber.slice(0, 4),
+            safetyNumber.slice(4, 8),
+            safetyNumber.slice(8, 12)
+        ];
     }
 
     // First 256 bits are for encryption, last 256 bits are for HMAC.
@@ -256,7 +301,7 @@ const multiparty = function () {
     return {
         newPrivateKey,
         publicKeyFromPrivate,
-        fingerprint,
+        genSafetyNumber,
         parsePublicKey,
         sharedSecret,
         encrypt,

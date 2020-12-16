@@ -8,7 +8,6 @@
 		nickname: null,
 		mpPrivateKey: null,
 		mpPublicKey: null,
-		mpFingerprint: null,
 		color: "#FFF" // overwritten on connect
 	};
 	const ignoredNicknames = [];

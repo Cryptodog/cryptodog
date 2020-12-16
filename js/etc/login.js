@@ -41,7 +41,6 @@ window.addEventListener('load', () => {
 
             Cryptodog.me.mpPrivateKey = multiparty.newPrivateKey();
             Cryptodog.me.mpPublicKey = multiparty.publicKeyFromPrivate(Cryptodog.me.mpPrivateKey);
-            Cryptodog.me.mpFingerprint = multiparty.fingerprint(Cryptodog.me.mpPublicKey.raw);
 
             Cryptodog.me.color = Cryptodog.color.pop();
             $('#loginInfo').text(Cryptodog.locale['loginMessage']['connecting']);

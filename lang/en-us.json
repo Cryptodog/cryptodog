@@ -17,16 +17,15 @@
         "connecting": "Connecting..."
     },
     "chatWindow": {
-        "groupFingerprint": "Group conversation fingerprint:",
+        "groupFingerprint": "Safety Number:",
         "statusAvailable": "Status: Available",
         "statusAway": "Status: Away",
-        "myInfo": "My Info",
         "desktopNotificationsOn": "Desktop Notifications On",
         "desktopNotificationsOff": "Desktop Notifications Off",
         "audioNotificationsOn": "Audio Notifications On",
         "audioNotificationsOff": "Audio Notifications Off",
         "logout": "Logout",
-        "displayInfo": "Display Info",
+        "displayInfo": "View Safety Number",
         "conversation": "Group",
         "ignore": "Ignore",
         "unignore": "Unignore"

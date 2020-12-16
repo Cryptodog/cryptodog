@@ -1,20 +1,20 @@
-(function() {
+(function () {
     'use strict';
 
     Cryptodog.locale = {};
     var languageObject;
 
-    Cryptodog.locale.set = function(locale, refresh) {
+    Cryptodog.locale.set = function (locale, refresh) {
         Cryptodog.locale.buildObject(locale, refresh);
     };
 
     // alternate async JSON-based language object builder
-    Cryptodog.locale.buildObject = function(locale, refresh) {
+    Cryptodog.locale.buildObject = function (locale, refresh) {
         // make locale lowercase
         locale = locale.toLowerCase();
 
         // get a list of available languages
-        $.getJSON('lang/langlist.json', function(langlist) {
+        $.getJSON('lang/langlist.json', function (langlist) {
             // handle aliases
             if (langlist['aliases'].hasOwnProperty(locale)) {
                 var newlang = langlist['aliases'][locale];
@@ -27,7 +27,7 @@
                 console.warn("Locale '" + locale + "' was not found, defaulting to en-US.");
                 locale = 'en-us';
             }
-            $.getJSON('lang/' + locale + '.json', function(data) {
+            $.getJSON('lang/' + locale + '.json', function (data) {
                 for (var o in data) {
                     if (data.hasOwnProperty(o)) {
                         Cryptodog.locale[o] = data[o];
@@ -39,15 +39,15 @@
     };
 
     // Re-render login page with new strings
-    Cryptodog.locale.refresh = function(languageObject) {
+    Cryptodog.locale.refresh = function (languageObject) {
         var smallType = ['bo', 'ar', 'in'];
-        
+
         if (smallType.indexOf(languageObject['language']) >= 0) {
             $('body').css({ 'font-size': '13px' });
         } else {
             $('body').css({ 'font-size': '11px' });
         }
-        
+
         $('body').css('font-family', languageObject['fonts']);
         $('#introHeader').text(languageObject['loginWindow']['introHeader']);
         $('#introParagraph').html(languageObject['loginWindow']['introParagraph']);
@@ -60,25 +60,24 @@
         $('#logout').attr('data-utip', languageObject['chatWindow']['logout']);
         $('#audio').attr('data-utip', languageObject['chatWindow']['audioNotificationsOff']);
         $('#notifications').attr('data-utip', languageObject['chatWindow']['desktopNotificationsOff']);
-        $('#myInfo').attr('data-utip', languageObject['chatWindow']['myInfo']);
         $('#status').attr('data-utip', languageObject['chatWindow']['statusAvailable']);
         $('#languageSelect').text($('[data-locale=' + languageObject['language'] + ']').text());
         $('[data-login=cryptocat]').text(languageObject.login.groupChat);
         $('[data-utip]').utip();
         $('html').attr('dir', languageObject['direction']);
-        
+
         if (languageObject['direction'] === 'ltr') {
             $('div#bubble #info li').css('background-position', 'top left');
         } else {
             $('div#bubble #info li').css('background-position', 'top right');
         }
-        
+
         $('#conversationName').select();
     };
 
     // Populate language
     if (typeof window !== 'undefined') {
-        $(window).ready(function() {
+        $(window).ready(function () {
             Cryptodog.locale.set('en-US', true);
         });
     }

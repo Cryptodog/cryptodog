@@ -37,7 +37,9 @@ class Buddy {
     setKeys(publicKey, secretKey) {
         this.mpPublicKey = publicKey;
         this.mpSecretKey = secretKey;
-        this.mpFingerprint = multiparty.fingerprint(this.mpPublicKey);
+        multiparty.genSafetyNumber(this.nickname, this.mpPublicKey).then(
+            (sn) => { this.safetyNumber = sn; }
+        );
     }
 
     updateAuth(auth) {
