@@ -359,8 +359,10 @@ DIALOG BOX
 
 .safetyNumber {
 	background: #222222;
+	color: white;
 	font-family: monospace;
-	font-size: 1.1em;
+	font-size: 1.2em;
+	font-weight: bold;
 	padding: 10px;
 }
 
