@@ -33,8 +33,9 @@
     "warnings": {
         "missingRecipientWarning": "Warning: this message could not be sent to (NICKNAME)"
     },
-    "auth": {
-        "authenticated": "Authenticated"
+    "safetyNumber": {
+        "title": "Safety Number for ",
+        "explanation": "To verify the security of your conversation with this user, compare the numbers above with the numbers they see for you (outside of Cryptodog). If any of the numbers do not match, an attacker may be listening in."
     },
     "login": {
         "groupChat": "Group Chat",

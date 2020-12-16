@@ -13,12 +13,9 @@ const template = {
         '</div>',
 
     buddyInfo:
-        `<div class="title">{{nickname}}</div>
-        <div id="displayInfo">
-            <h2>{{authenticated}}</h2>
-            <span id="authenticated">&#x2713</span><span id="notAuthenticated">X</span><br /><br />
-            <div class="authInfo" style="height:95px">{{#safetyNumber}}{{#.}}{{.}} {{/.}}<br>{{/safetyNumber}}<br />
-            </div>
+        `<div class="safetyNumberTitle">{{safetyNumberTitle}}{{nickname}}</div>
+        <div class="safetyNumber">{{#safetyNumber}}{{#.}}{{.}} {{/.}}<br>{{/safetyNumber}}</div>
+        <p class="safetyNumberExplanation">{{safetyNumberExplanation}}</p>
         </div>`,
 
     missingRecipients: '<div class="missingRecipients" dir="{{dir}}">{{text}}</div>',

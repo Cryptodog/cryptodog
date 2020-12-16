@@ -342,226 +342,40 @@ DIALOG BOX
 
 #dialogBox {
 	position: absolute;
-	width: 470px;
-	height: 240px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #C0C0C0;
-	border-radius: 8px 0 8px 8px;
+	width: 320px;
+	border-radius: 8px;
 	margin: 50px auto 0 -240px;
 	z-index: 4;
 	left: 50%;
-	font-size: 1.1em;
-	background: #FCFCFC;
+	background: #2F2F2F;
+	box-shadow: 10px 10px 40px 5px rgba(0,0,0,0.75);
 	display: none;
-	color: #151520;
+	color: lightgray;
 	overflow-wrap: break-word;
 	word-wrap: break-word;
-}
-
-.dialogBoxError {
-	border-color: #F00 !important;
-}
-
-.dialogBoxError #openAuth {
-	padding: 10px;
-	margin: 20px auto 0 auto;
-}
-
-#dialogBox [type=text], #dialogBox [type=password], #dialogBox [type=submit] {
-	color: #FFF;
-	float: left;
-	margin: 0 5px 10px 5px;
-	font-size: 1em;
-}
-
-#dialogBoxClose {
-	height: 18px;
-	width: 0;
-	font-size: 0;
 	text-align: center;
-	color: #FFF;
-	background: #C0C0C0;
-	float: right;
-	margin-top: 4px;
-	padding-bottom: 4px;
-	cursor: pointer;
-	font-family: Helvetica, Arial, Verdana;
-	font-weight: bold;
 }
 
-.dialogBoxError #dialogBoxClose {
-	background: #F00 !important;
-}
-
-#dialogBoxContent {
-	padding: 25px 0 0 0;
-}
-
-#dialogBoxContent p {
-	padding: 10px;
-	padding: 10px;
-	max-width: 340px;
-	margin: 0 auto;
-}
-
-#displayInfo {
-	font-size: 1.1em;
-	padding: 10px 20px;
-	height: 80px;
-}
-
-#displayInfo h2 {
-	color: #000;
-	margin: 0;
-	font-size: 13px;
-	margin-right: 10px;
-}
-
-#authenticated {
-	font-size: 0.9em;
-	cursor: pointer;
-	padding: 1px 30px;
-	height: 20px;
-	border: 1px solid #999;
-	background-color: transparent;
-	color: #999;
-	text-align: center;
-	border-radius: 5px 0 5px 5px;
-	display: inline-block;
-	margin: 3px 25px 0 0;
-	opacity: 0.4;
-}
-
-#authenticated:hover {
-	opacity: 0.8;
-}
-
-#authenticated[data-active=true] {
-	color: #FFF;
-	background-color: #999;
-	opacity: 1;
-}
-
-#notAuthenticated {
-	font-size: 0.9em;
-	cursor: pointer;
-	padding: 1px 30px;
-	height: 20px;
-	border: 1px solid #EF6C74;
-	background-color: transparent;
-	color: #EF6C74;
-	text-align: center;
-	border-radius: 5px 0 5px 5px;
-	display: inline-block;
-	opacity: 0.4;
-}
-
-#notAuthenticated:hover {
-	opacity: 0.8;
-}
-
-#notAuthenticated[data-active=true] {
-	color: #FFF;
-	background-color: #EF6C74;
-	opacity: 1;
-}
-
-.authInfo {
-	background: #ECECEC;
-	height: 130px;
-	padding: 5px 8px;
-	margin: 5px auto 0 auto;
-	border-radius: 8px 0 8px 8px;
-	font-weight: 600;
-	font-size: 14px;
+.safetyNumber {
+	background: #222222;
 	font-family: monospace;
-}
-
-.authInfo h2 {
-	font-size: 16px;
-	padding: 3px;
-	margin: 0 0 5px 0;
-}
-
-.authInfo #authQuestion, .authInfo #authAnswer {
-	background: #999;
-	padding: 4px;
-	width: 260px;
-	border: none;
-	font-size: 1.05em;
-	border-radius: 5px 0 5px 5px;
-}
-
-.authInfo #authSubmit {
-	float: right;
-	width: 100px;
-	height: 57px;
-	margin: -35px 20px 0 0;
-	border-radius: 5px 0 5px 5px;
-	font-size: 1.2em;
-	background: #0087AF;
-	border: none;
-	word-wrap: break-word;
-}
-
-#authVerified {
-	text-align: center;
 	font-size: 1.1em;
-	color: #FFF;
-	text-shadow: #FFF;
-	display: none;
+	padding: 10px;
 }
 
-#authReplyForm {
-	margin: -20px 0 5px 55px;
-}
-
-#authReply {
-	background: #C0C0C0;
-	border: none;
-	border-radius: 5px 0 5px 5px;
-	padding: 4px;
-	width: 220px;
-}
-
-#authReplyQuestion {
-	display: block;
-	overflow: hidden;
-}
-
-#authReplySubmit {
-	width: 100px;
-	border-radius: 5px 0 5px 5px;
-}
-
-#dialogBox .title {
-	padding: 5px 20px 5px 10px;
-	border-left: none;
-	background: #C0C0C0;
-	max-width: 220px;
-	margin-bottom: 2px;
-	color: #FFF;
+.safetyNumberTitle {
+	background: #568EA3;
+	border-radius: 8px 8px 0 0;
+	color: white;
 	font-size: 1.5em;
+	overflow: hidden;
+	padding: 5px 10px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
-#dialogBox .errorTitle {
-	background: #F00 !important;
-}
-
-#dialogBox #resetKeysOK {
-	background: #AAA;
-	border: 1px solid #C0C0C0;
-	color: #C0C0C0;
-	margin: 0 auto;
-	width: 100px;
-	font-size: 1.2em;
-	cursor: pointer;
-}
-
-#dialogBox [type=checkbox] {
-	width: 10px;
-	height: 10px;
+.safetyNumberExplanation {
+	margin: 15px;
 }
 
 /*

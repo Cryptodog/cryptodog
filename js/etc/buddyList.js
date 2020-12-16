@@ -103,7 +103,7 @@ const buddyList = function () {
         // Register menu item events.
         $menu.find('.option1').unbind().click(function (e) {
             e.stopPropagation();
-            dialog.showBuddyInfo(buddy);
+            dialog.showSafetyNumber(buddy);
             $menu.hide();
         });
         $menu.find('.option2').unbind().click(function (e) {
