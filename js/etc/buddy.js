@@ -41,10 +41,4 @@ class Buddy {
             (sn) => { this.safetyNumber = sn; }
         );
     }
-
-    updateAuth(auth) {
-        this.authenticated = auth;
-        $('#authenticated').attr('data-active', this.authenticated);
-        $('#notAuthenticated').attr('data-active', !this.authenticated);
-    }
 }

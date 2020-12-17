@@ -8,15 +8,6 @@ const dialog = (function () {
             safetyNumberTitle: Cryptodog.locale.safetyNumber.title,
             safetyNumberExplanation: Cryptodog.locale.safetyNumber.explanation
         }));
-
-        buddy.updateAuth(buddy.authenticated);
-
-        $('#authenticated').unbind('click').bind('click', function () {
-            buddy.updateAuth(true);
-        });
-        $('#notAuthenticated').unbind('click').bind('click', function () {
-            buddy.updateAuth(false);
-        });
     }
 
     function showBox(content) {
