@@ -1,6 +1,8 @@
 const dialog = (function () {
     'use strict';
 
+    const dialogBoxId = '#dialogBox';
+
     function showSafetyNumber(buddy) {
         showBox(Mustache.render(template.buddyInfo, {
             nickname: buddy.nickname,
@@ -11,23 +13,28 @@ const dialog = (function () {
     }
 
     function showBox(content) {
-        $(document).keydown(function (e) {
-            if (e.keyCode === 27) {
-                e.stopPropagation();
+        $(document).on('keydown.escDialogBox', function (e) {
+            if (e.key === 'Escape') {
+                $(document).off('keydown.escDialogBox');
                 closeBox();
-                $(document).unbind('keydown');
             }
         });
 
-        $('#dialogBox').html(content);
-        $('#dialogBox').fadeIn(100);
+        $(document).on('click.outsideDialogBox', function (e) {
+            if (!$(dialogBoxId).is(e.target) && !$(dialogBoxId).has(e.target).length) {
+                $(document).off('click.outsideDialogBox');
+                closeBox();
+            }
+        });
+
+        $(dialogBoxId).html(content);
+        $(dialogBoxId).fadeIn(100);
     }
 
     function closeBox() {
-        $('#dialogBox').fadeOut(100, function () {
-            $('#dialogBox').empty();
+        $(dialogBoxId).fadeOut(100, function () {
+            $(dialogBoxId).empty();
         });
-        $('#userInputText').focus();
     }
 
     return {
