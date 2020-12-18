@@ -51,7 +51,6 @@
         $('body').css('font-family', languageObject['fonts']);
         $('#introHeader').text(languageObject['loginWindow']['introHeader']);
         $('#introParagraph').html(languageObject['loginWindow']['introParagraph']);
-        $('#customServer').text(languageObject['loginWindow']['customServer']);
         $('#conversationName').attr('placeholder', languageObject['loginWindow']['conversationName']);
         $('#conversationName').attr('data-utip', languageObject['loginWindow']['conversationNameTooltip']);
         $('#nickname').attr('placeholder', languageObject['loginWindow']['nickname']);

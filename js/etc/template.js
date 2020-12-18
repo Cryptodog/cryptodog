@@ -1,7 +1,5 @@
 'use strict';
 const template = {
-    customServer: '<option data-relay="{{relay}}">' + '{{name}}</option>',
-
     buddy:
         '<div class="buddy" title="{{nickname}}" id="buddy-{{buddyID}}" status="{{status}}" data-id="{{buddyID}}" dir="ltr">' +
         '<span class="nickname">{{nickname}}</span></div>',
