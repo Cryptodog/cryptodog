@@ -274,26 +274,25 @@ BUDDY LIST
 }
 
 .buddyMenu {
-	background-color: #434343;
-	border: 0.1em solid #00AEDE;
+	background-color: #222222;
 	border-radius: 4px 4px 4px 4px;
-	z-index: 9999;
+	z-index: 2;
     position: absolute;
     overflow: hidden;
-	font-size: 0.9em;
+	font-size: 1em;
 	width: 110px;
+	padding: 5px;
+	box-shadow: 10px 10px 40px 5px rgba(0,0,0,0.75);
 }
 
 .buddyMenu li {
-	padding-left: 5px;
-	color: white;
+	color: lightgray;
 	list-style-type: none;
-	font-size: 1em;
 	cursor: pointer;
 }
 
 .buddyMenu li:hover {
-	background: rgba(255, 255, 255, 0.2);
+	background: #568EA3;
 }
 
 #buddy-group {
