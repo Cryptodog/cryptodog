@@ -85,7 +85,8 @@ const net = function () {
             chat.addJoin(buddy, timestamp);
 
             // Propagate away status to newcomers
-            meta.sendStatus(Cryptodog.me.status);
+            // XXX: 500 ms is an arbitrary amount of time to wait before keys are established
+            setTimeout(meta.sendStatus, 500, Cryptodog.me.status);
         }
     }
 
