@@ -13,7 +13,7 @@ The recommended way to run Cryptodog is via our [Chrome](https://chrome.google.c
 If you just want to test out Cryptodog, we have a [client hosted on GitHub Pages](https://cryptodog.github.io).
 
 ## Bugs
-Bug reports are appreciated! If you find a bug in Cryptodog, please open an issue here on GitHub.
+Bug reports are welcome! If you find a bug in Cryptodog, please open an issue here on GitHub.
 
 If you believe the issue has a security impact, we would appreciate *coordinated disclosure*. Please email us at security@crypto.dog.
 
