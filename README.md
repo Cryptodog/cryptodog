@@ -5,7 +5,7 @@
 Cryptodog is a community-developed fork of the original Cryptocat browser extension, which was [discontinued in February 2016](https://web.archive.org/web/20160225040533/https://crypto.cat/).
 
 ## Warning
-Cryptodog is experimental software. **Do not use Cryptodog if you have a critical need for secure messaging.** Instead, use a vetted secure messenger like [Signal](https://signal.org/) or [WhatsApp](https://www.whatsapp.com/).
+Cryptodog is experimental software. **Do not use Cryptodog if you have a critical need for secure messaging.** Instead, use [Signal](https://signal.org/).
 
 ## Usage
 The recommended way to run Cryptodog is via our [Chrome](https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/cryptodog) extensions. Using our browser extension ensures you always have the official, most recent version.
