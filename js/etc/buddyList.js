@@ -97,7 +97,7 @@ const buddyList = function () {
         $menu.css({
             display: "block",
             top: e.pageY + "px",
-            left: e.pageX + "px"
+            left: (e.pageX - $menu.width()) + "px"
         });
 
         // Register menu item events.
