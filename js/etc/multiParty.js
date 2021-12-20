@@ -3,15 +3,24 @@ Cryptodog.multiParty = function () { };
 (function () {
     'use strict';
 
-    let ecdhWorker = new Worker('js/workers/ecdh.js');
-    ecdhWorker.onmessage = function (event) {
-        let secretKey = {
-            // Conversion to WordArrays has to be done here instead of in worker because postMessage can't serialize them
-            message: CryptoJS.lib.WordArray.create(event.data.secretKey.message),
-            hmac: CryptoJS.lib.WordArray.create(event.data.secretKey.hmac)
+    Cryptodog.multiParty.initializeWorker = function () {
+        if (Cryptodog.multiParty.ecdhWorker) {
+            Cryptodog.multiParty.ecdhWorker.terminate();
+        }
+
+        let ecdhWorker = new Worker('js/workers/ecdh.js');
+        ecdhWorker.onmessage = function (event) {
+            let secretKey = {
+                // Conversion to WordArrays has to be done here instead of in worker because postMessage can't serialize them
+                message: CryptoJS.lib.WordArray.create(event.data.secretKey.message),
+                hmac: CryptoJS.lib.WordArray.create(event.data.secretKey.hmac)
+            };
+            Cryptodog.buddies[event.data.theirName].mpSecretKey = secretKey;
         };
-        Cryptodog.buddies[event.data.theirName].mpSecretKey = secretKey;
+        Cryptodog.multiParty.ecdhWorker = ecdhWorker;
     };
+
+    Cryptodog.multiParty.initializeWorker();
 
     var usedIVs = [];
 
@@ -223,7 +232,7 @@ Cryptodog.multiParty = function () { };
                 Cryptodog.UI.removeAuthAndWarn(sender);
             }
 
-            ecdhWorker.postMessage({
+            Cryptodog.multiParty.ecdhWorker.postMessage({
                 theirName: sender,
                 theirPublicKey: publicKey,
                 ourPrivateKey: Cryptodog.me.mpPrivateKey
