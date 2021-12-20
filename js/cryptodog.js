@@ -332,11 +332,6 @@ var Buddy = function(nickname, id, status) {
 
 Buddy.prototype = {
 	constructor: Buddy,
-	updateMpKeys: function(publicKey) {
-		this.mpPublicKey = publicKey;
-		this.mpFingerprint = Cryptodog.multiParty.genFingerprint(this.nickname);
-		this.mpSecretKey = Cryptodog.multiParty.genSharedSecret(this.nickname);
-	},
 	updateAuth: function(auth, dontTouchList) {
 		var nickname = this.nickname;
 		var bd = this;
