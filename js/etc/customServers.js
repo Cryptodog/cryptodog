@@ -23,33 +23,6 @@ $(window).ready(function() {
                     relay: 'wss://crypto.dog/websocket'
                 })
             );
-
-            $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptodog (BOSH)',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'https://crypto.dog/http-bind'
-                })
-            );
-
-            $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptodog (Tor Hidden Service)',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'ws://doggyfipznipbaia.onion/websocket'
-                })
-            );
-
-            $('#customServerSelector').append(
-                Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptodog (Tor Hidden Service) (BOSH)',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'http://doggyfipznipbaia.onion/http-bind'
-                })
-            );
         }
 
         $('#languages').hide();

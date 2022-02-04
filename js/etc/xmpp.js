@@ -25,6 +25,10 @@ $(window).ready(function() {
     });
     Cryptodog.storage.getItem('relay', function(key) {
         Cryptodog.xmpp.currentServer.relay = key ? key : Cryptodog.xmpp.defaultServer.relay;
+        if (Cryptodog.xmpp.currentServer.relay === 'https://crypto.dog/http-bind') {
+            // Hack: the official server no longer supports BOSH, so fall back to WebSocket
+            Cryptodog.xmpp.currentServer = Cryptodog.xmpp.defaultServer;
+        }
     });
 
 
