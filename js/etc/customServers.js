@@ -17,10 +17,11 @@ $(window).ready(function() {
         if (!document.getElementById('customServerSelector').firstChild) {
             $('#customServerSelector').append(
                 Mustache.render(Cryptodog.templates['customServer'], {
-                    name: 'Cryptodog',
-                    domain: 'crypto.dog',
-                    xmpp: 'conference.crypto.dog',
-                    relay: 'wss://crypto.dog/websocket'
+                    name: Cryptodog.xmpp.defaultServer.name,
+                    domain: Cryptodog.xmpp.defaultServer.domain,
+                    // Note "xmpp"/"conference" naming difference here
+                    xmpp: Cryptodog.xmpp.defaultServer.conference,
+                    relay: Cryptodog.xmpp.defaultServer.relay
                 })
             );
         }

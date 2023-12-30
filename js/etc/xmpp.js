@@ -3,16 +3,24 @@ Cryptodog.xmpp = {};
 Cryptodog.xmpp.currentStatus = 'online';
 Cryptodog.xmpp.connection = null;
 
-Cryptodog.xmpp.defaultServer = {
-    name: 'Cryptodog',
-    domain: 'crypto.dog',
-    conference: 'conference.crypto.dog',
-    relay: 'wss://crypto.dog/websocket'
-};
-
-Cryptodog.xmpp.currentServer = {};
-
 $(window).ready(function() {
+    let getDefaultServer = function () {
+        const mainRelay = 'wss://crypto.dog/websocket';
+        const onionRelay = 'ws://doggyhegixd2dvx5bqkxlyqf2pjpu5y72nwiokkn7oegdjpva5ypvyqd.onion/websocket';
+        function isOnionService() {
+            return window.location.host === new URL(onionRelay).host;
+        }
+        return {
+            name: 'Cryptodog' + (isOnionService() ? ' (Onion Service)' : ''),
+            domain: 'crypto.dog',
+            conference: 'conference.crypto.dog',
+            relay: isOnionService() ? onionRelay : mainRelay,
+        };
+    };
+
+    Cryptodog.xmpp.defaultServer = getDefaultServer();
+    Cryptodog.xmpp.currentServer = {};
+
     // Load custom server settings
     Cryptodog.storage.getItem('serverName', function(key) {
         Cryptodog.xmpp.currentServer.name = key ? key : Cryptodog.xmpp.defaultServer.name;
