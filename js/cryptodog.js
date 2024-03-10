@@ -6,7 +6,7 @@ GLOBAL VARIABLES
 -------------------
 */
 
-Cryptodog.version = '2.5.8'
+Cryptodog.version = '2.5.9'
 
 Cryptodog.me = {
 	newMessages:   0,
