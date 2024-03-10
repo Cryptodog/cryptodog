@@ -2,8 +2,8 @@
     "direction": "ltr",
     "fonts": "\"Helvetica Neue\", Helvetica, Arial, Verdana",
     "loginWindow": {
-        "introHeader": "Private Conversations for Everyone.",
-        "introParagraph": "Welcome to Cryptodog. Here are some helpful tips: <ul><li>Want to meet new people? Try connecting to room 'lobby'!</li><li>Cryptodog is not a magic bullet. You should never trust any piece of software with your life.</li><li class=\"key\">Cryptodog can't protect you against untrustworthy people or key loggers, and does not anonymize your connection.</li><li><i>If you're having trouble connecting, try using a different server.</i> Just click \"Custom server\" at the bottom right and pick one you and your conversation partner like.</ul>",
+        "introHeader": "Private conversations for everyone",
+        "introParagraph": "Welcome to Cryptodog. Here are some tips: <ul><li>Cryptodog is experimental software. Do not use Cryptodog if you have a critical need for secure messaging.</li><li>Want to meet new people? Try joining room \"lobby\".</li><li>Our <a href=\"https://chrome.google.com/webstore/detail/cryptodog/blnkmmamdbladdaaddkjbecbphngeiec\">Chrome extension</a> is the recommended way to use Cryptodog. We also have an <a href=\"http://doggyhegixd2dvx5bqkxlyqf2pjpu5y72nwiokkn7oegdjpva5ypvyqd.onion/\">onion service</a> for <a href=\"https://www.torproject.org/\">Tor</a> users and a <a href=\"https://cryptodog.github.io/cryptodog/\">client hosted on GitHub Pages</a> for testing purposes.</li><li>Bug reports are welcome! If you find a bug in Cryptodog, please open an issue on <a href=\"https://github.com/Cryptodog/cryptodog/issues\">GitHub</a>.</li><li>Other questions or concerns? Email us at <a href=\"mailto:contact@crypto.dog\">contact@crypto.dog</a>.</li></ul>",
         "blog": "Blog",
         "customServer": "Custom server",
         "reset": "Reset",
