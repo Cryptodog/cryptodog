@@ -1,6 +1,8 @@
 // On extension install
 chrome.runtime.onInstalled.addListener(function(details) {
-    chrome.tabs.create({'url': chrome.runtime.getURL('index.html')});
+    if (details.reason == 'install') {
+        chrome.tabs.create({'url': chrome.runtime.getURL('index.html')});
+    }
 });
 
 // On extension icon click
