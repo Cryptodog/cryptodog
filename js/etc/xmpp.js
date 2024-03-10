@@ -130,7 +130,7 @@ $(window).ready(function() {
                 $('.conversationName').text(document.title);
 
                 Cryptodog.storage.setItem('nickname', Cryptodog.me.nickname);
-            } else if (status === Strophe.Status.CONNFAIL || status === Strophe.Status.DISCONNECTED) {
+            } else if (status === Strophe.Status.DISCONNECTED) {
                 if (Cryptodog.loginError) {
                     Cryptodog.xmpp.reconnect();
                 }
@@ -195,24 +195,29 @@ $(window).ready(function() {
 
     // Reconnect to the same chatroom, on accidental connection loss.
     Cryptodog.xmpp.reconnect = function() {
-        if (Cryptodog.xmpp.connection) {
-            Cryptodog.xmpp.connection.reset();
-        }
-
+        // just calling connection.reset() seems to break the muc message and presence handlers
         Cryptodog.xmpp.connection = new Strophe.Connection(Cryptodog.xmpp.currentServer.relay);
 
         Cryptodog.xmpp.connection.connect(Cryptodog.xmpp.currentServer.domain, null, function(status) {
-            if (status === Strophe.Status.CONNECTING) {
-                $('.conversationName').animate({ 'background-color': '#F00' });
-            } else if (status === Strophe.Status.CONNECTED) {
-                afterConnect();
-
+            if (status === Strophe.Status.CONNECTED) {
                 Cryptodog.xmpp.connection.muc.join(
                     Cryptodog.me.conversation + '@' + Cryptodog.xmpp.currentServer.conference,
-                    Cryptodog.me.nickname
+                    Cryptodog.me.nickname,
+                    function(message) {
+                        if (Cryptodog.xmpp.onMessage(message)) {
+                            return true;
+                        }
+                    },
+                    function(presence) {
+                        if (Cryptodog.xmpp.onPresence(presence)) {
+                            return true;
+                        }
+                    }
                 );
-            } else if (status === Strophe.Status.CONNFAIL || status === Strophe.Status.DISCONNECTED) {
+                afterConnect();
+            } else if (status === Strophe.Status.DISCONNECTED) {
                 if (Cryptodog.loginError) {
+                    $('.conversationName').animate({ 'background-color': '#F00' });
                     window.setTimeout(function() {
                         Cryptodog.xmpp.reconnect();
                     }, 5000);
